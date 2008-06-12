@@ -5,12 +5,8 @@ using System.Runtime.InteropServices;
 using System.Security;
 using System.Security.Permissions;
 
-[assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Mindscape")]
 [assembly: AssemblyProduct("NHaml")]
-[assembly: AssemblyCopyright("Copyright ©  2007")]
-[assembly: AssemblyTrademark("")]
-[assembly: AssemblyCulture("")]
+[assembly: AssemblyCopyright("MIT License")]
 [assembly: ComVisible(false)]
 [assembly: CLSCompliant(true)]
 [assembly: AssemblyVersion("1.0.0.0")]
