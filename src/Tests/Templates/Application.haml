@@ -1,0 +1,17 @@
+!!!
+%html{xmlns="http://www.w3.org/1999/xhtml"}
+  %head
+    %title= title
+    %link{href="../../Content/Site.css", rel="stylesheet", type="text/css"}
+  %body
+    #inner
+      #header
+        %h1 My Sample MVC Application
+      #menu
+        %ul
+          %li
+            %a{ href="/" } Home
+          %li
+            %a{ href=string.Format("{0}/{1}", "~", "Products") } Products
+      #maincontent
+        _
