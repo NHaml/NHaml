@@ -6,6 +6,7 @@
 			<Word>Eof</Word>
 			<Word>Eval</Word>
 			<Word>Usings</Word>
+			<Word>Mvc</Word>
 		</Recognized>
 	</Words>
 </Dictionary>

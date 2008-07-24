@@ -90,7 +90,6 @@
     <Compile Include="TemplateCompiler.cs" />
     <Compile Include="TypeBuilder.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
-    <Compile Include="Utilities\Invariant.cs" />
     <Compile Include="Utilities\StringSet.cs" />
     <Compile Include="ViewBuilder.cs" />
   </ItemGroup>

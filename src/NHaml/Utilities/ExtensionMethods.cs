@@ -1,29 +1,70 @@
 using System;
 using System.ComponentModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.IO;
 using System.Text;
+
+using NHaml.Properties;
 
 namespace NHaml.Utilities
 {
   public static class ExtensionMethods
   {
-    [SuppressMessage("Microsoft.Naming", "CA1720")]
-    public static string RenderAttributes(this object obj)
+    public static void IsNotNull(this object maybeNull)
     {
-      if (obj != null)
+      if (maybeNull == null)
       {
-        var properties = TypeDescriptor.GetProperties(obj);
+        throw new InvalidOperationException(Resources.ObjectNull);
+      }
+    }
+
+    public static void ArgumentNotNull(this object argument, string argumentName)
+    {
+      if (argument == null)
+      {
+        throw new ArgumentNullException(argumentName);
+      }
+    }
+
+    public static void ArgumentNotEmpty(this string argument, string argumentName)
+    {
+      if (argument == null)
+      {
+        throw new ArgumentNullException(argumentName);
+      }
+
+      if (argument.Length == 0)
+      {
+        throw new ArgumentOutOfRangeException(
+          Resources.StringCannotBeEmpty.FormatCurrentCulture(argumentName));
+      }
+    }
+
+    public static void FileExists(this string path)
+    {
+      path.ArgumentNotEmpty("path");
+
+      if (!File.Exists(path))
+      {
+        throw new FileNotFoundException(path);
+      }
+    }
+
+    public static string RenderAttributes(this object attributeSource)
+    {
+      if (attributeSource != null)
+      {
+        var properties = TypeDescriptor.GetProperties(attributeSource);
 
         if (properties.Count > 0)
         {
           var attributes = new StringBuilder();
 
-          AppendAttribute(obj, properties[0], attributes, null);
+          AppendAttribute(attributeSource, properties[0], attributes, null);
 
           for (var i = 1; i < properties.Count; i++)
           {
-            AppendAttribute(obj, properties[i], attributes, " ");
+            AppendAttribute(attributeSource, properties[i], attributes, " ");
           }
 
           return attributes.ToString();

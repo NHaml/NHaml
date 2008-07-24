@@ -1,0 +1,4 @@
+%li
+  = product.ProductName 
+  %span.editlink
+    = Html.ActionLink("Edit", "Edit", new RouteValueDictionary(new { ID=product.ProductID }))

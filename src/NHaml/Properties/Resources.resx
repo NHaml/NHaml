@@ -129,6 +129,9 @@
   <data name="InvariantFail" xml:space="preserve">
     <value>Invariant Failure</value>
   </data>
+  <data name="ObjectNull" xml:space="preserve">
+    <value>Expected Not Null Object</value>
+  </data>
   <data name="StringCannotBeEmpty" xml:space="preserve">
     <value>The provided string argument "{0}" cannot be empty</value>
   </data>
