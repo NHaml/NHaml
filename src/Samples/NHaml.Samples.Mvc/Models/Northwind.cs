@@ -1,10 +1,8 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Linq;
 using System.Data.Linq.Mapping;
-
-using NHaml.Samples.Mvc.Models;
 
 #pragma warning disable 1591
 //------------------------------------------------------------------------------

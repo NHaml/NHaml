@@ -25,10 +25,11 @@ namespace NHaml.Samples.Mvc.Controllers
 
     public ActionResult New()
     {
-      var viewData = new ProductsNewViewData();
-
-      viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName");
-      viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName");
+      var viewData = new ProductsNewViewData
+                       {
+                         Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName"),
+                         Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName")
+                       };
 
       return View("New", viewData);
     }
@@ -52,9 +53,8 @@ namespace NHaml.Samples.Mvc.Controllers
 
     public ActionResult Edit(int id)
     {
-      var viewData = new ProductsEditViewData();
+      var viewData = new ProductsEditViewData {Product = northwind.GetProductById(id)};
 
-      viewData.Product = northwind.GetProductById(id);
       viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID);
       viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID);
 
