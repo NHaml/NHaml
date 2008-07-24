@@ -27,12 +27,13 @@ namespace NHaml
     private readonly StringSet _usings
       = new StringSet(DefaultUsings);
 
-    private static readonly string[] DefaultReferences = new[]
-                                                           {
-                                                             typeof(INotifyPropertyChanging).Assembly.Location,
-                                                             typeof(Action).Assembly.Location,
-                                                             typeof(TemplateCompiler).Assembly.Location
-                                                           };
+    private static readonly string[] DefaultReferences
+      = new[]
+          {
+            typeof(INotifyPropertyChanging).Assembly.Location,
+            typeof(Action).Assembly.Location,
+            typeof(TemplateCompiler).Assembly.Location
+          };
 
     private readonly StringSet _references
       = new StringSet(DefaultReferences);
@@ -63,7 +64,7 @@ namespace NHaml
       get { return _viewBaseType; }
       set
       {
-        Invariant.ArgumentNotNull(value, "value");
+        value.ArgumentNotNull("value");
 
         _viewBaseType = value;
 
@@ -74,11 +75,10 @@ namespace NHaml
 
     public void AddUsing(string @namespace)
     {
-      Invariant.ArgumentNotEmpty(@namespace, "namespace");
+      @namespace.ArgumentNotEmpty("namespace");
 
       _usings.Add(@namespace);
     }
-
 
     public IEnumerable Usings
     {
@@ -87,7 +87,7 @@ namespace NHaml
 
     public void AddReference(string assemblyLocation)
     {
-      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
+      assemblyLocation.ArgumentNotEmpty("assemblyLocation");
 
       _references.Add(assemblyLocation);
     }
@@ -99,14 +99,14 @@ namespace NHaml
 
     public void AddRule(MarkupRule markupRule)
     {
-      Invariant.ArgumentNotNull(markupRule, "markupRule");
+      markupRule.ArgumentNotNull("markupRule");
 
       _markupRules[markupRule.Signifier] = markupRule;
     }
 
     public MarkupRule GetRule(InputLine inputLine)
     {
-      Invariant.ArgumentNotNull(inputLine, "line");
+      inputLine.ArgumentNotNull("line");
 
       if (inputLine.Signifier >= 128)
       {
@@ -118,7 +118,7 @@ namespace NHaml
 
     public bool IsAutoClosing(string tag)
     {
-      Invariant.ArgumentNotEmpty(tag, "tag");
+      tag.ArgumentNotEmpty("tag");
 
       return _autoClosingTags.Contains(tag.ToUpperInvariant());
     }
@@ -136,12 +136,12 @@ namespace NHaml
     public Type Compile(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
-      Invariant.ArgumentNotEmpty(templatePath, "templatePath");
-      Invariant.FileExists(templatePath);
+      templatePath.ArgumentNotEmpty("templatePath");
+      templatePath.FileExists();
 
       if (!string.IsNullOrEmpty(layoutPath))
       {
-        Invariant.FileExists(layoutPath);
+        layoutPath.FileExists();
       }
 
       var compilationContext

@@ -69,8 +69,7 @@ namespace NHaml.Rules
               encoding = parts[1];
             }
 
-            compilationContext.ViewBuilder.AppendOutputLine(StringUtils.FormatInvariant(
-              @"<?xml version=""1.0"" encoding=""{0}"" ?>", encoding));
+            compilationContext.ViewBuilder.AppendOutputLine(@"<?xml version=""1.0"" encoding=""{0}"" ?>".FormatInvariant(encoding));
           }
           else
           {

@@ -7,7 +7,7 @@ namespace NHaml.Configuration
   [SuppressMessage("Microsoft.Design", "CA1010")]
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NamespacesConfigurationCollection : ConfigurationCollection<NamespaceConfigurationElement>
+  public sealed class NamespacesConfigurationCollection : ConfigurationCollection<NamespaceConfigurationElement>
   {
   }
 }

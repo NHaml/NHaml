@@ -19,8 +19,7 @@ namespace NHaml
     {
       _className = className;
 
-      _preamble.AppendLine(StringUtils.FormatInvariant("public class {0} : {1}, ICompiledView {{",
-        _className,
+      _preamble.AppendLine("public class {0} : {1}, ICompiledView {{".FormatInvariant(_className,
         MakeBaseTypeName(templateCompiler.ViewBaseType,
           genericArguments)));
       _preamble.AppendLine("StringBuilder _buffer;");

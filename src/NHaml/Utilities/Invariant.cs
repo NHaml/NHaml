@@ -7,7 +7,7 @@ namespace NHaml.Utilities
 {
   internal static class Invariant
   {
-    public static void ArgumentNotNull(object argument, string argumentName)
+    public static void ArgumentNotNull(this object argument, string argumentName)
     {
       if (argument == null)
       {
@@ -15,7 +15,7 @@ namespace NHaml.Utilities
       }
     }
 
-    public static void ArgumentNotEmpty(string argument, string argumentName)
+    public static void ArgumentNotEmpty(this string argument, string argumentName)
     {
       if (argument == null)
       {
@@ -25,13 +25,13 @@ namespace NHaml.Utilities
       if (argument.Length == 0)
       {
         throw new ArgumentOutOfRangeException(
-          StringUtils.FormatCurrentCulture(Resources.StringCannotBeEmpty, argumentName));
+          Resources.StringCannotBeEmpty.FormatCurrentCulture(argumentName));
       }
     }
 
-    public static void FileExists(string path)
+    public static void FileExists(this string path)
     {
-      ArgumentNotEmpty(path, "path");
+      path.ArgumentNotEmpty("path");
 
       if (!File.Exists(path))
       {

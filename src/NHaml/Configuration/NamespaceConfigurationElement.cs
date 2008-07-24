@@ -6,7 +6,7 @@ namespace NHaml.Configuration
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NamespaceConfigurationElement : ViewsCollectionElement
+  public sealed class NamespaceConfigurationElement : ViewsCollectionElement
   {
     private const string NamespaceElement = "namespace";
 

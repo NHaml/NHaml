@@ -19,7 +19,7 @@ namespace NHaml.Exceptions
     {
       var message = new StringBuilder();
 
-      message.AppendLine(StringUtils.FormatCurrentCulture(Resources.CompilationError, templatePath));
+      message.AppendLine(Resources.CompilationError.FormatCurrentCulture(templatePath));
 
       foreach (CompilerError error in compilerResults.Errors)
       {

@@ -8,7 +8,7 @@ namespace NHaml.Configuration
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlSection : ConfigurationSection
+  public sealed class NHamlSection : ConfigurationSection
   {
     private const string ProductionAttribute = "production";
     private const string AssembliesElement = "assemblies";
