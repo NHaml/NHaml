@@ -8,8 +8,8 @@
     <ProjectGuid>{94F9E5B5-2BE3-4C25-BCCF-86874D10854A}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Tests</RootNamespace>
-    <AssemblyName>Tests</AssemblyName>
+    <RootNamespace>NHaml.Tests</RootNamespace>
+    <AssemblyName>NHaml.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
@@ -38,11 +38,13 @@
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="App.config" />
     <None Include="Results\AltControllerPartial.xhtml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
@@ -228,13 +230,14 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FunctionalTester.cs">
+    <Compile Include="Configuration\ConfigurationTests.cs" />
+    <Compile Include="FunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="InputLineTester.cs">
+    <Compile Include="InputLineTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="TemplateCompilerTester.cs">
+    <Compile Include="TemplateCompilerTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestFixtureBase.cs">

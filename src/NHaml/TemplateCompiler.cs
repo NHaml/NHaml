@@ -79,6 +79,7 @@ namespace NHaml
       _usings.Add(@namespace);
     }
 
+
     public IEnumerable Usings
     {
       get { return _usings; }

@@ -1,4 +1,4 @@
-namespace NHaml
+namespace NHaml.Rules
 {
   public abstract class MarkupRule
   {

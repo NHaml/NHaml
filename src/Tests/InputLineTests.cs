@@ -5,7 +5,7 @@ using NUnit.Framework;
 namespace NHaml.Tests
 {
   [TestFixture]
-  public class InputLineTester
+  public class InputLineTests
   {
     [Test]
     public void DocType()

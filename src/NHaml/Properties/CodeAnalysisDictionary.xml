@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+	<Words>
+		<Recognized>
+			<Word>Haml</Word>
+			<Word>Eof</Word>
+			<Word>Eval</Word>
+			<Word>Usings</Word>
+		</Recognized>
+	</Words>
+</Dictionary>

@@ -2,7 +2,7 @@ using NUnit.Framework;
 
 namespace NHaml.Tests
 {
-  public class FunctionalTester : TestFixtureBase
+  public class FunctionalTests : TestFixtureBase
   {
     [Test]
     public void AttributeEval()

@@ -5,8 +5,7 @@ namespace NHaml.Rules
   public class NullMarkupRule : MarkupRule
   {
     [SuppressMessage("Microsoft.Security", "CA2104")]
-    public static readonly NullMarkupRule Instance =
-      new NullMarkupRule();
+    public static readonly NullMarkupRule Instance = new NullMarkupRule();
 
     private NullMarkupRule()
     {

@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace NHaml.Tests
 {
   [TestFixture]
-  public class TemplateCompilerTester : TestFixtureBase
+  public class TemplateCompilerTests : TestFixtureBase
   {
     public class ViewBase
     {
@@ -81,7 +81,7 @@ namespace NHaml.Tests
     }
 
     [Test]
-    public void script_tag_not_auto_closing()
+    public void ScriptTagNotAutoClosing()
     {
       var templateCompiler = new TemplateCompiler();
 
