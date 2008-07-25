@@ -17,7 +17,7 @@ namespace NHaml.Web.Mvc
 
       if (c != null)
       {
-        c.ViewEngine = new NHamlViewEngine();
+        c.ViewEngine = NHamlViewEngine.Instance;
       }
 
       return controller;

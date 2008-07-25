@@ -1,134 +1,92 @@
-using System.Collections.Generic;
 using System.Data.Linq;
-using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
 
-using NHaml.Configuration;
+using NHaml.Engine;
 
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewEngine : IViewEngine
+  public class NHamlViewEngine : ViewEngine<MvcCompiledView, ViewContext, IMvcView, ViewDataDictionary>, IViewEngine
   {
-    private static readonly Dictionary<string, MvcCompiledView> _viewCache
-      = new Dictionary<string, MvcCompiledView>();
+    private static readonly IViewEngine _instance = new NHamlViewEngine();
 
-    private static readonly TemplateCompiler _templateCompiler
-      = new TemplateCompiler();
-
-    private static bool _production;
-
-    [SuppressMessage("Microsoft.Performance", "CA1810")]
-    static NHamlViewEngine()
+    public static IViewEngine Instance
     {
-      _templateCompiler.AddUsing("System.Web");
-      _templateCompiler.AddUsing("System.Web.Mvc");
-      _templateCompiler.AddUsing("System.Web.Routing");
-
-      _templateCompiler.AddUsing("NHaml.Web.Mvc");
-
-      _templateCompiler.ViewBaseType = typeof(MvcView<>);
-
-      _templateCompiler.AddReference(typeof(UserControl).Assembly.Location);
-      _templateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
-      _templateCompiler.AddReference(typeof(DataContext).Assembly.Location);
-      _templateCompiler.AddReference(typeof(TextInputExtensions).Assembly.Location);
-
-      LoadConfiguration();
+      get { return _instance; }
     }
 
-    private static void LoadConfiguration()
+    private NHamlViewEngine()
     {
-      var section = NHamlSection.Read();
+      TemplateCompiler.AddUsing("System.Web");
+      TemplateCompiler.AddUsing("System.Web.Mvc");
+      TemplateCompiler.AddUsing("System.Web.Routing");
 
-      if (section != null)
-      {
-        _production = section.Production;
+      TemplateCompiler.AddUsing("NHaml.Web.Mvc");
 
-        foreach (var assemblyConfigurationElement in section.Assemblies)
-        {
-          _templateCompiler.AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
-        }
+      TemplateCompiler.ViewBaseType = typeof(MvcView<>);
 
-        foreach (var namespaceConfigurationElement in section.Namespaces)
-        {
-          _templateCompiler.AddUsing(namespaceConfigurationElement.Name);
-        }
-      }
+      TemplateCompiler.AddReference(typeof(UserControl).Assembly.Location);
+      TemplateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
+      TemplateCompiler.AddReference(typeof(DataContext).Assembly.Location);
+      TemplateCompiler.AddReference(typeof(TextInputExtensions).Assembly.Location);
+
+      TemplateCompiler.LoadFromConfiguration();
     }
 
-    public static void ClearViewCache()
+    protected override MvcCompiledView CreateView(ViewContext viewContext)
     {
-      lock (_viewCache)
-      {
-        _viewCache.Clear();
-      }
+      var templatePath = viewContext.HttpContext.Request
+        .MapPath("~/Views/" + GetViewKey(viewContext) + ".haml");
+
+      var layoutPath = SelectLayout(viewContext);
+
+      return new MvcCompiledView(
+        TemplateCompiler,
+        templatePath,
+        layoutPath,
+        viewContext.ViewData);
     }
 
-    public void RenderView(ViewContext viewContext)
+    protected override void RenderView(IMvcView view, ViewContext viewContext)
     {
-      var controller = (string)viewContext.RouteData.Values["controller"];
-      var viewKey = controller + "/" + viewContext.ViewName;
-
-      MvcCompiledView mvcCompiledView;
-
-      if (!_viewCache.TryGetValue(viewKey, out mvcCompiledView))
-      {
-        lock (_viewCache)
-        {
-          if (!_viewCache.TryGetValue(viewKey, out mvcCompiledView))
-          {
-            var templatePath = viewContext.HttpContext.Request
-              .MapPath("~/Views/" + viewKey + ".haml");
-
-            var layoutPath = FindLayout(viewContext.HttpContext.Request
-              .MapPath("~/Views/Shared"), viewContext.MasterName, controller);
-
-            mvcCompiledView = new MvcCompiledView(
-              _templateCompiler,
-              templatePath,
-              layoutPath,
-              viewContext.ViewData);
-
-            _viewCache.Add(viewKey, mvcCompiledView);
-          }
-        }
-      }
-
-      if (!_production)
-      {
-        mvcCompiledView.RecompileIfNecessary(viewContext.ViewData);
-      }
-
-      var view = mvcCompiledView.CreateView();
-
       view.Render(viewContext);
     }
 
-    protected virtual string FindLayout(string mastersFolder, string masterName, string controller)
+    protected override string GetViewKey(ViewContext viewContext)
     {
-      var layoutPath = mastersFolder + "\\" + masterName + ".haml";
+      return GetControllerName(viewContext) + "/" + viewContext.ViewName;
+    }
+
+    protected override ViewDataDictionary GetViewData(ViewContext viewContext)
+    {
+      return viewContext.ViewData;
+    }
+
+    protected override string SelectLayout(ViewContext viewContext)
+    {
+      var layoutsFolder = viewContext.HttpContext.Request.MapPath("~/Views/Shared");
+
+      var layoutPath = layoutsFolder + "\\" + viewContext.MasterName + ".haml";
 
       if (File.Exists(layoutPath))
       {
         return layoutPath;
       }
 
-      layoutPath = mastersFolder + "\\" + controller + ".haml";
+      layoutPath = layoutsFolder + "\\" + GetControllerName(viewContext) + ".haml";
 
       if (File.Exists(layoutPath))
       {
         return layoutPath;
       }
 
-      layoutPath = mastersFolder + "\\application.haml";
+      layoutPath = layoutsFolder + "\\application.haml";
 
       if (File.Exists(layoutPath))
       {
@@ -136,6 +94,11 @@ namespace NHaml.Web.Mvc
       }
 
       return null;
+    }
+
+    private static string GetControllerName(RequestContext viewContext)
+    {
+      return (string)viewContext.RouteData.Values["controller"];
     }
   }
 }

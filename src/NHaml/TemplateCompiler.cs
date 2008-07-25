@@ -3,9 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
+using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
+using NHaml.Configuration;
 using NHaml.Exceptions;
 using NHaml.Rules;
 using NHaml.Utilities;
@@ -43,6 +45,7 @@ namespace NHaml
     private readonly MarkupRule[] _markupRules = new MarkupRule[128];
 
     private Type _viewBaseType;
+    private bool _isProduction;
 
     public TemplateCompiler()
     {
@@ -59,6 +62,33 @@ namespace NHaml
       AddRule(new PartialMarkupRule());
 
       ViewBaseType = typeof(object);
+
+      LoadFromConfiguration();
+    }
+
+    public void LoadFromConfiguration()
+    {
+      var section = NHamlSection.Read();
+
+      if (section != null)
+      {
+        _isProduction = section.Production;
+
+        foreach (var assemblyConfigurationElement in section.Assemblies)
+        {
+          AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
+        }
+
+        foreach (var namespaceConfigurationElement in section.Namespaces)
+        {
+          AddUsing(namespaceConfigurationElement.Name);
+        }
+      }
+    }
+
+    public bool IsProduction
+    {
+      get { return _isProduction; }
     }
 
     public Type ViewBaseType

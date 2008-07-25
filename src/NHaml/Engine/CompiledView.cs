@@ -1,9 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Security.Permissions;
+using System.Web;
 
 namespace NHaml.Engine
 {
+  [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+  [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class CompiledView<TView, TViewData>
   {
     private readonly TemplateCompiler _templateCompiler;
