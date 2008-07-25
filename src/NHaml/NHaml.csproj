@@ -65,6 +65,7 @@
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
     <Compile Include="Configuration\NHamlSection.cs" />
     <Compile Include="Configuration\ViewsCollectionElement.cs" />
+    <Compile Include="Engine\CompiledView.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
     <Compile Include="ICompiledTemplate.cs" />

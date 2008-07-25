@@ -26,7 +26,6 @@ namespace NHaml.Tests
         {
           object o = new T();
           var list = (List<int>)o;
-
           return list.Count + 9;
         }
       }
@@ -85,7 +84,7 @@ namespace NHaml.Tests
     {
       var templateCompiler = new TemplateCompiler();
 
-      Assert.IsFalse(templateCompiler.IsAutoClosing("script"), "Script was auto-closed");
+      Assert.IsFalse(templateCompiler.IsAutoClosing("script"));
     }
   }
 }

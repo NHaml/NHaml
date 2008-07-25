@@ -17,8 +17,8 @@ namespace NHaml.Web.Mvc
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class NHamlViewEngine : IViewEngine
   {
-    private static readonly Dictionary<string, CompiledView> _viewCache
-      = new Dictionary<string, CompiledView>();
+    private static readonly Dictionary<string, MvcCompiledView> _viewCache
+      = new Dictionary<string, MvcCompiledView>();
 
     private static readonly TemplateCompiler _templateCompiler
       = new TemplateCompiler();
@@ -77,13 +77,13 @@ namespace NHaml.Web.Mvc
       var controller = (string)viewContext.RouteData.Values["controller"];
       var viewKey = controller + "/" + viewContext.ViewName;
 
-      CompiledView compiledView;
+      MvcCompiledView mvcCompiledView;
 
-      if (!_viewCache.TryGetValue(viewKey, out compiledView))
+      if (!_viewCache.TryGetValue(viewKey, out mvcCompiledView))
       {
         lock (_viewCache)
         {
-          if (!_viewCache.TryGetValue(viewKey, out compiledView))
+          if (!_viewCache.TryGetValue(viewKey, out mvcCompiledView))
           {
             var templatePath = viewContext.HttpContext.Request
               .MapPath("~/Views/" + viewKey + ".haml");
@@ -91,19 +91,23 @@ namespace NHaml.Web.Mvc
             var layoutPath = FindLayout(viewContext.HttpContext.Request
               .MapPath("~/Views/Shared"), viewContext.MasterName, controller);
 
-            compiledView = new CompiledView(_templateCompiler, templatePath, layoutPath, viewContext.ViewData);
+            mvcCompiledView = new MvcCompiledView(
+              _templateCompiler,
+              templatePath,
+              layoutPath,
+              viewContext.ViewData);
 
-            _viewCache.Add(viewKey, compiledView);
+            _viewCache.Add(viewKey, mvcCompiledView);
           }
         }
       }
 
       if (!_production)
       {
-        compiledView.RecompileIfNecessary(viewContext.ViewData);
+        mvcCompiledView.RecompileIfNecessary(viewContext.ViewData);
       }
 
-      var view = compiledView.CreateView();
+      var view = mvcCompiledView.CreateView();
 
       view.Render(viewContext);
     }

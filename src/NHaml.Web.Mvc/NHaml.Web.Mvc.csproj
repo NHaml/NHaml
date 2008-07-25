@@ -82,7 +82,9 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CompiledView.cs" />
+    <Compile Include="MvcCompiledView.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="IMvcView.cs" />
     <Compile Include="NHamlControllerFactory.cs" />
     <Compile Include="MvcView.cs" />

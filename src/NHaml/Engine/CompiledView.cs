@@ -1,22 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Security.Permissions;
-using System.Web;
-using System.Web.Mvc;
 
-namespace NHaml.Web.Mvc
+namespace NHaml.Engine
 {
-  [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class CompiledView
+  public class CompiledView<TView, TViewData>
   {
     private readonly TemplateCompiler _templateCompiler;
 
     private readonly string _templatePath;
     private readonly string _layoutPath;
 
-    private TemplateActivator<IMvcView> templateActivator;
+    private TemplateActivator<TView> _templateActivator;
 
     private readonly object _sync = new object();
 
@@ -24,7 +19,7 @@ namespace NHaml.Web.Mvc
       = new Dictionary<string, DateTime>();
 
     public CompiledView(TemplateCompiler templateCompiler,
-      string templatePath, string layoutPath, ViewDataDictionary viewData)
+      string templatePath, string layoutPath, TViewData viewData)
     {
       _templateCompiler = templateCompiler;
       _templatePath = templatePath;
@@ -33,12 +28,12 @@ namespace NHaml.Web.Mvc
       CompileView(viewData);
     }
 
-    public IMvcView CreateView()
+    public TView CreateView()
     {
-      return templateActivator();
+      return _templateActivator();
     }
 
-    public void RecompileIfNecessary(ViewDataDictionary viewData)
+    public void RecompileIfNecessary(TViewData viewData)
     {
       lock (_sync)
       {
@@ -54,23 +49,22 @@ namespace NHaml.Web.Mvc
       }
     }
 
-    private void CompileView(ViewDataDictionary viewData)
+    private void CompileView(TViewData viewData)
     {
-      var modelType = typeof(object);
-
-      if ((viewData != null) && (viewData.Model != null))
-      {
-        modelType = viewData.Model.GetType();
-      }
-
       var inputFiles = new List<string>();
 
-      templateActivator = _templateCompiler.Compile<IMvcView>(_templatePath, _layoutPath, inputFiles, modelType);
+      _templateActivator = _templateCompiler
+        .Compile<TView>(_templatePath, _layoutPath, inputFiles, GetGenericArguments(viewData));
 
       foreach (var inputFile in inputFiles)
       {
         _fileTimestamps[inputFile] = File.GetLastWriteTime(inputFile);
       }
+    }
+
+    protected virtual Type[] GetGenericArguments(TViewData viewData)
+    {
+      return new Type[] {};
     }
   }
 }
