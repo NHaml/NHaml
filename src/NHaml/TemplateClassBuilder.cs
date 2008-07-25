@@ -6,7 +6,7 @@ using NHaml.Utilities;
 
 namespace NHaml
 {
-  public sealed class ViewBuilder
+  public sealed class TemplateClassBuilder
   {
     private readonly StringBuilder _preamble = new StringBuilder();
     private readonly StringBuilder _output = new StringBuilder();
@@ -15,16 +15,16 @@ namespace NHaml
 
     private int _depth;
 
-    public ViewBuilder(TemplateCompiler templateCompiler, string className, params Type[] genericArguments)
+    public TemplateClassBuilder(TemplateCompiler templateCompiler, string className, params Type[] genericArguments)
     {
       _className = className;
 
-      _preamble.AppendLine("public class {0} : {1}, ICompiledView {{".FormatInvariant(_className,
-        MakeBaseTypeName(templateCompiler.ViewBaseType,
-          genericArguments)));
-      _preamble.AppendLine("StringBuilder _buffer;");
-      _preamble.AppendLine("public string Render(){");
-      _preamble.AppendLine("_buffer = new StringBuilder();");
+      _preamble.AppendLine(
+        "public class {0} : {1}, ICompiledTemplate {{"
+          .FormatInvariant(_className,
+            MakeBaseTypeName(templateCompiler.ViewBaseType, genericArguments)));
+
+      _preamble.AppendLine("public void Render(TextWriter writer){");
     }
 
     public string ClassName
@@ -64,12 +64,12 @@ namespace NHaml
 
     public void AppendOutput(string value, bool newLine)
     {
-      AppendOutputInternal(value, newLine ? "AppendLine" : "Append");
+      AppendOutputInternal(value, newLine ? "WriteLine" : "Write");
     }
 
     public void AppendOutputLine(string value)
     {
-      AppendOutputInternal(value, "AppendLine");
+      AppendOutputInternal(value, "WriteLine");
     }
 
     private void AppendOutputInternal(string value, string method)
@@ -86,7 +86,7 @@ namespace NHaml
           }
         }
 
-        _output.AppendLine("_buffer." + method + "(@\"" + value + "\");");
+        _output.AppendLine("writer." + method + "(@\"" + value + "\");");
       }
     }
 
@@ -104,8 +104,8 @@ namespace NHaml
     {
       if (code != null)
       {
-        var action = newLine ? "AppendLine" : "Append";
-        _output.AppendLine("_buffer." + action + "(Convert.ToString(" + code + "));");
+        var action = newLine ? "WriteLine" : "Write";
+        _output.AppendLine("writer." + action + "(Convert.ToString(" + code + "));");
       }
     }
 
@@ -143,7 +143,7 @@ namespace NHaml
 
     public string Build()
     {
-      _output.Append("return _buffer.ToString();}}");
+      _output.Append("}}");
 
       _preamble.Append(_output);
 

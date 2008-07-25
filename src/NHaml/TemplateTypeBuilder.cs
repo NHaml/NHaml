@@ -8,7 +8,7 @@ using Microsoft.CSharp;
 
 namespace NHaml
 {
-  public sealed class TypeBuilder
+  public sealed class TemplateTypeBuilder
   {
     private readonly Dictionary<string, string> _providerOptions
       = new Dictionary<string, string>();
@@ -23,7 +23,7 @@ namespace NHaml
     private string _source;
 
     [SuppressMessage("Microsoft.Security", "CA2122")]
-    public TypeBuilder(TemplateCompiler templateCompiler)
+    public TemplateTypeBuilder(TemplateCompiler templateCompiler)
     {
       _templateCompiler = templateCompiler;
 
@@ -54,8 +54,7 @@ namespace NHaml
       BuildSource(source);
       AddReferences();
 
-      var codeProvider
-        = new CSharpCodeProvider(_providerOptions);
+      var codeProvider = new CSharpCodeProvider(_providerOptions);
 
       _compilerResults = codeProvider
         .CompileAssemblyFromSource(_compilerParameters, _source);

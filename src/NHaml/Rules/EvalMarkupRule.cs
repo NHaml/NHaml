@@ -14,8 +14,8 @@ namespace NHaml.Rules
 
     public override BlockClosingAction Render(CompilationContext compilationContext)
     {
-      compilationContext.ViewBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent);
-      compilationContext.ViewBuilder.AppendCodeLine(compilationContext.CurrentInputLine.NormalizedText.Trim());
+      compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent);
+      compilationContext.TemplateClassBuilder.AppendCodeLine(compilationContext.CurrentInputLine.NormalizedText.Trim());
 
       return null;
     }

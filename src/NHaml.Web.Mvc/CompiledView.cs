@@ -5,8 +5,6 @@ using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
 
-using NHaml.Utilities;
-
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
@@ -18,7 +16,7 @@ namespace NHaml.Web.Mvc
     private readonly string _templatePath;
     private readonly string _layoutPath;
 
-    private ViewActivator<IMvcView> _viewActivator;
+    private TemplateActivator<IMvcView> templateActivator;
 
     private readonly object _sync = new object();
 
@@ -37,7 +35,7 @@ namespace NHaml.Web.Mvc
 
     public IMvcView CreateView()
     {
-      return _viewActivator();
+      return templateActivator();
     }
 
     public void RecompileIfNecessary(ViewDataDictionary viewData)
@@ -67,7 +65,7 @@ namespace NHaml.Web.Mvc
 
       var inputFiles = new List<string>();
 
-      _viewActivator = _templateCompiler.Compile<IMvcView>(_templatePath, _layoutPath, inputFiles, modelType);
+      templateActivator = _templateCompiler.Compile<IMvcView>(_templatePath, _layoutPath, inputFiles, modelType);
 
       foreach (var inputFile in inputFiles)
       {

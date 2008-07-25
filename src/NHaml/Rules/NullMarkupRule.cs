@@ -26,7 +26,7 @@ namespace NHaml.Rules
         text = text.TrimStart();
       }
 
-      compilationContext.ViewBuilder.AppendOutput(text,
+      compilationContext.TemplateClassBuilder.AppendOutput(text,
         !compilationContext.CurrentInputLine.IsMultiline);
 
       return null;

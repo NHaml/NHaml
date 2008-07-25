@@ -9,7 +9,7 @@ namespace NHaml
   public sealed class CompilationContext
   {
     private readonly TemplateCompiler _templateCompiler;
-    private readonly ViewBuilder _viewBuilder;
+    private readonly TemplateClassBuilder _templateClassBuilder;
 
     private readonly string _templatePath;
     private readonly string _layoutPath;
@@ -25,11 +25,11 @@ namespace NHaml
     private readonly StringSet _inputFiles
       = new StringSet();
 
-    public CompilationContext(TemplateCompiler templateCompiler, ViewBuilder viewBuilder,
+    public CompilationContext(TemplateCompiler templateCompiler, TemplateClassBuilder templateClassBuilder,
       string templatePath, string layoutPath)
     {
       _templateCompiler = templateCompiler;
-      _viewBuilder = viewBuilder;
+      _templateClassBuilder = templateClassBuilder;
       _templatePath = templatePath;
       _layoutPath = layoutPath;
 
@@ -47,9 +47,9 @@ namespace NHaml
       get { return _templateCompiler; }
     }
 
-    public ViewBuilder ViewBuilder
+    public TemplateClassBuilder TemplateClassBuilder
     {
-      get { return _viewBuilder; }
+      get { return _templateClassBuilder; }
     }
 
     public string LayoutPath

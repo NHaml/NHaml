@@ -1,0 +1,89 @@
+NHAML C# CODING STANDARDS
+
+# INDENTATION
+
+Indentation for files:
+
+Tab Size:      2
+Indent Size:   2
+Insert Spaces: true 
+ 
+
+# BRACES
+
+All code blocks should be surrounded by braces. E.g:
+
+if (foo)
+{
+  DoOneThing();
+}
+
+Not:
+
+if (foo) DoOneThing();
+
+This technique makes the code more readable and easier to maintain.
+
+
+# CONSTANTS
+
+Use Pascal case; not Uppercase. E.g.
+
+  public const string MyStringConstant;
+
+Not:
+
+  public const string MYSTRINGCONSTANT;
+
+The reason for this is that client code should not know or care whether
+the element is a constant or a property. Thus, a change from one to the other
+will not require a change to any calling code.
+
+
+# LINE BREAKS
+
+Blank lines should be placed between logical groupings of statements and control
+structures where appropriate.
+
+
+# BREAKING LONG LINES
+
+Lines that exceed 100 characters should be broken if possible. Often, long lines
+can be broken around operators. E.g.
+
+  ToolStripMenuItem fileItem
+    = (ToolStripMenuItem)Shell.MainMenuStrip.Items[Constants.UI.FileMenu];
+
+Not:
+
+  ToolStripMenuItem fileItem = (ToolStripMenuItem)Shell.MainMenuStrip.Items[Constants.UI.FileMenu];
+
+This enhances code readability by removing the need for horizontal scrolling in most
+situations.
+
+
+# INSTANCE FIELD NAMING
+
+Instance fields should be prefixed with an underscore. Eg.
+
+  private string _foo;
+
+
+# "this" KEYWORD
+
+Should not be used.
+
+
+# PROPERTIES
+
+Single line Property getters or setters should be formatted on one line:
+
+  public string NameQuery
+  {
+    get { return _nameSearch.NameQuery; }
+  }
+ 
+# RESHARPER
+
+No orange warning marks.
+Cleanup code before commit. (See provided ReSharper Code Style xml file)

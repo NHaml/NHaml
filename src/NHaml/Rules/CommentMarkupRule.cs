@@ -44,27 +44,27 @@ namespace NHaml.Rules
 
       if (string.IsNullOrEmpty(content))
       {
-        compilationContext.ViewBuilder.AppendOutputLine(openingTag);
+        compilationContext.TemplateClassBuilder.AppendOutputLine(openingTag);
         closingTag = compilationContext.CurrentInputLine.Indent + closingTag;
       }
       else
       {
         if (content.Length > 50)
         {
-          compilationContext.ViewBuilder.AppendOutputLine(openingTag);
-          compilationContext.ViewBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
-          compilationContext.ViewBuilder.AppendOutputLine(content);
+          compilationContext.TemplateClassBuilder.AppendOutputLine(openingTag);
+          compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
+          compilationContext.TemplateClassBuilder.AppendOutputLine(content);
         }
         else
         {
-          compilationContext.ViewBuilder.AppendOutput(openingTag + content);
+          compilationContext.TemplateClassBuilder.AppendOutput(openingTag + content);
           closingTag = ' ' + closingTag;
         }
       }
 
       return delegate
         {
-          compilationContext.ViewBuilder.AppendOutputLine(closingTag);
+          compilationContext.TemplateClassBuilder.AppendOutputLine(closingTag);
         };
     }
   }

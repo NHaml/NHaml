@@ -16,13 +16,13 @@ namespace NHaml.Rules
     {
       var isBlock = compilationContext.NextInputLine.IndentSize > compilationContext.CurrentInputLine.IndentSize;
 
-      compilationContext.ViewBuilder.AppendSilentCode(compilationContext.CurrentInputLine.NormalizedText, !isBlock);
+      compilationContext.TemplateClassBuilder.AppendSilentCode(compilationContext.CurrentInputLine.NormalizedText, !isBlock);
 
       if (isBlock)
       {
-        compilationContext.ViewBuilder.BeginCodeBlock();
+        compilationContext.TemplateClassBuilder.BeginCodeBlock();
 
-        return () => compilationContext.ViewBuilder.EndCodeBlock();
+        return () => compilationContext.TemplateClassBuilder.EndCodeBlock();
       }
 
       return null;

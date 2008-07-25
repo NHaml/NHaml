@@ -67,7 +67,7 @@
     <Compile Include="Configuration\ViewsCollectionElement.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
-    <Compile Include="ICompiledView.cs" />
+    <Compile Include="ICompiledTemplate.cs" />
     <Compile Include="InputLine.cs" />
     <Compile Include="Rules\MarkupRule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -88,11 +88,11 @@
     <Compile Include="Rules\SilentEvalMarkupRule.cs" />
     <Compile Include="Rules\TagMarkupRule.cs" />
     <Compile Include="TemplateCompiler.cs" />
-    <Compile Include="TypeBuilder.cs" />
+    <Compile Include="TemplateTypeBuilder.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\StringSet.cs" />
-    <Compile Include="ViewActivator.cs" />
-    <Compile Include="ViewBuilder.cs" />
+    <Compile Include="TemplateActivator.cs" />
+    <Compile Include="TemplateClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

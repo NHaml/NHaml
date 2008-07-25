@@ -65,7 +65,7 @@ namespace NHaml.Rules
       var openingTag = compilationContext.CurrentInputLine.Indent + '<' + match.Groups[1].Value;
       var closingTag = "</" + match.Groups[1].Value + '>';
 
-      compilationContext.ViewBuilder.AppendOutput(openingTag);
+      compilationContext.TemplateClassBuilder.AppendOutput(openingTag);
 
       ParseAndRenderAttributes(compilationContext, match);
 
@@ -81,7 +81,7 @@ namespace NHaml.Rules
           close += ' ';
         }
 
-        compilationContext.ViewBuilder.AppendOutput(close, newLine);
+        compilationContext.TemplateClassBuilder.AppendOutput(close, newLine);
 
         return null;
       }
@@ -90,26 +90,26 @@ namespace NHaml.Rules
 
       if (string.IsNullOrEmpty(content))
       {
-        compilationContext.ViewBuilder.AppendOutput(">", newLine);
+        compilationContext.TemplateClassBuilder.AppendOutput(">", newLine);
         closingTag = compilationContext.CurrentInputLine.Indent + closingTag;
       }
       else
       {
         if ((content.Length > 50) || string.Equals("=", action))
         {
-          compilationContext.ViewBuilder.AppendOutput(">", !isWhitespaceSensitive);
+          compilationContext.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
           if (!isWhitespaceSensitive)
           {
-            compilationContext.ViewBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
+            compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
           }
 
           if (string.Equals("=", action))
           {
-            compilationContext.ViewBuilder.AppendCode(content, !isWhitespaceSensitive);
+            compilationContext.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive);
           }
           else
           {
-            compilationContext.ViewBuilder.AppendOutput(content, !isWhitespaceSensitive);
+            compilationContext.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
           }
 
           if (!isWhitespaceSensitive)
@@ -119,7 +119,7 @@ namespace NHaml.Rules
         }
         else
         {
-          compilationContext.ViewBuilder.AppendOutput(">" + content);
+          compilationContext.TemplateClassBuilder.AppendOutput(">" + content);
         }
       }
 
@@ -128,7 +128,7 @@ namespace NHaml.Rules
         closingTag += ' ';
       }
 
-      return () => compilationContext.ViewBuilder.AppendOutput(closingTag, newLine);
+      return () => compilationContext.TemplateClassBuilder.AppendOutput(closingTag, newLine);
     }
 
     private static void ParseAndRenderAttributes(CompilationContext compilationContext, Match tagMatch)
@@ -164,15 +164,15 @@ namespace NHaml.Rules
 
       if (!string.IsNullOrEmpty(attributesHash))
       {
-        compilationContext.ViewBuilder.AppendOutput(" ");
+        compilationContext.TemplateClassBuilder.AppendOutput(" ");
 
         if (_staticAttributesRegex.IsMatch(attributesHash))
         {
-          compilationContext.ViewBuilder.AppendOutput(_commaStripperRegex.Replace(attributesHash, "\" "));
+          compilationContext.TemplateClassBuilder.AppendOutput(_commaStripperRegex.Replace(attributesHash, "\" "));
         }
         else
         {
-          compilationContext.ViewBuilder.AppendCode("new {"
+          compilationContext.TemplateClassBuilder.AppendCode("new {"
             + _keywordEscaperRegex.Replace(
               _hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3"), "@$1$2") +
                 "}.RenderAttributes()");

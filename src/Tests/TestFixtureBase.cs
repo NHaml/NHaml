@@ -32,11 +32,13 @@ namespace NHaml.Tests
 
       var view = viewActivator();
 
-      var output = view.Render();
+      var output = new StringWriter();
+
+      view.Render(output);
 
       //Console.WriteLine(output);
 
-      Assert.AreEqual(File.ReadAllText(ResultsFolder + layout + ".xhtml"), output);
+      Assert.AreEqual(File.ReadAllText(ResultsFolder + layout + ".xhtml"), output.ToString());
     }
 
     protected static void AssertRender(string template, TemplateCompiler templateCompiler,
@@ -47,11 +49,13 @@ namespace NHaml.Tests
 
       var view = viewActivator();
 
-      var output = view.Render();
+      var output = new StringWriter();
+
+      view.Render(output);
 
       //Console.WriteLine(output);
 
-      Assert.AreEqual(File.ReadAllText(ResultsFolder + template + ".xhtml"), output);
+      Assert.AreEqual(File.ReadAllText(ResultsFolder + template + ".xhtml"), output.ToString());
     }
   }
 }

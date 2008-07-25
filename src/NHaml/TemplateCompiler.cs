@@ -24,7 +24,7 @@ namespace NHaml
       = new StringSet(DefaultAutoClosingTags);
 
     private static readonly string[] DefaultUsings
-      = new[] {"System", "System.Text", "NHaml", "NHaml.Utilities"};
+      = new[] {"System", "System.IO", "NHaml", "NHaml.Utilities"};
 
     private readonly StringSet _usings
       = new StringSet(DefaultUsings);
@@ -138,36 +138,36 @@ namespace NHaml
       return _autoClosingTags.Contains(tag.ToUpperInvariant());
     }
 
-    public ViewActivator<ICompiledView> Compile(string templatePath, params Type[] genericArguments)
+    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, params Type[] genericArguments)
     {
-      return Compile<ICompiledView>(templatePath, genericArguments);
+      return Compile<ICompiledTemplate>(templatePath, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
-    public ViewActivator<TView> Compile<TView>(string templatePath, params Type[] genericArguments)
+    public TemplateActivator<TView> Compile<TView>(string templatePath, params Type[] genericArguments)
     {
       return Compile<TView>(templatePath, null, genericArguments);
     }
 
-    public ViewActivator<ICompiledView> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
+    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
     {
-      return Compile<ICompiledView>(templatePath, layoutPath, genericArguments);
+      return Compile<ICompiledTemplate>(templatePath, layoutPath, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
-    public ViewActivator<TView> Compile<TView>(string templatePath, string layoutPath, params Type[] genericArguments)
+    public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath, params Type[] genericArguments)
     {
       return Compile<TView>(templatePath, layoutPath, null, genericArguments);
     }
 
-    public ViewActivator<ICompiledView> Compile(string templatePath, string layoutPath,
+    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
-      return Compile<ICompiledView>(templatePath, layoutPath, inputFiles, genericArguments);
+      return Compile<ICompiledTemplate>(templatePath, layoutPath, inputFiles, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
-    public ViewActivator<TView> Compile<TView>(string templatePath, string layoutPath,
+    public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
       templatePath.ArgumentNotEmpty("templatePath");
@@ -186,7 +186,7 @@ namespace NHaml
       var compilationContext
         = new CompilationContext(
           this,
-          new ViewBuilder(this, MakeClassName(templatePath), genericArguments),
+          new TemplateClassBuilder(this, MakeClassName(templatePath), genericArguments),
           templatePath,
           layoutPath);
 
@@ -222,11 +222,11 @@ namespace NHaml
 
     private Type BuildView(CompilationContext compilationContext)
     {
-      var source = compilationContext.ViewBuilder.Build();
+      var source = compilationContext.TemplateClassBuilder.Build();
 
-      var typeBuilder = new TypeBuilder(this);
+      var typeBuilder = new TemplateTypeBuilder(this);
 
-      var viewType = typeBuilder.Build(source, compilationContext.ViewBuilder.ClassName);
+      var viewType = typeBuilder.Build(source, compilationContext.TemplateClassBuilder.ClassName);
 
       if (viewType == null)
       {
@@ -242,7 +242,7 @@ namespace NHaml
       return _pathCleaner.Replace(templatePath, "_").TrimStart('_');
     }
 
-    private static ViewActivator<TResult> CreateFastActivator<TResult>(Type type)
+    private static TemplateActivator<TResult> CreateFastActivator<TResult>(Type type)
     {
       var dynamicMethod = new DynamicMethod("activatefast__", type, null, type);
 
@@ -257,7 +257,7 @@ namespace NHaml
       ilGenerator.Emit(OpCodes.Newobj, constructor);
       ilGenerator.Emit(OpCodes.Ret);
 
-      return (ViewActivator<TResult>)dynamicMethod.CreateDelegate(typeof(ViewActivator<TResult>));
+      return (TemplateActivator<TResult>)dynamicMethod.CreateDelegate(typeof(TemplateActivator<TResult>));
     }
   }
 }

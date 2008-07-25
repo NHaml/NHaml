@@ -31,7 +31,7 @@ namespace NHaml.Web.Mvc
       _html = new HtmlHelper(_viewContext, this);
       _url = new UrlHelper(_viewContext);
 
-      viewContext.HttpContext.Response.Output.Write(((ICompiledView)this).Render());
+      ((ICompiledTemplate)this).Render(viewContext.HttpContext.Response.Output);
     }
 
     public AjaxHelper Ajax

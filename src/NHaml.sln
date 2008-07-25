@@ -7,8 +7,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB-34CF-4A08-B70B-6582290AA010}"
 	ProjectSection(SolutionItems) = preProject
+		CodingStandards.txt = CodingStandards.txt
 		License.txt = License.txt
 		NHaml.snk = NHaml.snk
+		ReSharperCodeStyle.xml = ReSharperCodeStyle.xml
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
