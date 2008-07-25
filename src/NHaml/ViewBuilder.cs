@@ -34,10 +34,11 @@ namespace NHaml
 
     public static string MakeBaseTypeName(Type baseType, params Type[] genericArguments)
     {
-      if (genericArguments != null && genericArguments.Length > 0)
+      if ((genericArguments != null) && (genericArguments.Length > 0))
       {
         baseType = baseType.MakeGenericType(genericArguments);
       }
+
       var tname = baseType.FullName.Replace('+', '.');
 
       if (baseType.IsGenericType)

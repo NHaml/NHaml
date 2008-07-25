@@ -15,7 +15,7 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewFactory : IViewEngine
+  public class NHamlViewEngine : IViewEngine
   {
     private static readonly Dictionary<string, CompiledView> _viewCache
       = new Dictionary<string, CompiledView>();
@@ -26,7 +26,7 @@ namespace NHaml.Web.Mvc
     private static bool _production;
 
     [SuppressMessage("Microsoft.Performance", "CA1810")]
-    static NHamlViewFactory()
+    static NHamlViewEngine()
     {
       _templateCompiler.AddUsing("System.Web");
       _templateCompiler.AddUsing("System.Web.Mvc");
@@ -34,7 +34,7 @@ namespace NHaml.Web.Mvc
 
       _templateCompiler.AddUsing("NHaml.Web.Mvc");
 
-      _templateCompiler.ViewBaseType = typeof(NHamlView<>);
+      _templateCompiler.ViewBaseType = typeof(MvcView<>);
 
       _templateCompiler.AddReference(typeof(UserControl).Assembly.Location);
       _templateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
@@ -105,8 +105,7 @@ namespace NHaml.Web.Mvc
 
       var view = compiledView.CreateView();
 
-      view.SetViewData(viewContext.ViewData);
-      view.RenderView(viewContext);
+      view.Render(viewContext);
     }
 
     protected virtual string FindLayout(string mastersFolder, string masterName, string controller)

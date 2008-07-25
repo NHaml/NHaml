@@ -91,6 +91,7 @@
     <Compile Include="TypeBuilder.cs" />
     <Compile Include="Utilities\ExtensionMethods.cs" />
     <Compile Include="Utilities\StringSet.cs" />
+    <Compile Include="ViewActivator.cs" />
     <Compile Include="ViewBuilder.cs" />
   </ItemGroup>
   <ItemGroup>

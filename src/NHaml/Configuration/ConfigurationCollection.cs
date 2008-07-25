@@ -5,7 +5,6 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NHaml.Configuration
 {
-  [SuppressMessage("Microsoft.Design", "CA1010")]
   public abstract class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
     where T : ViewsCollectionElement, new()
   {

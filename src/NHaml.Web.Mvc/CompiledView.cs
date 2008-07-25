@@ -5,6 +5,8 @@ using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
 
+using NHaml.Utilities;
+
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
@@ -16,7 +18,7 @@ namespace NHaml.Web.Mvc
     private readonly string _templatePath;
     private readonly string _layoutPath;
 
-    private Type _viewType;
+    private ViewActivator<IMvcView> _viewActivator;
 
     private readonly object _sync = new object();
 
@@ -33,9 +35,9 @@ namespace NHaml.Web.Mvc
       CompileView(viewData);
     }
 
-    public INHamlView CreateView()
+    public IMvcView CreateView()
     {
-      return (INHamlView)Activator.CreateInstance(_viewType);
+      return _viewActivator();
     }
 
     public void RecompileIfNecessary(ViewDataDictionary viewData)
@@ -56,35 +58,20 @@ namespace NHaml.Web.Mvc
 
     private void CompileView(ViewDataDictionary viewData)
     {
-      var viewDataType = typeof(object);
+      var modelType = typeof(object);
 
-      if (viewData != null && viewData.Model != null)
+      if ((viewData != null) && (viewData.Model != null))
       {
-        viewDataType = viewData.Model.GetType();
-
-        AddReferences(viewDataType);
+        modelType = viewData.Model.GetType();
       }
 
       var inputFiles = new List<string>();
 
-      _viewType = _templateCompiler.Compile(_templatePath, _layoutPath, inputFiles, viewDataType);
+      _viewActivator = _templateCompiler.Compile<IMvcView>(_templatePath, _layoutPath, inputFiles, modelType);
 
       foreach (var inputFile in inputFiles)
       {
         _fileTimestamps[inputFile] = File.GetLastWriteTime(inputFile);
-      }
-    }
-
-    private void AddReferences(Type type)
-    {
-      _templateCompiler.AddReference(type.Assembly.Location);
-
-      if (type.IsGenericType)
-      {
-        foreach (var t in type.GetGenericArguments())
-        {
-          AddReferences(t);
-        }
       }
     }
   }

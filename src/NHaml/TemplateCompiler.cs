@@ -2,6 +2,8 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics.CodeAnalysis;
+using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
@@ -92,6 +94,19 @@ namespace NHaml
       _references.Add(assemblyLocation);
     }
 
+    public void AddReferences(Type type)
+    {
+      AddReference(type.Assembly.Location);
+
+      if (type.IsGenericType)
+      {
+        foreach (var t in type.GetGenericArguments())
+        {
+          AddReferences(t);
+        }
+      }
+    }
+
     public IEnumerable References
     {
       get { return _references; }
@@ -123,17 +138,36 @@ namespace NHaml
       return _autoClosingTags.Contains(tag.ToUpperInvariant());
     }
 
-    public Type Compile(string templatePath, params Type[] genericArguments)
+    public ViewActivator<ICompiledView> Compile(string templatePath, params Type[] genericArguments)
     {
-      return Compile(templatePath, null, genericArguments);
+      return Compile<ICompiledView>(templatePath, genericArguments);
     }
 
-    public Type Compile(string templatePath, string layoutPath, params Type[] genericArguments)
+    [SuppressMessage("Microsoft.Design", "CA1004")]
+    public ViewActivator<TView> Compile<TView>(string templatePath, params Type[] genericArguments)
     {
-      return Compile(templatePath, layoutPath, null, genericArguments);
+      return Compile<TView>(templatePath, null, genericArguments);
     }
 
-    public Type Compile(string templatePath, string layoutPath,
+    public ViewActivator<ICompiledView> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
+    {
+      return Compile<ICompiledView>(templatePath, layoutPath, genericArguments);
+    }
+
+    [SuppressMessage("Microsoft.Design", "CA1004")]
+    public ViewActivator<TView> Compile<TView>(string templatePath, string layoutPath, params Type[] genericArguments)
+    {
+      return Compile<TView>(templatePath, layoutPath, null, genericArguments);
+    }
+
+    public ViewActivator<ICompiledView> Compile(string templatePath, string layoutPath,
+      ICollection<string> inputFiles, params Type[] genericArguments)
+    {
+      return Compile<ICompiledView>(templatePath, layoutPath, inputFiles, genericArguments);
+    }
+
+    [SuppressMessage("Microsoft.Design", "CA1004")]
+    public ViewActivator<TView> Compile<TView>(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
       templatePath.ArgumentNotEmpty("templatePath");
@@ -142,6 +176,11 @@ namespace NHaml
       if (!string.IsNullOrEmpty(layoutPath))
       {
         layoutPath.FileExists();
+      }
+
+      foreach (var type in genericArguments)
+      {
+        AddReferences(type);
       }
 
       var compilationContext
@@ -158,7 +197,7 @@ namespace NHaml
         compilationContext.CollectInputFiles(inputFiles);
       }
 
-      return BuildView(compilationContext);
+      return CreateFastActivator<TView>(BuildView(compilationContext));
     }
 
     private void Compile(CompilationContext compilationContext)
@@ -201,6 +240,24 @@ namespace NHaml
     private static string MakeClassName(string templatePath)
     {
       return _pathCleaner.Replace(templatePath, "_").TrimStart('_');
+    }
+
+    private static ViewActivator<TResult> CreateFastActivator<TResult>(Type type)
+    {
+      var dynamicMethod = new DynamicMethod("activatefast__", type, null, type);
+
+      var ilGenerator = dynamicMethod.GetILGenerator();
+      var constructor = type.GetConstructor(new Type[] {});
+
+      if (constructor == null)
+      {
+        return null;
+      }
+
+      ilGenerator.Emit(OpCodes.Newobj, constructor);
+      ilGenerator.Emit(OpCodes.Ret);
+
+      return (ViewActivator<TResult>)dynamicMethod.CreateDelegate(typeof(ViewActivator<TResult>));
     }
   }
 }

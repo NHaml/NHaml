@@ -83,10 +83,10 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CompiledView.cs" />
-    <Compile Include="INHamlView.cs" />
+    <Compile Include="IMvcView.cs" />
     <Compile Include="NHamlControllerFactory.cs" />
-    <Compile Include="NHamlView.cs" />
-    <Compile Include="NHamlViewFactory.cs" />
+    <Compile Include="MvcView.cs" />
+    <Compile Include="NHamlViewEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\NHaml\Properties\Resources.resx">

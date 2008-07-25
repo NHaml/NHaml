@@ -26,11 +26,11 @@ namespace NHaml.Tests
 
     protected void AssertRender(string template, string layout)
     {
-      var viewType = _templateCompiler.Compile(
+      var viewActivator = _templateCompiler.Compile(
         TemplatesFolder + template + ".haml",
         TemplatesFolder + layout + ".haml");
 
-      var view = (ICompiledView)Activator.CreateInstance(viewType);
+      var view = viewActivator();
 
       var output = view.Render();
 
@@ -42,10 +42,10 @@ namespace NHaml.Tests
     protected static void AssertRender(string template, TemplateCompiler templateCompiler,
       params Type[] genericArguments)
     {
-      var viewType = templateCompiler.Compile(
+      var viewActivator = templateCompiler.Compile(
         TemplatesFolder + template + ".haml", genericArguments);
 
-      var view = (ICompiledView)Activator.CreateInstance(viewType);
+      var view = viewActivator();
 
       var output = view.Render();
 
