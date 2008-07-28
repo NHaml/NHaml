@@ -1,5 +1,5 @@
 using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Text;
 
 using NHaml.Utilities;
@@ -46,8 +46,12 @@ namespace NHaml
         tname = tname.Substring(0, tname.IndexOf('`'));
         tname += "<";
 
-        var parameters = from t in baseType.GetGenericArguments()
-        select MakeBaseTypeName(t, null);
+        var parameters = new List<string>();
+
+        foreach (var t in baseType.GetGenericArguments())
+        {
+          parameters.Add(MakeBaseTypeName(t, null));
+        }
 
         tname += string.Join(",", parameters.ToArray());
 

@@ -34,8 +34,7 @@ namespace NHaml
     private static readonly string[] DefaultReferences
       = new[]
           {
-            typeof(INotifyPropertyChanging).Assembly.Location,
-            typeof(Action).Assembly.Location,
+            typeof(INotifyPropertyChanged).Assembly.Location,
             typeof(TemplateCompiler).Assembly.Location
           };
 

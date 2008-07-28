@@ -49,6 +49,7 @@ namespace NHaml
     }
 
     [SuppressMessage("Microsoft.Security", "CA2122")]
+    [SuppressMessage("Microsoft.Portability", "CA1903")]
     public Type Build(string source, string typeName)
     {
       BuildSource(source);

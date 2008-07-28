@@ -6,6 +6,14 @@ using System.Text;
 
 using NHaml.Properties;
 
+namespace System.Runtime.CompilerServices
+{
+  [AttributeUsage(AttributeTargets.Method | AttributeTargets.Class | AttributeTargets.Assembly)]
+  public sealed class ExtensionAttribute : Attribute
+  {
+  }
+}
+
 namespace NHaml.Utilities
 {
   public static class ExtensionMethods
