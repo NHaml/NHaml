@@ -9,6 +9,7 @@ using System.Text.RegularExpressions;
 
 using NHaml.Configuration;
 using NHaml.Exceptions;
+using NHaml.Properties;
 using NHaml.Rules;
 using NHaml.Utilities;
 
@@ -43,8 +44,11 @@ namespace NHaml
 
     private readonly MarkupRule[] _markupRules = new MarkupRule[128];
 
+    private IAttributeRenderer _attributeRenderer;
+
     private Type _viewBaseType;
-    private bool _isProduction;
+
+    private string _compilerVersion;
 
     public TemplateCompiler()
     {
@@ -62,6 +66,8 @@ namespace NHaml
 
       ViewBaseType = typeof(object);
 
+      CompilerVersion = "3.5";
+
       LoadFromConfiguration();
     }
 
@@ -71,7 +77,8 @@ namespace NHaml
 
       if (section != null)
       {
-        _isProduction = section.Production;
+        IsProduction = section.Production;
+        CompilerVersion = section.CompilerVersion;
 
         foreach (var assemblyConfigurationElement in section.Assemblies)
         {
@@ -85,9 +92,27 @@ namespace NHaml
       }
     }
 
-    public bool IsProduction
+    public bool IsProduction { get; set; }
+
+    public string CompilerVersion
     {
-      get { return _isProduction; }
+      get { return _compilerVersion; }
+      set
+      {
+        switch (value)
+        {
+          case "2.0":
+            _attributeRenderer = new CS2AttributeRenderer();
+            break;
+          case "3.5":
+            _attributeRenderer = new CS3AttributeRenderer();
+            break;
+          default:
+            throw new InvalidOperationException(Resources.UnsupportedCompilerVersion);
+        }
+
+        _compilerVersion = value;
+      }
     }
 
     public Type ViewBaseType
@@ -139,6 +164,11 @@ namespace NHaml
     public IEnumerable References
     {
       get { return _references; }
+    }
+
+    public IAttributeRenderer AttributeRenderer
+    {
+      get { return _attributeRenderer; }
     }
 
     public void AddRule(MarkupRule markupRule)

@@ -14,6 +14,7 @@ namespace NHaml
     private readonly string _className;
 
     private int _depth;
+    private int _attributeCount;
 
     public TemplateClassBuilder(TemplateCompiler templateCompiler, string className, params Type[] genericArguments)
     {
@@ -126,6 +127,18 @@ namespace NHaml
 
         _output.AppendLine(code);
       }
+    }
+
+    public void AppendAttributeCode(string name, string code)
+    {
+      var varName = "a" + _attributeCount++;
+
+      AppendSilentCode("string " + varName + "=Convert.ToString(" + code + ")", true);
+      AppendSilentCode("if (!string.IsNullOrEmpty(" + varName + ")){", false);
+      AppendOutput(name + "=\"");
+      _output.AppendLine("writer.Write(" + varName + ");");
+      AppendOutput("\"");
+      AppendSilentCode("}", false);
     }
 
     public void BeginCodeBlock()

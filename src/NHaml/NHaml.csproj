@@ -56,6 +56,8 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="BlockClosingAction.cs" />
+    <Compile Include="Coco\Parser.cs" />
+    <Compile Include="Coco\Scanner.cs" />
     <Compile Include="CompilationContext.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
@@ -64,10 +66,13 @@
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
     <Compile Include="Configuration\NHamlSection.cs" />
     <Compile Include="Configuration\ViewsCollectionElement.cs" />
+    <Compile Include="CS2AttributeRenderer.cs" />
+    <Compile Include="CS3AttributeRenderer.cs" />
     <Compile Include="Engine\CompiledView.cs" />
     <Compile Include="Engine\ViewEngine.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
+    <Compile Include="IAttributeRenderer.cs" />
     <Compile Include="ICompiledTemplate.cs" />
     <Compile Include="InputLine.cs" />
     <Compile Include="Rules\MarkupRule.cs" />
@@ -106,6 +111,10 @@
     <None Include="..\NHaml.snk">
       <Link>Properties\NHaml.snk</Link>
     </None>
+    <None Include="Coco\CSharp2.ATG" />
+    <None Include="Coco\Gen.cmd" />
+    <None Include="Coco\Parser.frame" />
+    <None Include="Coco\Scanner.frame" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
@@ -118,4 +127,8 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
 </Project>

@@ -172,10 +172,13 @@ namespace NHaml.Rules
         }
         else
         {
-          compilationContext.TemplateClassBuilder.AppendCode("new {"
-            + _keywordEscaperRegex.Replace(
-              _hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3"), "@$1$2") +
-                "}.RenderAttributes()");
+          var cleanAttributes = _keywordEscaperRegex
+            .Replace(_hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3"), "@$1$2");
+
+          compilationContext
+            .TemplateCompiler
+            .AttributeRenderer
+            .Render(compilationContext, cleanAttributes);
         }
       }
     }

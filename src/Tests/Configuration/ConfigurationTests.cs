@@ -8,12 +8,21 @@ namespace NHaml.Tests.Configuration
   public class ConfigurationTester
   {
     [Test]
-    public void CanReadCheckTimeStampsSettingFromAppSettings()
+    public void CanReadProductionSettingFromAppSettings()
     {
       var section = NHamlSection.Read();
 
       Assert.IsNotNull(section);
       Assert.IsTrue(section.Production);
+    }
+
+    [Test]
+    public void CanReadCompilerVersionFromAppSettings()
+    {
+      var section = NHamlSection.Read();
+
+      Assert.IsNotNull(section);
+      Assert.AreEqual("2.0", section.CompilerVersion);
     }
 
     [Test]

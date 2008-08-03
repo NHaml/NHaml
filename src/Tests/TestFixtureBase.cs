@@ -11,12 +11,16 @@ namespace NHaml.Tests
     protected const string TemplatesFolder = @"Templates\";
     protected const string ResultsFolder = @"Results\";
 
-    private TemplateCompiler _templateCompiler;
+    protected TemplateCompiler _templateCompiler;
 
     [SetUp]
-    public void SetUp()
+    public virtual void SetUp()
     {
       _templateCompiler = new TemplateCompiler();
+
+      Assert.AreEqual("2.0", _templateCompiler.CompilerVersion);
+
+      _templateCompiler.CompilerVersion = "3.5";
     }
 
     protected void AssertRender(string template)

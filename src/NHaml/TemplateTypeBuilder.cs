@@ -27,7 +27,7 @@ namespace NHaml
     {
       _templateCompiler = templateCompiler;
 
-      _providerOptions.Add("CompilerVersion", "v3.5");
+      _providerOptions.Add("CompilerVersion", "v" + _templateCompiler.CompilerVersion);
 
       _compilerParameters.GenerateInMemory = true;
       _compilerParameters.IncludeDebugInformation = false;

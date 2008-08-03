@@ -7,6 +7,7 @@
 			<Word>Eval</Word>
 			<Word>Usings</Word>
 			<Word>Mvc</Word>
+      <Word>Renderer</Word>
 		</Recognized>
 	</Words>
 </Dictionary>

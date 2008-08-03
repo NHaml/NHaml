@@ -36,8 +36,6 @@ namespace NHaml.Rules
 
         if (!File.Exists(partialTemplatePath))
         {
-          // try one level up
-
           partialTemplatePath
             = Path.Combine(templateDirectory, @"..\" + partialName + ".haml");
         }

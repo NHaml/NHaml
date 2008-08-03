@@ -11,6 +11,7 @@ namespace NHaml.Configuration
   public sealed class NHamlSection : ConfigurationSection
   {
     private const string ProductionAttribute = "production";
+    private const string CompilerVersionAttribute = "compilerVersion";
     private const string AssembliesElement = "assemblies";
     private const string NamespacesElement = "namespaces";
 
@@ -23,6 +24,12 @@ namespace NHaml.Configuration
     public bool Production
     {
       get { return Convert.ToBoolean(this[ProductionAttribute], CultureInfo.CurrentCulture); }
+    }
+
+    [ConfigurationProperty(CompilerVersionAttribute)]
+    public string CompilerVersion
+    {
+      get { return Convert.ToString(this[CompilerVersionAttribute], CultureInfo.CurrentCulture); }
     }
 
     [ConfigurationProperty(AssembliesElement)]

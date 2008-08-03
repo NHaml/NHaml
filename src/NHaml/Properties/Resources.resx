@@ -117,6 +117,9 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="AttributesParseError" xml:space="preserve">
+    <value>Error parsing attributes</value>
+  </data>
   <data name="CompilationError" xml:space="preserve">
     <value>An error occurred when compiling the file: {0}</value>
   </data>
@@ -137,5 +140,8 @@
   </data>
   <data name="SyntaxError" xml:space="preserve">
     <value>Syntax error on line {0}: {1}: "{2}"</value>
+  </data>
+  <data name="UnsupportedCompilerVersion" xml:space="preserve">
+    <value>Unsupported CompilerVersion: {0}</value>
   </data>
 </root>
