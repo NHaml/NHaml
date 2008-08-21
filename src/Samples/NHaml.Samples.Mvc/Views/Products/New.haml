@@ -1,20 +1,3 @@
 ^ title = "Add Product"
-%h2 Add Product
-%form{action="/Products.mvc/Create", method="post"}
-  %table
-    %tr
-      %td Name:
-      %td
-        %input{id="ProductName", type="text", name="ProductName"}
-    %tr
-      %td Category:
-      %td= Html.DropDownList("CategoryID", ViewData.Model.Categories)
-    %tr
-      %td Supplier:
-      %td= Html.DropDownList("SupplierID", ViewData.Model.Suppliers)
-    %tr
-      %td Unit Price:
-      %td 
-        %input{id="UnitPrice", type="text", name="UnitPrice"}
-  %p
-  _ Shared\Button
+%h2= title
+_ Form

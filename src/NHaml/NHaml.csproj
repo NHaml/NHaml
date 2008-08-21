@@ -66,6 +66,9 @@
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
     <Compile Include="Configuration\NHamlSection.cs" />
     <Compile Include="Configuration\ViewsCollectionElement.cs" />
+    <Compile Include="CS2LambdaRenderer.cs" />
+    <Compile Include="CS3LambdaRenderer.cs" />
+    <Compile Include="ILambdaRenderer.cs" />
     <Compile Include="CS2AttributeRenderer.cs" />
     <Compile Include="CS3AttributeRenderer.cs" />
     <Compile Include="Engine\CompiledView.cs" />
@@ -73,8 +76,10 @@
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
     <Compile Include="IAttributeRenderer.cs" />
-    <Compile Include="ICompiledTemplate.cs" />
+    <Compile Include="CompiledTemplate.cs" />
     <Compile Include="InputLine.cs" />
+    <Compile Include="IOutputWriter.cs" />
+    <Compile Include="TemplateOutputWriter.cs" />
     <Compile Include="Rules\MarkupRule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -95,8 +100,9 @@
     <Compile Include="Rules\TagMarkupRule.cs" />
     <Compile Include="TemplateCompiler.cs" />
     <Compile Include="TemplateTypeBuilder.cs" />
-    <Compile Include="Utilities\ExtensionMethods.cs" />
-    <Compile Include="Utilities\StringSet.cs" />
+    <Compile Include="Utils\Invariant.cs" />
+    <Compile Include="Utils\Utility.cs" />
+    <Compile Include="Utils\StringSet.cs" />
     <Compile Include="TemplateActivator.cs" />
     <Compile Include="TemplateClassBuilder.cs" />
   </ItemGroup>

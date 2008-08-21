@@ -3,35 +3,35 @@ using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
 
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class MvcView<TModel> : IMvcView
+  public abstract class MvcView<TModel> : CompiledTemplate, IMvcView
     where TModel : class
   {
     private ViewContext _viewContext;
     private AjaxHelper _ajax;
-    private HtmlHelper _html;
+    private NHamlHtmlHelper _html;
     private UrlHelper _url;
 
     private ViewDataDictionary<TModel> _viewData;
 
     public void Render(ViewContext viewContext)
     {
-      viewContext.ArgumentNotNull("viewContext");
+      Invariant.ArgumentNotNull(viewContext, "viewContext");
 
       _viewContext = viewContext;
 
       SetViewData(viewContext.ViewData);
 
       _ajax = new AjaxHelper(_viewContext);
-      _html = new HtmlHelper(_viewContext, this);
+      _html = new NHamlHtmlHelper(Output, _viewContext, this);
       _url = new UrlHelper(_viewContext);
 
-      ((ICompiledTemplate)this).Render(viewContext.HttpContext.Response.Output);
+      Render(viewContext.HttpContext.Response.Output);
     }
 
     public AjaxHelper Ajax
@@ -39,7 +39,7 @@ namespace NHaml.Web.Mvc
       get { return _ajax; }
     }
 
-    public HtmlHelper Html
+    public NHamlHtmlHelper Html
     {
       get { return _html; }
     }
@@ -57,6 +57,11 @@ namespace NHaml.Web.Mvc
     public ViewDataDictionary<TModel> ViewData
     {
       get { return _viewData; }
+    }
+
+    public TModel Model
+    {
+      get { return _viewData.Model; }
     }
 
     [SuppressMessage("Microsoft.Usage", "CA2227")]

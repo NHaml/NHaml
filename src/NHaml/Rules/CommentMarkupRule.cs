@@ -62,10 +62,7 @@ namespace NHaml.Rules
         }
       }
 
-      return delegate
-        {
-          compilationContext.TemplateClassBuilder.AppendOutputLine(closingTag);
-        };
+      return () => compilationContext.TemplateClassBuilder.AppendOutputLine(closingTag);
     }
   }
 }

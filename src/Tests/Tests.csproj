@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NHaml.Tests</RootNamespace>
     <AssemblyName>NHaml.Tests</AssemblyName>
-    <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
@@ -35,12 +35,33 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Moq, Version=2.6.3127.18174, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Moq.dll</HintPath>
+    </Reference>
     <Reference Include="nunit.framework, Version=2.2.8.0, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Abstractions.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Routing.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -74,7 +95,13 @@
     <None Include="Results\Escape.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Results\FormHelperCS3.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Results\Javascript.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Results\LambdaEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Results\List.xhtml">
@@ -150,6 +177,15 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Conditionals.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FormHelperCS3.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\LambdaEvalCS3.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\_Menu.haml">
@@ -234,7 +270,9 @@
   <ItemGroup>
     <Compile Include="AttributeSplitterTests.cs" />
     <Compile Include="Configuration\ConfigurationTests.cs" />
-    <Compile Include="CS2FunctionalTests.cs" />
+    <Compile Include="CS3HtmlHelperTests.cs" />
+    <Compile Include="PerformanceTests.cs" />
+    <Compile Include="CS3FunctionalTests.cs" />
     <Compile Include="FunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -249,9 +287,17 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
+      <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
+      <Name>NHaml.Web.Mvc</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHaml\NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Samples\NHaml.Samples.Mvc\NHaml.Samples.Mvc.csproj">
+      <Project>{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7}</Project>
+      <Name>NHaml.Samples.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

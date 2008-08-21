@@ -11,7 +11,7 @@ using NHaml.Configuration;
 using NHaml.Exceptions;
 using NHaml.Properties;
 using NHaml.Rules;
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml
 {
@@ -27,7 +27,7 @@ namespace NHaml
       = new StringSet(DefaultAutoClosingTags);
 
     private static readonly string[] DefaultUsings
-      = new[] {"System", "System.IO", "NHaml", "NHaml.Utilities"};
+      = new[] {"System", "System.IO", "NHaml", "NHaml.Utils"};
 
     private readonly StringSet _usings
       = new StringSet(DefaultUsings);
@@ -45,8 +45,9 @@ namespace NHaml
     private readonly MarkupRule[] _markupRules = new MarkupRule[128];
 
     private IAttributeRenderer _attributeRenderer;
+    private ILambdaRenderer _lambdaRenderer;
 
-    private Type _viewBaseType;
+    private Type _viewBaseType = typeof(CompiledTemplate);
 
     private string _compilerVersion;
 
@@ -64,8 +65,6 @@ namespace NHaml
       AddRule(new EscapeMarkupRule());
       AddRule(new PartialMarkupRule());
 
-      ViewBaseType = typeof(object);
-
       CompilerVersion = "3.5";
 
       LoadFromConfiguration();
@@ -78,7 +77,11 @@ namespace NHaml
       if (section != null)
       {
         IsProduction = section.Production;
-        CompilerVersion = section.CompilerVersion;
+
+        if (!string.IsNullOrEmpty(section.CompilerVersion))
+        {
+          CompilerVersion = section.CompilerVersion;
+        }
 
         foreach (var assemblyConfigurationElement in section.Assemblies)
         {
@@ -103,9 +106,11 @@ namespace NHaml
         {
           case "2.0":
             _attributeRenderer = new CS2AttributeRenderer();
+            _lambdaRenderer = new CS2LambdaRenderer();
             break;
           case "3.5":
             _attributeRenderer = new CS3AttributeRenderer();
+            _lambdaRenderer = new CS3LambdaRenderer();
             break;
           default:
             throw new InvalidOperationException(Resources.UnsupportedCompilerVersion);
@@ -120,7 +125,12 @@ namespace NHaml
       get { return _viewBaseType; }
       set
       {
-        value.ArgumentNotNull("value");
+        Invariant.ArgumentNotNull(value, "value");
+
+        if (!typeof(CompiledTemplate).IsAssignableFrom(value))
+        {
+          throw new InvalidOperationException(Resources.InvalidViewBaseType);
+        }
 
         _viewBaseType = value;
 
@@ -131,7 +141,7 @@ namespace NHaml
 
     public void AddUsing(string @namespace)
     {
-      @namespace.ArgumentNotEmpty("namespace");
+      Invariant.ArgumentNotEmpty(@namespace, "namespace");
 
       _usings.Add(@namespace);
     }
@@ -143,7 +153,7 @@ namespace NHaml
 
     public void AddReference(string assemblyLocation)
     {
-      assemblyLocation.ArgumentNotEmpty("assemblyLocation");
+      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
 
       _references.Add(assemblyLocation);
     }
@@ -171,16 +181,21 @@ namespace NHaml
       get { return _attributeRenderer; }
     }
 
+    public ILambdaRenderer LambdaRenderer
+    {
+      get { return _lambdaRenderer; }
+    }
+
     public void AddRule(MarkupRule markupRule)
     {
-      markupRule.ArgumentNotNull("markupRule");
+      Invariant.ArgumentNotNull(markupRule, "markupRule");
 
       _markupRules[markupRule.Signifier] = markupRule;
     }
 
     public MarkupRule GetRule(InputLine inputLine)
     {
-      inputLine.ArgumentNotNull("line");
+      Invariant.ArgumentNotNull(inputLine, "line");
 
       if (inputLine.Signifier >= 128)
       {
@@ -192,14 +207,14 @@ namespace NHaml
 
     public bool IsAutoClosing(string tag)
     {
-      tag.ArgumentNotEmpty("tag");
+      Invariant.ArgumentNotEmpty(tag, "tag");
 
       return _autoClosingTags.Contains(tag.ToUpperInvariant());
     }
 
-    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, params Type[] genericArguments)
+    public TemplateActivator<CompiledTemplate> Compile(string templatePath, params Type[] genericArguments)
     {
-      return Compile<ICompiledTemplate>(templatePath, genericArguments);
+      return Compile<CompiledTemplate>(templatePath, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
@@ -208,9 +223,9 @@ namespace NHaml
       return Compile<TView>(templatePath, null, genericArguments);
     }
 
-    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
+    public TemplateActivator<CompiledTemplate> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
     {
-      return Compile<ICompiledTemplate>(templatePath, layoutPath, genericArguments);
+      return Compile<CompiledTemplate>(templatePath, layoutPath, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
@@ -219,22 +234,22 @@ namespace NHaml
       return Compile<TView>(templatePath, layoutPath, null, genericArguments);
     }
 
-    public TemplateActivator<ICompiledTemplate> Compile(string templatePath, string layoutPath,
+    public TemplateActivator<CompiledTemplate> Compile(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
-      return Compile<ICompiledTemplate>(templatePath, layoutPath, inputFiles, genericArguments);
+      return Compile<CompiledTemplate>(templatePath, layoutPath, inputFiles, genericArguments);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
     public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath,
       ICollection<string> inputFiles, params Type[] genericArguments)
     {
-      templatePath.ArgumentNotEmpty("templatePath");
-      templatePath.FileExists();
+      Invariant.ArgumentNotEmpty(templatePath, "templatePath");
+      Invariant.FileExists(templatePath);
 
       if (!string.IsNullOrEmpty(layoutPath))
       {
-        layoutPath.FileExists();
+        Invariant.FileExists(layoutPath);
       }
 
       foreach (var type in genericArguments)

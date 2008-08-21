@@ -1,5 +1,6 @@
 using System;
 using System.IO;
+using System.Reflection;
 
 using NUnit.Framework;
 
@@ -18,14 +19,15 @@ namespace NHaml.Tests
     {
       _templateCompiler = new TemplateCompiler();
 
-      Assert.AreEqual("2.0", _templateCompiler.CompilerVersion);
+      _templateCompiler.AddReference(Assembly.GetExecutingAssembly().Location);
+      _templateCompiler.AddUsing("NHaml.Tests");
 
-      _templateCompiler.CompilerVersion = "3.5";
+      Assert.AreEqual("2.0", _templateCompiler.CompilerVersion);
     }
 
     protected void AssertRender(string template)
     {
-      AssertRender(template, _templateCompiler);
+      AssertRender(template, null, _templateCompiler);
     }
 
     protected void AssertRender(string template, string layout)
@@ -40,16 +42,15 @@ namespace NHaml.Tests
 
       view.Render(output);
 
-      //Console.WriteLine(output);
+      Console.WriteLine(output);
 
       Assert.AreEqual(File.ReadAllText(ResultsFolder + layout + ".xhtml"), output.ToString());
     }
 
-    protected static void AssertRender(string template, TemplateCompiler templateCompiler,
-      params Type[] genericArguments)
+    protected static void AssertRender(string template, string result,
+      TemplateCompiler templateCompiler, params Type[] genericArguments)
     {
-      var viewActivator = templateCompiler.Compile(
-        TemplatesFolder + template + ".haml", genericArguments);
+      var viewActivator = templateCompiler.Compile(TemplatesFolder + template + ".haml", genericArguments);
 
       var view = viewActivator();
 
@@ -57,9 +58,9 @@ namespace NHaml.Tests
 
       view.Render(output);
 
-      //Console.WriteLine(output);
+      Console.WriteLine(output);
 
-      Assert.AreEqual(File.ReadAllText(ResultsFolder + template + ".xhtml"), output.ToString());
+      Assert.AreEqual(File.ReadAllText(ResultsFolder + (result ?? template) + ".xhtml"), output.ToString());
     }
   }
 }

@@ -1,0 +1,8 @@
+- Html.Form(Model) (f) =>
+  = f.Label(p => p.ProductName)
+  = f.TextField(p => p.ProductName)
+  %br
+  = f.Label(p => p.UnitPrice)
+  = f.TextField(p => p.UnitPrice)
+  %p
+    = Html.SubmitButton()

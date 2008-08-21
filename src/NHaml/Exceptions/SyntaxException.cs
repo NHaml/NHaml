@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 
 using NHaml.Properties;
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml.Exceptions
 {
@@ -12,8 +12,8 @@ namespace NHaml.Exceptions
   {
     public static void Throw(InputLine inputLine, string errorFormat, params object[] values)
     {
-      var message = Resources.SyntaxError.FormatCurrentCulture(inputLine.LineNumber,
-        errorFormat.FormatCurrentCulture(values),
+      var message = Utility.FormatCurrentCulture(Resources.SyntaxError, inputLine.LineNumber,
+        Utility.FormatCurrentCulture(errorFormat, values),
         inputLine.Text);
 
       throw new SyntaxException(message, inputLine);

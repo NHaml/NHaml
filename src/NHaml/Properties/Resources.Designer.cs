@@ -100,6 +100,14 @@ namespace NHaml.Properties
     }
 
     /// <summary>
+    ///   Looks up a localized string similar to ViewBaseType must inherit from CompiledTemplate.
+    /// </summary>
+    internal static string InvalidViewBaseType
+    {
+      get { return ResourceManager.GetString("InvalidViewBaseType", resourceCulture); }
+    }
+
+    /// <summary>
     ///   Looks up a localized string similar to Invariant Failure.
     /// </summary>
     internal static string InvariantFail

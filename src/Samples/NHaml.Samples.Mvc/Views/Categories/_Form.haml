@@ -1,0 +1,8 @@
+- Html.Form(Model) (f) =>
+  = f.Label(p => p.CategoryName)
+  = f.TextField(p => p.CategoryName)
+  %br
+  = f.Label(p => p.Description)
+  = f.TextField(p => p.Description)
+  %p
+    = Html.SubmitButton()

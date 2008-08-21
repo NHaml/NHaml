@@ -98,6 +98,7 @@ namespace NHaml.Rules
         if ((content.Length > 50) || string.Equals("=", action))
         {
           compilationContext.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
+
           if (!isWhitespaceSensitive)
           {
             compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");

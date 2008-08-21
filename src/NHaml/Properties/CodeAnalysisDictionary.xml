@@ -8,6 +8,8 @@
 			<Word>Usings</Word>
 			<Word>Mvc</Word>
       <Word>Renderer</Word>
+      <Word>Outdent</Word>
+      <Word>Utils</Word>
 		</Recognized>
 	</Words>
 </Dictionary>

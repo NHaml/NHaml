@@ -16,10 +16,11 @@ namespace NHaml
     private string _text;
     private string _normalizedText;
 
+    private readonly string _indent;
     private readonly char _signifier;
     private readonly int _lineNumber;
-    private readonly string _indent;
     private readonly int _indentSize;
+
     private bool _isMultiline;
 
     public InputLine(string text, int lineNumber)

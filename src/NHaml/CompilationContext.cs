@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.IO;
 
 using NHaml.Rules;
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml
 {

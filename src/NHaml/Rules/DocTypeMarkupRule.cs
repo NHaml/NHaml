@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 using NHaml.Exceptions;
 using NHaml.Properties;
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml.Rules
 {
@@ -69,7 +69,8 @@ namespace NHaml.Rules
               encoding = parts[1];
             }
 
-            compilationContext.TemplateClassBuilder.AppendOutputLine(@"<?xml version=""1.0"" encoding=""{0}"" ?>".FormatInvariant(encoding));
+            compilationContext.TemplateClassBuilder.AppendOutputLine(Utility.FormatInvariant(@"<?xml version=""1.0"" encoding=""{0}"" ?>",
+              encoding));
           }
           else
           {

@@ -1,7 +1,10 @@
+^ var title = ""
 !!!
 %html{xmlns="http://www.w3.org/1999/xhtml"}
   %head
-    %title My Sample MVC Application
+    %title
+      NHaml MVC Sample -  
+      = title
     %link{href="../../Content/Site.css", rel="stylesheet", type="text/css"}
   %body
     #inner
@@ -12,8 +15,6 @@
           %li
             %a{href="/"} Home
           %li
-            = Html.ActionLink("About Us", "About", "Home")
-          %li
-            = Html.ActionLink("Products", "Category", "Products", new RouteValueDictionary(new { ID = 1 }))
+            = Html.ActionLink<CategoriesController>()
       #maincontent
         _

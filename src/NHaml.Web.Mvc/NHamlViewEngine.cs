@@ -1,5 +1,6 @@
 using System.Data.Linq;
 using System.IO;
+using System.Linq.Expressions;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
@@ -35,6 +36,7 @@ namespace NHaml.Web.Mvc
       TemplateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
       TemplateCompiler.AddReference(typeof(DataContext).Assembly.Location);
       TemplateCompiler.AddReference(typeof(TextInputExtensions).Assembly.Location);
+      TemplateCompiler.AddReference(typeof(Expression).Assembly.Location);
 
       TemplateCompiler.LoadFromConfiguration();
     }

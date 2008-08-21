@@ -129,6 +129,9 @@
   <data name="IllegalIndentation" xml:space="preserve">
     <value>Illegal Indentation: Only two space characters are allowed as tabulation</value>
   </data>
+  <data name="InvalidViewBaseType" xml:space="preserve">
+    <value>ViewBaseType must inherit from CompiledTemplate</value>
+  </data>
   <data name="InvariantFail" xml:space="preserve">
     <value>Invariant Failure</value>
   </data>

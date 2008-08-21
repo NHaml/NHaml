@@ -1,0 +1,32 @@
+- Html.Tag() () =>
+  The Content for
+  the div
+
+- Html.Tag("div") () =>
+  The Content for
+  the div
+
+- Html.Tag("div") () =>
+  The Content for the div
+
+- Html.Tag("div") () =>
+  - Html.Tag("div") () =>
+    The Content for the div
+
+- Html.Tag("div") () =>
+  - Html.Tag("div") () =>
+    - Html.Tag("div") () =>
+      The Content for the div
+
+- Html.Tag("body") () =>
+  _ Welcome
+
+- Html.Tag("body") () =>
+  - Html.Tag("div") () =>
+    _ Welcome
+
+- Html.Tag("div", 42) (n) =>
+  = "N was: " + n
+
+- Html.Tag("div", 21, 21) (i, j) =>
+  = "N was: " + (i + j)

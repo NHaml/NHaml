@@ -5,7 +5,7 @@ using System.Security.Permissions;
 using System.Text;
 
 using NHaml.Properties;
-using NHaml.Utilities;
+using NHaml.Utils;
 
 namespace NHaml.Exceptions
 {
@@ -19,7 +19,7 @@ namespace NHaml.Exceptions
     {
       var message = new StringBuilder();
 
-      message.AppendLine(Resources.CompilationError.FormatCurrentCulture(templatePath));
+      message.AppendLine(Utility.FormatCurrentCulture(Resources.CompilationError, templatePath));
 
       foreach (CompilerError error in compilerResults.Errors)
       {

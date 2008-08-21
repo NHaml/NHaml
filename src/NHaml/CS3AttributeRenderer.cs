@@ -8,7 +8,7 @@ namespace NHaml
     public void Render(CompilationContext compilationContext, string attributes)
     {
       compilationContext.TemplateClassBuilder
-        .AppendCode("new {" + attributes + "}.RenderAttributes()");
+        .AppendCode("Utility.RenderAttributes(new {" + attributes + "})");
     }
   }
 }

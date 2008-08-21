@@ -10,7 +10,7 @@ namespace NHaml.Tests
   [TestFixture]
   public class TemplateCompilerTests : TestFixtureBase
   {
-    public class ViewBase
+    public abstract class ViewBase : CompiledTemplate
     {
       public int Foo
       {
@@ -18,7 +18,8 @@ namespace NHaml.Tests
       }
     }
 
-    public class ViewBaseGeneric<T> where T : new()
+    public abstract class ViewBaseGeneric<T> : CompiledTemplate
+      where T : new()
     {
       public int Foo
       {
@@ -46,7 +47,7 @@ namespace NHaml.Tests
     {
       var templateCompiler = new TemplateCompiler {ViewBaseType = typeof(ViewBase)};
 
-      AssertRender("CustomBaseClass", templateCompiler);
+      AssertRender("CustomBaseClass", null, templateCompiler);
     }
 
     [Test]
@@ -54,7 +55,7 @@ namespace NHaml.Tests
     {
       var templateCompiler = new TemplateCompiler {ViewBaseType = typeof(ViewBaseGeneric<>)};
 
-      AssertRender("CustomBaseClass", templateCompiler, typeof(List<int>));
+      AssertRender("CustomBaseClass", null, templateCompiler, typeof(List<int>));
     }
 
     [Test]
