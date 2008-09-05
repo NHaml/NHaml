@@ -5,6 +5,7 @@ using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Microsoft.Web.Mvc;
 
 namespace NHaml.Web.Mvc
 {
@@ -74,7 +75,8 @@ namespace NHaml.Web.Mvc
         linkText,
         restfulAction.ToString().ToLowerInvariant(),
         Inflector.Pluralize(model.GetType().Name).ToLowerInvariant(),
-        new RouteValueDictionary {{"id", model.Id}});
+        new RouteValueDictionary {{"id", model.Id}},
+        new RouteValueDictionary());
     }
 
     private static string GetControllerName(Type controllerType)

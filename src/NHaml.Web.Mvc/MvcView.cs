@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
+using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
-
 using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
@@ -19,7 +19,7 @@ namespace NHaml.Web.Mvc
 
     private ViewDataDictionary<TModel> _viewData;
 
-    public void Render(ViewContext viewContext)
+    public void Render(ViewContext viewContext, TextWriter writer)
     {
       Invariant.ArgumentNotNull(viewContext, "viewContext");
 
@@ -32,6 +32,10 @@ namespace NHaml.Web.Mvc
       _url = new UrlHelper(_viewContext);
 
       Render(viewContext.HttpContext.Response.Output);
+    }
+
+    public void Render(ViewContext viewContext)
+    {
     }
 
     public AjaxHelper Ajax
@@ -76,7 +80,7 @@ namespace NHaml.Web.Mvc
     {
       if (typeof(ViewDataDictionary<TModel>).IsAssignableFrom(viewData.GetType()))
       {
-        _viewData = (ViewDataDictionary<TModel>)viewData;
+        _viewData = (ViewDataDictionary<TModel>) viewData;
       }
       else
       {

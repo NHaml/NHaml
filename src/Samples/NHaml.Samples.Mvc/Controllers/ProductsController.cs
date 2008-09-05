@@ -25,7 +25,7 @@ namespace NHaml.Samples.Mvc.Controllers
     {
       var products = new Product();
 
-      BindingHelperExtensions.UpdateFrom(products, Request.Form);
+      UpdateModel(products, Request.Form.AllKeys);
 
       Northwind.AddProduct(products);
       Northwind.SubmitChanges();
@@ -42,7 +42,7 @@ namespace NHaml.Samples.Mvc.Controllers
     {
       var products = Northwind.GetProductById(id);
 
-      BindingHelperExtensions.UpdateFrom(products, Request.Form);
+      UpdateModel(products, Request.Form.AllKeys);
 
       Northwind.SubmitChanges();
 

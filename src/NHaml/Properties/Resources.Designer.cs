@@ -26,8 +26,8 @@ namespace NHaml.Properties
   // To add or remove a member, edit your .ResX file then rerun ResGen
   // with the /str option, or rebuild your VS project.
   [GeneratedCode("System.Resources.Tools.StronglyTypedResourceBuilder", "2.0.0.0")]
-  [DebuggerNonUserCode()]
-  [CompilerGenerated()]
+  [DebuggerNonUserCode]
+  [CompilerGenerated]
   internal class Resources
   {
     private static ResourceManager resourceMan;

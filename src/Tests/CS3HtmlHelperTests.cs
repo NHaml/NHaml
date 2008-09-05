@@ -3,12 +3,9 @@ using System.Linq.Expressions;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-
 using Moq;
-
 using NHaml.Samples.Mvc.Models;
 using NHaml.Web.Mvc;
-
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -46,17 +43,19 @@ namespace NHaml.Tests
       {
         // lol!
 
+        var mockViewDataContainer = new Mock<IViewDataContainer>();
+        mockViewDataContainer.ExpectGet(v => v.ViewData).Returns(new ViewDataDictionary());
+
         _html = new NHamlHtmlHelper(
           Output,
           new ViewContext(
             new Mock<HttpContextBase>().Object,
             new RouteData(),
-            new Mock<Controller>().Object,
+            new Mock<ControllerBase>().Object,
             "MockView",
-            string.Empty,
             new ViewDataDictionary(),
             new TempDataDictionary()),
-          new Mock<IViewDataContainer>().Object);
+          mockViewDataContainer.Object);
       }
 
       public NHamlHtmlHelper Html

@@ -36,7 +36,7 @@ namespace NHaml.Samples.Mvc
                                     })
                               });
 
-      ControllerBuilder.Current.SetControllerFactory(new NHamlControllerFactory());
+      ViewEngines.Engines.Add(new NHamlViewEngine());
     }
   }
 }

@@ -1,5 +1,4 @@
 ﻿using System.Web.Mvc;
-
 using NHaml.Samples.Mvc.Models;
 
 namespace NHaml.Samples.Mvc.Controllers
@@ -25,7 +24,7 @@ namespace NHaml.Samples.Mvc.Controllers
     {
       var category = new Category();
 
-      BindingHelperExtensions.UpdateFrom(category, Request.Form);
+      UpdateModel(category, Request.Form.AllKeys);
 
       Northwind.AddCategory(category);
       Northwind.SubmitChanges();
@@ -42,7 +41,7 @@ namespace NHaml.Samples.Mvc.Controllers
     {
       var category = Northwind.GetCategoryById(id);
 
-      BindingHelperExtensions.UpdateFrom(category, Request.Form);
+      UpdateModel(category, Request.Form.AllKeys);
 
       Northwind.SubmitChanges();
 
