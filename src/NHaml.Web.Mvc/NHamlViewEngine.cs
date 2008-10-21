@@ -6,7 +6,9 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 using System.Web.UI;
+
 using Microsoft.Web.Mvc;
+
 using NHaml.Engine;
 
 namespace NHaml.Web.Mvc
@@ -100,7 +102,7 @@ namespace NHaml.Web.Mvc
 
     private static string GetControllerName(RequestContext requestContext)
     {
-      return (string) requestContext.RouteData.Values["controller"];
+      return (string)requestContext.RouteData.Values["controller"];
     }
   }
 }

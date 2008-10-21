@@ -3,6 +3,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
+
 using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
@@ -80,7 +81,7 @@ namespace NHaml.Web.Mvc
     {
       if (typeof(ViewDataDictionary<TModel>).IsAssignableFrom(viewData.GetType()))
       {
-        _viewData = (ViewDataDictionary<TModel>) viewData;
+        _viewData = (ViewDataDictionary<TModel>)viewData;
       }
       else
       {

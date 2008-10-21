@@ -194,14 +194,14 @@ namespace NHaml.Web.Mvc
     public static string Ordinalize(string number)
     {
       var n = int.Parse(number, CultureInfo.InvariantCulture);
-      var nMod100 = n%100;
+      var nMod100 = n % 100;
 
       if (nMod100 >= 11 && nMod100 <= 13)
       {
         return number + "th";
       }
 
-      switch (n%10)
+      switch (n % 10)
       {
         case 1:
           return number + "st";
