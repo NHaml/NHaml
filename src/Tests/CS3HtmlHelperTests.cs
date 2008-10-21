@@ -24,6 +24,7 @@ namespace NHaml.Tests
       _templateCompiler.ViewBaseType = typeof(MockView);
 
       _templateCompiler.AddReferences(typeof(IViewDataContainer));
+      _templateCompiler.AddReference(typeof(Route).Assembly.Location);
       _templateCompiler.AddReference(typeof(Expression).Assembly.Location);
       _templateCompiler.AddReference(typeof(NHamlHtmlHelper).Assembly.Location);
       _templateCompiler.AddReference(typeof(Product).Assembly.Location);
@@ -38,7 +39,7 @@ namespace NHaml.Tests
       AssertRender("FormHelperCS3", "FormHelperCS3", _templateCompiler);
     }
 
-    public abstract class MockView : CompiledTemplate
+    public abstract class MockView : MvcView<object>
     {
       private NHamlHtmlHelper _html;
 
@@ -55,13 +56,13 @@ namespace NHaml.Tests
             new Mock<HttpContextBase>().Object,
             new RouteData(),
             new Mock<ControllerBase>().Object,
-            "MockView",
+            this,
             new ViewDataDictionary(),
             new TempDataDictionary()),
           mockViewDataContainer.Object);
       }
 
-      public NHamlHtmlHelper Html
+      public new NHamlHtmlHelper Html
       {
         get { return _html; }
       }

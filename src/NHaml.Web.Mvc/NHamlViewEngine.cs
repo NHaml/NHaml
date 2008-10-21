@@ -45,7 +45,11 @@ namespace NHaml.Web.Mvc
 
     public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
     {
-      return new ViewEngineResult(FindView(viewName, masterName, controllerContext));
+      return new ViewEngineResult(FindView(viewName, masterName, controllerContext), this);
+    }
+
+    public void ReleaseView(ControllerContext controllerContext, IView view)
+    {
     }
 
     protected override MvcCompiledView CreateView(string viewName, string layoutName, ControllerContext context)

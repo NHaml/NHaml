@@ -4,9 +4,8 @@ using System.Security.Permissions;
 using System.Text.RegularExpressions;
 using System.Web;
 using System.Web.Mvc;
+using System.Web.Mvc.Html;
 using System.Web.Routing;
-
-using Microsoft.Web.Mvc;
 
 namespace NHaml.Web.Mvc
 {
@@ -42,7 +41,7 @@ namespace NHaml.Web.Mvc
     {
       var controllerName = GetControllerName(typeof(TController));
 
-      return ActionLink(controllerName, "index", controllerName.ToLowerInvariant());
+      return this.ActionLink(controllerName, "index", controllerName.ToLowerInvariant());
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004:GenericMethodsShouldProvideTypeParameter")]
@@ -51,7 +50,7 @@ namespace NHaml.Web.Mvc
     {
       var controllerName = GetControllerName(typeof(TController));
 
-      return ActionLink(linkText, restfulAction.ToString().ToLowerInvariant(), controllerName.ToLowerInvariant());
+      return this.ActionLink(linkText, restfulAction.ToString().ToLowerInvariant(), controllerName.ToLowerInvariant());
     }
 
     public virtual string ActionLink<TModel>(TModel model)
@@ -72,7 +71,7 @@ namespace NHaml.Web.Mvc
       // TODO: Delete should POST through a hidden form
       //       Should be able to specify "confirm" alert
 
-      return ActionLink(
+      return this.ActionLink(
         linkText,
         restfulAction.ToString().ToLowerInvariant(),
         Inflector.Pluralize(model.GetType().Name).ToLowerInvariant(),
