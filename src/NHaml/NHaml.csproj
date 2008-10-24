@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30428</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{9B885FC4-45C0-4526-9253-A799238EDD66}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -50,11 +50,21 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Backends\CSharp2\CSharp2CompilerBackend.cs" />
+    <Compile Include="Backends\CSharp2\CSharp2SilentEvalRenderer.cs" />
+    <Compile Include="Backends\CSharp3\CSharp3TemplateTypeBuilder.cs" />
+    <Compile Include="Backends\ISilentEvalRenderer.cs" />
+    <Compile Include="Backends\TemplateClassBuilderBase.cs" />
+    <Compile Include="Backends\ITemplateClassBuilder.cs" />
+    <Compile Include="Backends\CSharp3\CSharp3CompilerBackend.cs" />
+    <Compile Include="Backends\ICompilerBackend.cs" />
     <Compile Include="BlockClosingAction.cs" />
     <Compile Include="Coco\Parser.cs" />
     <Compile Include="Coco\Scanner.cs" />
@@ -66,16 +76,16 @@
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
     <Compile Include="Configuration\NHamlSection.cs" />
     <Compile Include="Configuration\ViewsCollectionElement.cs" />
-    <Compile Include="CS2LambdaRenderer.cs" />
-    <Compile Include="CS3LambdaRenderer.cs" />
-    <Compile Include="ILambdaRenderer.cs" />
-    <Compile Include="CS2AttributeRenderer.cs" />
-    <Compile Include="CS3AttributeRenderer.cs" />
+    <Compile Include="Backends\CSharp2\CSharp2LambdaRenderer.cs" />
+    <Compile Include="Backends\CSharp3\CSharp3LambdaRenderer.cs" />
+    <Compile Include="Backends\ILambdaRenderer.cs" />
+    <Compile Include="Backends\CSharp2\CSharp2AttributeRenderer.cs" />
+    <Compile Include="Backends\CSharp3\CSharp3AttributeRenderer.cs" />
     <Compile Include="Engine\CompiledView.cs" />
     <Compile Include="Engine\ViewEngine.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
-    <Compile Include="IAttributeRenderer.cs" />
+    <Compile Include="Backends\IAttributeRenderer.cs" />
     <Compile Include="CompiledTemplate.cs" />
     <Compile Include="InputLine.cs" />
     <Compile Include="IOutputWriter.cs" />
@@ -99,12 +109,12 @@
     <Compile Include="Rules\SilentEvalMarkupRule.cs" />
     <Compile Include="Rules\TagMarkupRule.cs" />
     <Compile Include="TemplateCompiler.cs" />
-    <Compile Include="TemplateTypeBuilder.cs" />
+    <Compile Include="Backends\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="TemplateActivator.cs" />
-    <Compile Include="TemplateClassBuilder.cs" />
+    <Compile Include="Backends\CSharp2\CSharp2TemplateClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">

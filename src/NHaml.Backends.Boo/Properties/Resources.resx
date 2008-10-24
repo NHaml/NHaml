@@ -117,37 +117,25 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
-  <data name="AttributesParseError" xml:space="preserve">
-    <value>Error parsing attributes</value>
+  <data name="AttributesParse_BinaryExpressionExpected" xml:space="preserve">
+    <value>Error parsing attributes: BinaryExpression expected but get {0}.</value>
   </data>
-  <data name="CompilationError" xml:space="preserve">
-    <value>An error occurred when compiling the file: {0}</value>
+  <data name="AttributesParse_BooParserError" xml:space="preserve">
+    <value>Error parsing attributes: {0}</value>
   </data>
-  <data name="CompilerBackendTypeNotFound" xml:space="preserve">
-    <value>Compiler backend type {0} not found</value>
+  <data name="AttributesParse_ExpressionStatementExpected" xml:space="preserve">
+    <value>Error parsing attributes: ExpressionStatement expected but get {0}.</value>
   </data>
-  <data name="ErrorParsingTag" xml:space="preserve">
-    <value>Error parsing tag</value>
+  <data name="AttributesParse_StatementGreaterThenOne" xml:space="preserve">
+    <value>Error parsing attributes: Statement count is greater then one.</value>
   </data>
-  <data name="IllegalIndentation" xml:space="preserve">
-    <value>Illegal Indentation: Only two space characters are allowed as tabulation</value>
+  <data name="AttributesParse_UnexpectedAttributeExpression" xml:space="preserve">
+    <value>Error parsing attributes: Expected Literal- or ReferenceExpression but get {0}.</value>
   </data>
-  <data name="InvalidViewBaseType" xml:space="preserve">
-    <value>ViewBaseType must inherit from CompiledTemplate</value>
+  <data name="AttributesParse_UnexpectedBlockStatementCount" xml:space="preserve">
+    <value>Error parsing attributes: Black has no or more then one statement.</value>
   </data>
-  <data name="InvariantFail" xml:space="preserve">
-    <value>Invariant Failure</value>
-  </data>
-  <data name="NotAssignableToICompilerBackend" xml:space="preserve">
-    <value>Type {0} is not assignable to ICompilerBackend</value>
-  </data>
-  <data name="ObjectNull" xml:space="preserve">
-    <value>Expected Not Null Object</value>
-  </data>
-  <data name="StringCannotBeEmpty" xml:space="preserve">
-    <value>The provided string argument "{0}" cannot be empty</value>
-  </data>
-  <data name="SyntaxError" xml:space="preserve">
-    <value>Syntax error on line {0}: {1}: "{2}"</value>
+  <data name="AttributesParse_UnexpectedExpression" xml:space="preserve">
+    <value>Error parsing attributes: Expected HashLiteral- or BlockExpression but get {0}.</value>
   </data>
 </root>

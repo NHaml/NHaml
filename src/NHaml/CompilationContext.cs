@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
+using NHaml.Backends;
 using NHaml.Rules;
 using NHaml.Utils;
 
@@ -8,16 +9,7 @@ namespace NHaml
 {
   public sealed class CompilationContext
   {
-    private readonly TemplateCompiler _templateCompiler;
-    private readonly TemplateClassBuilder _templateClassBuilder;
-
-    private readonly string _templatePath;
-    private readonly string _layoutPath;
-
-    private readonly LinkedList<InputLine> _inputLines
-      = new LinkedList<InputLine>();
-
-    private LinkedListNode<InputLine> _currentNode;
+    private readonly IAttributeRenderer _attributeRenderer;
 
     private readonly Stack<BlockClosingAction> _blockClosingActions
       = new Stack<BlockClosingAction>();
@@ -25,15 +17,33 @@ namespace NHaml
     private readonly StringSet _inputFiles
       = new StringSet();
 
-    public CompilationContext(TemplateCompiler templateCompiler, TemplateClassBuilder templateClassBuilder,
+    private readonly LinkedList<InputLine> _inputLines
+      = new LinkedList<InputLine>();
+
+    private readonly string _layoutPath;
+
+    private readonly ISilentEvalRenderer _silentEvalRenderer;
+    private readonly ITemplateClassBuilder _templateClassBuilder;
+    private readonly TemplateCompiler _templateCompiler;
+
+    private readonly string _templatePath;
+
+    private LinkedListNode<InputLine> _currentNode;
+
+    public CompilationContext(TemplateCompiler templateCompiler,
+      IAttributeRenderer attributeRenderer,
+      ISilentEvalRenderer silentEvalRenderer,
+      ITemplateClassBuilder templateClassBuilder,
       string templatePath, string layoutPath)
     {
       _templateCompiler = templateCompiler;
+      _attributeRenderer = attributeRenderer;
+      _silentEvalRenderer = silentEvalRenderer;
       _templateClassBuilder = templateClassBuilder;
       _templatePath = templatePath;
       _layoutPath = layoutPath;
 
-      var primaryTemplate = _layoutPath ?? _templatePath;
+      string primaryTemplate = _layoutPath ?? _templatePath;
 
       _inputLines = BuildInputLines(primaryTemplate);
 
@@ -47,7 +57,17 @@ namespace NHaml
       get { return _templateCompiler; }
     }
 
-    public TemplateClassBuilder TemplateClassBuilder
+    public IAttributeRenderer AttributeRenderer
+    {
+      get { return _attributeRenderer; }
+    }
+
+    public ISilentEvalRenderer SilentEvalRenderer
+    {
+      get { return _silentEvalRenderer; }
+    }
+
+    public ITemplateClassBuilder TemplateClassBuilder
     {
       get { return _templateClassBuilder; }
     }
@@ -92,11 +112,20 @@ namespace NHaml
       get { return _blockClosingActions; }
     }
 
+    public bool IsBlock
+    {
+      get
+      {
+        return NextInputLine.IndentSize >
+          CurrentInputLine.IndentSize;
+      }
+    }
+
     public void CollectInputFiles(ICollection<string> inputFiles)
     {
       inputFiles.Clear();
 
-      foreach (var inputFile in _inputFiles)
+      foreach (string inputFile in _inputFiles)
       {
         inputFiles.Add(inputFile);
       }
@@ -109,7 +138,7 @@ namespace NHaml
 
     public void CloseBlocks()
     {
-      for (var j = 0;
+      for (int j = 0;
            ((j <= CurrentNode.Previous.Value.IndentSize
              - CurrentInputLine.IndentSize)
                && (_blockClosingActions.Count > 0));
@@ -121,9 +150,9 @@ namespace NHaml
 
     public void MergeTemplate(string templatePath)
     {
-      var previous = _currentNode.Previous;
+      LinkedListNode<InputLine> previous = _currentNode.Previous;
 
-      var lineNumber = 0;
+      int lineNumber = 0;
 
       using (var reader = new StreamReader(templatePath))
       {
@@ -145,7 +174,7 @@ namespace NHaml
 
     private LinkedList<InputLine> BuildInputLines(string templatePath)
     {
-      var lineNumber = 0;
+      int lineNumber = 0;
 
       _inputLines.AddLast(new InputLine(string.Empty, lineNumber++));
 

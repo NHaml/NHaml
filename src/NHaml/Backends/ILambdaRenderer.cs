@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace NHaml
+namespace NHaml.Backends
 {
   public interface ILambdaRenderer
   {

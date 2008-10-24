@@ -7,10 +7,10 @@ using NHaml.Coco;
 using NHaml.Exceptions;
 using NHaml.Properties;
 
-namespace NHaml
+namespace NHaml.Backends.CSharp2
 {
   [SuppressMessage("Microsoft.Naming", "CA1722")]
-  public sealed class CS2AttributeRenderer : IAttributeRenderer
+  public sealed class CSharp2AttributeRenderer : IAttributeRenderer
   {
     public void Render(CompilationContext compilationContext, string attributes)
     {

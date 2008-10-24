@@ -43,7 +43,7 @@ namespace NHaml.Web.Mvc
           {
             {"controller", Inflector.Pluralize(_model.GetType().Name).ToLowerInvariant()},
             {"action", _model.IsNew ? "create" : "update"},
-            {"id", _model.IsNew ? (object)null : _model.Id}
+            {"id", _model.IsNew ? (object) null : _model.Id}
           });
 
       _outputWriter.WriteLine(string.Format(CultureInfo.InvariantCulture, FormFormat,

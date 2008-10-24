@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
@@ -7,8 +6,9 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
+using NHaml.Backends;
+using NHaml.Backends.CSharp3;
 using NHaml.Configuration;
-using NHaml.Exceptions;
 using NHaml.Properties;
 using NHaml.Rules;
 using NHaml.Utils;
@@ -23,15 +23,6 @@ namespace NHaml
     private static readonly string[] DefaultAutoClosingTags
       = new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"};
 
-    private readonly StringSet _autoClosingTags
-      = new StringSet(DefaultAutoClosingTags);
-
-    private static readonly string[] DefaultUsings
-      = new[] {"System", "System.IO", "NHaml", "NHaml.Utils"};
-
-    private readonly StringSet _usings
-      = new StringSet(DefaultUsings);
-
     private static readonly string[] DefaultReferences
       = new[]
           {
@@ -39,17 +30,25 @@ namespace NHaml
             typeof(TemplateCompiler).Assembly.Location
           };
 
+    private static readonly string[] DefaultUsings
+      = new[] {"System", "System.IO", "NHaml", "NHaml.Utils"};
+
+    private readonly StringSet _autoClosingTags =
+      new StringSet(DefaultAutoClosingTags);
+
+    private readonly MarkupRule[] _markupRules
+      = new MarkupRule[128];
+
     private readonly StringSet _references
       = new StringSet(DefaultReferences);
 
-    private readonly MarkupRule[] _markupRules = new MarkupRule[128];
+    private readonly StringSet _usings
+      = new StringSet(DefaultUsings);
 
-    private IAttributeRenderer _attributeRenderer;
-    private ILambdaRenderer _lambdaRenderer;
+    private ICompilerBackend _compilerBackend;
 
-    private Type _viewBaseType = typeof(CompiledTemplate);
-
-    private string _compilerVersion;
+    private Type _viewBaseType
+      = typeof(CompiledTemplate);
 
     public TemplateCompiler()
     {
@@ -65,60 +64,22 @@ namespace NHaml
       AddRule(new EscapeMarkupRule());
       AddRule(new PartialMarkupRule());
 
-      CompilerVersion = "3.5";
+      _compilerBackend = new CSharp3CompilerBackend();
 
       LoadFromConfiguration();
     }
 
-    public void LoadFromConfiguration()
+    public ICompilerBackend CompilerBackend
     {
-      var section = NHamlSection.Read();
-
-      if (section != null)
+      get { return _compilerBackend; }
+      set
       {
-        IsProduction = section.Production;
-
-        if (!string.IsNullOrEmpty(section.CompilerVersion))
-        {
-          CompilerVersion = section.CompilerVersion;
-        }
-
-        foreach (var assemblyConfigurationElement in section.Assemblies)
-        {
-          AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
-        }
-
-        foreach (var namespaceConfigurationElement in section.Namespaces)
-        {
-          AddUsing(namespaceConfigurationElement.Name);
-        }
+        Invariant.ArgumentNotNull(value, "value");
+        _compilerBackend = value;
       }
     }
 
     public bool IsProduction { get; set; }
-
-    public string CompilerVersion
-    {
-      get { return _compilerVersion; }
-      set
-      {
-        switch (value)
-        {
-          case "2.0":
-            _attributeRenderer = new CS2AttributeRenderer();
-            _lambdaRenderer = new CS2LambdaRenderer();
-            break;
-          case "3.5":
-            _attributeRenderer = new CS3AttributeRenderer();
-            _lambdaRenderer = new CS3LambdaRenderer();
-            break;
-          default:
-            throw new InvalidOperationException(Resources.UnsupportedCompilerVersion);
-        }
-
-        _compilerVersion = value;
-      }
-    }
 
     public Type ViewBaseType
     {
@@ -133,57 +94,47 @@ namespace NHaml
         }
 
         _viewBaseType = value;
-
         _usings.Add(_viewBaseType.Namespace);
         _references.Add(_viewBaseType.Assembly.Location);
       }
     }
 
-    public void AddUsing(string @namespace)
-    {
-      Invariant.ArgumentNotEmpty(@namespace, "namespace");
-
-      _usings.Add(@namespace);
-    }
-
-    public IEnumerable Usings
+    public IEnumerable<string> Usings
     {
       get { return _usings; }
     }
 
-    public void AddReference(string assemblyLocation)
-    {
-      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
-
-      _references.Add(assemblyLocation);
-    }
-
-    public void AddReferences(Type type)
-    {
-      AddReference(type.Assembly.Location);
-
-      if (type.IsGenericType)
-      {
-        foreach (var t in type.GetGenericArguments())
-        {
-          AddReferences(t);
-        }
-      }
-    }
-
-    public IEnumerable References
+    public IEnumerable<string> References
     {
       get { return _references; }
     }
 
-    public IAttributeRenderer AttributeRenderer
+    public void LoadFromConfiguration()
     {
-      get { return _attributeRenderer; }
-    }
+      NHamlSection section = NHamlSection.Read();
 
-    public ILambdaRenderer LambdaRenderer
-    {
-      get { return _lambdaRenderer; }
+      if (section == null)
+      {
+        return;
+      }
+
+      IsProduction = section.Production;
+
+      // Todo: rebuild configuration
+      if (!string.IsNullOrEmpty(section.CompilerBackend))
+      {
+        _compilerBackend = section.CreateCompilerBackend();
+      }
+
+      foreach (AssemblyConfigurationElement assemblyConfigurationElement in section.Assemblies)
+      {
+        AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
+      }
+
+      foreach (NamespaceConfigurationElement namespaceConfigurationElement in section.Namespaces)
+      {
+        AddUsing(namespaceConfigurationElement.Name);
+      }
     }
 
     public void AddRule(MarkupRule markupRule)
@@ -210,6 +161,35 @@ namespace NHaml
       Invariant.ArgumentNotEmpty(tag, "tag");
 
       return _autoClosingTags.Contains(tag.ToUpperInvariant());
+    }
+
+    public void AddUsing(string @namespace)
+    {
+      Invariant.ArgumentNotEmpty(@namespace, "namespace");
+
+      _usings.Add(@namespace);
+    }
+
+    public void AddReference(string assemblyLocation)
+    {
+      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
+
+      _references.Add(assemblyLocation);
+    }
+
+    public void AddReferences(Type type)
+    {
+      AddReference(type.Assembly.Location);
+
+      if (!type.IsGenericType)
+      {
+        return;
+      }
+
+      foreach (Type t in type.GetGenericArguments())
+      {
+        AddReferences(t);
+      }
     }
 
     public TemplateActivator<CompiledTemplate> Compile(string templatePath, params Type[] genericArguments)
@@ -252,7 +232,7 @@ namespace NHaml
         Invariant.FileExists(layoutPath);
       }
 
-      foreach (var type in genericArguments)
+      foreach (Type type in genericArguments)
       {
         AddReferences(type);
       }
@@ -260,7 +240,9 @@ namespace NHaml
       var compilationContext
         = new CompilationContext(
           this,
-          new TemplateClassBuilder(this, MakeClassName(templatePath), genericArguments),
+          _compilerBackend.AttributeRenderer,
+          _compilerBackend.SilentEvalRenderer,
+          _compilerBackend.CreateTemplateClassBuilder(ViewBaseType, MakeClassName(templatePath), genericArguments),
           templatePath,
           layoutPath);
 
@@ -271,14 +253,14 @@ namespace NHaml
         compilationContext.CollectInputFiles(inputFiles);
       }
 
-      return CreateFastActivator<TView>(BuildView(compilationContext));
+      return CreateFastActivator<TView>(_compilerBackend.BuildView(compilationContext));
     }
 
     private void Compile(CompilationContext compilationContext)
     {
       while (compilationContext.CurrentNode.Next != null)
       {
-        var rule = GetRule(compilationContext.CurrentInputLine);
+        MarkupRule rule = compilationContext.TemplateCompiler.GetRule(compilationContext.CurrentInputLine);
 
         if (compilationContext.CurrentInputLine.IsMultiline && rule.MergeMultiline)
         {
@@ -294,34 +276,12 @@ namespace NHaml
       compilationContext.CloseBlocks();
     }
 
-    private Type BuildView(CompilationContext compilationContext)
-    {
-      var source = compilationContext.TemplateClassBuilder.Build();
-
-      var typeBuilder = new TemplateTypeBuilder(this);
-
-      var viewType = typeBuilder.Build(source, compilationContext.TemplateClassBuilder.ClassName);
-
-      if (viewType == null)
-      {
-        ViewCompilationException.Throw(typeBuilder.CompilerResults,
-          typeBuilder.Source, compilationContext.TemplatePath);
-      }
-
-      return viewType;
-    }
-
-    private static string MakeClassName(string templatePath)
-    {
-      return _pathCleaner.Replace(templatePath, "_").TrimStart('_');
-    }
-
     private static TemplateActivator<TResult> CreateFastActivator<TResult>(Type type)
     {
       var dynamicMethod = new DynamicMethod("activatefast__", type, null, type);
 
-      var ilGenerator = dynamicMethod.GetILGenerator();
-      var constructor = type.GetConstructor(new Type[] {});
+      ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+      ConstructorInfo constructor = type.GetConstructor(new Type[] {});
 
       if (constructor == null)
       {
@@ -332,6 +292,11 @@ namespace NHaml
       ilGenerator.Emit(OpCodes.Ret);
 
       return (TemplateActivator<TResult>)dynamicMethod.CreateDelegate(typeof(TemplateActivator<TResult>));
+    }
+
+    private static string MakeClassName(string templatePath)
+    {
+      return _pathCleaner.Replace(templatePath, "_").TrimStart('_');
     }
   }
 }

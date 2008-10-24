@@ -11,7 +11,7 @@ namespace NHaml.Utils
     {
       if (attributeSource != null)
       {
-        var properties = TypeDescriptor.GetProperties(attributeSource);
+        PropertyDescriptorCollection properties = TypeDescriptor.GetProperties(attributeSource);
 
         if (properties.Count > 0)
         {
@@ -19,7 +19,7 @@ namespace NHaml.Utils
 
           AppendAttribute(attributeSource, properties[0], attributes, null);
 
-          for (var i = 1; i < properties.Count; i++)
+          for (int i = 1; i < properties.Count; i++)
           {
             AppendAttribute(attributeSource, properties[i], attributes, " ");
           }
@@ -34,11 +34,21 @@ namespace NHaml.Utils
     private static void AppendAttribute(object obj, PropertyDescriptor propertyDescriptor,
       StringBuilder attributes, string separator)
     {
-      var value = Convert.ToString(propertyDescriptor.GetValue(obj), CultureInfo.InvariantCulture);
+      object value = propertyDescriptor.GetValue(obj);
+      string name = propertyDescriptor.Name.Replace('_', '-');
 
-      if (!string.IsNullOrEmpty(value))
+      AppendAttribute(value, attributes, separator, name);
+    }
+
+    private static void AppendAttribute(object value, StringBuilder attributes,
+      string separator, object name)
+    {
+      string invariantValue = Convert.ToString(value, CultureInfo.InvariantCulture);
+      string invariantName = Convert.ToString(name, CultureInfo.InvariantCulture);
+
+      if (!string.IsNullOrEmpty(invariantValue))
       {
-        attributes.Append(separator + propertyDescriptor.Name.Replace('_', '-') + "=\"" + value + "\"");
+        attributes.Append(separator + invariantName + "=\"" + invariantValue + "\"");
       }
     }
 

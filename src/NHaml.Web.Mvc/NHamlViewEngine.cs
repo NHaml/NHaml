@@ -1,3 +1,4 @@
+using System;
 using System.Data.Linq;
 using System.IO;
 using System.Linq.Expressions;
@@ -15,7 +16,7 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewEngine : ViewEngine<MvcCompiledView, ControllerContext, IMvcView, ViewDataDictionary>,
+  public class NHamlViewEngine : ViewEngine<NHamlCompiledView, ControllerContext, INHamlView, ViewDataDictionary>,
     IViewEngine
   {
     public NHamlViewEngine()
@@ -26,43 +27,65 @@ namespace NHaml.Web.Mvc
 
       TemplateCompiler.AddUsing("NHaml.Web.Mvc");
 
-      TemplateCompiler.ViewBaseType = typeof(MvcView<>);
+      TemplateCompiler.ViewBaseType = typeof(NHamlView<>);
 
       TemplateCompiler.AddReference(typeof(UserControl).Assembly.Location);
       TemplateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
       TemplateCompiler.AddReference(typeof(DataContext).Assembly.Location);
       TemplateCompiler.AddReference(typeof(LinkExtensions).Assembly.Location);
+      TemplateCompiler.AddReference(typeof(Action).Assembly.Location);
       TemplateCompiler.AddReference(typeof(Expression).Assembly.Location);
       TemplateCompiler.AddReference(typeof(IView).Assembly.Location);
+
+      foreach (var name in System.Reflection.Assembly.GetCallingAssembly().GetReferencedAssemblies())
+      {
+        TemplateCompiler.AddReference(System.Reflection.Assembly.Load(name).Location);
+      }
 
       TemplateCompiler.LoadFromConfiguration();
     }
 
+    #region IViewEngine Members
+
     public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
     {
-      return FindView(controllerContext, partialViewName, null);
+      return new ViewEngineResult(FindAndCreatePartialView(partialViewName, controllerContext), this);
     }
 
     public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
     {
-      return new ViewEngineResult(FindView(viewName, masterName, controllerContext), this);
+      return new ViewEngineResult(FindAndCreateView(viewName, masterName, controllerContext), this);
     }
 
     public void ReleaseView(ControllerContext controllerContext, IView view)
     {
     }
 
-    protected override MvcCompiledView CreateView(string viewName, string layoutName, ControllerContext context)
+    #endregion
+
+    protected override NHamlCompiledView CreateView(string viewName, string layoutName, ControllerContext context)
     {
       var templatePath = context.HttpContext.Request
         .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
 
-      var layoutPath = SelectLayout(layoutName, context);
+      var masterPath = SelectLayout(layoutName, context);
 
-      return new MvcCompiledView(
+      return new NHamlCompiledView(
         TemplateCompiler,
         templatePath,
-        layoutPath,
+        masterPath,
+        context.Controller.ViewData);
+    }
+
+    protected override NHamlCompiledView CreatePartialView(string viewName, ControllerContext context)
+    {
+      var templatePath = context.HttpContext.Request
+        .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
+
+      return new NHamlCompiledView(
+        TemplateCompiler,
+        templatePath,
+        null,
         context.Controller.ViewData);
     }
 

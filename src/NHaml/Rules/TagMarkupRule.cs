@@ -177,7 +177,6 @@ namespace NHaml.Rules
             .Replace(_hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3"), "@$1$2");
 
           compilationContext
-            .TemplateCompiler
             .AttributeRenderer
             .Render(compilationContext, cleanAttributes);
         }

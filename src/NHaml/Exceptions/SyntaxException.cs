@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
@@ -8,17 +9,9 @@ using NHaml.Utils;
 namespace NHaml.Exceptions
 {
   [Serializable]
+  [DebuggerStepThrough]
   public sealed class SyntaxException : Exception
   {
-    public static void Throw(InputLine inputLine, string errorFormat, params object[] values)
-    {
-      var message = Utility.FormatCurrentCulture(Resources.SyntaxError, inputLine.LineNumber,
-        Utility.FormatCurrentCulture(errorFormat, values),
-        inputLine.Text);
-
-      throw new SyntaxException(message, inputLine);
-    }
-
     private readonly InputLine _inputLine;
 
     public SyntaxException()
@@ -49,6 +42,15 @@ namespace NHaml.Exceptions
     public InputLine InputLine
     {
       get { return _inputLine; }
+    }
+
+    public static void Throw(InputLine inputLine, string errorFormat, params object[] values)
+    {
+      string message = Utility.FormatCurrentCulture(Resources.SyntaxError, inputLine.LineNumber,
+        Utility.FormatCurrentCulture(errorFormat, values),
+        inputLine.Text);
+
+      throw new SyntaxException(message, inputLine);
     }
 
     [SecurityPermission(SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter)]

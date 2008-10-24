@@ -1,4 +1,4 @@
-namespace NHaml
+namespace NHaml.Backends
 {
   public interface IAttributeRenderer
   {

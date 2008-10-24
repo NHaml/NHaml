@@ -9,7 +9,7 @@ namespace NHaml.Rules
 
     public override BlockClosingAction Render(CompilationContext compilationContext)
     {
-      compilationContext.TemplateClassBuilder.AppendPreamble(compilationContext.CurrentInputLine.NormalizedText);
+      compilationContext.TemplateClassBuilder.AppendPreambleCode(compilationContext.CurrentInputLine.NormalizedText);
 
       return null;
     }

@@ -3,14 +3,13 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
-
 using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class MvcView<TModel> : CompiledTemplate, IMvcView
+  public abstract class NHamlView<TModel> : CompiledTemplate, INHamlView
     where TModel : class
   {
     private ViewContext _viewContext;
@@ -81,7 +80,7 @@ namespace NHaml.Web.Mvc
     {
       if (typeof(ViewDataDictionary<TModel>).IsAssignableFrom(viewData.GetType()))
       {
-        _viewData = (ViewDataDictionary<TModel>)viewData;
+        _viewData = (ViewDataDictionary<TModel>) viewData;
       }
       else
       {

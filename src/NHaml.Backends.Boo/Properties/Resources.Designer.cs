@@ -8,7 +8,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NHaml.Properties {
+namespace NHaml.Backends.Boo.Properties {
     using System;
     
     
@@ -39,7 +39,7 @@ namespace NHaml.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NHaml.Properties.Resources", typeof(Resources).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("NHaml.Backends.Boo.Properties.Resources", typeof(Resources).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -61,101 +61,65 @@ namespace NHaml.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error parsing attributes.
+        ///   Looks up a localized string similar to Error parsing attributes: BinaryExpression expected but get {0}..
         /// </summary>
-        internal static string AttributesParseError {
+        internal static string AttributesParse_BinaryExpressionExpected {
             get {
-                return ResourceManager.GetString("AttributesParseError", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_BinaryExpressionExpected", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to An error occurred when compiling the file: {0}.
+        ///   Looks up a localized string similar to Error parsing attributes: {0}.
         /// </summary>
-        internal static string CompilationError {
+        internal static string AttributesParse_BooParserError {
             get {
-                return ResourceManager.GetString("CompilationError", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_BooParserError", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Compiler backend type {0} not found.
+        ///   Looks up a localized string similar to Error parsing attributes: ExpressionStatement expected but get {0}..
         /// </summary>
-        internal static string CompilerBackendTypeNotFound {
+        internal static string AttributesParse_ExpressionStatementExpected {
             get {
-                return ResourceManager.GetString("CompilerBackendTypeNotFound", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_ExpressionStatementExpected", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Error parsing tag.
+        ///   Looks up a localized string similar to Error parsing attributes: Statement count is greater then one..
         /// </summary>
-        internal static string ErrorParsingTag {
+        internal static string AttributesParse_StatementGreaterThenOne {
             get {
-                return ResourceManager.GetString("ErrorParsingTag", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_StatementGreaterThenOne", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Illegal Indentation: Only two space characters are allowed as tabulation.
+        ///   Looks up a localized string similar to Error parsing attributes: Expected Literal- or ReferenceExpression but get {0}..
         /// </summary>
-        internal static string IllegalIndentation {
+        internal static string AttributesParse_UnexpectedAttributeExpression {
             get {
-                return ResourceManager.GetString("IllegalIndentation", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_UnexpectedAttributeExpression", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to ViewBaseType must inherit from CompiledTemplate.
+        ///   Looks up a localized string similar to Error parsing attributes: Black has no or more then one statement..
         /// </summary>
-        internal static string InvalidViewBaseType {
+        internal static string AttributesParse_UnexpectedBlockStatementCount {
             get {
-                return ResourceManager.GetString("InvalidViewBaseType", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_UnexpectedBlockStatementCount", resourceCulture);
             }
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Invariant Failure.
+        ///   Looks up a localized string similar to Error parsing attributes: Expected HashLiteral- or BlockExpression but get {0}..
         /// </summary>
-        internal static string InvariantFail {
+        internal static string AttributesParse_UnexpectedExpression {
             get {
-                return ResourceManager.GetString("InvariantFail", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Type {0} is not assignable to ICompilerBackend.
-        /// </summary>
-        internal static string NotAssignableToICompilerBackend {
-            get {
-                return ResourceManager.GetString("NotAssignableToICompilerBackend", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Expected Not Null Object.
-        /// </summary>
-        internal static string ObjectNull {
-            get {
-                return ResourceManager.GetString("ObjectNull", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to The provided string argument &quot;{0}&quot; cannot be empty.
-        /// </summary>
-        internal static string StringCannotBeEmpty {
-            get {
-                return ResourceManager.GetString("StringCannotBeEmpty", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to Syntax error on line {0}: {1}: &quot;{2}&quot;.
-        /// </summary>
-        internal static string SyntaxError {
-            get {
-                return ResourceManager.GetString("SyntaxError", resourceCulture);
+                return ResourceManager.GetString("AttributesParse_UnexpectedExpression", resourceCulture);
             }
         }
     }
