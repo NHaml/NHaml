@@ -74,7 +74,7 @@ namespace NHaml.Tests
 
       var inputFiles = new List<string>();
 
-      templateCompiler.Compile(TemplatesFolder + "Partials.haml",
+      templateCompiler.Compile(TemplatesFolder + "PartialsCS2.haml",
         TemplatesFolder + "Application.haml", inputFiles);
 
       Assert.AreEqual(4, inputFiles.Count);

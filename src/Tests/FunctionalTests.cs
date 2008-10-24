@@ -2,33 +2,17 @@ using System.IO;
 
 using NUnit.Framework;
 
+using System;
+
 namespace NHaml.Tests
 {
-  public class FunctionalTests : TestFixtureBase
+  public abstract class FunctionalTests : TestFixtureBase
   {
     public override void SetUp()
     {
       base.SetUp();
 
       _templateCompiler.ViewBaseType = typeof(MockView);
-    }
-
-    [Test]
-    public void LambdaEval()
-    {
-      AssertRender("LambdaEval");
-    }
-
-    [Test]
-    public void AttributeEval()
-    {
-      AssertRender("AttributeEval");
-    }
-
-    [Test]
-    public void NullAttributes()
-    {
-      AssertRender("NullAttributes");
     }
 
     [Test]
@@ -41,24 +25,6 @@ namespace NHaml.Tests
     public void Partials2()
     {
       AssertRender("Partials2");
-    }
-
-    [Test]
-    public void Partials()
-    {
-      AssertRender("Partials");
-    }
-
-    [Test]
-    public void Layout()
-    {
-      AssertRender("Welcome", "Application");
-    }
-
-    [Test]
-    public void Welcome()
-    {
-      AssertRender("Welcome");
     }
 
     [Test]
@@ -125,42 +91,6 @@ namespace NHaml.Tests
     public void OriginalEngine()
     {
       AssertRender("OriginalEngine");
-    }
-
-    [Test]
-    public void SimpleEval()
-    {
-      AssertRender("SimpleEval");
-    }
-
-    [Test]
-    public void SilentEval()
-    {
-      AssertRender("SilentEval");
-    }
-
-    [Test]
-    public void LoopEval()
-    {
-      AssertRender("LoopEval");
-    }
-
-    [Test]
-    public void SwitchEval()
-    {
-      AssertRender("SwitchEval");
-    }
-
-    [Test]
-    public void Conditionals()
-    {
-      AssertRender("Conditionals");
-    }
-
-    [Test]
-    public void MultiLine()
-    {
-      AssertRender("MultiLine");
     }
 
     [Test]

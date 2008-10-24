@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30428</ProductVersion>
+    <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{94F9E5B5-2BE3-4C25-BCCF-86874D10854A}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -48,7 +48,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Abstractions, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\System.Web.Abstractions.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -57,7 +57,7 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\System.Web.Mvc.dll</HintPath>
     </Reference>
-    <Reference Include="System.Web.Routing, Version=0.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\System.Web.Routing.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -65,6 +65,57 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="Results\Preamble.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\AttributeEvalBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\ConditionalsBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\PreambleCS2.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\PreambleBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\NullAttributesBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\MultiLineBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\WelcomeBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\PartialsBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\LoopEvalBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\SilentEvalBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\SimpleEvalBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\LambdaEvalBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FormHelperBoo.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Mvc\Shared\Application.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Mvc\Shared\Controller.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Mvc\View.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Results\AltControllerPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -155,7 +206,7 @@
     <None Include="Results\WhitespaceSensitive.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Shared\_Partial.haml">
+    <None Include="Templates\Shared\_Partial.haml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
     <None Include="Templates\AltControllerPartial.haml">
@@ -167,7 +218,7 @@
     <None Include="Templates\Application.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\AttributeEval.haml">
+    <None Include="Templates\AttributeEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\AutoClose.haml">
@@ -176,7 +227,7 @@
     <None Include="Templates\Comments.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Conditionals.haml">
+    <None Include="Templates\ConditionalsCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\FormHelperCS3.haml">
@@ -185,7 +236,7 @@
     <None Include="Templates\LambdaEvalCS3.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\LambdaEval.haml">
+    <None Include="Templates\LambdaEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\_Menu.haml">
@@ -209,19 +260,19 @@
     <None Include="Templates\List.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\LoopEval.haml">
+    <None Include="Templates\LoopEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\MultiLine.haml">
+    <None Include="Templates\MultiLineCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\NullAttributes.haml">
+    <None Include="Templates\NullAttributesCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\OriginalEngine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Partials.haml">
+    <None Include="Templates\PartialsCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Partials2.haml">
@@ -236,13 +287,13 @@
     <None Include="Templates\SharedPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SilentEval.haml">
+    <None Include="Templates\SilentEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SimpleEval.haml">
+    <None Include="Templates\SimpleEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SwitchEval.haml">
+    <None Include="Templates\SwitchEvalCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\TagParsing.haml">
@@ -251,7 +302,7 @@
     <None Include="Templates\VeryBasic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Welcome.haml">
+    <None Include="Templates\WelcomeCS2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\WhitespaceSensitive.haml">
@@ -269,10 +320,13 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeSplitterTests.cs" />
+    <Compile Include="BooFunctionalTests.cs" />
     <Compile Include="Configuration\ConfigurationTests.cs" />
-    <Compile Include="CS3HtmlHelperTests.cs" />
+    <Compile Include="CSharp2FunctionalTests.cs" />
+    <Compile Include="CSharp3HtmlHelperTests.cs" />
+    <Compile Include="Mvc\NHamlViewEngineTests.cs" />
     <Compile Include="PerformanceTests.cs" />
-    <Compile Include="CS3FunctionalTests.cs" />
+    <Compile Include="CSharp3FunctionalTests.cs" />
     <Compile Include="FunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -287,6 +341,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NHaml.Backends.Boo\NHaml.Backends.Boo.csproj">
+      <Project>{E9AFFBF2-A4E1-459A-9BB7-80A59D4AA8FD}</Project>
+      <Name>NHaml.Backends.Boo</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 using System.Linq.Expressions;
 using System.Web;
@@ -6,6 +7,7 @@ using System.Web.Routing;
 
 using Moq;
 
+using NHaml.Backends.CSharp3;
 using NHaml.Samples.Mvc.Models;
 using NHaml.Web.Mvc;
 
@@ -14,18 +16,18 @@ using NUnit.Framework;
 namespace NHaml.Tests
 {
   [TestFixture]
-  public class CS3HtmlHelperTests : TestFixtureBase
+  public class CSharp3HtmlHelperTests : TestFixtureBase
   {
     public override void SetUp()
     {
       base.SetUp();
 
-      _templateCompiler.CompilerVersion = "3.5";
+      _templateCompiler.CompilerBackend = new CSharp3CompilerBackend();
       _templateCompiler.ViewBaseType = typeof(MockView);
 
       _templateCompiler.AddReferences(typeof(IViewDataContainer));
-      _templateCompiler.AddReference(typeof(Route).Assembly.Location);
       _templateCompiler.AddReference(typeof(Expression).Assembly.Location);
+      _templateCompiler.AddReference(typeof(Route).Assembly.Location);
       _templateCompiler.AddReference(typeof(NHamlHtmlHelper).Assembly.Location);
       _templateCompiler.AddReference(typeof(Product).Assembly.Location);
 
@@ -39,7 +41,7 @@ namespace NHaml.Tests
       AssertRender("FormHelperCS3", "FormHelperCS3", _templateCompiler);
     }
 
-    public abstract class MockView : MvcView<object>
+    public abstract class MockView : NHamlView<object>
     {
       private NHamlHtmlHelper _html;
 

@@ -2,6 +2,8 @@ using System;
 using System.IO;
 using System.Reflection;
 
+using NHaml.Backends.CSharp2;
+
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -22,7 +24,7 @@ namespace NHaml.Tests
       _templateCompiler.AddReference(Assembly.GetExecutingAssembly().Location);
       _templateCompiler.AddUsing("NHaml.Tests");
 
-      Assert.AreEqual("2.0", _templateCompiler.CompilerVersion);
+      _templateCompiler.CompilerBackend = new CSharp2CompilerBackend();
     }
 
     protected void AssertRender(string template)

@@ -1,6 +1,9 @@
 using System;
 using System.Diagnostics;
 
+using NHaml.Backends.CSharp2;
+using NHaml.Backends.CSharp3;
+
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -12,7 +15,7 @@ namespace NHaml.Tests
     [Test]
     public void CS2AttributeCompilationPerformance()
     {
-      _templateCompiler.CompilerVersion = "2.0";
+        _templateCompiler.CompilerBackend = new CSharp2CompilerBackend();
 
       var stopwatch = new Stopwatch();
 
@@ -33,7 +36,7 @@ namespace NHaml.Tests
     [Test]
     public void CS3AttributeCompilationPerformance()
     {
-      _templateCompiler.CompilerVersion = "3.5";
+        _templateCompiler.CompilerBackend = new CSharp3CompilerBackend();
 
       var stopwatch = new Stopwatch();
 
