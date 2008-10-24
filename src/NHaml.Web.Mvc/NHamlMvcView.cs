@@ -9,7 +9,7 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class NHamlView<TModel> : CompiledTemplate, INHamlView
+  public abstract class NHamlMvcView<TModel> : CompiledTemplate, INHamlMvcView
     where TModel : class
   {
     private ViewContext _viewContext;

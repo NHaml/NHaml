@@ -41,7 +41,7 @@ namespace NHaml.Tests
       AssertRender("FormHelperCS3", "FormHelperCS3", _templateCompiler);
     }
 
-    public abstract class MockView : NHamlView<object>
+    public abstract class MockView : NHamlMvcView<object>
     {
       private NHamlHtmlHelper _html;
 

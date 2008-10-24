@@ -36,7 +36,7 @@ namespace NHaml.Samples.Mvc
                                     })
                               });
 
-      ViewEngines.Engines.Add(new NHamlViewEngine());
+      ViewEngines.Engines.Add(new NHamlViewMvcEngine());
     }
   }
 }

@@ -6,7 +6,7 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public interface INHamlView : IViewDataContainer, IView
+  public interface INHamlMvcView : IViewDataContainer, IView
   {
     void Render(ViewContext viewContext);
   }

@@ -20,7 +20,7 @@ namespace NHaml.Tests.Mvc
       using (var stringWriter = new StringWriter())
       {
         var controllerContext = CreateMockedControllerContext();
-        var engine = new NHamlViewEngine();
+        var engine = new NHamlViewMvcEngine();
 
         var result = engine.FindPartialView(controllerContext, "View");
 
@@ -59,7 +59,7 @@ namespace NHaml.Tests.Mvc
       using (var stringWriter = new StringWriter())
       {
         var controllerContext = CreateMockedControllerContext();
-        var engine = new NHamlViewEngine();
+        var engine = new NHamlViewMvcEngine();
 
         var result = engine.FindView(controllerContext, "View", withLayout);
 

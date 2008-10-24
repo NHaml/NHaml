@@ -16,10 +16,10 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewEngine : ViewEngine<NHamlCompiledView, ControllerContext, INHamlView, ViewDataDictionary>,
+  public class NHamlViewMvcEngine : ViewEngine<NHamlCompiledMvcView, ControllerContext, INHamlMvcView, ViewDataDictionary>,
     IViewEngine
   {
-    public NHamlViewEngine()
+    public NHamlViewMvcEngine()
     {
       TemplateCompiler.AddUsing("System.Web");
       TemplateCompiler.AddUsing("System.Web.Mvc");
@@ -27,7 +27,7 @@ namespace NHaml.Web.Mvc
 
       TemplateCompiler.AddUsing("NHaml.Web.Mvc");
 
-      TemplateCompiler.ViewBaseType = typeof(NHamlView<>);
+      TemplateCompiler.ViewBaseType = typeof(NHamlMvcView<>);
 
       TemplateCompiler.AddReference(typeof(UserControl).Assembly.Location);
       TemplateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
@@ -63,26 +63,26 @@ namespace NHaml.Web.Mvc
 
     #endregion
 
-    protected override NHamlCompiledView CreateView(string viewName, string layoutName, ControllerContext context)
+    protected override NHamlCompiledMvcView CreateView(string viewName, string layoutName, ControllerContext context)
     {
       var templatePath = context.HttpContext.Request
         .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
 
       var masterPath = SelectLayout(layoutName, context);
 
-      return new NHamlCompiledView(
+      return new NHamlCompiledMvcView(
         TemplateCompiler,
         templatePath,
         masterPath,
         context.Controller.ViewData);
     }
 
-    protected override NHamlCompiledView CreatePartialView(string viewName, ControllerContext context)
+    protected override NHamlCompiledMvcView CreatePartialView(string viewName, ControllerContext context)
     {
       var templatePath = context.HttpContext.Request
         .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
 
-      return new NHamlCompiledView(
+      return new NHamlCompiledMvcView(
         TemplateCompiler,
         templatePath,
         null,
