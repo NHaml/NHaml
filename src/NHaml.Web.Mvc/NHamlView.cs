@@ -63,6 +63,11 @@ namespace NHaml.Web.Mvc
       get { return _viewData; }
     }
 
+    public TempDataDictionary TempData
+    {
+      get { return _viewContext.TempData; }
+    }
+
     public TModel Model
     {
       get { return _viewData.Model; }
