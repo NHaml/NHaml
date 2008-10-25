@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.IO;
 
-using NHaml.Backends;
+using NHaml.BackEnds;
 using NHaml.Rules;
 using NHaml.Utils;
 
@@ -43,7 +43,7 @@ namespace NHaml
       _templatePath = templatePath;
       _layoutPath = layoutPath;
 
-      string primaryTemplate = _layoutPath ?? _templatePath;
+      var primaryTemplate = _layoutPath ?? _templatePath;
 
       _inputLines = BuildInputLines(primaryTemplate);
 
@@ -125,7 +125,7 @@ namespace NHaml
     {
       inputFiles.Clear();
 
-      foreach (string inputFile in _inputFiles)
+      foreach (var inputFile in _inputFiles)
       {
         inputFiles.Add(inputFile);
       }
@@ -138,7 +138,7 @@ namespace NHaml
 
     public void CloseBlocks()
     {
-      for (int j = 0;
+      for (var j = 0;
            ((j <= CurrentNode.Previous.Value.IndentSize
              - CurrentInputLine.IndentSize)
                && (_blockClosingActions.Count > 0));
@@ -150,9 +150,9 @@ namespace NHaml
 
     public void MergeTemplate(string templatePath)
     {
-      LinkedListNode<InputLine> previous = _currentNode.Previous;
+      var previous = _currentNode.Previous;
 
-      int lineNumber = 0;
+      var lineNumber = 0;
 
       using (var reader = new StreamReader(templatePath))
       {
@@ -174,7 +174,7 @@ namespace NHaml
 
     private LinkedList<InputLine> BuildInputLines(string templatePath)
     {
-      int lineNumber = 0;
+      var lineNumber = 0;
 
       _inputLines.AddLast(new InputLine(string.Empty, lineNumber++));
 

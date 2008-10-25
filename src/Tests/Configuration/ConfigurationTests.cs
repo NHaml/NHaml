@@ -1,12 +1,10 @@
-﻿
 using System;
 
 using Moq;
 
-using NHaml.Backends;
-using NHaml.Backends.Boo;
-using NHaml.Backends.CSharp2;
-using NHaml.Backends.CSharp3;
+using NHaml.BackEnds.Boo;
+using NHaml.BackEnds.CSharp2;
+using NHaml.BackEnds.CSharp3;
 using NHaml.Configuration;
 
 using NUnit.Framework;
@@ -16,81 +14,81 @@ namespace NHaml.Tests.Configuration
   [TestFixture]
   public class ConfigurationTester
   {
-    private void CreateAndAssertCompilerBackend(string name,
-      Type compilerBackendType)
+    private static void CreateAndAssertCompilerBackEnd(string name,
+      Type compilerBackEndType)
     {
       var sectionMock = new Mock<NHamlSection>();
-      sectionMock.Expect(s => s.CompilerBackend)
+      sectionMock.Expect(s => s.CompilerBackEnd)
         .Returns(() => name);
 
-      ICompilerBackend backend = sectionMock.Object.CreateCompilerBackend();
+      var backEnd = sectionMock.Object.CreateCompilerBackEnd();
 
-      Assert.IsNotNull(backend);
-      Assert.IsInstanceOfType(compilerBackendType, backend);
+      Assert.IsNotNull(backEnd);
+      Assert.IsInstanceOfType(compilerBackEndType, backEnd);
     }
 
     [Test]
-    public void CanCreateBooCompilerBackendFromFullName()
+    public void CanCreateBooCompilerBackEndFromFullName()
     {
-      CreateAndAssertCompilerBackend("NHaml.Backends.Boo.BooCompilerBackend, NHaml.Backends.Boo",
-        typeof(BooCompilerBackend));
+      CreateAndAssertCompilerBackEnd("NHaml.BackEnds.Boo.BooCompilerBackEnd, NHaml.BackEnds.Boo",
+        typeof(BooCompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp2CompilerBackendFromFullName()
+    public void CanCreateCSharp2CompilerBackEndFromFullName()
     {
-      CreateAndAssertCompilerBackend("NHaml.Backends.CSharp2.CSharp2CompilerBackend, NHaml",
-        typeof(CSharp2CompilerBackend));
+      CreateAndAssertCompilerBackEnd("NHaml.BackEnds.CSharp2.CSharp2CompilerBackEnd, NHaml",
+        typeof(CSharp2CompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp2CompilerBackendFromLongName()
+    public void CanCreateCSharp2CompilerBackEndFromLongName()
     {
-      CreateAndAssertCompilerBackend("CSharp2CompilerBackend",
-        typeof(CSharp2CompilerBackend));
+      CreateAndAssertCompilerBackEnd("CSharp2CompilerBackEnd",
+        typeof(CSharp2CompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp2CompilerBackendFromShortName()
+    public void CanCreateCSharp2CompilerBackEndFromShortName()
     {
-      CreateAndAssertCompilerBackend("CSharp2",
-        typeof(CSharp2CompilerBackend));
+      CreateAndAssertCompilerBackEnd("CSharp2",
+        typeof(CSharp2CompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp3CompilerBackendFromFullName()
+    public void CanCreateCSharp3CompilerBackEndFromFullName()
     {
-      CreateAndAssertCompilerBackend("NHaml.Backends.CSharp3.CSharp3CompilerBackend, NHaml",
-        typeof(CSharp3CompilerBackend));
+      CreateAndAssertCompilerBackEnd("NHaml.BackEnds.CSharp3.CSharp3CompilerBackEnd, NHaml",
+        typeof(CSharp3CompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp3CompilerBackendFromLongName()
+    public void CanCreateCSharp3CompilerBackEndFromLongName()
     {
-      CreateAndAssertCompilerBackend("CSharp3CompilerBackend",
-        typeof(CSharp3CompilerBackend));
+      CreateAndAssertCompilerBackEnd("CSharp3CompilerBackEnd",
+        typeof(CSharp3CompilerBackEnd));
     }
 
     [Test]
-    public void CanCreateCSharp3CompilerBackendFromShortName()
+    public void CanCreateCSharp3CompilerBackEndFromShortName()
     {
-      CreateAndAssertCompilerBackend("CSharp3",
-        typeof(CSharp3CompilerBackend));
+      CreateAndAssertCompilerBackEnd("CSharp3",
+        typeof(CSharp3CompilerBackEnd));
     }
 
     [Test]
-    public void CanReadCompilerBackendFromAppSettings()
+    public void CanReadCompilerBackEndFromAppSettings()
     {
-      NHamlSection section = NHamlSection.Read();
+      var section = NHamlSection.Read();
 
       Assert.IsNotNull(section);
-      Assert.AreEqual("CSharp2", section.CompilerBackend);
+      Assert.AreEqual("CSharp2", section.CompilerBackEnd);
     }
 
     [Test]
     public void CanReadProductionSettingFromAppSettings()
     {
-      NHamlSection section = NHamlSection.Read();
+      var section = NHamlSection.Read();
 
       Assert.IsNotNull(section);
       Assert.IsTrue(section.Production);
@@ -99,7 +97,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadViewsAssembliesSectionFromAppSettings()
     {
-      NHamlSection section = NHamlSection.Read();
+      var section = NHamlSection.Read();
 
       Assert.IsNotNull(section);
       Assert.AreEqual(1, section.Assemblies.Count);
@@ -109,7 +107,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadViewsNamespacesSectionFromAppSettings()
     {
-      NHamlSection section = NHamlSection.Read();
+      var section = NHamlSection.Read();
 
       Assert.IsNotNull(section);
       Assert.AreEqual(1, section.Namespaces.Count);

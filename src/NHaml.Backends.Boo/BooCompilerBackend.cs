@@ -2,17 +2,15 @@
 
 using NHaml.Exceptions;
 
-namespace NHaml.Backends.Boo
+namespace NHaml.BackEnds.Boo
 {
-  public class BooCompilerBackend : ICompilerBackend
+  public class BooCompilerBackEnd : ICompilerBackEnd
   {
-    public BooCompilerBackend()
+    public BooCompilerBackEnd()
     {
       AttributeRenderer = new BooAttributeRenderer();
       SilentEvalRenderer = new BooSilentEvalRenderer();
     }
-
-    #region ICompilerBackend Members
 
     public IAttributeRenderer AttributeRenderer { get; private set; }
     public ISilentEvalRenderer SilentEvalRenderer { get; private set; }
@@ -41,7 +39,5 @@ namespace NHaml.Backends.Boo
 
       return viewType;
     }
-
-    #endregion
   }
 }

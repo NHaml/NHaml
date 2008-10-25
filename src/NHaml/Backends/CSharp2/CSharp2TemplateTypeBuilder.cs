@@ -6,7 +6,7 @@ using System.Text;
 
 using Microsoft.CSharp;
 
-namespace NHaml.Backends.CSharp2
+namespace NHaml.BackEnds.CSharp2
 {
   public class CSharp2TemplateTypeBuilder
   {
@@ -26,6 +26,7 @@ namespace NHaml.Backends.CSharp2
     public CSharp2TemplateTypeBuilder(TemplateCompiler templateCompiler)
     {
       _templateCompiler = templateCompiler;
+
       _providerOptions.Add("CompilerVersion", "v2.0");
 
       _compilerParameters.GenerateInMemory = true;
@@ -45,6 +46,11 @@ namespace NHaml.Backends.CSharp2
     public CompilerParameters CompilerParameters
     {
       get { return _compilerParameters; }
+    }
+
+    protected Dictionary<string, string> ProviderOptions
+    {
+      get { return _providerOptions; }
     }
 
     [SuppressMessage("Microsoft.Security", "CA2122")]

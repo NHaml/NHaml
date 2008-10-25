@@ -1,7 +1,7 @@
 using System;
 using System.Text.RegularExpressions;
 
-namespace NHaml.Backends.CSharp3
+namespace NHaml.BackEnds.CSharp3
 {
   internal class CSharp3LambdaRenderer : ILambdaRenderer
   {

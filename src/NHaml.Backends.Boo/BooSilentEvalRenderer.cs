@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace NHaml.Backends.Boo
+namespace NHaml.BackEnds.Boo
 {
   [SuppressMessage("Microsoft.Naming", "CA1722")]
   public sealed class BooSilentEvalRenderer : ISilentEvalRenderer

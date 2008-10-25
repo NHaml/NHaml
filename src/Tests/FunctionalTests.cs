@@ -2,8 +2,6 @@ using System.IO;
 
 using NUnit.Framework;
 
-using System;
-
 namespace NHaml.Tests
 {
   public abstract class FunctionalTests : TestFixtureBase

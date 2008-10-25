@@ -1,10 +1,11 @@
 using System.Text;
 
-namespace NHaml.Backends
+namespace NHaml.BackEnds
 {
   public abstract class TemplateClassBuilderBase : ITemplateClassBuilder
   {
     private readonly string _className;
+
     private readonly StringBuilder _output = new StringBuilder();
     private readonly StringBuilder _preamble = new StringBuilder();
 
@@ -24,12 +25,8 @@ namespace NHaml.Backends
     }
 
     public int Depth { get; set; }
-
     public int BlockDepth { get; set; }
-
     public int AttributeCount { get; set; }
-
-    #region ITemplateClassBuilder Members
 
     public string ClassName
     {
@@ -79,7 +76,5 @@ namespace NHaml.Backends
     public abstract void AppendPreambleCode(string code);
 
     public abstract string Build();
-
-    #endregion
   }
 }

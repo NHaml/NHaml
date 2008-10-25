@@ -341,9 +341,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHaml.Backends.Boo\NHaml.Backends.Boo.csproj">
+    <ProjectReference Include="..\NHaml.Backends.Boo\NHaml.BackEnds.Boo.csproj">
       <Project>{E9AFFBF2-A4E1-459A-9BB7-80A59D4AA8FD}</Project>
-      <Name>NHaml.Backends.Boo</Name>
+      <Name>NHaml.BackEnds.Boo</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>

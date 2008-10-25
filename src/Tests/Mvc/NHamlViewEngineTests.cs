@@ -1,13 +1,13 @@
-﻿using NHaml.Web.Mvc;
-
-using NUnit.Framework;
-
+using System.IO;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using System.Web;
-using System.IO;
 
 using Moq;
+
+using NHaml.Web.Mvc;
+
+using NUnit.Framework;
 
 namespace NHaml.Tests.Mvc
 {

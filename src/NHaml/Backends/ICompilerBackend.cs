@@ -1,8 +1,8 @@
 ﻿using System;
 
-namespace NHaml.Backends
+namespace NHaml.BackEnds
 {
-  public interface ICompilerBackend
+  public interface ICompilerBackEnd
   {
     IAttributeRenderer AttributeRenderer { get; }
     ISilentEvalRenderer SilentEvalRenderer { get; }

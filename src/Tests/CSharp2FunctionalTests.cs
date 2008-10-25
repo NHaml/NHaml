@@ -1,4 +1,4 @@
-using NHaml.Backends.CSharp2;
+using NHaml.BackEnds.CSharp2;
 
 using NUnit.Framework;
 
@@ -11,7 +11,7 @@ namespace NHaml.Tests
     {
       base.SetUp();
 
-      _templateCompiler.CompilerBackend = new CSharp2CompilerBackend();
+      _templateCompiler.CompilerBackEnd = new CSharp2CompilerBackEnd();
     }
 
     [Test]

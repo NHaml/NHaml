@@ -1,8 +1,8 @@
-using NHaml.Backends.CSharp3;
+using System;
+
+using NHaml.BackEnds.CSharp3;
 
 using NUnit.Framework;
-
-using System;
 
 namespace NHaml.Tests
 {
@@ -13,7 +13,7 @@ namespace NHaml.Tests
     {
       base.SetUp();
 
-      _templateCompiler.CompilerBackend = new CSharp3CompilerBackend();
+      _templateCompiler.CompilerBackEnd = new CSharp3CompilerBackEnd();
       _templateCompiler.AddReference(typeof(Action).Assembly.Location);
       _templateCompiler.ViewBaseType = typeof(MockView);
     }

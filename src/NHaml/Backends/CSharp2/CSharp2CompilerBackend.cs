@@ -2,36 +2,34 @@
 
 using NHaml.Exceptions;
 
-namespace NHaml.Backends.CSharp2
+namespace NHaml.BackEnds.CSharp2
 {
-  public class CSharp2CompilerBackend : ICompilerBackend
+  public class CSharp2CompilerBackEnd : ICompilerBackEnd
   {
-    public CSharp2CompilerBackend()
+    public CSharp2CompilerBackEnd()
     {
       AttributeRenderer = new CSharp2AttributeRenderer();
-      LambdaRenderer = new CSharp2LambdaRenderer();
-      SilentEvalRenderer = new CSharp2SilentEvalRenderer(LambdaRenderer);
+      SilentEvalRenderer = new CSharp2SilentEvalRenderer(new CSharp2LambdaRenderer());
     }
 
-    public ILambdaRenderer LambdaRenderer { get; private set; }
+    public IAttributeRenderer AttributeRenderer { get; protected set; }
+    public ISilentEvalRenderer SilentEvalRenderer { get; protected set; }
 
-    public IAttributeRenderer AttributeRenderer { get; private set; }
-    public ISilentEvalRenderer SilentEvalRenderer { get; private set; }
-
-    public ITemplateClassBuilder CreateTemplateClassBuilder(
-      Type viewBaseType,
-      string className,
-      params Type[] genericArguments)
+    public ITemplateClassBuilder CreateTemplateClassBuilder(Type viewBaseType,
+      string className, params Type[] genericArguments)
     {
       return new CSharp2TemplateClassBuilder(viewBaseType, className, genericArguments);
+    }
+
+    protected virtual CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder(CompilationContext compilationContext)
+    {
+      return new CSharp2TemplateTypeBuilder(compilationContext.TemplateCompiler);
     }
 
     public Type BuildView(CompilationContext compilationContext)
     {
       var source = compilationContext.TemplateClassBuilder.Build();
-
-      var typeBuilder = new CSharp2TemplateTypeBuilder(compilationContext.TemplateCompiler);
-
+      var typeBuilder = CreateTemplateTypeBuilder(compilationContext);
       var viewType = typeBuilder.Build(source, compilationContext.TemplateClassBuilder.ClassName);
 
       if (viewType == null)

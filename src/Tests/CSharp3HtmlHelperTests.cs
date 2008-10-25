@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using System.Linq.Expressions;
 using System.Web;
@@ -7,7 +6,7 @@ using System.Web.Routing;
 
 using Moq;
 
-using NHaml.Backends.CSharp3;
+using NHaml.BackEnds.CSharp3;
 using NHaml.Samples.Mvc.Models;
 using NHaml.Web.Mvc;
 
@@ -22,7 +21,7 @@ namespace NHaml.Tests
     {
       base.SetUp();
 
-      _templateCompiler.CompilerBackend = new CSharp3CompilerBackend();
+      _templateCompiler.CompilerBackEnd = new CSharp3CompilerBackEnd();
       _templateCompiler.ViewBaseType = typeof(MockView);
 
       _templateCompiler.AddReferences(typeof(IViewDataContainer));

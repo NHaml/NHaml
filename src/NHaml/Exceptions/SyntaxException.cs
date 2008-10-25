@@ -46,7 +46,7 @@ namespace NHaml.Exceptions
 
     public static void Throw(InputLine inputLine, string errorFormat, params object[] values)
     {
-      string message = Utility.FormatCurrentCulture(Resources.SyntaxError, inputLine.LineNumber,
+      var message = Utility.FormatCurrentCulture(Resources.SyntaxError, inputLine.LineNumber,
         Utility.FormatCurrentCulture(errorFormat, values),
         inputLine.Text);
 

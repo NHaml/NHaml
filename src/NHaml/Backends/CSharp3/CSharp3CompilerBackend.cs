@@ -1,47 +1,18 @@
-﻿using System;
+﻿using NHaml.BackEnds.CSharp2;
 
-using NHaml.Backends.CSharp2;
-using NHaml.Exceptions;
-
-namespace NHaml.Backends.CSharp3
+namespace NHaml.BackEnds.CSharp3
 {
-  public class CSharp3CompilerBackend : ICompilerBackend
+  public class CSharp3CompilerBackEnd : CSharp2CompilerBackEnd
   {
-    public CSharp3CompilerBackend()
+    public CSharp3CompilerBackEnd()
     {
       AttributeRenderer = new CSharp3AttributeRenderer();
-      LambdaRenderer = new CSharp3LambdaRenderer();
-      SilentEvalRenderer = new CSharp2SilentEvalRenderer(LambdaRenderer);
+      SilentEvalRenderer = new CSharp2SilentEvalRenderer(new CSharp3LambdaRenderer());
     }
 
-    public ILambdaRenderer LambdaRenderer { get; private set; }
-
-    public IAttributeRenderer AttributeRenderer { get; private set; }
-    public ISilentEvalRenderer SilentEvalRenderer { get; private set; }
-
-    public ITemplateClassBuilder CreateTemplateClassBuilder(
-      Type viewBaseType,
-      string className,
-      params Type[] genericArguments)
+    protected override CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder(CompilationContext compilationContext)
     {
-      return new CSharp2TemplateClassBuilder(viewBaseType, className, genericArguments);
-    }
-
-    public Type BuildView(CompilationContext compilationContext)
-    {
-      var source = compilationContext.TemplateClassBuilder.Build();
-
-      var typeBuilder = new CSharp3TemplateTypeBuilder(compilationContext.TemplateCompiler);
-
-      var viewType = typeBuilder.Build(source, compilationContext.TemplateClassBuilder.ClassName);
-
-      if (viewType == null)
-      {
-        ViewCompilationException.Throw(typeBuilder.CompilerResults,
-          typeBuilder.Source, compilationContext.TemplatePath);
-      }
-
-      return viewType;
+      return new CSharp3TemplateTypeBuilder(compilationContext.TemplateCompiler);
     }
   }
 }

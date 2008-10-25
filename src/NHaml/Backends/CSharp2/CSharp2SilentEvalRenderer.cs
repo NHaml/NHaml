@@ -1,7 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
 using System.Text.RegularExpressions;
 
-namespace NHaml.Backends.CSharp2
+namespace NHaml.BackEnds.CSharp2
 {
   [SuppressMessage("Microsoft.Naming", "CA1722")]
   public class CSharp2SilentEvalRenderer : ISilentEvalRenderer
@@ -10,9 +10,9 @@ namespace NHaml.Backends.CSharp2
       @"^(.+)(\(.*\))\s*=>\s*$",
       RegexOptions.Compiled | RegexOptions.Singleline);
 
-    public CSharp2SilentEvalRenderer(ILambdaRenderer iLambdaRenderer)
+    public CSharp2SilentEvalRenderer(ILambdaRenderer lambdaRenderer)
     {
-      LambdaRenderer = iLambdaRenderer;
+      LambdaRenderer = lambdaRenderer;
     }
 
     public ILambdaRenderer LambdaRenderer { get; set; }

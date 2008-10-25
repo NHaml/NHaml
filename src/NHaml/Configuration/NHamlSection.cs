@@ -4,9 +4,9 @@ using System.Globalization;
 using System.Security.Permissions;
 using System.Web;
 
-using NHaml.Backends;
-using NHaml.Backends.CSharp2;
-using NHaml.Backends.CSharp3;
+using NHaml.BackEnds;
+using NHaml.BackEnds.CSharp2;
+using NHaml.BackEnds.CSharp3;
 using NHaml.Properties;
 using NHaml.Utils;
 
@@ -17,7 +17,7 @@ namespace NHaml.Configuration
   public class NHamlSection : ConfigurationSection
   {
     private const string AssembliesElement = "assemblies";
-    private const string CompilerBackendAttribute = "compilerBackend";
+    private const string CompilerBackEndAttribute = "compilerBackEnd";
     private const string NamespacesElement = "namespaces";
     private const string ProductionAttribute = "production";
 
@@ -27,10 +27,10 @@ namespace NHaml.Configuration
       get { return Convert.ToBoolean(this[ProductionAttribute], CultureInfo.CurrentCulture); }
     }
 
-    [ConfigurationProperty(CompilerBackendAttribute)]
-    public virtual string CompilerBackend
+    [ConfigurationProperty(CompilerBackEndAttribute)]
+    public virtual string CompilerBackEnd
     {
-      get { return Convert.ToString(this[CompilerBackendAttribute], CultureInfo.CurrentCulture); }
+      get { return Convert.ToString(this[CompilerBackEndAttribute], CultureInfo.CurrentCulture); }
     }
 
     [ConfigurationProperty(AssembliesElement)]
@@ -50,52 +50,51 @@ namespace NHaml.Configuration
       return (NHamlSection)ConfigurationManager.GetSection("nhaml");
     }
 
-    public ICompilerBackend CreateCompilerBackend()
+    public ICompilerBackEnd CreateCompilerBackEnd()
     {
-      var backend = CompilerBackend;
+      var backEnd = CompilerBackEnd;
 
-      var csharp2BackendType = typeof(CSharp2CompilerBackend);
-      var csharp3BackendType = typeof(CSharp3CompilerBackend);
-      Type backendType;
+      var csharp2BackEndType = typeof(CSharp2CompilerBackEnd);
+      var csharp3BackEndType = typeof(CSharp3CompilerBackEnd);
 
-      if (backend.IndexOf(Type.Delimiter) == -1)
+      Type backEndType;
+
+      if (backEnd.IndexOf(Type.Delimiter) == -1)
       {
-        if (!backend.EndsWith("CompilerBackend"))
+        if (!backEnd.EndsWith("CompilerBackEnd", StringComparison.OrdinalIgnoreCase))
         {
-          backend += "CompilerBackend";
+          backEnd += "CompilerBackEnd";
         }
 
-        if (backend.Equals(csharp2BackendType.Name, StringComparison.InvariantCulture))
+        if (backEnd.Equals(csharp2BackEndType.Name, StringComparison.OrdinalIgnoreCase))
         {
-          backendType = csharp2BackendType;
-        }
-        else if (backend.Equals(csharp3BackendType.Name, StringComparison.InvariantCulture))
-        {
-          backendType = csharp3BackendType;
+          backEndType = csharp2BackEndType;
         }
         else
         {
-          backendType = Type.GetType(backend, false);
+          backEndType = backEnd.Equals(csharp3BackEndType.Name, StringComparison.OrdinalIgnoreCase)
+            ? csharp3BackEndType
+            : Type.GetType(backEnd, false);
         }
       }
       else
       {
-        backendType = Type.GetType(backend, false);
+        backEndType = Type.GetType(backEnd, false);
       }
 
-      if (backendType == null)
+      if (backEndType == null)
       {
         throw new ConfigurationErrorsException(
-          Utility.FormatCurrentCulture(Resources.CompilerBackendTypeNotFound, backend));
+          Utility.FormatCurrentCulture(Resources.CompilerBackEndTypeNotFound, backEnd));
       }
 
-      if (!typeof(ICompilerBackend).IsAssignableFrom(backendType))
+      if (!typeof(ICompilerBackEnd).IsAssignableFrom(backEndType))
       {
         throw new ConfigurationErrorsException(
-          Utility.FormatCurrentCulture(Resources.NotAssignableToICompilerBackend, backend));
+          Utility.FormatCurrentCulture(Resources.NotAssignableToICompilerBackEnd, backEnd));
       }
 
-      return (ICompilerBackend)Activator.CreateInstance(backendType);
+      return (ICompilerBackEnd)Activator.CreateInstance(backEndType);
     }
   }
 }

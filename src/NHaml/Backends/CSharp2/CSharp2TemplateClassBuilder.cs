@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NHaml.Utils;
 
-namespace NHaml.Backends.CSharp2
+namespace NHaml.BackEnds.CSharp2
 {
   public sealed class CSharp2TemplateClassBuilder : TemplateClassBuilderBase
   {

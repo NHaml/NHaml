@@ -6,8 +6,8 @@ using System.Reflection;
 using System.Reflection.Emit;
 using System.Text.RegularExpressions;
 
-using NHaml.Backends;
-using NHaml.Backends.CSharp3;
+using NHaml.BackEnds;
+using NHaml.BackEnds.CSharp3;
 using NHaml.Configuration;
 using NHaml.Properties;
 using NHaml.Rules;
@@ -45,7 +45,7 @@ namespace NHaml
     private readonly StringSet _usings
       = new StringSet(DefaultUsings);
 
-    private ICompilerBackend _compilerBackend;
+    private ICompilerBackEnd _compilerBackEnd;
 
     private Type _viewBaseType
       = typeof(CompiledTemplate);
@@ -64,18 +64,18 @@ namespace NHaml
       AddRule(new EscapeMarkupRule());
       AddRule(new PartialMarkupRule());
 
-      _compilerBackend = new CSharp3CompilerBackend();
+      _compilerBackEnd = new CSharp3CompilerBackEnd();
 
       LoadFromConfiguration();
     }
 
-    public ICompilerBackend CompilerBackend
+    public ICompilerBackEnd CompilerBackEnd
     {
-      get { return _compilerBackend; }
+      get { return _compilerBackEnd; }
       set
       {
         Invariant.ArgumentNotNull(value, "value");
-        _compilerBackend = value;
+        _compilerBackEnd = value;
       }
     }
 
@@ -111,7 +111,7 @@ namespace NHaml
 
     public void LoadFromConfiguration()
     {
-      NHamlSection section = NHamlSection.Read();
+      var section = NHamlSection.Read();
 
       if (section == null)
       {
@@ -121,17 +121,17 @@ namespace NHaml
       IsProduction = section.Production;
 
       // Todo: rebuild configuration
-      if (!string.IsNullOrEmpty(section.CompilerBackend))
+      if (!string.IsNullOrEmpty(section.CompilerBackEnd))
       {
-        _compilerBackend = section.CreateCompilerBackend();
+        _compilerBackEnd = section.CreateCompilerBackEnd();
       }
 
-      foreach (AssemblyConfigurationElement assemblyConfigurationElement in section.Assemblies)
+      foreach (var assemblyConfigurationElement in section.Assemblies)
       {
         AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
       }
 
-      foreach (NamespaceConfigurationElement namespaceConfigurationElement in section.Namespaces)
+      foreach (var namespaceConfigurationElement in section.Namespaces)
       {
         AddUsing(namespaceConfigurationElement.Name);
       }
@@ -186,7 +186,7 @@ namespace NHaml
         return;
       }
 
-      foreach (Type t in type.GetGenericArguments())
+      foreach (var t in type.GetGenericArguments())
       {
         AddReferences(t);
       }
@@ -232,7 +232,7 @@ namespace NHaml
         Invariant.FileExists(layoutPath);
       }
 
-      foreach (Type type in genericArguments)
+      foreach (var type in genericArguments)
       {
         AddReferences(type);
       }
@@ -240,9 +240,9 @@ namespace NHaml
       var compilationContext
         = new CompilationContext(
           this,
-          _compilerBackend.AttributeRenderer,
-          _compilerBackend.SilentEvalRenderer,
-          _compilerBackend.CreateTemplateClassBuilder(ViewBaseType, MakeClassName(templatePath), genericArguments),
+          _compilerBackEnd.AttributeRenderer,
+          _compilerBackEnd.SilentEvalRenderer,
+          _compilerBackEnd.CreateTemplateClassBuilder(ViewBaseType, MakeClassName(templatePath), genericArguments),
           templatePath,
           layoutPath);
 
@@ -253,14 +253,14 @@ namespace NHaml
         compilationContext.CollectInputFiles(inputFiles);
       }
 
-      return CreateFastActivator<TView>(_compilerBackend.BuildView(compilationContext));
+      return CreateFastActivator<TView>(_compilerBackEnd.BuildView(compilationContext));
     }
 
-    private void Compile(CompilationContext compilationContext)
+    private static void Compile(CompilationContext compilationContext)
     {
       while (compilationContext.CurrentNode.Next != null)
       {
-        MarkupRule rule = compilationContext.TemplateCompiler.GetRule(compilationContext.CurrentInputLine);
+        var rule = compilationContext.TemplateCompiler.GetRule(compilationContext.CurrentInputLine);
 
         if (compilationContext.CurrentInputLine.IsMultiline && rule.MergeMultiline)
         {
@@ -280,8 +280,8 @@ namespace NHaml
     {
       var dynamicMethod = new DynamicMethod("activatefast__", type, null, type);
 
-      ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
-      ConstructorInfo constructor = type.GetConstructor(new Type[] {});
+      var ilGenerator = dynamicMethod.GetILGenerator();
+      var constructor = type.GetConstructor(new Type[] {});
 
       if (constructor == null)
       {

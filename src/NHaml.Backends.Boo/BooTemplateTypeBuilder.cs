@@ -10,7 +10,7 @@ using Boo.Lang.Compiler.Pipelines;
 
 using CompilerError=Boo.Lang.Compiler.CompilerError;
 
-namespace NHaml.Backends.Boo
+namespace NHaml.BackEnds.Boo
 {
   public class BooTemplateTypeBuilder
   {
@@ -76,12 +76,13 @@ namespace NHaml.Backends.Boo
       return null;
     }
 
-    [SuppressMessage("Microsoft.Security", "CA2122")]
+    [SuppressMessage("Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods")]
     private void AddReferences()
     {
       foreach (var assemblyFile in _templateCompiler.References)
       {
         var assembly = Assembly.LoadFrom(assemblyFile);
+
         _booCompiler.Parameters.References.Add(assembly);
       }
     }

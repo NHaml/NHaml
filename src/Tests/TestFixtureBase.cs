@@ -2,7 +2,7 @@ using System;
 using System.IO;
 using System.Reflection;
 
-using NHaml.Backends.CSharp2;
+using NHaml.BackEnds.CSharp2;
 
 using NUnit.Framework;
 
@@ -24,7 +24,7 @@ namespace NHaml.Tests
       _templateCompiler.AddReference(Assembly.GetExecutingAssembly().Location);
       _templateCompiler.AddUsing("NHaml.Tests");
 
-      _templateCompiler.CompilerBackend = new CSharp2CompilerBackend();
+      _templateCompiler.CompilerBackEnd = new CSharp2CompilerBackEnd();
     }
 
     protected void AssertRender(string template)

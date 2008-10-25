@@ -123,8 +123,8 @@
   <data name="CompilationError" xml:space="preserve">
     <value>An error occurred when compiling the file: {0}</value>
   </data>
-  <data name="CompilerBackendTypeNotFound" xml:space="preserve">
-    <value>Compiler backend type {0} not found</value>
+  <data name="CompilerBackEndTypeNotFound" xml:space="preserve">
+    <value>Compiler back-end type {0} not found</value>
   </data>
   <data name="ErrorParsingTag" xml:space="preserve">
     <value>Error parsing tag</value>
@@ -138,8 +138,8 @@
   <data name="InvariantFail" xml:space="preserve">
     <value>Invariant Failure</value>
   </data>
-  <data name="NotAssignableToICompilerBackend" xml:space="preserve">
-    <value>Type {0} is not assignable to ICompilerBackend</value>
+  <data name="NotAssignableToICompilerBackEnd" xml:space="preserve">
+    <value>Type {0} is not assignable to ICompilerBackEnd</value>
   </data>
   <data name="ObjectNull" xml:space="preserve">
     <value>Expected Not Null Object</value>

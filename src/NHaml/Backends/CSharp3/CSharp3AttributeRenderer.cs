@@ -1,6 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
-namespace NHaml.Backends.CSharp3
+namespace NHaml.BackEnds.CSharp3
 {
   [SuppressMessage("Microsoft.Naming", "CA1722")]
   public sealed class CSharp3AttributeRenderer : IAttributeRenderer

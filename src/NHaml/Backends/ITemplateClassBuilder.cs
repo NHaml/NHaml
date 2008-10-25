@@ -1,4 +1,4 @@
-namespace NHaml.Backends
+namespace NHaml.BackEnds
 {
   public interface ITemplateClassBuilder
   {

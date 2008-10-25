@@ -7,17 +7,15 @@ using antlr;
 using Boo.Lang.Compiler.Ast;
 using Boo.Lang.Parser;
 
-using NHaml.Backends.Boo.Properties;
+using NHaml.BackEnds.Boo.Properties;
 using NHaml.Exceptions;
 using NHaml.Utils;
 
-namespace NHaml.Backends.Boo
+namespace NHaml.BackEnds.Boo
 {
   [SuppressMessage("Microsoft.Naming", "CA1722")]
   public sealed class BooAttributeRenderer : IAttributeRenderer
   {
-    #region IAttributeRenderer Members
-
     public void Render(CompilationContext compilationContext, string attributes)
     {
       var errorList = new List<RecognitionException>();
@@ -31,26 +29,30 @@ namespace NHaml.Backends.Boo
             Resources.AttributesParse_BooParserError, exception.Message));
       }
 
-      if (expression is HashLiteralExpression)
+      var hashLiteralExpression = expression as HashLiteralExpression;
+
+      if (hashLiteralExpression != null)
       {
-        Render(compilationContext, (HashLiteralExpression)expression);
-      }
-      else if (expression is BlockExpression)
-      {
-        Render(compilationContext, (BlockExpression)expression);
+        Render(compilationContext, hashLiteralExpression);
       }
       else
       {
-        SyntaxException.Throw(
-          compilationContext.CurrentInputLine,
-          Utility.FormatCurrentCulture(Resources.AttributesParse_UnexpectedExpression, expression.GetType().FullName));
+        var blockExpression = expression as BlockExpression;
+
+        if (blockExpression != null)
+        {
+          Render(compilationContext, blockExpression);
+        }
+        else
+        {
+          SyntaxException.Throw(
+            compilationContext.CurrentInputLine,
+            Utility.FormatCurrentCulture(Resources.AttributesParse_UnexpectedExpression, expression.GetType().FullName));
+        }
       }
     }
 
-    #endregion
-
-    private void Render(CompilationContext compilationContext,
-      BlockExpression blockExpression)
+    private static void Render(CompilationContext compilationContext, BlockExpression blockExpression)
     {
       if (blockExpression.Body == null ||
         blockExpression.Body.Statements.Count == 0)
@@ -66,29 +68,36 @@ namespace NHaml.Backends.Boo
 
       var statement = blockExpression.Body.Statements[0];
 
-      if (!(statement is ExpressionStatement))
+      var expressionStatement = statement as ExpressionStatement;
+
+      if (expressionStatement == null)
       {
         var type = statement == null ? "null" : statement.GetType().FullName;
-        SyntaxException.Throw(compilationContext.CurrentInputLine,
-          Utility.FormatCurrentCulture(
-            Resources.AttributesParse_ExpressionStatementExpected, type));
-      }
 
-      var expression = ((ExpressionStatement)statement).Expression;
-
-      if (!(expression is BinaryExpression))
-      {
-        var type = statement == null ? "null" : statement.GetType().FullName;
         SyntaxException.Throw(compilationContext.CurrentInputLine,
           Utility.FormatCurrentCulture(Resources.AttributesParse_ExpressionStatementExpected, type));
       }
 
-      var binaryExpression = (BinaryExpression)expression;
+// ReSharper disable PossibleNullReferenceException
+      var expression = expressionStatement.Expression;
+// ReSharper restore PossibleNullReferenceException
 
+      var binaryExpression = expression as BinaryExpression;
+
+      if (binaryExpression == null)
+      {
+        var type = statement == null ? "null" : statement.GetType().FullName;
+
+        SyntaxException.Throw(compilationContext.CurrentInputLine,
+          Utility.FormatCurrentCulture(Resources.AttributesParse_ExpressionStatementExpected, type));
+      }
+
+// ReSharper disable PossibleNullReferenceException
       AppendAttribute(compilationContext, binaryExpression.Left, binaryExpression.Right, false);
+// ReSharper restore PossibleNullReferenceException
     }
 
-    private void Render(CompilationContext compilationContext,
+    private static void Render(CompilationContext compilationContext,
       HashLiteralExpression hashExpression)
     {
       var first = true;
@@ -100,22 +109,29 @@ namespace NHaml.Backends.Boo
     }
 
     private static void AppendAttribute(CompilationContext compilationContext,
-      Expression key, Expression value, bool useSeparator)
+      Expression key, Node value, bool useSeparator)
     {
       if (key is LiteralExpression)
       {
         var literal = (StringLiteralExpression)key;
+
         AppendAttribute(compilationContext, literal.Value, value.ToCodeString(), useSeparator);
-      }
-      else if (key is ReferenceExpression)
-      {
-        var name = ((ReferenceExpression)key).Name;
-        AppendAttribute(compilationContext, name, value.ToCodeString(), useSeparator);
       }
       else
       {
-        var message = string.Format(Resources.AttributesParse_UnexpectedAttributeExpression, key.GetType().FullName);
-        SyntaxException.Throw(compilationContext.CurrentInputLine, message);
+        var referenceExpression = key as ReferenceExpression;
+
+        if (referenceExpression != null)
+        {
+          AppendAttribute(compilationContext, referenceExpression.Name, value.ToCodeString(), useSeparator);
+        }
+        else
+        {
+          var message = Utility.FormatCurrentCulture(
+            Resources.AttributesParse_UnexpectedAttributeExpression, key.GetType().FullName);
+
+          SyntaxException.Throw(compilationContext.CurrentInputLine, message);
+        }
       }
     }
 

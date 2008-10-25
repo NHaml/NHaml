@@ -20,50 +20,52 @@ namespace NHaml.Engine
 
     public TView FindAndCreateView(string viewName, string layoutName, TContext context)
     {
-        return CacheView( viewName, context, () => CreateView(viewName, layoutName, context));
+      return CacheView(viewName, context, () => CreateView(viewName, layoutName, context));
     }
 
-    public TView FindAndCreatePartialView( string viewName, TContext context )
+    public TView FindAndCreatePartialView(string viewName, TContext context)
     {
-        return CacheView( viewName, context, () => CreatePartialView(viewName, context));
+      return CacheView(viewName, context, () => CreatePartialView(viewName, context));
     }
 
-    private TView CacheView( string viewName, TContext context, CreateCompiledViewDelegate createView )
+    private TView CacheView(string viewName, TContext context, CreateCompiledViewDelegate createView)
     {
-        if( createView == null )
-            throw new ArgumentNullException( "createView" );
+      if (createView == null)
+      {
+        throw new ArgumentNullException("createView");
+      }
 
-        var viewKey = GetViewKey( viewName, context );
+      var viewKey = GetViewKey(viewName, context);
 
-        TCompiledView compiledView;
+      TCompiledView compiledView;
 
-        if( !_viewCache.TryGetValue( viewKey, out compiledView ) )
+      if (!_viewCache.TryGetValue(viewKey, out compiledView))
+      {
+        lock (_viewCache)
         {
-            lock( _viewCache )
-            {
-                if( !_viewCache.TryGetValue( viewKey, out compiledView ) )
-                {
-                    compiledView = createView();
+          if (!_viewCache.TryGetValue(viewKey, out compiledView))
+          {
+            compiledView = createView();
 
-                    _viewCache.Add( viewKey, compiledView );
-                }
-            }
+            _viewCache.Add(viewKey, compiledView);
+          }
         }
+      }
 
-        if( !_templateCompiler.IsProduction )
-        {
-            compiledView.RecompileIfNecessary( GetViewData( context ) );
-        }
+      if (!_templateCompiler.IsProduction)
+      {
+        compiledView.RecompileIfNecessary(GetViewData(context));
+      }
 
-        return compiledView.CreateView();
-
+      return compiledView.CreateView();
     }
 
     private delegate TCompiledView CreateCompiledViewDelegate();
-    protected abstract string GetViewKey( string viewName, TContext context );
+
+    protected abstract string GetViewKey(string viewName, TContext context);
     protected abstract TViewData GetViewData(TContext context);
-    protected abstract TCompiledView CreateView( string viewName, string layoutName, TContext context );
-    protected abstract TCompiledView CreatePartialView( string viewName, TContext context );
+    protected abstract TCompiledView CreateView(string viewName, string layoutName, TContext context);
+    protected abstract TCompiledView CreatePartialView(string viewName, TContext context);
 
     protected TemplateCompiler TemplateCompiler
     {

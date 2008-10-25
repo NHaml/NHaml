@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 using NHaml.Utils;
 
-namespace NHaml.Backends.Boo
+namespace NHaml.BackEnds.Boo
 {
   public sealed class BooTemplateClassBuilder : TemplateClassBuilderBase
   {
@@ -53,7 +53,7 @@ namespace NHaml.Backends.Boo
       // prevents problems with " at the end of the string
       value = value.Replace("\"", "\"\"\"+'\"'+\"\"\"");
 
-      Output.AppendLine(string.Format(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
+      Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
     }
 
     public override void AppendCode(string code, bool newLine)
@@ -61,7 +61,8 @@ namespace NHaml.Backends.Boo
       if (code != null)
       {
         var action = newLine ? "WriteLine" : "Write";
-        Output.AppendLine(string.Format(IndentString + "textWriter.{0}(Convert.ToString({1}))", action, code));
+
+        Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(Convert.ToString({1}))", action, code));
       }
     }
 
@@ -91,7 +92,7 @@ namespace NHaml.Backends.Boo
 
       Output.Append(IndentString + code.Trim());
 
-      if (!closeStatement && !code.EndsWith(":"))
+      if (!closeStatement && !code.EndsWith(":", StringComparison.OrdinalIgnoreCase))
       {
         Output.Append(":");
       }
