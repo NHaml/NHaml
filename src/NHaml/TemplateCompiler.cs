@@ -17,9 +17,6 @@ namespace NHaml
 {
   public sealed class TemplateCompiler
   {
-    private static readonly Regex _pathCleaner
-      = new Regex(@"[-\\/\.:\s]", RegexOptions.Compiled | RegexOptions.Singleline);
-
     private static readonly string[] DefaultAutoClosingTags
       = new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"};
 
@@ -242,7 +239,7 @@ namespace NHaml
           this,
           _compilerBackEnd.AttributeRenderer,
           _compilerBackEnd.SilentEvalRenderer,
-          _compilerBackEnd.CreateTemplateClassBuilder(ViewBaseType, MakeClassName(templatePath), genericArguments),
+          _compilerBackEnd.CreateTemplateClassBuilder( ViewBaseType, ClassNameProvider.MakeClassName( templatePath ), genericArguments ),
           templatePath,
           layoutPath);
 
@@ -292,11 +289,6 @@ namespace NHaml
       ilGenerator.Emit(OpCodes.Ret);
 
       return (TemplateActivator<TResult>)dynamicMethod.CreateDelegate(typeof(TemplateActivator<TResult>));
-    }
-
-    private static string MakeClassName(string templatePath)
-    {
-      return _pathCleaner.Replace(templatePath, "_").TrimStart('_');
     }
   }
 }

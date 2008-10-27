@@ -21,7 +21,8 @@ namespace NHaml.BackEnds.CSharp2
       return new CSharp2TemplateClassBuilder(viewBaseType, className, genericArguments);
     }
 
-    protected virtual CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder(CompilationContext compilationContext)
+    protected virtual CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder(
+      CompilationContext compilationContext)
     {
       return new CSharp2TemplateTypeBuilder(compilationContext.TemplateCompiler);
     }

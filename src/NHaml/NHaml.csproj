@@ -110,6 +110,7 @@
     <Compile Include="Rules\TagMarkupRule.cs" />
     <Compile Include="TemplateCompiler.cs" />
     <Compile Include="BackEnds\CSharp2\CSharp2TemplateTypeBuilder.cs" />
+    <Compile Include="Utils\ClassNameProvider.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />

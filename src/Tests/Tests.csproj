@@ -48,6 +48,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Data" />
     <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\System.Web.Abstractions.dll</HintPath>
@@ -62,6 +63,7 @@
       <HintPath>..\..\lib\System.Web.Routing.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
@@ -321,6 +323,7 @@
   <ItemGroup>
     <Compile Include="AttributeSplitterTests.cs" />
     <Compile Include="BooFunctionalTests.cs" />
+    <Compile Include="UtilsTests.cs" />
     <Compile Include="Configuration\ConfigurationTests.cs" />
     <Compile Include="CSharp2FunctionalTests.cs" />
     <Compile Include="CSharp3HtmlHelperTests.cs" />
@@ -359,6 +362,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Issues\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
