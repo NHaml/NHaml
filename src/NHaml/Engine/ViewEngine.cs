@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;
 using System.Web;
@@ -10,13 +8,10 @@ namespace NHaml.Engine
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public abstract class ViewEngine<TCompiledView, TContext, TView, TViewData>
-    where TCompiledView : CompiledView<TView, TViewData>
+    where TCompiledView : ICompiledView<TView, TViewData>
   {
-    private readonly Dictionary<string, TCompiledView> _viewCache
-      = new Dictionary<string, TCompiledView>();
-
-    private readonly TemplateCompiler _templateCompiler
-      = new TemplateCompiler();
+    private readonly CompiledViewCache<TCompiledView, TView, TViewData> _viewCache
+      = new CompiledViewCache<TCompiledView, TView, TViewData>();
 
     public TView FindAndCreateView(string viewName, string layoutName, TContext context)
     {
@@ -28,39 +23,12 @@ namespace NHaml.Engine
       return CacheView(viewName, context, () => CreatePartialView(viewName, context));
     }
 
-    private TView CacheView(string viewName, TContext context, CreateCompiledViewDelegate createView)
+    private TView CacheView(string viewName, TContext context,
+      CompiledViewCache<TCompiledView, TView, TViewData>.CreateCompiledViewDelegate createView)
     {
-      if (createView == null)
-      {
-        throw new ArgumentNullException("createView");
-      }
-
       var viewKey = GetViewKey(viewName, context);
-
-      TCompiledView compiledView;
-
-      if (!_viewCache.TryGetValue(viewKey, out compiledView))
-      {
-        lock (_viewCache)
-        {
-          if (!_viewCache.TryGetValue(viewKey, out compiledView))
-          {
-            compiledView = createView();
-
-            _viewCache.Add(viewKey, compiledView);
-          }
-        }
-      }
-
-      if (!_templateCompiler.IsProduction)
-      {
-        compiledView.RecompileIfNecessary(GetViewData(context));
-      }
-
-      return compiledView.CreateView();
+      return _viewCache.GetView(createView, viewKey, () => GetViewData(context));
     }
-
-    private delegate TCompiledView CreateCompiledViewDelegate();
 
     protected abstract string GetViewKey(string viewName, TContext context);
     protected abstract TViewData GetViewData(TContext context);
@@ -69,7 +37,7 @@ namespace NHaml.Engine
 
     protected TemplateCompiler TemplateCompiler
     {
-      get { return _templateCompiler; }
+      get { return _viewCache.TemplateCompiler; }
     }
   }
 }

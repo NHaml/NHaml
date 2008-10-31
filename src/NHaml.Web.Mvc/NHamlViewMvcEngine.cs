@@ -1,6 +1,5 @@
 using System;
 using System.Data.Linq;
-using System.IO;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Security.Permissions;
@@ -17,11 +16,36 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewMvcEngine :
-    ViewEngine<NHamlCompiledMvcView, ControllerContext, INHamlMvcView, ViewDataDictionary>,
-    IViewEngine
+  public class NHamlViewMvcEngine : VirtualPathProviderViewEngine
   {
+    private readonly CompiledViewCache<NHamlCompiledMvcView, INHamlMvcView, ViewDataDictionary> _viewCache =
+      new CompiledViewCache<NHamlCompiledMvcView, INHamlMvcView, ViewDataDictionary>();
+
     public NHamlViewMvcEngine()
+    {
+      InitializeTemplateCompiler();
+      InitializeViewLocations();
+    }
+
+    private void InitializeViewLocations()
+    {
+      ViewLocationFormats = new[]
+                              {
+                                "~/Views/{1}/{0}.haml",
+                                "~/Views/Shared/{0}.haml"
+                              };
+
+      MasterLocationFormats = new[]
+                                {
+                                  "~/Views/Shared/{0}.haml",
+                                  "~/Views/Shared/{1}.haml",
+                                  "~/Views/Shared/application.haml",
+                                };
+
+      PartialViewLocationFormats = ViewLocationFormats;
+    }
+
+    private void InitializeTemplateCompiler()
     {
       TemplateCompiler.AddUsing("System.Web");
       TemplateCompiler.AddUsing("System.Web.Mvc");
@@ -48,91 +72,62 @@ namespace NHaml.Web.Mvc
       TemplateCompiler.LoadFromConfiguration();
     }
 
-    #region IViewEngine Members
-
-    public ViewEngineResult FindPartialView(ControllerContext controllerContext, string partialViewName)
+    protected TemplateCompiler TemplateCompiler
     {
-      return new ViewEngineResult(FindAndCreatePartialView(partialViewName, controllerContext), this);
+      get { return _viewCache.TemplateCompiler; }
     }
 
-    public ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
+    public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
     {
-      return new ViewEngineResult(FindAndCreateView(viewName, masterName, controllerContext), this);
+      masterName = MasterRenamingHackery(masterName);
+      var result = base.FindView(controllerContext, viewName, masterName);
+      return result;
     }
 
-    public void ReleaseView(ControllerContext controllerContext, IView view)
+    private static string MasterRenamingHackery(string masterName)
     {
+      //Hack: If the specified master is empty then the VirtualPathProviderViewEngine will not try to locate a master.
+      //Give it a fake name to ensure that the VirtualPathProviderViewEngine will always look through the master-locations 
+      //so that application.haml can be located
+      if (string.IsNullOrEmpty(masterName))
+      {
+        masterName = "__NhamlFakeMasterThatShouldNeverExist__";
+      }
+      return masterName;
     }
 
-    #endregion
-
-    protected override NHamlCompiledMvcView CreateView(string viewName, string layoutName, ControllerContext context)
+    protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
-      var templatePath = context.HttpContext.Request
-        .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
+      return _viewCache.GetView(() => CreateCompiledView(partialPath, null, controllerContext), partialPath,
+        () => controllerContext.Controller.ViewData);
+    }
 
-      var masterPath = SelectLayout(layoutName, context);
+    protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
+    {
+      return _viewCache.GetView(() => CreateCompiledView(viewPath, masterPath, controllerContext), viewPath,
+        () => controllerContext.Controller.ViewData);
+    }
+
+    protected NHamlCompiledMvcView CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
+    {
+      viewPath = VirtualPathToPhysicalPath(viewPath, context);
+      masterPath = VirtualPathToPhysicalPath(masterPath, context);
 
       return new NHamlCompiledMvcView(
         TemplateCompiler,
-        templatePath,
+        viewPath,
         masterPath,
         context.Controller.ViewData);
     }
 
-    protected override NHamlCompiledMvcView CreatePartialView(string viewName, ControllerContext context)
+    private string VirtualPathToPhysicalPath(string path, RequestContext context)
     {
-      var templatePath = context.HttpContext.Request
-        .MapPath("~/Views/" + GetViewKey(viewName, context) + ".haml");
-
-      return new NHamlCompiledMvcView(
-        TemplateCompiler,
-        templatePath,
-        null,
-        context.Controller.ViewData);
-    }
-
-    protected override string GetViewKey(string viewName, ControllerContext context)
-    {
-      return GetControllerName(context) + "/" + viewName;
-    }
-
-    protected override ViewDataDictionary GetViewData(ControllerContext context)
-    {
-      return context.Controller.ViewData;
-    }
-
-    protected static string SelectLayout(string layoutName, RequestContext requestContext)
-    {
-      var layoutsFolder = requestContext.HttpContext.Request.MapPath("~/Views/Shared");
-
-      var layoutPath = layoutsFolder + "\\" + layoutName + ".haml";
-
-      if (File.Exists(layoutPath))
+      if (string.IsNullOrEmpty(path))
       {
-        return layoutPath;
+        return path;
       }
 
-      layoutPath = layoutsFolder + "\\" + GetControllerName(requestContext) + ".haml";
-
-      if (File.Exists(layoutPath))
-      {
-        return layoutPath;
-      }
-
-      layoutPath = layoutsFolder + "\\application.haml";
-
-      if (File.Exists(layoutPath))
-      {
-        return layoutPath;
-      }
-
-      return null;
-    }
-
-    private static string GetControllerName(RequestContext requestContext)
-    {
-      return (string)requestContext.RouteData.Values["controller"];
+      return context.HttpContext.Request.MapPath(path);
     }
   }
 }

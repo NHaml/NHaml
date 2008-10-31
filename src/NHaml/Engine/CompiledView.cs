@@ -8,7 +8,7 @@ namespace NHaml.Engine
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class CompiledView<TView, TViewData>
+  public class CompiledView<TView, TViewData> : ICompiledView<TView, TViewData>
   {
     private readonly TemplateCompiler _templateCompiler;
 

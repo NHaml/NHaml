@@ -82,6 +82,8 @@
     <Compile Include="BackEnds\CSharp2\CSharp2AttributeRenderer.cs" />
     <Compile Include="BackEnds\CSharp3\CSharp3AttributeRenderer.cs" />
     <Compile Include="Engine\CompiledView.cs" />
+    <Compile Include="Engine\CompiledViewCache.cs" />
+    <Compile Include="Engine\ICompiledView.cs" />
     <Compile Include="Engine\ViewEngine.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
     <Compile Include="Exceptions\ViewCompilationException.cs" />
