@@ -53,9 +53,9 @@ namespace NHaml.Tests
     [Test]
     public void ViewBaseClassGeneric()
     {
-      var templateCompiler = new TemplateCompiler {ViewBaseType = typeof(ViewBaseGeneric<>)};
+      var templateCompiler = new TemplateCompiler {ViewBaseType = typeof(ViewBaseGeneric<List<int>>)};
 
-      AssertRender("CustomBaseClass", null, templateCompiler, typeof(List<int>));
+      AssertRender("CustomBaseClass", null, templateCompiler);
     }
 
     [Test]

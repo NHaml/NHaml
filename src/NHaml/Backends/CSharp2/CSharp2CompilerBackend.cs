@@ -16,9 +16,9 @@ namespace NHaml.BackEnds.CSharp2
     public ISilentEvalRenderer SilentEvalRenderer { get; protected set; }
 
     public ITemplateClassBuilder CreateTemplateClassBuilder(Type viewBaseType,
-      string className, params Type[] genericArguments)
+      string className)
     {
-      return new CSharp2TemplateClassBuilder(viewBaseType, className, genericArguments);
+      return new CSharp2TemplateClassBuilder(viewBaseType, className);
     }
 
     protected virtual CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder(

@@ -50,9 +50,9 @@ namespace NHaml.Tests
     }
 
     protected static void AssertRender(string template, string result,
-      TemplateCompiler templateCompiler, params Type[] genericArguments)
+      TemplateCompiler templateCompiler)
     {
-      var viewActivator = templateCompiler.Compile(TemplatesFolder + template + ".haml", genericArguments);
+      var viewActivator = templateCompiler.Compile(TemplatesFolder + template + ".haml");
 
       var view = viewActivator();
 

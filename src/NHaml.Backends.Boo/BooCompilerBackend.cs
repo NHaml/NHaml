@@ -17,10 +17,9 @@ namespace NHaml.BackEnds.Boo
 
     public ITemplateClassBuilder CreateTemplateClassBuilder(
       Type viewBaseType,
-      string className,
-      params Type[] genericArguments)
+      string className)
     {
-      return new BooTemplateClassBuilder(viewBaseType, className, genericArguments);
+      return new BooTemplateClassBuilder(viewBaseType, className);
     }
 
     public Type BuildView(CompilationContext compilationContext)

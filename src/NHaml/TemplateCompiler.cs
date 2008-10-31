@@ -90,6 +90,7 @@ namespace NHaml
         }
 
         _viewBaseType = value;
+        AddReferences(_viewBaseType);
         _usings.Add(_viewBaseType.Namespace);
         _references.Add(_viewBaseType.Assembly.Location);
       }
@@ -188,37 +189,37 @@ namespace NHaml
       }
     }
 
-    public TemplateActivator<CompiledTemplate> Compile(string templatePath, params Type[] genericArguments)
+    public TemplateActivator<CompiledTemplate> Compile(string templatePath)
     {
-      return Compile<CompiledTemplate>(templatePath, genericArguments);
+      return Compile<CompiledTemplate>(templatePath);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
-    public TemplateActivator<TView> Compile<TView>(string templatePath, params Type[] genericArguments)
+    public TemplateActivator<TView> Compile<TView>(string templatePath)
     {
-      return Compile<TView>(templatePath, null, genericArguments);
+      return Compile<TView>(templatePath, null);
     }
 
-    public TemplateActivator<CompiledTemplate> Compile(string templatePath, string layoutPath, params Type[] genericArguments)
+    public TemplateActivator<CompiledTemplate> Compile(string templatePath, string layoutPath)
     {
-      return Compile<CompiledTemplate>(templatePath, layoutPath, genericArguments);
+      return Compile<CompiledTemplate>(templatePath, layoutPath);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
-    public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath, params Type[] genericArguments)
+    public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath)
     {
-      return Compile<TView>(templatePath, layoutPath, null, genericArguments);
+      return Compile<TView>(templatePath, layoutPath, null);
     }
 
     public TemplateActivator<CompiledTemplate> Compile(string templatePath, string layoutPath,
-      ICollection<string> inputFiles, params Type[] genericArguments)
+      ICollection<string> inputFiles)
     {
-      return Compile<CompiledTemplate>(templatePath, layoutPath, inputFiles, genericArguments);
+      return Compile<CompiledTemplate>(templatePath, layoutPath, inputFiles);
     }
 
     [SuppressMessage("Microsoft.Design", "CA1004")]
     public TemplateActivator<TView> Compile<TView>(string templatePath, string layoutPath,
-      ICollection<string> inputFiles, params Type[] genericArguments)
+      ICollection<string> inputFiles)
     {
       Invariant.ArgumentNotEmpty(templatePath, "templatePath");
       Invariant.FileExists(templatePath);
@@ -228,17 +229,13 @@ namespace NHaml
         Invariant.FileExists(layoutPath);
       }
 
-      foreach (var type in genericArguments)
-      {
-        AddReferences(type);
-      }
 
       var compilationContext
         = new CompilationContext(
           this,
           _compilerBackEnd.AttributeRenderer,
           _compilerBackEnd.SilentEvalRenderer,
-          _compilerBackEnd.CreateTemplateClassBuilder(ViewBaseType, ClassNameProvider.MakeClassName(templatePath), genericArguments),
+          _compilerBackEnd.CreateTemplateClassBuilder(ViewBaseType, ClassNameProvider.MakeClassName(templatePath)),
           templatePath,
           layoutPath);
 

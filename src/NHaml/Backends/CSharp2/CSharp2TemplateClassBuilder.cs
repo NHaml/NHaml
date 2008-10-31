@@ -8,13 +8,13 @@ namespace NHaml.BackEnds.CSharp2
   public sealed class CSharp2TemplateClassBuilder : TemplateClassBuilderBase
   {
     public CSharp2TemplateClassBuilder(Type viewBaseType,
-      string className, params Type[] genericArguments)
+      string className)
       : base(className)
     {
       Preamble.AppendLine(
         Utility.FormatInvariant("public class {0} : {1} {{readonly TemplateOutputWriter _output = new TemplateOutputWriter();",
           ClassName,
-          MakeBaseTypeName(viewBaseType, genericArguments)));
+          MakeBaseTypeName(viewBaseType)));
 
       Preamble.AppendLine("protected override TemplateOutputWriter Output {get{return _output;}}");
       Preamble.AppendLine("public override void Render(TextWriter textWriter){");
@@ -115,33 +115,29 @@ namespace NHaml.BackEnds.CSharp2
       return Preamble.ToString();
     }
 
-    private static string MakeBaseTypeName(Type baseType, params Type[] genericArguments)
+    private static string MakeBaseTypeName(Type baseType)
     {
-      if ((genericArguments != null) && (genericArguments.Length > 0))
-      {
-        baseType = baseType.MakeGenericType(genericArguments);
-      }
 
-      var tname = baseType.FullName.Replace('+', '.');
+      var typeName = baseType.FullName.Replace('+', '.');
 
       if (baseType.IsGenericType)
       {
-        tname = tname.Substring(0, tname.IndexOf('`'));
-        tname += "<";
+        typeName = typeName.Substring(0, typeName.IndexOf('`'));
+        typeName += "<";
 
         var parameters = new List<string>();
 
-        foreach (var t in baseType.GetGenericArguments())
+        foreach (var type in baseType.GetGenericArguments())
         {
-          parameters.Add(MakeBaseTypeName(t, null));
+          parameters.Add(MakeBaseTypeName(type));
         }
 
-        tname += string.Join(",", parameters.ToArray());
+        typeName += string.Join(",", parameters.ToArray());
 
-        tname += ">";
+        typeName += ">";
       }
 
-      return tname;
+      return typeName;
     }
   }
 }

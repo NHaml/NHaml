@@ -6,7 +6,7 @@ namespace NHaml.BackEnds
   {
     IAttributeRenderer AttributeRenderer { get; }
     ISilentEvalRenderer SilentEvalRenderer { get; }
-    ITemplateClassBuilder CreateTemplateClassBuilder(Type viewBaseType, string className, params Type[] genericArguments);
+    ITemplateClassBuilder CreateTemplateClassBuilder(Type viewBaseType, string className);
     Type BuildView(CompilationContext compilationContext);
   }
 }

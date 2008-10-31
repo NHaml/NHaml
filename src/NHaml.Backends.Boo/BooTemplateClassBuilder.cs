@@ -10,10 +10,10 @@ namespace NHaml.BackEnds.Boo
     private bool _disableOutputIndentationShrink;
 
     public BooTemplateClassBuilder(Type viewBaseType,
-      string className, params Type[] genericArguments)
+      string className)
       : base(className)
     {
-      var init = Utility.FormatInvariant("class {0}({1}):", ClassName, MakeBaseTypeName(viewBaseType, genericArguments));
+      var init = Utility.FormatInvariant("class {0}({1}):", ClassName, MakeBaseTypeName(viewBaseType));
       Preamble.AppendLine(init);
       Preamble.AppendLine("  _output as TemplateOutputWriter");
       Preamble.AppendLine("  def constructor():");
@@ -135,33 +135,29 @@ namespace NHaml.BackEnds.Boo
       return Preamble.ToString();
     }
 
-    private static string MakeBaseTypeName(Type baseType, params Type[] genericArguments)
+    private static string MakeBaseTypeName(Type baseType)
     {
-      if ((genericArguments != null) && (genericArguments.Length > 0))
-      {
-        baseType = baseType.MakeGenericType(genericArguments);
-      }
 
-      var tname = baseType.FullName.Replace('+', '.');
+      var typeName = baseType.FullName.Replace('+', '.');
 
       if (baseType.IsGenericType)
       {
-        tname = tname.Substring(0, tname.IndexOf('`'));
-        tname += "[";
+        typeName = typeName.Substring(0, typeName.IndexOf('`'));
+        typeName += "[";
 
         var parameters = new List<string>();
 
-        foreach (var t in baseType.GetGenericArguments())
+        foreach (var type in baseType.GetGenericArguments())
         {
-          parameters.Add(MakeBaseTypeName(t, null));
+          parameters.Add(MakeBaseTypeName(type));
         }
 
-        tname += string.Join(",", parameters.ToArray());
+        typeName += string.Join(",", parameters.ToArray());
 
-        tname += "]";
+        typeName += "]";
       }
 
-      return tname;
+      return typeName;
     }
   }
 }
