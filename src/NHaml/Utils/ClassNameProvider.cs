@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 
 namespace NHaml.Utils
@@ -6,16 +6,16 @@ namespace NHaml.Utils
   public static class ClassNameProvider
   {
     private static readonly Regex _pathCleaner
-      = new Regex( @"[^0-9a-z_]", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline );
+      = new Regex(@"[^0-9a-z_]", RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
 
-    public static string MakeClassName( string templatePath )
+    public static string MakeClassName(string templatePath)
     {
-      if( templatePath == null )
+      if (templatePath == null)
       {
-        throw new ArgumentNullException( "templatePath" );
+        throw new ArgumentNullException("templatePath");
       }
 
-      return _pathCleaner.Replace( templatePath, "_" ).Trim( '_' );
+      return _pathCleaner.Replace(templatePath, "_").Trim('_');
     }
   }
 }

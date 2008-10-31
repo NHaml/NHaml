@@ -4,7 +4,6 @@ using System.ComponentModel;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Text.RegularExpressions;
 
 using NHaml.BackEnds;
 using NHaml.BackEnds.CSharp3;
@@ -239,7 +238,7 @@ namespace NHaml
           this,
           _compilerBackEnd.AttributeRenderer,
           _compilerBackEnd.SilentEvalRenderer,
-          _compilerBackEnd.CreateTemplateClassBuilder( ViewBaseType, ClassNameProvider.MakeClassName( templatePath ), genericArguments ),
+          _compilerBackEnd.CreateTemplateClassBuilder(ViewBaseType, ClassNameProvider.MakeClassName(templatePath), genericArguments),
           templatePath,
           layoutPath);
 

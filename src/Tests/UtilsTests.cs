@@ -1,4 +1,5 @@
 ﻿using NHaml.Utils;
+
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -8,10 +9,9 @@ namespace NHaml.Tests
     [Test]
     public void ClassNameProviderShouldReturnValidClassName()
     {
-      var className = ClassNameProvider.MakeClassName( @" C:\abc ! XYZ\\#(){}[].hAml.." );
+      var className = ClassNameProvider.MakeClassName(@" C:\abc ! XYZ\\#(){}[].hAml..");
 
-      Assert.AreEqual( className, "C__abc___XYZ__________hAml" );
+      Assert.AreEqual(className, "C__abc___XYZ__________hAml");
     }
-
   }
 }
