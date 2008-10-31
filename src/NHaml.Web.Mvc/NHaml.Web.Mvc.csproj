@@ -89,12 +89,12 @@
     <Compile Include="Helpers\Inflector.cs" />
     <Compile Include="Helpers\NHamlHtmlHelper.cs" />
     <Compile Include="Helpers\FormBuilder.cs" />
-    <Compile Include="NHamlCompiledMvcView.cs">
+    <Compile Include="NHamlMvcCompiledView.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="INHamlMvcView.cs" />
     <Compile Include="NHamlMvcView.cs" />
-    <Compile Include="NHamlViewMvcEngine.cs" />
+    <Compile Include="NHamlMvcViewEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\NHaml\Properties\Resources.resx">

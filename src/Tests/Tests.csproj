@@ -77,6 +77,9 @@
     <None Include="Templates\ConditionalsBoo.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\Mvc\Home\View.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\Mvc\Shared\SharedView.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -120,9 +123,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Mvc\Shared\Controller.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\Mvc\Home\View.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Results\AltControllerPartial.xhtml">

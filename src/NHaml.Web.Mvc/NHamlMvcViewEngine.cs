@@ -16,12 +16,12 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlViewMvcEngine : VirtualPathProviderViewEngine
+  public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
   {
-    private readonly CompiledViewCache<NHamlCompiledMvcView, INHamlMvcView, ViewDataDictionary> _viewCache =
-      new CompiledViewCache<NHamlCompiledMvcView, INHamlMvcView, ViewDataDictionary>();
+    private readonly CompiledViewCache<NHamlMvcCompiledView, INHamlMvcView, ViewDataDictionary> _viewCache =
+      new CompiledViewCache<NHamlMvcCompiledView, INHamlMvcView, ViewDataDictionary>();
 
-    public NHamlViewMvcEngine()
+    public NHamlMvcViewEngine()
     {
       InitializeTemplateCompiler();
       InitializeViewLocations();
@@ -108,12 +108,12 @@ namespace NHaml.Web.Mvc
         () => controllerContext.Controller.ViewData);
     }
 
-    protected NHamlCompiledMvcView CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
+    protected NHamlMvcCompiledView CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
     {
       viewPath = VirtualPathToPhysicalPath(viewPath, context);
       masterPath = VirtualPathToPhysicalPath(masterPath, context);
 
-      return new NHamlCompiledMvcView(
+      return new NHamlMvcCompiledView(
         TemplateCompiler,
         viewPath,
         masterPath,

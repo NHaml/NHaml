@@ -15,12 +15,12 @@ namespace NHaml.Tests.Mvc
   [TestFixture]
   public class NHamlViewEngineTests
   {
-    private NHamlViewMvcEngine _engine;
+    private NHamlMvcViewEngine _viewEngine;
 
     [SetUp]
     public void Setup()
     {
-      _engine = new TestableNHamlViewMvcEngine();
+      _viewEngine = new TestableNHamlViewMvcEngine();
     }
 
     [Test]
@@ -30,7 +30,7 @@ namespace NHaml.Tests.Mvc
       {
         var controllerContext = CreateMockedControllerContext();
 
-        var result = _engine.FindPartialView(controllerContext, "View");
+        var result = _viewEngine.FindPartialView(controllerContext, "View");
 
         Assert.IsNotNull(result);
 
@@ -80,7 +80,7 @@ namespace NHaml.Tests.Mvc
       {
         var controllerContext = CreateMockedControllerContext();
 
-        var result = _engine.FindView(controllerContext, viewName, withLayout);
+        var result = _viewEngine.FindView(controllerContext, viewName, withLayout);
 
         Assert.IsNotNull(result);
 
@@ -109,7 +109,7 @@ namespace NHaml.Tests.Mvc
       return new ControllerContext(contextMock.Object, routeData, controllerMock.Object);
     }
 
-    private class TestableNHamlViewMvcEngine : NHamlViewMvcEngine
+    private class TestableNHamlViewMvcEngine : NHamlMvcViewEngine
     {
       public TestableNHamlViewMvcEngine()
       {

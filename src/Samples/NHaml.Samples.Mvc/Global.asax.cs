@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
@@ -36,7 +36,7 @@ namespace NHaml.Samples.Mvc
                                     })
                               });
 
-      ViewEngines.Engines.Add(new NHamlViewMvcEngine());
+      ViewEngines.Engines.Add(new NHamlMvcViewEngine());
     }
   }
 }

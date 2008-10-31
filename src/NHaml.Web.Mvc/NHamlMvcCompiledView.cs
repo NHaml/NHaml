@@ -9,9 +9,9 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlCompiledMvcView : CompiledView<INHamlMvcView, ViewDataDictionary>
+  public class NHamlMvcCompiledView : CompiledView<INHamlMvcView, ViewDataDictionary>
   {
-    public NHamlCompiledMvcView(TemplateCompiler templateCompiler, string templatePath,
+    public NHamlMvcCompiledView(TemplateCompiler templateCompiler, string templatePath,
       string layoutPath, ViewDataDictionary viewData)
       : base(templateCompiler, templatePath, layoutPath, viewData)
     {
