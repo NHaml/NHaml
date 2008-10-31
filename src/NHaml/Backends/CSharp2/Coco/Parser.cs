@@ -1741,10 +1741,9 @@ namespace NHaml.Coco
 
     private void VariableDeclarators()
     {
-      string name;
       int start;
       Expect(1);
-      name = t.val;
+      var name = t.val;
       if (la.kind == 85)
       {
         Get();

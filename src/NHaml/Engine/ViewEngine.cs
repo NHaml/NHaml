@@ -1,3 +1,4 @@
+using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Security.Permissions;
 using System.Web;
@@ -7,11 +8,11 @@ namespace NHaml.Engine
   [SuppressMessage("Microsoft.Design", "CA1005")]
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class ViewEngine<TCompiledView, TContext, TView, TViewData>
-    where TCompiledView : ICompiledView<TView, TViewData>
+  public abstract class ViewEngine<TContext, TView>
+    
   {
-    private readonly CompiledViewCache<TCompiledView, TView, TViewData> _viewCache
-      = new CompiledViewCache<TCompiledView, TView, TViewData>();
+    private readonly CompiledViewCache<TView> _viewCache
+      = new CompiledViewCache<TView>();
 
     public TView FindAndCreateView(string viewName, string layoutName, TContext context)
     {
@@ -24,16 +25,16 @@ namespace NHaml.Engine
     }
 
     private TView CacheView(string viewName, TContext context,
-      CompiledViewCache<TCompiledView, TView, TViewData>.CreateCompiledViewDelegate createView)
+      CompiledViewCache<TView>.CreateCompiledViewDelegate createView)
     {
       var viewKey = GetViewKey(viewName, context);
-      return _viewCache.GetView(createView, viewKey, () => GetViewData(context));
+      return _viewCache.GetView(createView, viewKey, () => GetViewBaseType(context));
     }
 
     protected abstract string GetViewKey(string viewName, TContext context);
-    protected abstract TViewData GetViewData(TContext context);
-    protected abstract TCompiledView CreateView(string viewName, string layoutName, TContext context);
-    protected abstract TCompiledView CreatePartialView(string viewName, TContext context);
+    protected abstract Type GetViewBaseType(TContext context);
+    protected abstract ICompiledView<TView> CreateView(string viewName, string layoutName, TContext context);
+    protected abstract ICompiledView<TView> CreatePartialView(string viewName, TContext context);
 
     protected TemplateCompiler TemplateCompiler
     {

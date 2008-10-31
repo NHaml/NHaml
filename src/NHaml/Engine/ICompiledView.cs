@@ -1,8 +1,8 @@
 namespace NHaml.Engine
 {
-  public interface ICompiledView<TView, TViewData>
+  public interface ICompiledView<TView>
   {
     TView CreateView();
-    void RecompileIfNecessary(TViewData viewData);
+    void RecompileIfNecessary();
   }
 }

@@ -8,7 +8,7 @@ namespace NHaml.Engine
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class CompiledView<TView, TViewData> : ICompiledView<TView, TViewData>
+  public class CompiledView<TView> : ICompiledView<TView>
   {
     private readonly TemplateCompiler _templateCompiler;
 
@@ -23,13 +23,13 @@ namespace NHaml.Engine
       = new Dictionary<string, DateTime>();
 
     public CompiledView(TemplateCompiler templateCompiler,
-      string templatePath, string layoutPath, TViewData viewData)
+      string templatePath, string layoutPath)
     {
       _templateCompiler = templateCompiler;
       _templatePath = templatePath;
       _layoutPath = layoutPath;
 
-      CompileView(viewData);
+      CompileView();
     }
 
     public TView CreateView()
@@ -37,7 +37,7 @@ namespace NHaml.Engine
       return _templateActivator();
     }
 
-    public void RecompileIfNecessary(TViewData viewData)
+    public void RecompileIfNecessary()
     {
       lock (_sync)
       {
@@ -45,7 +45,7 @@ namespace NHaml.Engine
         {
           if (File.GetLastWriteTime(inputFile.Key) > inputFile.Value)
           {
-            CompileView(viewData);
+            CompileView();
 
             break;
           }
@@ -53,12 +53,12 @@ namespace NHaml.Engine
       }
     }
 
-    private void CompileView(TViewData viewData)
+    private void CompileView()
     {
       var inputFiles = new List<string>();
 
       _templateActivator = _templateCompiler
-        .Compile<TView>(_templatePath, _layoutPath, inputFiles, GetGenericArguments(viewData));
+        .Compile<TView>(_templatePath, _layoutPath, inputFiles);
 
       foreach (var inputFile in inputFiles)
       {
@@ -66,9 +66,5 @@ namespace NHaml.Engine
       }
     }
 
-    protected virtual Type[] GetGenericArguments(TViewData viewData)
-    {
-      return new Type[] {};
-    }
   }
 }

@@ -18,8 +18,8 @@ namespace NHaml.Web.Mvc
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
   {
-    private readonly CompiledViewCache<NHamlMvcCompiledView, INHamlMvcView, ViewDataDictionary> _viewCache =
-      new CompiledViewCache<NHamlMvcCompiledView, INHamlMvcView, ViewDataDictionary>();
+    private readonly CompiledViewCache<INHamlMvcView> _viewCache =
+      new CompiledViewCache<INHamlMvcView>();
 
     public NHamlMvcViewEngine()
     {
@@ -99,28 +99,38 @@ namespace NHaml.Web.Mvc
     protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
       return _viewCache.GetView(() => CreateCompiledView(partialPath, null, controllerContext), partialPath,
-        () => controllerContext.Controller.ViewData);
+        () => GetBaseType(controllerContext));
     }
 
     protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
     {
       return _viewCache.GetView(() => CreateCompiledView(viewPath, masterPath, controllerContext), viewPath,
-        () => controllerContext.Controller.ViewData);
+        () => GetBaseType(controllerContext));
     }
 
-    protected NHamlMvcCompiledView CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
+    static Type GetBaseType(ControllerContext viewContext)
+    {
+      var modelType = typeof(object);
+      var viewData = viewContext.Controller.ViewData;
+      if ((viewData != null) && (viewData.Model != null))
+      {
+        modelType = viewData.Model.GetType();
+      }
+
+      return typeof(NHamlMvcView<>).MakeGenericType(modelType);
+    }
+    protected CompiledView<INHamlMvcView> CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
     {
       viewPath = VirtualPathToPhysicalPath(viewPath, context);
       masterPath = VirtualPathToPhysicalPath(masterPath, context);
 
-      return new NHamlMvcCompiledView(
+      return new CompiledView<INHamlMvcView>(
         TemplateCompiler,
         viewPath,
-        masterPath,
-        context.Controller.ViewData);
+        masterPath);
     }
 
-    private string VirtualPathToPhysicalPath(string path, RequestContext context)
+    private static string VirtualPathToPhysicalPath(string path, RequestContext context)
     {
       if (string.IsNullOrEmpty(path))
       {
