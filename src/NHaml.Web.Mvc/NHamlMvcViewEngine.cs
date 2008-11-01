@@ -80,7 +80,9 @@ namespace NHaml.Web.Mvc
     public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
     {
       masterName = MasterRenamingHackery(masterName);
+
       var result = base.FindView(controllerContext, viewName, masterName);
+
       return result;
     }
 
@@ -89,10 +91,12 @@ namespace NHaml.Web.Mvc
       //Hack: If the specified master is empty then the VirtualPathProviderViewEngine will not try to locate a master.
       //Give it a fake name to ensure that the VirtualPathProviderViewEngine will always look through the master-locations 
       //so that application.haml can be located
+
       if (string.IsNullOrEmpty(masterName))
       {
         masterName = "__NhamlFakeMasterThatShouldNeverExist__";
       }
+
       return masterName;
     }
 

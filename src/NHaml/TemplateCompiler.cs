@@ -22,8 +22,8 @@ namespace NHaml
     private static readonly string[] DefaultReferences
       = new[]
           {
-            typeof(INotifyPropertyChanged).Assembly.Location,
-            typeof(TemplateCompiler).Assembly.Location
+            typeof(TemplateCompiler).Assembly.Location,
+            typeof(INotifyPropertyChanged).Assembly.Location
           };
 
     private static readonly string[] DefaultUsings
@@ -43,8 +43,7 @@ namespace NHaml
 
     private ICompilerBackEnd _compilerBackEnd;
 
-    private Type _viewBaseType
-      = typeof(CompiledTemplate);
+    private Type _viewBaseType = typeof(CompiledTemplate);
 
     public TemplateCompiler()
     {
@@ -71,6 +70,7 @@ namespace NHaml
       set
       {
         Invariant.ArgumentNotNull(value, "value");
+
         _compilerBackEnd = value;
       }
     }
@@ -90,9 +90,10 @@ namespace NHaml
         }
 
         _viewBaseType = value;
+
         AddReferences(_viewBaseType);
+
         _usings.Add(_viewBaseType.Namespace);
-        _references.Add(_viewBaseType.Assembly.Location);
       }
     }
 
@@ -153,7 +154,7 @@ namespace NHaml
       return _markupRules[inputLine.Signifier] ?? NullMarkupRule.Instance;
     }
 
-    public bool IsAutoClosing(string tag)
+    public bool IsAutoClosingTag(string tag)
     {
       Invariant.ArgumentNotEmpty(tag, "tag");
 
@@ -165,13 +166,6 @@ namespace NHaml
       Invariant.ArgumentNotEmpty(@namespace, "namespace");
 
       _usings.Add(@namespace);
-    }
-
-    public void AddReference(string assemblyLocation)
-    {
-      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
-
-      _references.Add(assemblyLocation);
     }
 
     public void AddReferences(Type type)
@@ -187,6 +181,13 @@ namespace NHaml
       {
         AddReferences(t);
       }
+    }
+
+    public void AddReference(string assemblyLocation)
+    {
+      Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
+
+      _references.Add(assemblyLocation);
     }
 
     public TemplateActivator<CompiledTemplate> Compile(string templatePath)

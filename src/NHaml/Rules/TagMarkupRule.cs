@@ -72,7 +72,7 @@ namespace NHaml.Rules
       var action = match.Groups[5].Value;
 
       if (string.Equals("/", action)
-        || compilationContext.TemplateCompiler.IsAutoClosing(match.Groups[1].Value))
+        || compilationContext.TemplateCompiler.IsAutoClosingTag(match.Groups[1].Value))
       {
         var close = " />";
 

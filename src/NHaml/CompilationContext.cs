@@ -116,8 +116,7 @@ namespace NHaml
     {
       get
       {
-        return NextInputLine.IndentSize >
-          CurrentInputLine.IndentSize;
+        return NextInputLine.IndentSize > CurrentInputLine.IndentSize;
       }
     }
 

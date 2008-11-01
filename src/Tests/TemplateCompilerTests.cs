@@ -85,7 +85,7 @@ namespace NHaml.Tests
     {
       var templateCompiler = new TemplateCompiler();
 
-      Assert.IsFalse(templateCompiler.IsAutoClosing("script"));
+      Assert.IsFalse(templateCompiler.IsAutoClosingTag("script"));
     }
   }
 }

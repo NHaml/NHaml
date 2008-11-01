@@ -89,8 +89,12 @@
     <Compile Include="Helpers\Inflector.cs" />
     <Compile Include="Helpers\NHamlHtmlHelper.cs" />
     <Compile Include="Helpers\FormBuilder.cs" />
-    <Compile Include="INHamlMvcView.cs" />
-    <Compile Include="NHamlMvcView.cs" />
+    <Compile Include="INHamlMvcView.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="NHamlMvcView.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="NHamlMvcViewEngine.cs" />
   </ItemGroup>
   <ItemGroup>

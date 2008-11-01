@@ -35,6 +35,7 @@ namespace NHaml.Engine
           if (!_viewCache.TryGetValue(viewKey, out compiledView))
           {
             _templateCompiler.ViewBaseType = viewBaseType;
+
             compiledView = compiledViewCreator();
 
             _viewCache.Add(viewKey, compiledView);
