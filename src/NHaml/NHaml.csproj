@@ -74,8 +74,8 @@
     <Compile Include="Configuration\ConfigurationCollection.cs" />
     <Compile Include="Configuration\NamespaceConfigurationElement.cs" />
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
-    <Compile Include="Configuration\NHamlSection.cs" />
-    <Compile Include="Configuration\ViewsCollectionElement.cs" />
+    <Compile Include="Configuration\NHamlConfigurationSection.cs" />
+    <Compile Include="Configuration\KeyedConfigurationElement.cs" />
     <Compile Include="BackEnds\CSharp2\CSharp2LambdaRenderer.cs" />
     <Compile Include="BackEnds\CSharp3\CSharp3LambdaRenderer.cs" />
     <Compile Include="BackEnds\ILambdaRenderer.cs" />

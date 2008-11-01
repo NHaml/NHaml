@@ -2,7 +2,7 @@ using System.Configuration;
 
 namespace NHaml.Configuration
 {
-  public sealed class AssemblyConfigurationElement : ViewsCollectionElement
+  public sealed class AssemblyConfigurationElement : KeyedConfigurationElement
   {
     private const string AssemblyElement = "assembly";
 

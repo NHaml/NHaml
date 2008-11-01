@@ -14,7 +14,7 @@ namespace NHaml.Configuration
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlSection : ConfigurationSection
+  public class NHamlConfigurationSection : ConfigurationSection
   {
     private const string AssembliesElement = "assemblies";
     private const string CompilerBackEndAttribute = "compilerBackEnd";
@@ -45,9 +45,9 @@ namespace NHaml.Configuration
       get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
     }
 
-    public static NHamlSection Read()
+    public static NHamlConfigurationSection Read()
     {
-      return (NHamlSection)ConfigurationManager.GetSection("nhaml");
+      return (NHamlConfigurationSection)ConfigurationManager.GetSection("nhaml");
     }
 
     public ICompilerBackEnd CreateCompilerBackEnd()

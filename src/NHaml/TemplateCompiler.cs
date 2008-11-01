@@ -109,7 +109,7 @@ namespace NHaml
 
     public void LoadFromConfiguration()
     {
-      var section = NHamlSection.Read();
+      var section = NHamlConfigurationSection.Read();
 
       if (section == null)
       {

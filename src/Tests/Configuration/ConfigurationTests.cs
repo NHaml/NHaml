@@ -17,7 +17,7 @@ namespace NHaml.Tests.Configuration
     private static void CreateAndAssertCompilerBackEnd(string name,
       Type compilerBackEndType)
     {
-      var sectionMock = new Mock<NHamlSection>();
+      var sectionMock = new Mock<NHamlConfigurationSection>();
       sectionMock.Expect(s => s.CompilerBackEnd)
         .Returns(() => name);
 
@@ -79,7 +79,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadCompilerBackEndFromAppSettings()
     {
-      var section = NHamlSection.Read();
+      var section = NHamlConfigurationSection.Read();
 
       Assert.IsNotNull(section);
       Assert.AreEqual("CSharp2", section.CompilerBackEnd);
@@ -88,7 +88,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadProductionSettingFromAppSettings()
     {
-      var section = NHamlSection.Read();
+      var section = NHamlConfigurationSection.Read();
 
       Assert.IsNotNull(section);
       Assert.IsTrue(section.Production);
@@ -97,7 +97,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadViewsAssembliesSectionFromAppSettings()
     {
-      var section = NHamlSection.Read();
+      var section = NHamlConfigurationSection.Read();
 
       Assert.IsNotNull(section);
       Assert.AreEqual(1, section.Assemblies.Count);
@@ -107,7 +107,7 @@ namespace NHaml.Tests.Configuration
     [Test]
     public void CanReadViewsNamespacesSectionFromAppSettings()
     {
-      var section = NHamlSection.Read();
+      var section = NHamlConfigurationSection.Read();
 
       Assert.IsNotNull(section);
       Assert.AreEqual(1, section.Namespaces.Count);

@@ -5,7 +5,7 @@ using System.Configuration;
 namespace NHaml.Configuration
 {
   public abstract class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
-    where T : ViewsCollectionElement, new()
+    where T : KeyedConfigurationElement, new()
   {
     public override ConfigurationElementCollectionType CollectionType
     {
