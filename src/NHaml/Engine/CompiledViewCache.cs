@@ -10,7 +10,9 @@ namespace NHaml.Engine
   public class CompiledViewCache<TView>
   {
     private readonly TemplateCompiler _templateCompiler = new TemplateCompiler();
-    private readonly Dictionary<string, ICompiledView<TView>> _viewCache = new Dictionary<string, ICompiledView<TView>>();
+
+    private readonly Dictionary<string, ICompiledView<TView>> _viewCache
+      = new Dictionary<string, ICompiledView<TView>>();
 
     public TemplateCompiler TemplateCompiler
     {

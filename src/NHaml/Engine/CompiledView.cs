@@ -65,6 +65,5 @@ namespace NHaml.Engine
         _fileTimestamps[inputFile] = File.GetLastWriteTime(inputFile);
       }
     }
-
   }
 }

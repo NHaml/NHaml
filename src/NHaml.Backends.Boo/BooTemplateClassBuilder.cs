@@ -137,7 +137,6 @@ namespace NHaml.BackEnds.Boo
 
     private static string MakeBaseTypeName(Type baseType)
     {
-
       var typeName = baseType.FullName.Replace('+', '.');
 
       if (baseType.IsGenericType)

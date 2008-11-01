@@ -229,7 +229,6 @@ namespace NHaml
         Invariant.FileExists(layoutPath);
       }
 
-
       var compilationContext
         = new CompilationContext(
           this,

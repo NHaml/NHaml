@@ -108,7 +108,7 @@ namespace NHaml.Web.Mvc
         () => GetBaseType(controllerContext));
     }
 
-    static Type GetBaseType(ControllerContext viewContext)
+    private static Type GetBaseType(ControllerContext viewContext)
     {
       var modelType = typeof(object);
       var viewData = viewContext.Controller.ViewData;
@@ -119,6 +119,7 @@ namespace NHaml.Web.Mvc
 
       return typeof(NHamlMvcView<>).MakeGenericType(modelType);
     }
+
     protected CompiledView<INHamlMvcView> CreateCompiledView(string viewPath, string masterPath, RequestContext context)
     {
       viewPath = VirtualPathToPhysicalPath(viewPath, context);

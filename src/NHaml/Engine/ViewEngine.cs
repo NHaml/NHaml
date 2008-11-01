@@ -9,7 +9,7 @@ namespace NHaml.Engine
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public abstract class ViewEngine<TContext, TView>
-    
+
   {
     private readonly CompiledViewCache<TView> _viewCache
       = new CompiledViewCache<TView>();
