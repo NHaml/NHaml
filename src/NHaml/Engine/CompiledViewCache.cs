@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 
+using NHaml.Utils;
+
 namespace NHaml.Engine
 {
   public delegate ICompiledView<TView> CompiledViewCreator<TView>();
-
-  public delegate Type ViewBaseTypeObtainer();
 
   public class CompiledViewCache<TView>
   {
@@ -19,17 +19,12 @@ namespace NHaml.Engine
       get { return _templateCompiler; }
     }
 
-    public TView GetView(CompiledViewCreator<TView> compiledViewCreator, string viewKey, ViewBaseTypeObtainer viewBaseTypeObtainer)
+    public TView GetView(CompiledViewCreator<TView> compiledViewCreator, 
+      string viewKey, Type viewBaseType)
     {
-      if (compiledViewCreator == null)
-      {
-        throw new ArgumentNullException("compiledViewCreator");
-      }
-
-      if (viewBaseTypeObtainer == null)
-      {
-        throw new ArgumentNullException("viewBaseTypeObtainer");
-      }
+      Invariant.ArgumentNotNull(compiledViewCreator, "compiledViewCreator");
+      Invariant.ArgumentNotEmpty(viewKey, "viewKey");
+      Invariant.ArgumentNotNull(viewBaseType, "viewBaseType");
 
       ICompiledView<TView> compiledView;
 
@@ -39,7 +34,7 @@ namespace NHaml.Engine
         {
           if (!_viewCache.TryGetValue(viewKey, out compiledView))
           {
-            _templateCompiler.ViewBaseType = viewBaseTypeObtainer();
+            _templateCompiler.ViewBaseType = viewBaseType;
             compiledView = compiledViewCreator();
 
             _viewCache.Add(viewKey, compiledView);

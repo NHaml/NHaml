@@ -30,13 +30,13 @@ namespace NHaml.Tests
     [Test, ExpectedException(typeof(ArgumentNullException))]
     public void GetViewShouldThrowWhenCreateCompiledViewDelegateIsNull()
     {
-      _cache.GetView(null, "foo", () => null);
+      _cache.GetView(null, "foo", null);
     }
 
     [Test, ExpectedException(typeof(ArgumentNullException))]
     public void GetViewShouldThrowWhenObtainViewDataDelegateIsNull()
     {
-      _cache.GetView(() => null, "foo", null);
+      _cache.GetView(null, "foo", null);
     }
 
     [Test]
@@ -46,7 +46,7 @@ namespace NHaml.Tests
       var view = new Mock<INHamlMvcView>();
       compiledView.Expect(x => x.CreateView()).Returns(view.Object);
 
-      var fromCache = _cache.GetView(() => compiledView.Object, "foo", () => typeof(NHamlMvcView<ViewDataDictionary>));
+      var fromCache = _cache.GetView(() => compiledView.Object, "foo", typeof(NHamlMvcView<ViewDataDictionary>));
 
       Assert.AreSame(view.Object, fromCache);
     }
@@ -58,7 +58,7 @@ namespace NHaml.Tests
       var view = new Mock<INHamlMvcView>();
       compiledView.Expect(x => x.CreateView()).Returns(view.Object);
 
-      _cache.GetView(() => compiledView.Object, "foo", () => typeof(NHamlMvcView<ViewDataDictionary>));
+      _cache.GetView(() => compiledView.Object, "foo", typeof(NHamlMvcView<ViewDataDictionary>));
       //View should now be cached
 
       var fromCache = _cache.GetView(
@@ -67,7 +67,7 @@ namespace NHaml.Tests
             throw new AssertionException("This delegate should not be invoked");
           },
         "foo",
-        () => typeof(NHamlMvcView<ViewDataDictionary>));
+        typeof(NHamlMvcView<ViewDataDictionary>));
 
       Assert.AreSame(view.Object, fromCache);
     }
@@ -81,7 +81,7 @@ namespace NHaml.Tests
 
       _cache.TemplateCompiler.IsProduction = false;
 
-      _cache.GetView(() => compiledView.Object, "foo", () => typeof(NHamlMvcView<ViewDataDictionary>));
+      _cache.GetView(() => compiledView.Object, "foo", typeof(NHamlMvcView<ViewDataDictionary>));
 
       compiledView.Verify(x => x.RecompileIfNecessary());
     }
@@ -97,7 +97,7 @@ namespace NHaml.Tests
 
       _cache.TemplateCompiler.IsProduction = true;
 
-      _cache.GetView(() => compiledView.Object, "foo", () => typeof(NHamlMvcView<ViewDataDictionary>));
+      _cache.GetView(() => compiledView.Object, "foo", typeof(NHamlMvcView<ViewDataDictionary>));
     }
   }
 }

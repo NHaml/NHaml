@@ -27,7 +27,7 @@ namespace NHaml.Engine
     private TView CacheView(string viewName, TContext context, CompiledViewCreator<TView> compiledViewCreator)
     {
       var viewKey = GetViewKey(viewName, context);
-      return _viewCache.GetView(compiledViewCreator, viewKey, () => GetViewBaseType(context));
+      return _viewCache.GetView(compiledViewCreator, viewKey, GetViewBaseType(context));
     }
 
     protected abstract string GetViewKey(string viewName, TContext context);

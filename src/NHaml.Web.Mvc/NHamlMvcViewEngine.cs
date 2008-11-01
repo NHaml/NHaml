@@ -98,14 +98,18 @@ namespace NHaml.Web.Mvc
 
     protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
-      return _viewCache.GetView(() => CreateCompiledView(partialPath, null, controllerContext), partialPath,
-        () => GetBaseType(controllerContext));
+      return _viewCache.GetView(
+        () => CreateCompiledView(partialPath, null, controllerContext),
+        partialPath,
+        GetBaseType(controllerContext));
     }
 
     protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
     {
-      return _viewCache.GetView(() => CreateCompiledView(viewPath, masterPath, controllerContext), viewPath,
-        () => GetBaseType(controllerContext));
+      return _viewCache.GetView(
+        () => CreateCompiledView(viewPath, masterPath, controllerContext),
+        viewPath,
+        GetBaseType(controllerContext));
     }
 
     private static Type GetBaseType(ControllerContext viewContext)
