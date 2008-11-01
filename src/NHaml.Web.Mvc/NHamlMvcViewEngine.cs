@@ -119,7 +119,7 @@ namespace NHaml.Web.Mvc
 
       return typeof(NHamlMvcView<>).MakeGenericType(modelType);
     }
-    protected CompiledView<INHamlMvcView> CreateCompiledView(string viewPath, string masterPath, ControllerContext context)
+    protected CompiledView<INHamlMvcView> CreateCompiledView(string viewPath, string masterPath, RequestContext context)
     {
       viewPath = VirtualPathToPhysicalPath(viewPath, context);
       masterPath = VirtualPathToPhysicalPath(masterPath, context);

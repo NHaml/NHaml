@@ -3,12 +3,12 @@ using System.Collections.Generic;
 
 namespace NHaml.Engine
 {
+  public delegate ICompiledView<TView> CompiledViewCreator<TView>();
+
+  public delegate Type ViewBaseTypeObtainer();
+
   public class CompiledViewCache<TView>
   {
-    public delegate ICompiledView<TView> CreateCompiledViewDelegate();
-
-    public delegate Type ObtainViewBaseTypeDelegate();
-
     private readonly TemplateCompiler _templateCompiler = new TemplateCompiler();
     private readonly Dictionary<string, ICompiledView<TView>> _viewCache = new Dictionary<string, ICompiledView<TView>>();
 
@@ -17,16 +17,16 @@ namespace NHaml.Engine
       get { return _templateCompiler; }
     }
 
-    public TView GetView(CreateCompiledViewDelegate createView, string viewKey, ObtainViewBaseTypeDelegate obtainViewBaseType)
+    public TView GetView(CompiledViewCreator<TView> compiledViewCreator, string viewKey, ViewBaseTypeObtainer viewBaseTypeObtainer)
     {
-      if (createView == null)
+      if (compiledViewCreator == null)
       {
-        throw new ArgumentNullException("createView");
+        throw new ArgumentNullException("compiledViewCreator");
       }
 
-      if (obtainViewBaseType == null)
+      if (viewBaseTypeObtainer == null)
       {
-        throw new ArgumentNullException("obtainViewBaseType");
+        throw new ArgumentNullException("viewBaseTypeObtainer");
       }
 
       ICompiledView<TView> compiledView;
@@ -37,8 +37,8 @@ namespace NHaml.Engine
         {
           if (!_viewCache.TryGetValue(viewKey, out compiledView))
           {
-            _templateCompiler.ViewBaseType = obtainViewBaseType();
-            compiledView = createView();
+            _templateCompiler.ViewBaseType = viewBaseTypeObtainer();
+            compiledView = compiledViewCreator();
 
             _viewCache.Add(viewKey, compiledView);
           }
