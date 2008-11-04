@@ -1,60 +1,77 @@
-﻿using System.Web.Mvc;
+﻿using System.Configuration;
+using System.Web.Mvc;
 
 using NHaml.Samples.Mvc.Models;
 
 namespace NHaml.Samples.Mvc.Controllers
 {
-  public class ProductsController : ControllerBase
+  public class ProductsController : Controller
   {
-    public ActionResult Index()
+    private readonly NorthwindDataContext northwind = new NorthwindDataContext(
+      ConfigurationManager.ConnectionStrings["NorthwindConnectionString"].ConnectionString);
+
+    //
+    // Products/Category/1
+
+    public ActionResult Category(int id)
     {
-      return View(Northwind.Products);
+      var category = northwind.GetCategoryById(id);
+
+      return View("List", category);
     }
 
-    public ActionResult Show(int id)
-    {
-      return View(Northwind.GetProductById(id));
-    }
+    //
+    // Products/New
 
     public ActionResult New()
     {
-      return View(new Product());
+      var viewData = new ProductsNewViewData
+                       {
+                         Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName"),
+                         Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName")
+                       };
+
+      return View("New", viewData);
     }
+
+    //
+    // Products/Create
 
     public ActionResult Create()
     {
-      var products = new Product();
+      var product = new Product();
+      UpdateModel(product, Request.Form.AllKeys);
 
-      UpdateModel(products, Request.Form.AllKeys);
+      northwind.AddProduct(product);
+      northwind.SubmitChanges();
 
-      Northwind.AddProduct(products);
-      Northwind.SubmitChanges();
-
-      return this.RedirectToAction(c => c.Show(products.Id));
+      return RedirectToAction("Category", new {ID = product.CategoryID});
     }
+
+    //
+    // Products/Edit/5
 
     public ActionResult Edit(int id)
     {
-      return View(Northwind.GetProductById(id));
+      var viewData = new ProductsEditViewData {Product = northwind.GetProductById(id)};
+
+      viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID);
+      viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID);
+
+      return View("Edit", viewData);
     }
+
+    //
+    // Products/Update/5
 
     public ActionResult Update(int id)
     {
-      var products = Northwind.GetProductById(id);
+      var product = northwind.GetProductById(id);
+      UpdateModel(product, Request.Form.AllKeys);
 
-      UpdateModel(products, Request.Form.AllKeys);
+      northwind.SubmitChanges();
 
-      Northwind.SubmitChanges();
-
-      return this.RedirectToAction(c => c.Show(products.Id));
-    }
-
-    public ActionResult Destroy(int id)
-    {
-      Northwind.RemoveProduct(id);
-      Northwind.SubmitChanges();
-
-      return this.RedirectToAction(c => c.Index());
+      return RedirectToAction("Category", new {Action = "Category", ID = product.CategoryID});
     }
   }
 }

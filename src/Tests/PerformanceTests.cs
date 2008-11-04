@@ -1,8 +1,8 @@
 using System;
 using System.Diagnostics;
 
-using NHaml.BackEnds.CSharp2;
-using NHaml.BackEnds.CSharp3;
+using NHaml.Compilers.CSharp2;
+using NHaml.Compilers.CSharp3;
 
 using NUnit.Framework;
 
@@ -15,7 +15,7 @@ namespace NHaml.Tests
     [Test]
     public void CS2AttributeCompilationPerformance()
     {
-      _templateCompiler.CompilerBackEnd = new CSharp2CompilerBackEnd();
+      _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
 
       var stopwatch = new Stopwatch();
 
@@ -23,9 +23,7 @@ namespace NHaml.Tests
 
       for (var i = 0; i < 100; i++)
       {
-        _templateCompiler.Compile(
-          TemplatesFolder + "AttributeEval.haml",
-          TemplatesFolder + "AttributeEval.haml");
+        _templateEngine.Compile(TemplatesFolder + @"C#2\AttributeEval.haml");
       }
 
       stopwatch.Stop();
@@ -36,7 +34,7 @@ namespace NHaml.Tests
     [Test]
     public void CS3AttributeCompilationPerformance()
     {
-      _templateCompiler.CompilerBackEnd = new CSharp3CompilerBackEnd();
+      _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
 
       var stopwatch = new Stopwatch();
 
@@ -44,9 +42,7 @@ namespace NHaml.Tests
 
       for (var i = 0; i < 100; i++)
       {
-        _templateCompiler.Compile(
-          TemplatesFolder + "AttributeEval.haml",
-          TemplatesFolder + "AttributeEval.haml");
+        _templateEngine.Compile(TemplatesFolder + @"C#2\AttributeEval.haml");
       }
 
       stopwatch.Stop();

@@ -1,12 +1,46 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Globalization;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace NHaml.Utils
 {
   public static class Utility
   {
+    private static readonly Regex _pathCleaner = new Regex(
+      @"[^0-9a-z_]",
+      RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline);
+
+    public static string MakeClassName(string templatePath)
+    {
+      Invariant.ArgumentNotEmpty(templatePath, "templatePath");
+
+      return _pathCleaner.Replace(templatePath, "_").Trim('_');
+    }
+
+    public static string MakeBaseClassName(Type baseType, char open, char close, string separator)
+    {
+      var typeName = baseType.FullName.Replace("+", separator).Replace(".", separator);
+
+      if (baseType.IsGenericType)
+      {
+        typeName = typeName.Substring(0, typeName.IndexOf('`')) + open;
+
+        var parameters = new List<string>();
+
+        foreach (var t in baseType.GetGenericArguments())
+        {
+          parameters.Add(MakeBaseClassName(t, open, close, separator));
+        }
+
+        typeName += string.Join(",", parameters.ToArray()) + close;
+      }
+
+      return typeName;
+    }
+
     public static string RenderAttributes(object attributeSource)
     {
       if (attributeSource != null)

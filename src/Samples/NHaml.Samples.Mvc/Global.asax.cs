@@ -21,7 +21,7 @@ namespace NHaml.Samples.Mvc
                                 Defaults = new RouteValueDictionary(
                                   new
                                     {
-                                      action = "index", 
+                                      action = "index",
                                       id = ""
                                     })
                               });
@@ -31,8 +31,9 @@ namespace NHaml.Samples.Mvc
                                 Defaults = new RouteValueDictionary(
                                   new
                                     {
-                                      controller = "Home", 
-                                      action = "index", id = ""
+                                      controller = "Home",
+                                      action = "index",
+                                      id = ""
                                     })
                               });
 

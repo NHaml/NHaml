@@ -45,6 +45,10 @@
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.Scripting, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Microsoft.Scripting.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Microsoft.Web.Mvc.dll</HintPath>
@@ -77,46 +81,28 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\NHaml\Properties\Resources.Designer.cs">
-      <Link>Properties\Resources.Designer.cs</Link>
-    </Compile>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
-    </Compile>
-    <Compile Include="Helpers\RestfulAction.cs" />
-    <Compile Include="Helpers\PropertyBinding.cs" />
-    <Compile Include="Helpers\IModel.cs" />
-    <Compile Include="Helpers\Inflector.cs" />
-    <Compile Include="Helpers\NHamlHtmlHelper.cs" />
-    <Compile Include="Helpers\FormBuilder.cs" />
-    <Compile Include="INHamlMvcView.cs">
-      <SubType>Code</SubType>
     </Compile>
     <Compile Include="NHamlMvcView.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="NHamlMvcViewEngine.cs" />
+    <Compile Include="NHamlMvcViewEngine.cs">
+      <SubType>Code</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\NHaml\Properties\Resources.resx">
-      <Link>Properties\Resources.resx</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
+    <ProjectReference Include="..\NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj">
+      <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
+      <Name>NHaml.Compilers.IronRuby</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHaml\NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\NHaml.snk">
-      <Link>Properties\NHaml.snk</Link>
-    </None>
-  </ItemGroup>
-  <ItemGroup>
-    <CodeAnalysisDictionary Include="..\NHaml\Properties\CodeAnalysisDictionary.xml">
-      <Link>Properties\CodeAnalysisDictionary.xml</Link>
-    </CodeAnalysisDictionary>
+    <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

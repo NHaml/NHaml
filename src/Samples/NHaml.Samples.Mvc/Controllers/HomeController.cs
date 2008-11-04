@@ -6,7 +6,12 @@ namespace NHaml.Samples.Mvc.Controllers
   {
     public ActionResult Index()
     {
-      return View();
+      return View("Index");
+    }
+
+    public ActionResult About()
+    {
+      return View("About");
     }
   }
 }

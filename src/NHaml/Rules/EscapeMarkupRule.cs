@@ -7,10 +7,10 @@ namespace NHaml.Rules
       get { return '\\'; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent);
-      compilationContext.TemplateClassBuilder.AppendOutputLine(compilationContext.CurrentInputLine.NormalizedText);
+      templateParser.TemplateClassBuilder.AppendOutput(templateParser.CurrentInputLine.Indent);
+      templateParser.TemplateClassBuilder.AppendOutputLine(templateParser.CurrentInputLine.NormalizedText);
 
       return null;
     }

@@ -1,27 +1,20 @@
-using System;
-
-using NHaml.BackEnds.CSharp3;
+using NHaml.Compilers.CSharp3;
 
 using NUnit.Framework;
 
 namespace NHaml.Tests
 {
   [TestFixture]
-  public class CSharp3FunctionalTests : CSharp2FunctionalTests
+  public class CSharp3FunctionalTests : FunctionalTestFixture
   {
     public override void SetUp()
     {
       base.SetUp();
 
-      _templateCompiler.CompilerBackEnd = new CSharp3CompilerBackEnd();
-      _templateCompiler.AddReference(typeof(Action).Assembly.Location);
-      _templateCompiler.ViewBaseType = typeof(MockView);
-    }
+      _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
 
-    [Test]
-    public void LambdaEvalCS3()
-    {
-      AssertRender("LambdaEvalCS3", "LambdaEval", _templateCompiler);
+      _primaryTemplatesFolder = "C#3";
+      _secondaryTemplatesFolder = "C#2";
     }
   }
 }

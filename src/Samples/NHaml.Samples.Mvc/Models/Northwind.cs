@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.ComponentModel;
 using System.Data;
 using System.Data.Linq;
@@ -120,10 +120,7 @@ namespace NHaml.Samples.Mvc.Models
       get { return GetTable<Supplier>(); }
     }
   }
-}
 
-namespace NHaml.Samples.Mvc.Models
-{
   [Table(Name = "Categories")]
   public partial class Category : INotifyPropertyChanging, INotifyPropertyChanged
   {
@@ -157,7 +154,7 @@ namespace NHaml.Samples.Mvc.Models
 
     public Category()
     {
-      _Products = new EntitySet<Product>(new Action<Product>(attach_Products), new Action<Product>(detach_Products));
+      _Products = new EntitySet<Product>(attach_Products, detach_Products);
       OnCreated();
     }
 
@@ -331,7 +328,7 @@ namespace NHaml.Samples.Mvc.Models
 
     public Customer()
     {
-      _Orders = new EntitySet<Order>(new Action<Order>(attach_Orders), new Action<Order>(detach_Orders));
+      _Orders = new EntitySet<Order>(attach_Orders, detach_Orders);
       OnCreated();
     }
 
@@ -575,9 +572,9 @@ namespace NHaml.Samples.Mvc.Models
 
     private string _Title;
 
-    private Nullable<DateTime> _BirthDate;
+    private DateTime? _BirthDate;
 
-    private Nullable<DateTime> _HireDate;
+    private DateTime? _HireDate;
 
     private string _Address;
 
@@ -597,7 +594,7 @@ namespace NHaml.Samples.Mvc.Models
 
     private string _Notes;
 
-    private Nullable<int> _ReportsTo;
+    private int? _ReportsTo;
 
     private readonly EntitySet<Order> _Orders;
 
@@ -614,9 +611,9 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnFirstNameChanged();
     partial void OnTitleChanging(string value);
     partial void OnTitleChanged();
-    partial void OnBirthDateChanging(Nullable<DateTime> value);
+    partial void OnBirthDateChanging(DateTime? value);
     partial void OnBirthDateChanged();
-    partial void OnHireDateChanging(Nullable<DateTime> value);
+    partial void OnHireDateChanging(DateTime? value);
     partial void OnHireDateChanged();
     partial void OnAddressChanging(string value);
     partial void OnAddressChanged();
@@ -636,14 +633,14 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnPhotoChanged();
     partial void OnNotesChanging(string value);
     partial void OnNotesChanged();
-    partial void OnReportsToChanging(Nullable<int> value);
+    partial void OnReportsToChanging(int? value);
     partial void OnReportsToChanged();
 
     #endregion
 
     public Employee()
     {
-      _Orders = new EntitySet<Order>(new Action<Order>(attach_Orders), new Action<Order>(detach_Orders));
+      _Orders = new EntitySet<Order>(attach_Orders, detach_Orders);
       OnCreated();
     }
 
@@ -717,7 +714,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Birth Date", Storage = "_BirthDate", DbType = "DateTime")]
-    public Nullable<DateTime> BirthDate
+    public DateTime? BirthDate
     {
       get { return _BirthDate; }
       set
@@ -734,7 +731,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Hire Date", Storage = "_HireDate", DbType = "DateTime")]
-    public Nullable<DateTime> HireDate
+    public DateTime? HireDate
     {
       get { return _HireDate; }
       set
@@ -904,7 +901,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Reports To", Storage = "_ReportsTo", DbType = "Int")]
-    public Nullable<int> ReportsTo
+    public int? ReportsTo
     {
       get { return _ReportsTo; }
       set
@@ -1182,7 +1179,7 @@ namespace NHaml.Samples.Mvc.Models
 
     private string _CustomerID;
 
-    private Nullable<int> _EmployeeID;
+    private int? _EmployeeID;
 
     private string _ShipName;
 
@@ -1196,15 +1193,15 @@ namespace NHaml.Samples.Mvc.Models
 
     private string _ShipCountry;
 
-    private Nullable<int> _ShipVia;
+    private int? _ShipVia;
 
-    private Nullable<DateTime> _OrderDate;
+    private DateTime? _OrderDate;
 
-    private Nullable<DateTime> _RequiredDate;
+    private DateTime? _RequiredDate;
 
-    private Nullable<DateTime> _ShippedDate;
+    private DateTime? _ShippedDate;
 
-    private Nullable<decimal> _Freight;
+    private decimal? _Freight;
 
     private readonly EntitySet<OrderDetail> _OrderDetails;
 
@@ -1223,7 +1220,7 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnOrderIDChanged();
     partial void OnCustomerIDChanging(string value);
     partial void OnCustomerIDChanged();
-    partial void OnEmployeeIDChanging(Nullable<int> value);
+    partial void OnEmployeeIDChanging(int? value);
     partial void OnEmployeeIDChanged();
     partial void OnShipNameChanging(string value);
     partial void OnShipNameChanged();
@@ -1237,22 +1234,22 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnShipPostalCodeChanged();
     partial void OnShipCountryChanging(string value);
     partial void OnShipCountryChanged();
-    partial void OnShipViaChanging(Nullable<int> value);
+    partial void OnShipViaChanging(int? value);
     partial void OnShipViaChanged();
-    partial void OnOrderDateChanging(Nullable<DateTime> value);
+    partial void OnOrderDateChanging(DateTime? value);
     partial void OnOrderDateChanged();
-    partial void OnRequiredDateChanging(Nullable<DateTime> value);
+    partial void OnRequiredDateChanging(DateTime? value);
     partial void OnRequiredDateChanged();
-    partial void OnShippedDateChanging(Nullable<DateTime> value);
+    partial void OnShippedDateChanging(DateTime? value);
     partial void OnShippedDateChanged();
-    partial void OnFreightChanging(Nullable<decimal> value);
+    partial void OnFreightChanging(decimal? value);
     partial void OnFreightChanged();
 
     #endregion
 
     public Order()
     {
-      _OrderDetails = new EntitySet<OrderDetail>(new Action<OrderDetail>(attach_OrderDetails), new Action<OrderDetail>(detach_OrderDetails));
+      _OrderDetails = new EntitySet<OrderDetail>(attach_OrderDetails, detach_OrderDetails);
       _Customer = default(EntityRef<Customer>);
       _Shipper = default(EntityRef<Shipper>);
       _Employee = default(EntityRef<Employee>);
@@ -1294,7 +1291,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Employee ID", Storage = "_EmployeeID", DbType = "Int")]
-    public Nullable<int> EmployeeID
+    public int? EmployeeID
     {
       get { return _EmployeeID; }
       set
@@ -1413,7 +1410,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Ship Via", Storage = "_ShipVia", DbType = "Int")]
-    public Nullable<int> ShipVia
+    public int? ShipVia
     {
       get { return _ShipVia; }
       set
@@ -1430,7 +1427,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Order Date", Storage = "_OrderDate", DbType = "DateTime")]
-    public Nullable<DateTime> OrderDate
+    public DateTime? OrderDate
     {
       get { return _OrderDate; }
       set
@@ -1447,7 +1444,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Required Date", Storage = "_RequiredDate", DbType = "DateTime")]
-    public Nullable<DateTime> RequiredDate
+    public DateTime? RequiredDate
     {
       get { return _RequiredDate; }
       set
@@ -1464,7 +1461,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Shipped Date", Storage = "_ShippedDate", DbType = "DateTime")]
-    public Nullable<DateTime> ShippedDate
+    public DateTime? ShippedDate
     {
       get { return _ShippedDate; }
       set
@@ -1481,7 +1478,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Storage = "_Freight", DbType = "Money")]
-    public Nullable<decimal> Freight
+    public decimal? Freight
     {
       get { return _Freight; }
       set
@@ -1559,7 +1556,7 @@ namespace NHaml.Samples.Mvc.Models
           }
           else
           {
-            _ShipVia = default(Nullable<int>);
+            _ShipVia = default(int?);
           }
           SendPropertyChanged("Shipper");
         }
@@ -1590,7 +1587,7 @@ namespace NHaml.Samples.Mvc.Models
           }
           else
           {
-            _EmployeeID = default(Nullable<int>);
+            _EmployeeID = default(int?);
           }
           SendPropertyChanged("Employee");
         }
@@ -1637,9 +1634,9 @@ namespace NHaml.Samples.Mvc.Models
 
     private int _ProductID;
 
-    private Nullable<int> _SupplierID;
+    private int? _SupplierID;
 
-    private Nullable<int> _CategoryID;
+    private int? _CategoryID;
 
     private string _ProductName;
 
@@ -1647,13 +1644,13 @@ namespace NHaml.Samples.Mvc.Models
 
     private string _QuantityPerUnit;
 
-    private Nullable<decimal> _UnitPrice;
+    private decimal? _UnitPrice;
 
-    private Nullable<short> _UnitsInStock;
+    private short? _UnitsInStock;
 
-    private Nullable<short> _UnitsOnOrder;
+    private short? _UnitsOnOrder;
 
-    private Nullable<short> _ReorderLevel;
+    private short? _ReorderLevel;
 
     private bool _Discontinued;
 
@@ -1670,9 +1667,9 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnCreated();
     partial void OnProductIDChanging(int value);
     partial void OnProductIDChanged();
-    partial void OnSupplierIDChanging(Nullable<int> value);
+    partial void OnSupplierIDChanging(int? value);
     partial void OnSupplierIDChanged();
-    partial void OnCategoryIDChanging(Nullable<int> value);
+    partial void OnCategoryIDChanging(int? value);
     partial void OnCategoryIDChanged();
     partial void OnProductNameChanging(string value);
     partial void OnProductNameChanged();
@@ -1680,13 +1677,13 @@ namespace NHaml.Samples.Mvc.Models
     partial void OnEnglishNameChanged();
     partial void OnQuantityPerUnitChanging(string value);
     partial void OnQuantityPerUnitChanged();
-    partial void OnUnitPriceChanging(Nullable<decimal> value);
+    partial void OnUnitPriceChanging(decimal? value);
     partial void OnUnitPriceChanged();
-    partial void OnUnitsInStockChanging(Nullable<short> value);
+    partial void OnUnitsInStockChanging(short? value);
     partial void OnUnitsInStockChanged();
-    partial void OnUnitsOnOrderChanging(Nullable<short> value);
+    partial void OnUnitsOnOrderChanging(short? value);
     partial void OnUnitsOnOrderChanged();
-    partial void OnReorderLevelChanging(Nullable<short> value);
+    partial void OnReorderLevelChanging(short? value);
     partial void OnReorderLevelChanged();
     partial void OnDiscontinuedChanging(bool value);
     partial void OnDiscontinuedChanged();
@@ -1695,7 +1692,7 @@ namespace NHaml.Samples.Mvc.Models
 
     public Product()
     {
-      _OrderDetails = new EntitySet<OrderDetail>(new Action<OrderDetail>(attach_OrderDetails), new Action<OrderDetail>(detach_OrderDetails));
+      _OrderDetails = new EntitySet<OrderDetail>(attach_OrderDetails, detach_OrderDetails);
       _Supplier = default(EntityRef<Supplier>);
       _Category = default(EntityRef<Category>);
       OnCreated();
@@ -1720,7 +1717,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Supplier ID", Storage = "_SupplierID", DbType = "Int")]
-    public Nullable<int> SupplierID
+    public int? SupplierID
     {
       get { return _SupplierID; }
       set
@@ -1737,7 +1734,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Category ID", Storage = "_CategoryID", DbType = "Int")]
-    public Nullable<int> CategoryID
+    public int? CategoryID
     {
       get { return _CategoryID; }
       set
@@ -1805,7 +1802,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Unit Price", Storage = "_UnitPrice", DbType = "Money")]
-    public Nullable<decimal> UnitPrice
+    public decimal? UnitPrice
     {
       get { return _UnitPrice; }
       set
@@ -1822,7 +1819,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Units In Stock", Storage = "_UnitsInStock", DbType = "SmallInt")]
-    public Nullable<short> UnitsInStock
+    public short? UnitsInStock
     {
       get { return _UnitsInStock; }
       set
@@ -1839,7 +1836,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Units On Order", Storage = "_UnitsOnOrder", DbType = "SmallInt")]
-    public Nullable<short> UnitsOnOrder
+    public short? UnitsOnOrder
     {
       get { return _UnitsOnOrder; }
       set
@@ -1856,7 +1853,7 @@ namespace NHaml.Samples.Mvc.Models
     }
 
     [Column(Name = "Reorder Level", Storage = "_ReorderLevel", DbType = "SmallInt")]
-    public Nullable<short> ReorderLevel
+    public short? ReorderLevel
     {
       get { return _ReorderLevel; }
       set
@@ -1921,7 +1918,7 @@ namespace NHaml.Samples.Mvc.Models
           }
           else
           {
-            _SupplierID = default(Nullable<int>);
+            _SupplierID = default(int?);
           }
           SendPropertyChanged("Supplier");
         }
@@ -1952,7 +1949,7 @@ namespace NHaml.Samples.Mvc.Models
           }
           else
           {
-            _CategoryID = default(Nullable<int>);
+            _CategoryID = default(int?);
           }
           SendPropertyChanged("Category");
         }
@@ -2017,7 +2014,7 @@ namespace NHaml.Samples.Mvc.Models
 
     public Shipper()
     {
-      _Orders = new EntitySet<Order>(new Action<Order>(attach_Orders), new Action<Order>(detach_Orders));
+      _Orders = new EntitySet<Order>(attach_Orders, detach_Orders);
       OnCreated();
     }
 
@@ -2157,7 +2154,7 @@ namespace NHaml.Samples.Mvc.Models
 
     public Supplier()
     {
-      _Products = new EntitySet<Product>(new Action<Product>(attach_Products), new Action<Product>(detach_Products));
+      _Products = new EntitySet<Product>(attach_Products, detach_Products);
       OnCreated();
     }
 

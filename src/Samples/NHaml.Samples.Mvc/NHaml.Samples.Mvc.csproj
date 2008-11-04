@@ -69,17 +69,11 @@
     <Content Include="Web.config" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Controllers\CategoriesController.cs" />
-    <Compile Include="Controllers\ControllerBase.cs" />
-    <Compile Include="Extensions\ControllerExtensions.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ProductsController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
-    <Compile Include="Models\Category.cs" />
-    <Compile Include="Models\Model.cs" />
-    <Compile Include="Models\Product.cs" />
     <Compile Include="Models\Northwind.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -97,17 +91,15 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Views\Categories\_Form.haml" />
-    <None Include="Views\Categories\Edit.haml" />
-    <None Include="Views\Categories\New.haml" />
-    <None Include="Views\Categories\Show.haml" />
-    <None Include="Views\Categories\Index.haml" />
+    <None Include="Views\Home\About.haml" />
     <None Include="Views\Home\Index.haml" />
-    <None Include="Views\Products\Show.haml" />
-    <None Include="Views\Products\_Form.haml" />
+    <None Include="Views\Products\List.haml" />
     <None Include="Views\Products\New.haml" />
     <None Include="Views\Products\Edit.haml" />
+    <None Include="Views\Products\_Product.haml" />
     <None Include="Views\Shared\Application.haml" />
+    <None Include="Views\Shared\Products.haml" />
+    <None Include="Views\Shared\_Button.haml" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">

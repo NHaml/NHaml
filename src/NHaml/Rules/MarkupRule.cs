@@ -9,15 +9,15 @@ namespace NHaml.Rules
       get { return false; }
     }
 
-    public abstract BlockClosingAction Render(CompilationContext compilationContext);
+    public abstract BlockClosingAction Render(TemplateParser templateParser);
 
-    public virtual void Process(CompilationContext compilationContext)
+    public virtual void Process(TemplateParser templateParser)
     {
-      compilationContext.CloseBlocks();
-      compilationContext.BlockClosingActions.Push(Render(compilationContext) ?? delegate
+      templateParser.CloseBlocks();
+      templateParser.BlockClosingActions.Push(Render(templateParser) ?? delegate
         {
         });
-      compilationContext.MoveNext();
+      templateParser.MoveNext();
     }
   }
 }

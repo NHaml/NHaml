@@ -20,20 +20,20 @@ namespace NHaml.Rules
       get { return true; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var match = _commentRegex.Match(compilationContext.CurrentInputLine.NormalizedText);
+      var match = _commentRegex.Match(templateParser.CurrentInputLine.NormalizedText);
 
       if (!match.Success)
       {
-        SyntaxException.Throw(compilationContext.CurrentInputLine,
-          Resources.ErrorParsingTag, compilationContext.CurrentInputLine);
+        SyntaxException.Throw(templateParser.CurrentInputLine,
+          Resources.ErrorParsingTag, templateParser.CurrentInputLine);
       }
 
       var ieBlock = match.Groups[1].Value;
       var content = match.Groups[2].Value;
 
-      var openingTag = compilationContext.CurrentInputLine.Indent + "<!--";
+      var openingTag = templateParser.CurrentInputLine.Indent + "<!--";
       var closingTag = "-->";
 
       if (!string.IsNullOrEmpty(ieBlock))
@@ -44,25 +44,25 @@ namespace NHaml.Rules
 
       if (string.IsNullOrEmpty(content))
       {
-        compilationContext.TemplateClassBuilder.AppendOutputLine(openingTag);
-        closingTag = compilationContext.CurrentInputLine.Indent + closingTag;
+        templateParser.TemplateClassBuilder.AppendOutputLine(openingTag);
+        closingTag = templateParser.CurrentInputLine.Indent + closingTag;
       }
       else
       {
         if (content.Length > 50)
         {
-          compilationContext.TemplateClassBuilder.AppendOutputLine(openingTag);
-          compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
-          compilationContext.TemplateClassBuilder.AppendOutputLine(content);
+          templateParser.TemplateClassBuilder.AppendOutputLine(openingTag);
+          templateParser.TemplateClassBuilder.AppendOutput(templateParser.CurrentInputLine.Indent + "  ");
+          templateParser.TemplateClassBuilder.AppendOutputLine(content);
         }
         else
         {
-          compilationContext.TemplateClassBuilder.AppendOutput(openingTag + content);
+          templateParser.TemplateClassBuilder.AppendOutput(openingTag + content);
           closingTag = ' ' + closingTag;
         }
       }
 
-      return () => compilationContext.TemplateClassBuilder.AppendOutputLine(closingTag);
+      return () => templateParser.TemplateClassBuilder.AppendOutputLine(closingTag);
     }
   }
 }

@@ -10,21 +10,47 @@ using System.Web.UI;
 
 using Microsoft.Web.Mvc;
 
-using NHaml.Engine;
-
 namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
   {
-    private readonly CompiledViewCache<INHamlMvcView> _viewCache =
-      new CompiledViewCache<INHamlMvcView>();
+    private readonly TemplateEngine _templateEngine = new TemplateEngine();
 
     public NHamlMvcViewEngine()
     {
-      InitializeTemplateCompiler();
+      InitializeTemplateEngine();
       InitializeViewLocations();
+    }
+
+    protected TemplateEngine TemplateEngine
+    {
+      get { return _templateEngine; }
+    }
+
+    private void InitializeTemplateEngine()
+    {
+      _templateEngine.AddUsing("System.Web");
+      _templateEngine.AddUsing("System.Web.Mvc");
+      _templateEngine.AddUsing("System.Web.Mvc.Html");
+      _templateEngine.AddUsing("System.Web.Routing");
+
+      _templateEngine.AddUsing("NHaml.Web.Mvc");
+
+      _templateEngine.AddReference(typeof(UserControl).Assembly.Location);
+      _templateEngine.AddReference(typeof(RouteValueDictionary).Assembly.Location);
+      _templateEngine.AddReference(typeof(DataContext).Assembly.Location);
+      _templateEngine.AddReference(typeof(LinkExtensions).Assembly.Location);
+      _templateEngine.AddReference(typeof(Action).Assembly.Location);
+      _templateEngine.AddReference(typeof(Expression).Assembly.Location);
+      _templateEngine.AddReference(typeof(IView).Assembly.Location);
+      _templateEngine.AddReference(typeof(NHamlMvcView<>).Assembly.Location);
+
+      foreach (var name in Assembly.GetCallingAssembly().GetReferencedAssemblies())
+      {
+        _templateEngine.AddReference(Assembly.Load(name).Location);
+      }
     }
 
     private void InitializeViewLocations()
@@ -45,107 +71,58 @@ namespace NHaml.Web.Mvc
       PartialViewLocationFormats = ViewLocationFormats;
     }
 
-    private void InitializeTemplateCompiler()
-    {
-      TemplateCompiler.AddUsing("System.Web");
-      TemplateCompiler.AddUsing("System.Web.Mvc");
-      TemplateCompiler.AddUsing("System.Web.Mvc.Html");
-      TemplateCompiler.AddUsing("System.Web.Routing");
-
-      TemplateCompiler.AddUsing("NHaml.Web.Mvc");
-
-      TemplateCompiler.ViewBaseType = typeof(NHamlMvcView<>);
-
-      TemplateCompiler.AddReference(typeof(UserControl).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(RouteValueDictionary).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(DataContext).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(LinkExtensions).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(Action).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(Expression).Assembly.Location);
-      TemplateCompiler.AddReference(typeof(IView).Assembly.Location);
-
-      foreach (var name in Assembly.GetCallingAssembly().GetReferencedAssemblies())
-      {
-        TemplateCompiler.AddReference(Assembly.Load(name).Location);
-      }
-
-      TemplateCompiler.LoadFromConfiguration();
-    }
-
-    protected TemplateCompiler TemplateCompiler
-    {
-      get { return _viewCache.TemplateCompiler; }
-    }
-
     public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
     {
-      masterName = MasterRenamingHackery(masterName);
+      if (string.IsNullOrEmpty(masterName))
+      {
+        // Hack: If the specified master is empty then the VirtualPathProviderViewEngine will not try to locate a master.
+        // Give it a fake name to ensure that the VirtualPathProviderViewEngine will always look through the master-locations 
+        // so that application.haml can be located
+
+        masterName = "__NHamlFakeMasterThatShouldNeverExist__";
+      }
 
       var result = base.FindView(controllerContext, viewName, masterName);
 
       return result;
     }
 
-    private static string MasterRenamingHackery(string masterName)
-    {
-      //Hack: If the specified master is empty then the VirtualPathProviderViewEngine will not try to locate a master.
-      //Give it a fake name to ensure that the VirtualPathProviderViewEngine will always look through the master-locations 
-      //so that application.haml can be located
-
-      if (string.IsNullOrEmpty(masterName))
-      {
-        masterName = "__NhamlFakeMasterThatShouldNeverExist__";
-      }
-
-      return masterName;
-    }
-
     protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
-      return _viewCache.GetView(
-        () => CreateCompiledView(partialPath, null, controllerContext),
-        partialPath,
-        GetBaseType(controllerContext));
+      return (IView)_templateEngine.Compile(
+        VirtualPathToPhysicalPath(controllerContext, partialPath),
+        GetViewBaseType(controllerContext)).CreateInstance();
     }
 
     protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
     {
-      return _viewCache.GetView(
-        () => CreateCompiledView(viewPath, masterPath, controllerContext),
-        viewPath,
-        GetBaseType(controllerContext));
+      return (IView)_templateEngine.Compile(
+        VirtualPathToPhysicalPath(controllerContext, viewPath),
+        VirtualPathToPhysicalPath(controllerContext, masterPath),
+        GetViewBaseType(controllerContext)).CreateInstance();
     }
 
-    private static Type GetBaseType(ControllerContext viewContext)
+    private Type GetViewBaseType(ControllerContext controllerContext)
     {
       var modelType = typeof(object);
-      var viewData = viewContext.Controller.ViewData;
+
+      var viewData = controllerContext.Controller.ViewData;
+
       if ((viewData != null) && (viewData.Model != null))
       {
         modelType = viewData.Model.GetType();
       }
 
-      return typeof(NHamlMvcView<>).MakeGenericType(modelType);
+      return ViewBaseType.MakeGenericType(modelType);
     }
 
-    protected CompiledView<INHamlMvcView> CreateCompiledView(string viewPath, string masterPath, RequestContext context)
+    protected virtual Type ViewBaseType
     {
-      viewPath = VirtualPathToPhysicalPath(viewPath, context);
-      masterPath = VirtualPathToPhysicalPath(masterPath, context);
-
-      return new CompiledView<INHamlMvcView>(
-        TemplateCompiler,
-        viewPath,
-        masterPath);
+      get { return typeof(NHamlMvcView<>); }
     }
 
-    private static string VirtualPathToPhysicalPath(string path, RequestContext context)
+    private static string VirtualPathToPhysicalPath(RequestContext context, string path)
     {
-      if (string.IsNullOrEmpty(path))
-      {
-        return path;
-      }
-
       return context.HttpContext.Request.MapPath(path);
     }
   }

@@ -10,13 +10,10 @@ namespace NHaml.Web.Mvc
 {
   [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class NHamlMvcView<TModel> : CompiledTemplate, INHamlMvcView
+  public abstract class NHamlMvcView<TModel> : Template, IView, IViewDataContainer
     where TModel : class
   {
     private ViewContext _viewContext;
-    private AjaxHelper _ajax;
-    private NHamlHtmlHelper _html;
-    private UrlHelper _url;
 
     private ViewDataDictionary<TModel> _viewData;
 
@@ -28,31 +25,21 @@ namespace NHaml.Web.Mvc
 
       SetViewData(viewContext.ViewData);
 
-      _ajax = new AjaxHelper(_viewContext);
-      _html = new NHamlHtmlHelper(Output, _viewContext, this);
-      _url = new UrlHelper(_viewContext);
+      CreateHelpers(viewContext);
 
-      Render(viewContext.HttpContext.Response.Output);
+      Render(writer);
     }
 
-    public void Render(ViewContext viewContext)
+    protected virtual void CreateHelpers(ViewContext viewContext)
     {
+      Ajax = new AjaxHelper(viewContext);
+      Html = new HtmlHelper(viewContext, this);
+      Url = new UrlHelper(viewContext);
     }
 
-    public AjaxHelper Ajax
-    {
-      get { return _ajax; }
-    }
-
-    public NHamlHtmlHelper Html
-    {
-      get { return _html; }
-    }
-
-    public UrlHelper Url
-    {
-      get { return _url; }
-    }
+    public AjaxHelper Ajax { get; protected set; }
+    public HtmlHelper Html { get; protected set; }
+    public UrlHelper Url { get; protected set; }
 
     public ViewContext ViewContext
     {

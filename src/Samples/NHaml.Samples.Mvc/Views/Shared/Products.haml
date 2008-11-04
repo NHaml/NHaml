@@ -1,0 +1,19 @@
+!!!
+%html{xmlns="http://www.w3.org/1999/xhtml"}
+  %head
+    %title My Sample MVC Application - Products Layout
+    %link{href="../../Content/Site.css", rel="stylesheet", type="text/css"}
+  %body
+    #inner
+      #header
+        %h1 My Store Manager - Products
+      #menu
+        %ul
+          %li
+            %a{href="/"} Home
+          %li
+            = Html.ActionLink("About Us", "About", "Home")
+          %li
+            = Html.ActionLink("Products", "Category", "Products", new { ID = 1 }, null)
+      #maincontent
+        _

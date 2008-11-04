@@ -12,12 +12,12 @@ namespace NHaml.Rules
       get { return true; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      compilationContext.TemplateClassBuilder
-        .AppendOutput(compilationContext.CurrentInputLine.Indent);
-      compilationContext.TemplateClassBuilder
-        .AppendCodeLine(compilationContext.CurrentInputLine.NormalizedText.Trim());
+      templateParser.TemplateClassBuilder
+        .AppendOutput(templateParser.CurrentInputLine.Indent);
+      templateParser.TemplateClassBuilder
+        .AppendCodeLine(templateParser.CurrentInputLine.NormalizedText.Trim());
 
       return null;
     }

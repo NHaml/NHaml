@@ -2,9 +2,11 @@ namespace NHaml.Rules
 {
   public class SilentEvalMarkupRule : MarkupRule
   {
+    public const char SignifierChar = '-';
+
     public override char Signifier
     {
-      get { return '-'; }
+      get { return SignifierChar; }
     }
 
     public override bool MergeMultiline
@@ -12,9 +14,9 @@ namespace NHaml.Rules
       get { return true; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      return compilationContext.SilentEvalRenderer.Render(compilationContext);
+      return templateParser.TemplateEngine.TemplateCompiler.RenderSilentEval(templateParser);
     }
   }
 }

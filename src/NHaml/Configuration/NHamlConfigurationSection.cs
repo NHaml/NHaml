@@ -1,12 +1,13 @@
 using System;
 using System.Configuration;
+using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Security.Permissions;
 using System.Web;
 
-using NHaml.BackEnds;
-using NHaml.BackEnds.CSharp2;
-using NHaml.BackEnds.CSharp3;
+using NHaml.Compilers;
+using NHaml.Compilers.CSharp2;
+using NHaml.Compilers.CSharp3;
 using NHaml.Properties;
 using NHaml.Utils;
 
@@ -16,21 +17,27 @@ namespace NHaml.Configuration
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class NHamlConfigurationSection : ConfigurationSection
   {
-    private const string AssembliesElement = "assemblies";
-    private const string CompilerBackEndAttribute = "compilerBackEnd";
-    private const string NamespacesElement = "namespaces";
-    private const string ProductionAttribute = "production";
-
-    [ConfigurationProperty(ProductionAttribute)]
-    public virtual bool Production
+    [SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
+    public static NHamlConfigurationSection GetSection()
     {
-      get { return Convert.ToBoolean(this[ProductionAttribute], CultureInfo.CurrentCulture); }
+      return (NHamlConfigurationSection)ConfigurationManager.GetSection("nhaml");
     }
 
-    [ConfigurationProperty(CompilerBackEndAttribute)]
-    public virtual string CompilerBackEnd
+    private const string AssembliesElement = "assemblies";
+    private const string NamespacesElement = "namespaces";
+    private const string AutoRecompileAttribute = "autoRecompile";
+    private const string TemplateCompilerAttribute = "templateCompiler";
+
+    [ConfigurationProperty(AutoRecompileAttribute)]
+    public virtual bool? AutoRecompile
     {
-      get { return Convert.ToString(this[CompilerBackEndAttribute], CultureInfo.CurrentCulture); }
+      get { return this[AutoRecompileAttribute] as bool?; }
+    }
+
+    [ConfigurationProperty(TemplateCompilerAttribute)]
+    public virtual string TemplateCompiler
+    {
+      get { return Convert.ToString(this[TemplateCompilerAttribute], CultureInfo.CurrentCulture); }
     }
 
     [ConfigurationProperty(AssembliesElement)]
@@ -45,56 +52,51 @@ namespace NHaml.Configuration
       get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
     }
 
-    public static NHamlConfigurationSection Read()
+    public ITemplateCompiler CreateTemplateCompiler()
     {
-      return (NHamlConfigurationSection)ConfigurationManager.GetSection("nhaml");
-    }
+      var templateCompiler = TemplateCompiler;
 
-    public ICompilerBackEnd CreateCompilerBackEnd()
-    {
-      var backEnd = CompilerBackEnd;
+      var csharp2Type = typeof(CSharp2TemplateCompiler);
+      var csharp3Type = typeof(CSharp3TemplateCompiler);
 
-      var csharp2BackEndType = typeof(CSharp2CompilerBackEnd);
-      var csharp3BackEndType = typeof(CSharp3CompilerBackEnd);
+      Type Type;
 
-      Type backEndType;
-
-      if (backEnd.IndexOf(Type.Delimiter) == -1)
+      if (templateCompiler.IndexOf(Type.Delimiter) == -1)
       {
-        if (!backEnd.EndsWith("CompilerBackEnd", StringComparison.OrdinalIgnoreCase))
+        if (!templateCompiler.EndsWith("TemplateCompiler", StringComparison.OrdinalIgnoreCase))
         {
-          backEnd += "CompilerBackEnd";
+          templateCompiler += "TemplateCompiler";
         }
 
-        if (backEnd.Equals(csharp2BackEndType.Name, StringComparison.OrdinalIgnoreCase))
+        if (templateCompiler.Equals(csharp2Type.Name, StringComparison.OrdinalIgnoreCase))
         {
-          backEndType = csharp2BackEndType;
+          Type = csharp2Type;
         }
         else
         {
-          backEndType = backEnd.Equals(csharp3BackEndType.Name, StringComparison.OrdinalIgnoreCase)
-            ? csharp3BackEndType
-            : Type.GetType(backEnd, false);
+          Type = templateCompiler.Equals(csharp3Type.Name, StringComparison.OrdinalIgnoreCase)
+            ? csharp3Type
+            : Type.GetType(templateCompiler, false);
         }
       }
       else
       {
-        backEndType = Type.GetType(backEnd, false);
+        Type = Type.GetType(templateCompiler, false);
       }
 
-      if (backEndType == null)
+      if (Type == null)
       {
         throw new ConfigurationErrorsException(
-          Utility.FormatCurrentCulture(Resources.CompilerBackEndTypeNotFound, backEnd));
+          Utility.FormatCurrentCulture(Resources.TemplateCompilerTypeNotFound, templateCompiler));
       }
 
-      if (!typeof(ICompilerBackEnd).IsAssignableFrom(backEndType))
+      if (!typeof(ITemplateCompiler).IsAssignableFrom(Type))
       {
         throw new ConfigurationErrorsException(
-          Utility.FormatCurrentCulture(Resources.NotAssignableToICompilerBackEnd, backEnd));
+          Utility.FormatCurrentCulture(Resources.NotAssignableToITemplateCompiler, templateCompiler));
       }
 
-      return (ICompilerBackEnd)Activator.CreateInstance(backEndType);
+      return (ITemplateCompiler)Activator.CreateInstance(Type);
     }
   }
 }

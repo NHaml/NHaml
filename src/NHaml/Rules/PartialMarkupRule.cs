@@ -14,37 +14,35 @@ namespace NHaml.Rules
       get { return '_'; }
     }
 
-    public override void Process(CompilationContext compilationContext)
+    public override void Process(TemplateParser templateParser)
     {
-      Render(compilationContext);
+      Render(templateParser);
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var match = _partialRegex.Match(compilationContext.CurrentInputLine.NormalizedText);
+      var match = _partialRegex.Match(templateParser.CurrentInputLine.NormalizedText);
 
       if (match.Success)
       {
-        var templateDirectory
-          = Path.GetDirectoryName(compilationContext.TemplatePath);
+        var templateDirectory = Path.GetDirectoryName(templateParser.TemplatePath);
 
         var partialName = match.Groups[1].Value;
+
         partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
 
-        var partialTemplatePath
-          = Path.Combine(templateDirectory, partialName + ".haml");
+        var partialTemplatePath = Path.Combine(templateDirectory, partialName + ".haml");
 
         if (!File.Exists(partialTemplatePath))
         {
-          partialTemplatePath
-            = Path.Combine(templateDirectory, @"..\" + partialName + ".haml");
+          partialTemplatePath = Path.Combine(templateDirectory, @"..\" + partialName + ".haml");
         }
 
-        compilationContext.MergeTemplate(partialTemplatePath);
+        templateParser.MergeTemplate(partialTemplatePath);
       }
-      else if (!string.IsNullOrEmpty(compilationContext.LayoutPath))
+      else if (!string.IsNullOrEmpty(templateParser.LayoutTemplatePath))
       {
-        compilationContext.MergeTemplate(compilationContext.TemplatePath);
+        templateParser.MergeTemplate(templateParser.TemplatePath);
       }
 
       return null;

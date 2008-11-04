@@ -50,25 +50,26 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BackEnds\CSharp2\CSharp2CompilerBackEnd.cs" />
-    <Compile Include="BackEnds\CSharp2\CSharp2SilentEvalRenderer.cs" />
-    <Compile Include="BackEnds\CSharp3\CSharp3TemplateTypeBuilder.cs" />
-    <Compile Include="BackEnds\ISilentEvalRenderer.cs" />
-    <Compile Include="BackEnds\TemplateClassBuilderBase.cs" />
-    <Compile Include="BackEnds\ITemplateClassBuilder.cs" />
-    <Compile Include="BackEnds\CSharp3\CSharp3CompilerBackEnd.cs" />
-    <Compile Include="BackEnds\ICompilerBackEnd.cs" />
-    <Compile Include="BlockClosingAction.cs" />
-    <Compile Include="BackEnds\CSharp2\Coco\Parser.cs" />
-    <Compile Include="BackEnds\CSharp2\Coco\Scanner.cs" />
-    <Compile Include="CompilationContext.cs" />
+    <Compile Include="CompiledTemplate.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Compilers\CSharp2\CSharp2TemplateCompiler.cs" />
+    <Compile Include="Compilers\CSharp3\CSharp3TemplateCompiler.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Compilers\CSharp3\CSharp3TemplateTypeBuilder.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Compilers\TemplateClassBuilder.cs" />
+    <Compile Include="Compilers\ITemplateCompiler.cs" />
+    <Compile Include="Compilers\CSharp2\Coco\Parser.cs" />
+    <Compile Include="Compilers\CSharp2\Coco\Scanner.cs" />
+    <Compile Include="TemplateParser.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
@@ -76,22 +77,14 @@
     <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
     <Compile Include="Configuration\NHamlConfigurationSection.cs" />
     <Compile Include="Configuration\KeyedConfigurationElement.cs" />
-    <Compile Include="BackEnds\CSharp2\CSharp2LambdaRenderer.cs" />
-    <Compile Include="BackEnds\CSharp3\CSharp3LambdaRenderer.cs" />
-    <Compile Include="BackEnds\ILambdaRenderer.cs" />
-    <Compile Include="BackEnds\CSharp2\CSharp2AttributeRenderer.cs" />
-    <Compile Include="BackEnds\CSharp3\CSharp3AttributeRenderer.cs" />
-    <Compile Include="Engine\CompiledView.cs" />
-    <Compile Include="Engine\CompiledViewCache.cs" />
-    <Compile Include="Engine\ICompiledView.cs" />
-    <Compile Include="Engine\ViewEngine.cs" />
     <Compile Include="Exceptions\SyntaxException.cs" />
-    <Compile Include="Exceptions\ViewCompilationException.cs" />
-    <Compile Include="BackEnds\IAttributeRenderer.cs" />
-    <Compile Include="CompiledTemplate.cs" />
+    <Compile Include="Exceptions\TemplateCompilationException.cs" />
+    <Compile Include="Template.cs" />
     <Compile Include="InputLine.cs" />
-    <Compile Include="IOutputWriter.cs" />
-    <Compile Include="TemplateOutputWriter.cs" />
+    <Compile Include="TemplateFactory.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="OutputWriter.cs" />
     <Compile Include="Rules\MarkupRule.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
@@ -110,14 +103,12 @@
     <Compile Include="Rules\PartialMarkupRule.cs" />
     <Compile Include="Rules\SilentEvalMarkupRule.cs" />
     <Compile Include="Rules\TagMarkupRule.cs" />
-    <Compile Include="TemplateCompiler.cs" />
-    <Compile Include="BackEnds\CSharp2\CSharp2TemplateTypeBuilder.cs" />
-    <Compile Include="Utils\ClassNameProvider.cs" />
+    <Compile Include="TemplateEngine.cs" />
+    <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
-    <Compile Include="TemplateActivator.cs" />
-    <Compile Include="BackEnds\CSharp2\CSharp2TemplateClassBuilder.cs" />
+    <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -130,10 +121,10 @@
     <None Include="..\NHaml.snk">
       <Link>Properties\NHaml.snk</Link>
     </None>
-    <None Include="BackEnds\CSharp2\Coco\CSharp2.ATG" />
-    <None Include="BackEnds\CSharp2\Coco\Gen.cmd" />
-    <None Include="BackEnds\CSharp2\Coco\Parser.frame" />
-    <None Include="BackEnds\CSharp2\Coco\Scanner.frame" />
+    <None Include="Compilers\CSharp2\Coco\CSharp2.ATG" />
+    <None Include="Compilers\CSharp2\Coco\Gen.cmd" />
+    <None Include="Compilers\CSharp2\Coco\Parser.frame" />
+    <None Include="Compilers\CSharp2\Coco\Scanner.frame" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />

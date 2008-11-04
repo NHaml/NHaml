@@ -1,0 +1,4 @@
+%li
+  = product.ProductName 
+  %span.editlink
+    = html.action_link('Edit', {:action => 'Edit', :id => product.ProductId})

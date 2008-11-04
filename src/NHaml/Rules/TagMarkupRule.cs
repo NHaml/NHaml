@@ -28,11 +28,7 @@ namespace NHaml.Rules
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _hyphenCleanerRegex = new Regex(
-      @"\b(http|accept)\-(equiv|charset)(\s*=)",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly Regex _keywordEscaperRegex = new Regex(
-      @"(\bclass\s*=)|(\bfor\s*=)",
+      @"\b(http|accept)\-(equiv|charset)(\s*[=:])",
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly List<string> _whitespaceSensitiveTags
@@ -48,31 +44,31 @@ namespace NHaml.Rules
       get { return '%'; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var match = _tagRegex.Match(PreprocessLine(compilationContext.CurrentInputLine));
+      var match = _tagRegex.Match(PreprocessLine(templateParser.CurrentInputLine));
 
       if (!match.Success)
       {
-        SyntaxException.Throw(compilationContext.CurrentInputLine, Resources.ErrorParsingTag,
-          compilationContext.CurrentInputLine);
+        SyntaxException.Throw(templateParser.CurrentInputLine, Resources.ErrorParsingTag,
+          templateParser.CurrentInputLine);
       }
 
       var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(match.Groups[1].Value);
 
-      var newLine = !compilationContext.CurrentInputLine.IsMultiline;
+      var newLine = !templateParser.CurrentInputLine.IsMultiline;
 
-      var openingTag = compilationContext.CurrentInputLine.Indent + '<' + match.Groups[1].Value;
+      var openingTag = templateParser.CurrentInputLine.Indent + '<' + match.Groups[1].Value;
       var closingTag = "</" + match.Groups[1].Value + '>';
 
-      compilationContext.TemplateClassBuilder.AppendOutput(openingTag);
+      templateParser.TemplateClassBuilder.AppendOutput(openingTag);
 
-      ParseAndRenderAttributes(compilationContext, match);
+      ParseAndRenderAttributes(templateParser, match);
 
       var action = match.Groups[5].Value;
 
       if (string.Equals("/", action)
-        || compilationContext.TemplateCompiler.IsAutoClosingTag(match.Groups[1].Value))
+        || templateParser.TemplateEngine.IsAutoClosingTag(match.Groups[1].Value))
       {
         var close = " />";
 
@@ -81,7 +77,7 @@ namespace NHaml.Rules
           close += ' ';
         }
 
-        compilationContext.TemplateClassBuilder.AppendOutput(close, newLine);
+        templateParser.TemplateClassBuilder.AppendOutput(close, newLine);
 
         return null;
       }
@@ -90,37 +86,37 @@ namespace NHaml.Rules
 
       if (string.IsNullOrEmpty(content))
       {
-        compilationContext.TemplateClassBuilder.AppendOutput(">", newLine);
-        closingTag = compilationContext.CurrentInputLine.Indent + closingTag;
+        templateParser.TemplateClassBuilder.AppendOutput(">", newLine);
+        closingTag = templateParser.CurrentInputLine.Indent + closingTag;
       }
       else
       {
         if ((content.Length > 50) || string.Equals("=", action))
         {
-          compilationContext.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
+          templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
 
           if (!isWhitespaceSensitive)
           {
-            compilationContext.TemplateClassBuilder.AppendOutput(compilationContext.CurrentInputLine.Indent + "  ");
+            templateParser.TemplateClassBuilder.AppendOutput(templateParser.CurrentInputLine.Indent + "  ");
           }
 
           if (string.Equals("=", action))
           {
-            compilationContext.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive);
+            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive);
           }
           else
           {
-            compilationContext.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
+            templateParser.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
           }
 
           if (!isWhitespaceSensitive)
           {
-            closingTag = compilationContext.CurrentInputLine.Indent + closingTag;
+            closingTag = templateParser.CurrentInputLine.Indent + closingTag;
           }
         }
         else
         {
-          compilationContext.TemplateClassBuilder.AppendOutput(">" + content);
+          templateParser.TemplateClassBuilder.AppendOutput(">" + content);
         }
       }
 
@@ -129,10 +125,10 @@ namespace NHaml.Rules
         closingTag += ' ';
       }
 
-      return () => compilationContext.TemplateClassBuilder.AppendOutput(closingTag, newLine);
+      return () => templateParser.TemplateClassBuilder.AppendOutput(closingTag, newLine);
     }
 
-    private static void ParseAndRenderAttributes(CompilationContext compilationContext, Match tagMatch)
+    private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)
     {
       var idAndClasses = tagMatch.Groups[2].Value;
       var attributesHash = tagMatch.Groups[4].Value.Trim();
@@ -165,20 +161,17 @@ namespace NHaml.Rules
 
       if (!string.IsNullOrEmpty(attributesHash))
       {
-        compilationContext.TemplateClassBuilder.AppendOutput(" ");
+        templateParser.TemplateClassBuilder.AppendOutput(" ");
 
         if (_staticAttributesRegex.IsMatch(attributesHash))
         {
-          compilationContext.TemplateClassBuilder.AppendOutput(_commaStripperRegex.Replace(attributesHash, "\" "));
+          templateParser.TemplateClassBuilder.AppendOutput(_commaStripperRegex.Replace(attributesHash, "\" "));
         }
         else
         {
-          var cleanAttributes = _keywordEscaperRegex
-            .Replace(_hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3"), "@$1$2");
+          var cleanAttributes = _hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3");
 
-          compilationContext
-            .AttributeRenderer
-            .Render(compilationContext, cleanAttributes);
+          templateParser.TemplateEngine.TemplateCompiler.RenderAttributes(templateParser, cleanAttributes);
         }
       }
     }

@@ -123,23 +123,20 @@
   <data name="CompilationError" xml:space="preserve">
     <value>An error occurred when compiling the file: {0}</value>
   </data>
-  <data name="CompilerBackEndTypeNotFound" xml:space="preserve">
-    <value>Compiler back-end type {0} not found</value>
-  </data>
   <data name="ErrorParsingTag" xml:space="preserve">
     <value>Error parsing tag</value>
   </data>
   <data name="IllegalIndentation" xml:space="preserve">
     <value>Illegal Indentation: Only two space characters are allowed as tabulation</value>
   </data>
-  <data name="InvalidViewBaseType" xml:space="preserve">
-    <value>ViewBaseType must inherit from CompiledTemplate</value>
+  <data name="InvalidTemplateBaseType" xml:space="preserve">
+    <value>TemplateBaseType must inherit from CompiledTemplate</value>
   </data>
   <data name="InvariantFail" xml:space="preserve">
     <value>Invariant Failure</value>
   </data>
-  <data name="NotAssignableToICompilerBackEnd" xml:space="preserve">
-    <value>Type {0} is not assignable to ICompilerBackEnd</value>
+  <data name="NotAssignableToITemplateCompiler" xml:space="preserve">
+    <value>Type {0} is not assignable to ITemplateCompiler</value>
   </data>
   <data name="ObjectNull" xml:space="preserve">
     <value>Expected Not Null Object</value>
@@ -149,5 +146,8 @@
   </data>
   <data name="SyntaxError" xml:space="preserve">
     <value>Syntax error on line {0}: {1}: "{2}"</value>
+  </data>
+  <data name="TemplateCompilerTypeNotFound" xml:space="preserve">
+    <value>TemplateCompiler type {0} not found</value>
   </data>
 </root>

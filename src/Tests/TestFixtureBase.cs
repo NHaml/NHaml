@@ -1,68 +1,63 @@
 using System;
 using System.IO;
-using System.Reflection;
-
-using NHaml.BackEnds.CSharp2;
 
 using NUnit.Framework;
 
 namespace NHaml.Tests
 {
-  [TestFixture]
   public abstract class TestFixtureBase
   {
     protected const string TemplatesFolder = @"Templates\";
-    protected const string ResultsFolder = @"Results\";
+    protected const string ExpectedFolder = @"Expected\";
 
-    protected TemplateCompiler _templateCompiler;
+    protected TemplateEngine _templateEngine;
+
+    protected string _primaryTemplatesFolder;
+    protected string _secondaryTemplatesFolder;
 
     [SetUp]
     public virtual void SetUp()
     {
-      _templateCompiler = new TemplateCompiler();
-
-      _templateCompiler.AddReference(Assembly.GetExecutingAssembly().Location);
-      _templateCompiler.AddUsing("NHaml.Tests");
-
-      _templateCompiler.CompilerBackEnd = new CSharp2CompilerBackEnd();
+      _templateEngine = new TemplateEngine();
     }
 
-    protected void AssertRender(string template)
+    protected void AssertRender(string templateName)
     {
-      AssertRender(template, null, _templateCompiler);
+      AssertRender(templateName, null);
     }
 
-    protected void AssertRender(string template, string layout)
+    protected void AssertRender(string templateName, string layoutName)
     {
-      var viewActivator = _templateCompiler.Compile(
-        TemplatesFolder + template + ".haml",
-        TemplatesFolder + layout + ".haml");
+      var expected = templateName;
 
-      var view = viewActivator();
+      var templatePath = TemplatesFolder + _primaryTemplatesFolder + "\\" + templateName + ".haml";
+
+      if (!File.Exists(templatePath))
+      {
+        templatePath = TemplatesFolder + _secondaryTemplatesFolder + "\\" + templateName + ".haml";
+      }
+
+      if (!File.Exists(templatePath))
+      {
+        templatePath = TemplatesFolder + templateName + ".haml";
+      }
+
+      if (!string.IsNullOrEmpty(layoutName))
+      {
+        expected = layoutName;
+        layoutName = TemplatesFolder + layoutName + ".haml";
+      }
+
+      var compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
+      var template = compiledTemplate.CreateInstance();
 
       var output = new StringWriter();
 
-      view.Render(output);
+      template.Render(output);
 
       Console.WriteLine(output);
 
-      Assert.AreEqual(File.ReadAllText(ResultsFolder + layout + ".xhtml"), output.ToString());
-    }
-
-    protected static void AssertRender(string template, string result,
-      TemplateCompiler templateCompiler)
-    {
-      var viewActivator = templateCompiler.Compile(TemplatesFolder + template + ".haml");
-
-      var view = viewActivator();
-
-      var output = new StringWriter();
-
-      view.Render(output);
-
-      Console.WriteLine(output);
-
-      Assert.AreEqual(File.ReadAllText(ResultsFolder + (result ?? template) + ".xhtml"), output.ToString());
+      Assert.AreEqual(File.ReadAllText(ExpectedFolder + expected + ".xhtml"), output.ToString());
     }
   }
 }

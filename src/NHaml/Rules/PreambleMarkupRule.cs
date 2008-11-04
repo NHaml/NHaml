@@ -7,9 +7,14 @@ namespace NHaml.Rules
       get { return '^'; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      compilationContext.TemplateClassBuilder.AppendPreambleCode(compilationContext.CurrentInputLine.NormalizedText);
+      var code = templateParser.CurrentInputLine.NormalizedText.Trim();
+
+      if (!string.IsNullOrEmpty(code))
+      {
+        templateParser.TemplateClassBuilder.AppendPreambleCode(code);
+      }
 
       return null;
     }

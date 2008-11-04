@@ -1,95 +1,18 @@
-using NHaml.BackEnds.CSharp2;
+using NHaml.Compilers.CSharp2;
 
 using NUnit.Framework;
 
 namespace NHaml.Tests
 {
   [TestFixture]
-  public class CSharp2FunctionalTests : FunctionalTests
+  public class CSharp2FunctionalTests : FunctionalTestFixture
   {
     public override void SetUp()
     {
       base.SetUp();
 
-      _templateCompiler.CompilerBackEnd = new CSharp2CompilerBackEnd();
-    }
-
-    [Test]
-    public void LambdaEval()
-    {
-      AssertRender("LambdaEvalCS2", "LambdaEval", _templateCompiler);
-    }
-
-    [Test]
-    public void AttributeEval()
-    {
-      AssertRender("AttributeEvalCS2", "AttributeEval", _templateCompiler);
-    }
-
-    [Test]
-    public void SimpleEval()
-    {
-      AssertRender("SimpleEvalCS2", "SimpleEval", _templateCompiler);
-    }
-
-    [Test]
-    public void SilentEval()
-    {
-      AssertRender("SilentEvalCS2", "SilentEval", _templateCompiler);
-    }
-
-    [Test]
-    public void LoopEval()
-    {
-      AssertRender("LoopEvalCS2", "LoopEval", _templateCompiler);
-    }
-
-    [Test]
-    public void SwitchEval()
-    {
-      AssertRender("SwitchEvalCS2", "SwitchEval", _templateCompiler);
-    }
-
-    [Test]
-    public void Conditionals()
-    {
-      AssertRender("ConditionalsCS2", "Conditionals", _templateCompiler);
-    }
-
-    [Test]
-    public void MultiLine()
-    {
-      AssertRender("MultiLineCS2", "MultiLine", _templateCompiler);
-    }
-
-    [Test]
-    public void NullAttributes()
-    {
-      AssertRender("NullAttributesCS2", "NullAttributes", _templateCompiler);
-    }
-
-    [Test]
-    public void Partials()
-    {
-      AssertRender("PartialsCS2", "Partials", _templateCompiler);
-    }
-
-    [Test]
-    public void Preamble()
-    {
-      AssertRender("PreambleCS2", "Preamble", _templateCompiler);
-    }
-
-    [Test]
-    public void Welcome()
-    {
-      AssertRender("WelcomeCS2", "Welcome", _templateCompiler);
-    }
-
-    [Test]
-    public void Layout()
-    {
-      AssertRender("WelcomeCS2", "Application");
+      _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
+      _primaryTemplatesFolder = "C#2";
     }
   }
 }

@@ -16,18 +16,18 @@ namespace NHaml.Rules
       get { return new char(); }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var text = compilationContext.CurrentInputLine.Text;
+      var text = templateParser.CurrentInputLine.Text;
 
-      if ((compilationContext.CurrentNode.Previous != null)
-        && compilationContext.CurrentNode.Previous.Value.IsMultiline)
+      if ((templateParser.CurrentNode.Previous != null)
+        && templateParser.CurrentNode.Previous.Value.IsMultiline)
       {
         text = text.TrimStart();
       }
 
-      compilationContext.TemplateClassBuilder.AppendOutput(text,
-        !compilationContext.CurrentInputLine.IsMultiline);
+      templateParser.TemplateClassBuilder.AppendOutput(text,
+        !templateParser.CurrentInputLine.IsMultiline);
 
       return null;
     }

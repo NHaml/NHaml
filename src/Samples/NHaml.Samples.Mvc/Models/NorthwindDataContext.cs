@@ -1,48 +1,43 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 
 namespace NHaml.Samples.Mvc.Models
 {
   public partial class NorthwindDataContext
   {
+    // Retrieve All Category Objects
+
     public List<Category> GetCategories()
     {
       return Categories.ToList();
     }
+
+    // Retrieve all Suppliers
 
     public List<Supplier> GetSuppliers()
     {
       return Suppliers.ToList();
     }
 
-    public Category GetCategoryById(int id)
+    // Retrieve a Specific Category
+
+    public Category GetCategoryById(int categoryId)
     {
-      return Categories.First(c => c.CategoryID == id);
+      return Categories.First(c => c.CategoryID == categoryId);
     }
 
-    public Product GetProductById(int id)
+    // Retrieve a specific Product
+
+    public Product GetProductById(int productId)
     {
-      return Products.Single(p => p.ProductID == id);
+      return Products.Single(p => p.ProductID == productId);
     }
 
-    public void AddCategory(Category category)
-    {
-      Categories.InsertOnSubmit(category);
-    }
-
-    public void RemoveCategory(int id)
-    {
-      Categories.DeleteOnSubmit(GetCategoryById(id));
-    }
+    // Add a New Product
 
     public void AddProduct(Product product)
     {
       Products.InsertOnSubmit(product);
-    }
-
-    public void RemoveProduct(int id)
-    {
-      Products.DeleteOnSubmit(GetProductById(id));
     }
   }
 }

@@ -11,7 +11,7 @@ namespace NHaml.Rules
       get { return SignifierChar; }
     }
 
-    public override BlockClosingAction Render(CompilationContext compilationContext)
+    public override BlockClosingAction Render(TemplateParser templateParser)
     {
       return null;
     }
