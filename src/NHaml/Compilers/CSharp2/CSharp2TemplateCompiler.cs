@@ -1,6 +1,5 @@
 using System;
 using System.Collections;
-using System.Diagnostics;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -30,8 +29,8 @@ namespace NHaml.Compilers.CSharp2
     {
       var templateSource = templateParser.TemplateClassBuilder.Build();
 
-      Console.WriteLine(templateSource);
-      Trace.WriteLine(templateSource);
+      //Console.WriteLine(templateSource);
+      //Trace.WriteLine(templateSource);
 
       var typeBuilder = CreateTemplateTypeBuilder(templateParser.TemplateEngine);
 

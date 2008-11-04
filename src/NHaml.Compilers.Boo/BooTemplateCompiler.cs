@@ -24,7 +24,7 @@ namespace NHaml.Compilers.Boo
     {
       var templateSource = templateParser.TemplateClassBuilder.Build();
 
-      Console.WriteLine(templateSource);
+      //Console.WriteLine(templateSource);
 
       var typeBuilder = new BooTemplateTypeBuilder(templateParser.TemplateEngine);
 

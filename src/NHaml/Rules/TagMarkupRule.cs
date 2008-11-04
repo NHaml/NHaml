@@ -12,7 +12,7 @@ namespace NHaml.Rules
     private const string Class = "class";
 
     private static readonly Regex _tagRegex = new Regex(
-      @"^([-:\w]+)([-\w\.\#]*)\s*(\{(.*)\})?([\/=]?)(.*)$",
+      @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?([\/=]?)(.*)$",
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _idClassesRegex = new Regex(
@@ -54,12 +54,12 @@ namespace NHaml.Rules
           templateParser.CurrentInputLine);
       }
 
-      var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(match.Groups[1].Value);
+      var tagName = match.Groups[1].Value.Replace("\\", string.Empty);
 
+      var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
       var newLine = !templateParser.CurrentInputLine.IsMultiline;
-
-      var openingTag = templateParser.CurrentInputLine.Indent + '<' + match.Groups[1].Value;
-      var closingTag = "</" + match.Groups[1].Value + '>';
+      var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
+      var closingTag = "</" + tagName + '>';
 
       templateParser.TemplateClassBuilder.AppendOutput(openingTag);
 
@@ -68,7 +68,7 @@ namespace NHaml.Rules
       var action = match.Groups[5].Value;
 
       if (string.Equals("/", action)
-        || templateParser.TemplateEngine.IsAutoClosingTag(match.Groups[1].Value))
+        || templateParser.TemplateEngine.IsAutoClosingTag(tagName))
       {
         var close = " />";
 
