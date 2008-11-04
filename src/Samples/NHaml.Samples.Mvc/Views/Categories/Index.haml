@@ -1,7 +1,0 @@
-^ title = "Categories"
-%h2= title
-%ul
-  - foreach (var category in Model)
-    %li = Html.ActionLink(category)
-%p
-  %em= Html.ActionLink<CategoriesController>(RestfulAction.New, "Add Category")
