@@ -18,7 +18,7 @@ namespace NHaml.Tests
     [Test]
     public void TemplatesAreCached()
     {
-      var templatePath = TemplatesFolder + @"C#2\AttributeEval.haml";
+      var templatePath = TemplatesFolder + @"CSharp2\AttributeEval.haml";
 
       var compiledTemplate1 = _templateEngine.Compile(templatePath);
       var compiledTemplate2 = _templateEngine.Compile(templatePath);
@@ -29,7 +29,7 @@ namespace NHaml.Tests
     [Test]
     public void TemplatesWithLayoutsAreCached()
     {
-      var templatePath = TemplatesFolder + @"C#2\Welcome.haml";
+      var templatePath = TemplatesFolder + @"CSharp2\Welcome.haml";
       var layoutTemplatePath = TemplatesFolder + @"Application.haml";
 
       var compiledTemplate1 = _templateEngine.Compile(templatePath, layoutTemplatePath);

@@ -13,8 +13,8 @@ namespace NHaml.Tests
 
       _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
 
-      _primaryTemplatesFolder = "C#3";
-      _secondaryTemplatesFolder = "C#2";
+      _primaryTemplatesFolder = "CSharp3";
+      _secondaryTemplatesFolder = "CSharp2";
     }
   }
 }

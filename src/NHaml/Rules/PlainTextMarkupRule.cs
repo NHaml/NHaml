@@ -2,12 +2,13 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NHaml.Rules
 {
-  public class NullMarkupRule : MarkupRule
+  [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
+  public class PlainTextMarkupRule : MarkupRule
   {
     [SuppressMessage("Microsoft.Security", "CA2104")]
-    public static readonly NullMarkupRule Instance = new NullMarkupRule();
+    public static readonly PlainTextMarkupRule Instance = new PlainTextMarkupRule();
 
-    private NullMarkupRule()
+    private PlainTextMarkupRule()
     {
     }
 

@@ -99,7 +99,7 @@
     <Compile Include="Rules\EscapeMarkupRule.cs" />
     <Compile Include="Rules\EvalMarkupRule.cs" />
     <Compile Include="Rules\IdMarkupRule.cs" />
-    <Compile Include="Rules\NullMarkupRule.cs" />
+    <Compile Include="Rules\PlainTextMarkupRule.cs" />
     <Compile Include="Rules\PartialMarkupRule.cs" />
     <Compile Include="Rules\SilentEvalMarkupRule.cs" />
     <Compile Include="Rules\TagMarkupRule.cs" />

@@ -157,10 +157,10 @@ namespace NHaml
 
       if (inputLine.Signifier >= 128)
       {
-        return NullMarkupRule.Instance;
+        return PlainTextMarkupRule.Instance;
       }
 
-      return _markupRules[inputLine.Signifier] ?? NullMarkupRule.Instance;
+      return _markupRules[inputLine.Signifier] ?? PlainTextMarkupRule.Instance;
     }
 
     internal bool IsAutoClosingTag(string tag)

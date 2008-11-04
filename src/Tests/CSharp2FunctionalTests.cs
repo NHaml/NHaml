@@ -12,7 +12,7 @@ namespace NHaml.Tests
       base.SetUp();
 
       _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
-      _primaryTemplatesFolder = "C#2";
+      _primaryTemplatesFolder = "CSharp2";
     }
   }
 }

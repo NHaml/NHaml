@@ -23,7 +23,7 @@ namespace NHaml.Tests
 
       for (var i = 0; i < 100; i++)
       {
-        _templateEngine.Compile(TemplatesFolder + @"C#2\AttributeEval.haml");
+        _templateEngine.Compile(TemplatesFolder + @"CSharp2\AttributeEval.haml");
       }
 
       stopwatch.Stop();
@@ -42,7 +42,7 @@ namespace NHaml.Tests
 
       for (var i = 0; i < 100; i++)
       {
-        _templateEngine.Compile(TemplatesFolder + @"C#2\AttributeEval.haml");
+        _templateEngine.Compile(TemplatesFolder + @"CSharp2\AttributeEval.haml");
       }
 
       stopwatch.Stop();
