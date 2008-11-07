@@ -15,7 +15,7 @@ namespace NHaml.Web.Mvc.IronRuby
       TemplateEngine.AddReference(typeof(NHamlMvcIronRubyView<>).Assembly.Location);
     }
 
-    protected override Type ViewBaseType
+    protected override Type ViewGenericBaseType
     {
       get { return typeof(NHamlMvcIronRubyView<>); }
     }

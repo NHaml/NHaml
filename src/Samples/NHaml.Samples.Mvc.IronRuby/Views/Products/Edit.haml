@@ -14,4 +14,4 @@
       %td Unit Price:
       %td= html.text_box('UnitPrice', view_data.model.product.unit_price)
   %p
-  _ Shared\Button
+  - html.render_partial('_Button')

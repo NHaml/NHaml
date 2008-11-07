@@ -16,17 +16,14 @@ namespace NHaml.Web.Mvc
   [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
   public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
   {
+    protected const string FakeMasterName = "__FakeMaster__";
+
     private readonly TemplateEngine _templateEngine = new TemplateEngine();
 
     public NHamlMvcViewEngine()
     {
       InitializeTemplateEngine();
       InitializeViewLocations();
-    }
-
-    protected TemplateEngine TemplateEngine
-    {
-      get { return _templateEngine; }
     }
 
     private void InitializeTemplateEngine()
@@ -53,6 +50,11 @@ namespace NHaml.Web.Mvc
       }
     }
 
+    protected TemplateEngine TemplateEngine
+    {
+      get { return _templateEngine; }
+    }
+
     private void InitializeViewLocations()
     {
       ViewLocationFormats = new[]
@@ -75,11 +77,7 @@ namespace NHaml.Web.Mvc
     {
       if (string.IsNullOrEmpty(masterName))
       {
-        // Hack: If the specified master is empty then the VirtualPathProviderViewEngine will not try to locate a master.
-        // Give it a fake name to ensure that the VirtualPathProviderViewEngine will always look through the master-locations 
-        // so that application.haml can be located
-
-        masterName = "__NHamlFakeMasterThatShouldNeverExist__";
+        masterName = FakeMasterName;
       }
 
       var result = base.FindView(controllerContext, viewName, masterName);
@@ -102,26 +100,33 @@ namespace NHaml.Web.Mvc
         GetViewBaseType(controllerContext)).CreateInstance();
     }
 
-    private Type GetViewBaseType(ControllerContext controllerContext)
+    protected virtual Type ViewGenericBaseType
+    {
+      get { return typeof(NHamlMvcView<>); }
+    }
+
+    protected virtual Type GetViewBaseType(ControllerContext controllerContext)
     {
       var modelType = typeof(object);
 
       var viewData = controllerContext.Controller.ViewData;
+
+      var viewContext = controllerContext as ViewContext;
+
+      if ((viewContext != null) && (viewContext.ViewData != null))
+      {
+        viewData = viewContext.ViewData;
+      }
 
       if ((viewData != null) && (viewData.Model != null))
       {
         modelType = viewData.Model.GetType();
       }
 
-      return ViewBaseType.MakeGenericType(modelType);
+      return ViewGenericBaseType.MakeGenericType(modelType);
     }
 
-    protected virtual Type ViewBaseType
-    {
-      get { return typeof(NHamlMvcView<>); }
-    }
-
-    private static string VirtualPathToPhysicalPath(RequestContext context, string path)
+    protected virtual string VirtualPathToPhysicalPath(RequestContext context, string path)
     {
       return context.HttpContext.Request.MapPath(path);
     }

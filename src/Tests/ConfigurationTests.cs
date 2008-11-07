@@ -89,7 +89,7 @@ namespace NHaml.Tests
       var section = NHamlConfigurationSection.GetSection();
 
       Assert.IsNotNull(section);
-      Assert.AreEqual("CSharp2", section.TemplateCompiler);
+      Assert.AreEqual("CSharp3", section.TemplateCompiler);
     }
 
     [Test]

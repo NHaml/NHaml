@@ -1,14 +1,16 @@
 using System;
 using System.IO;
 
+using NHaml.Compilers.CSharp2;
+
 using NUnit.Framework;
 
 namespace NHaml.Tests
 {
   public abstract class TestFixtureBase
   {
-    protected const string TemplatesFolder = @"Templates\";
-    protected const string ExpectedFolder = @"Expected\";
+    public const string TemplatesFolder = @"Templates\";
+    public const string ExpectedFolder = @"Expected\";
 
     protected TemplateEngine _templateEngine;
 
@@ -18,7 +20,9 @@ namespace NHaml.Tests
     [SetUp]
     public virtual void SetUp()
     {
-      _templateEngine = new TemplateEngine();
+      _templateEngine = new TemplateEngine {TemplateCompiler = new CSharp2TemplateCompiler()};
+
+      _primaryTemplatesFolder = "CSharp2";
     }
 
     protected void AssertRender(string templateName)
@@ -28,7 +32,14 @@ namespace NHaml.Tests
 
     protected void AssertRender(string templateName, string layoutName)
     {
-      var expected = templateName;
+      AssertRender<Template>(templateName, layoutName, (t, w) => t.Render(w));
+    }
+
+    protected void AssertRender<TTemplate>(string templateName, string layoutName,
+      Action<TTemplate, TextWriter> renderAction)
+      where TTemplate : Template
+    {
+      var expectedName = templateName;
 
       var templatePath = TemplatesFolder + _primaryTemplatesFolder + "\\" + templateName + ".haml";
 
@@ -44,7 +55,7 @@ namespace NHaml.Tests
 
       if (!string.IsNullOrEmpty(layoutName))
       {
-        expected = layoutName;
+        expectedName = layoutName;
         layoutName = TemplatesFolder + layoutName + ".haml";
       }
 
@@ -53,11 +64,16 @@ namespace NHaml.Tests
 
       var output = new StringWriter();
 
-      template.Render(output);
+      renderAction((TTemplate)template, output);
 
+      AssertRender(output, expectedName);
+    }
+
+    protected static void AssertRender(StringWriter output, string expectedName)
+    {
       Console.WriteLine(output);
 
-      Assert.AreEqual(File.ReadAllText(ExpectedFolder + expected + ".xhtml"), output.ToString());
+      Assert.AreEqual(File.ReadAllText(ExpectedFolder + expectedName + ".xhtml"), output.ToString());
     }
   }
 }

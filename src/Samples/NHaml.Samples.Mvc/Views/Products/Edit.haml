@@ -14,4 +14,4 @@
       %td Unit Price:
       %td= Html.TextBox("UnitPrice", ViewData.Model.Product.UnitPrice.ToString())
   %p
-  _ Shared\Button
+  - Html.RenderPartial(@"_Button")

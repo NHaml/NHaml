@@ -33,5 +33,10 @@ namespace NHaml.Web.Mvc.IronRuby.Helpers
     {
       return SelectExtensions.DropDownList(this, name, selectList);
     }
+
+    public void RenderPartial(string partialViewName)
+    {
+      RenderPartialExtensions.RenderPartial(this, partialViewName);
+    }
   }
 }

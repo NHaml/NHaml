@@ -1,6 +1,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
 
@@ -53,6 +54,9 @@ namespace NHaml.Compilers.CSharp2
     public Type Build(string source, string typeName)
     {
       BuildSource(source);
+
+      Trace.WriteLine(_source);
+
       AddReferences();
 
       var codeProvider = new CSharpCodeProvider(_providerOptions);

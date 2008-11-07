@@ -1,4 +1,4 @@
-﻿using System.Collections;
+using System.Collections;
 using System.Web.Routing;
 
 namespace NHaml.Web.Mvc.IronRuby.Helpers

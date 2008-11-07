@@ -41,6 +41,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\IronRuby.Libraries.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Web.Mvc, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Microsoft.Web.Mvc.dll</HintPath>
+    </Reference>
     <Reference Include="Moq, Version=2.6.3127.18174, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Moq.dll</HintPath>
@@ -52,6 +56,21 @@
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Abstractions.dll</HintPath>
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Web.Routing, Version=3.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\System.Web.Routing.dll</HintPath>
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
   </ItemGroup>
@@ -70,6 +89,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Expected\Conditionals.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\MvcPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Expected\CustomBaseClass.xhtml">
@@ -190,6 +212,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Comments.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\MvcPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\CSharp2\AttributeEval.haml">
@@ -338,6 +363,7 @@
     <Compile Include="BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="MvcTests.cs" />
     <Compile Include="IronRubyFunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
     <Compile Include="ConfigurationTests.cs" />
@@ -367,6 +393,10 @@
     <ProjectReference Include="..\NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj">
       <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
       <Name>NHaml.Compilers.IronRuby</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
+      <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
+      <Name>NHaml.Web.Mvc</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml\NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
