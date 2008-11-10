@@ -85,7 +85,10 @@ namespace NHaml.Rules
       }
       else
       {
-        if ((content.Length > 50) || string.Equals("=", action) || string.Equals("&=", action) || string.Equals("!=", action))
+        if ((content.Length > 50)
+          || string.Equals("=", action)
+            || string.Equals("&=", action)
+              || string.Equals("!=", action))
         {
           templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
 
