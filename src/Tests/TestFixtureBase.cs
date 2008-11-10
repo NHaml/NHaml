@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 
 using NHaml.Compilers.CSharp2;
@@ -16,6 +17,11 @@ namespace NHaml.Tests
 
     protected string _primaryTemplatesFolder;
     protected string _secondaryTemplatesFolder;
+
+    protected TestFixtureBase()
+    {
+      Trace.Listeners.Clear();
+    }
 
     [SetUp]
     public virtual void SetUp()

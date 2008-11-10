@@ -1,47 +1,46 @@
 Foo |
 Bar |
-Baz
-Foo |
-  Bar |
-    Baz
-Foo |
-  Bar
-    = "Baz"
-
-Foo
-%a{@href : '#'} Bar
-Baz
+Baz |
 
 Foo |
-%a{@href : '#'} Bar |
-Baz
-
-%a{@href : '#'} Foo |
 Bar |
 Baz
 
-%a{@href : '#'} Foo |
-%a{@href : '#'} Bar |
-%a{@href : '#'} Baz
+Foo |
+  Bar |
+    Baz |
 
-%img{@src : '#'} |
-%img{@src : '#'} |
-%img{@src : '#'}
+Foo |
+  Bar |
+    = "Baz"
+
+Foo |
+%a{href = '#'} Bar |
+Baz |
+
+%a{href = '#'} Foo |
+Bar |
+Baz |
+
+%img{src: '#', |
+     href: '#'} |
 
 %p
   = "Holy cow " + |
     "multiline " + |
     "tags! " + |
-    "A pipe (|) even!"
+    "A pipe (|) even!" |
   = "PipesIgnored|"
   = "1" + |
     "2" + |
-    "3"
+    "3" |
   %br/
   - for i in range(0,2)
     - j = i | 2
     = j
 
 - if true |
-  and false == false
+  and false == false |
   = "w00t!"
+  
+The Last Line |

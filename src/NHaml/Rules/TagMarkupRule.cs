@@ -57,7 +57,6 @@ namespace NHaml.Rules
       var tagName = match.Groups[1].Value.Replace("\\", string.Empty);
 
       var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
-      var newLine = !templateParser.CurrentInputLine.IsMultiline;
       var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
       var closingTag = "</" + tagName + '>';
 
@@ -72,12 +71,7 @@ namespace NHaml.Rules
       {
         var close = " />";
 
-        if (!newLine)
-        {
-          close += ' ';
-        }
-
-        templateParser.TemplateClassBuilder.AppendOutput(close, newLine);
+        templateParser.TemplateClassBuilder.AppendOutputLine(close);
 
         return null;
       }
@@ -86,7 +80,7 @@ namespace NHaml.Rules
 
       if (string.IsNullOrEmpty(content))
       {
-        templateParser.TemplateClassBuilder.AppendOutput(">", newLine);
+        templateParser.TemplateClassBuilder.AppendOutputLine(">");
         closingTag = templateParser.CurrentInputLine.Indent + closingTag;
       }
       else
@@ -120,12 +114,7 @@ namespace NHaml.Rules
         }
       }
 
-      if (!newLine)
-      {
-        closingTag += ' ';
-      }
-
-      return () => templateParser.TemplateClassBuilder.AppendOutput(closingTag, newLine);
+      return () => templateParser.TemplateClassBuilder.AppendOutputLine(closingTag);
     }
 
     private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)

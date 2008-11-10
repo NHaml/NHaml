@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Text;
 
 using IronRuby;
@@ -35,8 +36,7 @@ namespace NHaml.Compilers.IronRuby
 
       var templateSource = ruby.ToString();
 
-      //Console.WriteLine(templateSource);
-      //Trace.WriteLine(templateSource);
+      Trace.WriteLine(templateSource);
 
       _scriptEngine.Execute(templateSource);
 

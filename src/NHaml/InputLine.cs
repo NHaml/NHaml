@@ -21,7 +21,7 @@ namespace NHaml
     private readonly int _lineNumber;
     private readonly int _indentSize;
 
-    private bool _isMultiline;
+    private readonly bool _isMultiline;
 
     public InputLine(string text, int lineNumber)
     {
@@ -37,7 +37,7 @@ namespace NHaml
         _text = _text.Remove(match.Groups[1].Index);
       }
 
-      _normalizedText = _text.Trim();
+      _normalizedText = _text.TrimStart();
 
       if (!string.IsNullOrEmpty(_normalizedText))
       {
@@ -46,9 +46,6 @@ namespace NHaml
       }
 
       _indent = _indentRegex.Match(_text).Groups[0].Value;
-
-      ValidateIndentation();
-
       _indentSize = _indent.Length / 2;
     }
 
@@ -90,8 +87,13 @@ namespace NHaml
     public void Merge(InputLine nextInputLine)
     {
       _text += nextInputLine.Text.TrimStart();
-      _normalizedText += ' ' + nextInputLine.Text.Trim();
-      _isMultiline = nextInputLine.IsMultiline;
+      _normalizedText += nextInputLine.Text.TrimStart();
+    }
+
+    public void TrimEnd()
+    {
+      _text = _text.TrimEnd();
+      _normalizedText = _normalizedText.TrimEnd();
     }
 
     public override string ToString()
@@ -99,7 +101,7 @@ namespace NHaml
       return LineNumber + ": " + Text;
     }
 
-    private void ValidateIndentation()
+    public void ValidateIndentation()
     {
       if (_indent.Contains("\t") || ((_indent.Length % 2) != 0))
       {

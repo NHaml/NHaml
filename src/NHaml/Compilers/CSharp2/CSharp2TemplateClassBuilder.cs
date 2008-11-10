@@ -40,8 +40,7 @@ namespace NHaml.Compilers.CSharp2
     {
       if (code != null)
       {
-        var action = newLine ? "WriteLine" : "Write";
-        Output.AppendLine("textWriter." + action + "(Convert.ToString(" + code + "));");
+        Output.AppendLine("textWriter." + (newLine ? "WriteLine" : "Write") + "(Convert.ToString(" + code + "));");
       }
     }
 
@@ -50,6 +49,7 @@ namespace NHaml.Compilers.CSharp2
       if (BlockDepth != depth)
       {
         Output.AppendLine("Output.Depth = " + depth + ";");
+
         BlockDepth = depth;
       }
     }

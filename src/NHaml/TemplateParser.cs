@@ -108,17 +108,20 @@ namespace NHaml
     {
       while (CurrentNode.Next != null)
       {
-        var rule = TemplateEngine.GetRule(CurrentInputLine);
-
-        if (CurrentInputLine.IsMultiline && rule.MergeMultiline)
+        while (CurrentInputLine.IsMultiline && NextInputLine.IsMultiline)
         {
           CurrentInputLine.Merge(NextInputLine);
           InputLines.Remove(NextNode);
         }
-        else
+
+        if (CurrentInputLine.IsMultiline)
         {
-          rule.Process(this);
+          CurrentInputLine.TrimEnd();
         }
+
+        CurrentInputLine.ValidateIndentation();
+
+        TemplateEngine.GetRule(CurrentInputLine).Process(this);
       }
 
       CloseBlocks();

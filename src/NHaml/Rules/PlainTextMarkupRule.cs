@@ -19,16 +19,7 @@ namespace NHaml.Rules
 
     public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var text = templateParser.CurrentInputLine.Text;
-
-      if ((templateParser.CurrentNode.Previous != null)
-        && templateParser.CurrentNode.Previous.Value.IsMultiline)
-      {
-        text = text.TrimStart();
-      }
-
-      templateParser.TemplateClassBuilder.AppendOutput(text,
-        !templateParser.CurrentInputLine.IsMultiline);
+      templateParser.TemplateClassBuilder.AppendOutputLine(templateParser.CurrentInputLine.Text);
 
       return null;
     }

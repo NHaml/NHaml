@@ -7,11 +7,6 @@ namespace NHaml.Rules
       get { return '='; }
     }
 
-    public override bool MergeMultiline
-    {
-      get { return true; }
-    }
-
     public override BlockClosingAction Render(TemplateParser templateParser)
     {
       templateParser.TemplateClassBuilder

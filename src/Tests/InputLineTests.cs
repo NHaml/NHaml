@@ -1,5 +1,3 @@
-using NHaml.Exceptions;
-
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -19,26 +17,12 @@ namespace NHaml.Tests
     }
 
     [Test]
-    public void RTrimmed()
+    public void Trimmed()
     {
       var inputLine = new InputLine("  %head ", 1);
 
       Assert.AreEqual("  %head ", inputLine.Text);
-      Assert.AreEqual("head", inputLine.NormalizedText);
-    }
-
-    [Test]
-    [ExpectedException(typeof(SyntaxException))]
-    public void ContainsTab()
-    {
-      new InputLine("  \t%head", 1);
-    }
-
-    [Test]
-    [ExpectedException(typeof(SyntaxException))]
-    public void OddNumberOfSpaces()
-    {
-      new InputLine(" %head", 1);
+      Assert.AreEqual("head ", inputLine.NormalizedText);
     }
 
     [Test]

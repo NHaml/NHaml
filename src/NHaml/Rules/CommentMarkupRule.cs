@@ -15,11 +15,6 @@ namespace NHaml.Rules
       get { return '/'; }
     }
 
-    public override bool MergeMultiline
-    {
-      get { return true; }
-    }
-
     public override BlockClosingAction Render(TemplateParser templateParser)
     {
       var match = _commentRegex.Match(templateParser.CurrentInputLine.NormalizedText);
