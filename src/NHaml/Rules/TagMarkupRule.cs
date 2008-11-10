@@ -12,7 +12,7 @@ namespace NHaml.Rules
     private const string Class = "class";
 
     private static readonly Regex _tagRegex = new Regex(
-      @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?([\/=]?)(.*)$",
+      @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(\/|=|&=)?(.*)$",
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _idClassesRegex = new Regex(
@@ -85,7 +85,7 @@ namespace NHaml.Rules
       }
       else
       {
-        if ((content.Length > 50) || string.Equals("=", action))
+        if ((content.Length > 50) || string.Equals("=", action) || string.Equals("&=", action))
         {
           templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
 
@@ -96,10 +96,12 @@ namespace NHaml.Rules
 
           if (string.Equals("=", action))
           {
-            templateParser.TemplateClassBuilder.AppendCode(
-              content,
-              !isWhitespaceSensitive,
+            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive,
               templateParser.TemplateEngine.EncodeHtml);
+          }
+          else if (string.Equals("&=", action))
+          {
+            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, true);
           }
           else
           {
