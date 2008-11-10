@@ -36,11 +36,18 @@ namespace NHaml.Compilers.CSharp2
       Output.AppendLine("textWriter." + method + "(@\"" + value + "\");");
     }
 
-    public override void AppendCode(string code, bool newLine)
+    public override void AppendCode(string code, bool newLine, bool escapeHtml)
     {
       if (code != null)
       {
-        Output.AppendLine("textWriter." + (newLine ? "WriteLine" : "Write") + "(Convert.ToString(" + code + "));");
+        code = "(Convert.ToString(" + code + "))";
+
+        if (escapeHtml)
+        {
+          code = "(HttpUtility.HtmlEncode" + code + ")";
+        }
+
+        Output.AppendLine("textWriter." + (newLine ? "WriteLine" : "Write") + code + ";");
       }
     }
 

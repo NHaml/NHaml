@@ -51,13 +51,16 @@ namespace NHaml.Compilers.IronRuby
       Output.AppendLine("text_writer." + method + "('" + value.Replace("'", "\\'") + "')");
     }
 
-    public override void AppendCode(string code, bool newLine)
+    public override void AppendCode(string code, bool newLine, bool escapeHtml)
     {
       if (code != null)
       {
-        var method = newLine ? "WriteLine" : "Write";
+        if (escapeHtml)
+        {
+          code = "System::Web::HttpUtility.HtmlEncode(" + code + ")";
+        }
 
-        Output.AppendLine("text_writer." + method + "(" + code + ")");
+        Output.AppendLine("text_writer." + (newLine ? "WriteLine" : "Write") + "(" + code + ")");
       }
     }
 

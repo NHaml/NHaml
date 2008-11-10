@@ -9,10 +9,11 @@ namespace NHaml.Rules
 
     public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      templateParser.TemplateClassBuilder
-        .AppendOutput(templateParser.CurrentInputLine.Indent);
-      templateParser.TemplateClassBuilder
-        .AppendCodeLine(templateParser.CurrentInputLine.NormalizedText.Trim());
+      templateParser.TemplateClassBuilder.AppendOutput(templateParser.CurrentInputLine.Indent);
+
+      templateParser.TemplateClassBuilder.AppendCodeLine(
+        templateParser.CurrentInputLine.NormalizedText.Trim(),
+        templateParser.TemplateEngine.EncodeHtml);
 
       return null;
     }

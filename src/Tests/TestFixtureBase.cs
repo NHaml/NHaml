@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 
 using NHaml.Compilers.CSharp2;
@@ -18,11 +17,6 @@ namespace NHaml.Tests
     protected string _primaryTemplatesFolder;
     protected string _secondaryTemplatesFolder;
 
-    protected TestFixtureBase()
-    {
-      Trace.Listeners.Clear();
-    }
-
     [SetUp]
     public virtual void SetUp()
     {
@@ -38,15 +32,18 @@ namespace NHaml.Tests
 
     protected void AssertRender(string templateName, string layoutName)
     {
-      AssertRender<Template>(templateName, layoutName, (t, w) => t.Render(w));
-    }
-
-    protected void AssertRender<TTemplate>(string templateName, string layoutName,
-      Action<TTemplate, TextWriter> renderAction)
-      where TTemplate : Template
-    {
       var expectedName = templateName;
 
+      if (!string.IsNullOrEmpty(layoutName))
+      {
+        expectedName = layoutName;
+      }
+
+      AssertRender(templateName, layoutName, expectedName);
+    }
+
+    protected void AssertRender(string templateName, string layoutName, string expectedName)
+    {
       var templatePath = TemplatesFolder + _primaryTemplatesFolder + "\\" + templateName + ".haml";
 
       if (!File.Exists(templatePath))
@@ -61,7 +58,6 @@ namespace NHaml.Tests
 
       if (!string.IsNullOrEmpty(layoutName))
       {
-        expectedName = layoutName;
         layoutName = TemplatesFolder + layoutName + ".haml";
       }
 
@@ -70,7 +66,7 @@ namespace NHaml.Tests
 
       var output = new StringWriter();
 
-      renderAction((TTemplate)template, output);
+      template.Render(output);
 
       AssertRender(output, expectedName);
     }

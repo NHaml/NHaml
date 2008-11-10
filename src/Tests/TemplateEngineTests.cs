@@ -12,7 +12,7 @@ namespace NHaml.Tests
     {
       _templateEngine.AddUsing("System");
 
-      Assert.AreEqual(5, _templateEngine.Usings.Count());
+      Assert.AreEqual(6, _templateEngine.Usings.Count());
     }
 
     [Test]

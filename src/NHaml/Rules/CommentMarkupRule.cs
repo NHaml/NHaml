@@ -7,8 +7,9 @@ namespace NHaml.Rules
 {
   public class CommentMarkupRule : MarkupRule
   {
-    private static readonly Regex _commentRegex
-      = new Regex(@"^(\[[\w\s\.]*\])?(.*)$", RegexOptions.Compiled | RegexOptions.Singleline);
+    private static readonly Regex _commentRegex = new Regex(
+      @"^(\[[\w\s\.]*\])?(.*)$",
+      RegexOptions.Compiled | RegexOptions.Singleline);
 
     public override char Signifier
     {

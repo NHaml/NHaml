@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Web;
 
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp3;
@@ -21,11 +22,12 @@ namespace NHaml
       = new[]
           {
             typeof(TemplateEngine).Assembly.Location,
-            typeof(INotifyPropertyChanged).Assembly.Location
+            typeof(INotifyPropertyChanged).Assembly.Location,
+            typeof(HttpUtility).Assembly.Location
           };
 
     private static readonly string[] DefaultUsings
-      = new[] {"System", "System.IO", "NHaml", "NHaml.Utils"};
+      = new[] {"System", "System.IO", "System.Web", "NHaml", "NHaml.Utils"};
 
     private readonly StringSet _autoClosingTags =
       new StringSet(DefaultAutoClosingTags);
@@ -50,6 +52,7 @@ namespace NHaml
       AddRule(new ClassMarkupRule());
       AddRule(new IdMarkupRule());
       AddRule(new EvalMarkupRule());
+      AddRule(new EncodedEvalMarkupRule());
       AddRule(new SilentEvalMarkupRule());
       AddRule(new PreambleMarkupRule());
       AddRule(new CommentMarkupRule());
@@ -71,6 +74,11 @@ namespace NHaml
       if (section.AutoRecompile.HasValue)
       {
         AutoRecompile = section.AutoRecompile.Value;
+      }
+
+      if (section.EncodeHtml.HasValue)
+      {
+        EncodeHtml = section.EncodeHtml.Value;
       }
 
       if (!string.IsNullOrEmpty(section.TemplateCompiler))
@@ -103,6 +111,7 @@ namespace NHaml
     }
 
     public bool AutoRecompile { get; set; }
+    public bool EncodeHtml { get; set; }
 
     public Type TemplateBaseType
     {

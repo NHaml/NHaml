@@ -94,6 +94,12 @@
     <None Include="Expected\Conditionals.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Expected\EscapeHtmlOff.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\EscapeHtmlOn.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Expected\MvcPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -218,6 +224,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Alligators.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\EscapeHtml.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\MvcPartial.haml">

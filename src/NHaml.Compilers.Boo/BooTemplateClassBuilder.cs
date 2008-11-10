@@ -44,13 +44,18 @@ namespace NHaml.Compilers.Boo
       Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
     }
 
-    public override void AppendCode(string code, bool newLine)
+    public override void AppendCode(string code, bool newLine, bool escapeHtml)
     {
       if (code != null)
       {
-        var action = newLine ? "WriteLine" : "Write";
+        code = "(Convert.ToString(" + code + "))";
 
-        Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(Convert.ToString({1}))", action, code));
+        if (escapeHtml)
+        {
+          code = "(HttpUtility.HtmlEncode" + code + ")";
+        }
+
+        Output.AppendLine(IndentString + "textWriter." + (newLine ? "WriteLine" : "Write") + code + ";");
       }
     }
 

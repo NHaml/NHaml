@@ -103,6 +103,16 @@ namespace NHaml.Tests
     }
 
     [Test]
+    public void CanReadEscapeHtmlFromAppSettings()
+    {
+      var section = NHamlConfigurationSection.GetSection();
+
+      Assert.IsNotNull(section);
+      Assert.IsTrue(section.EncodeHtml.HasValue);
+      Assert.IsFalse(section.EncodeHtml.Value);
+    }
+
+    [Test]
     public void CanReadViewsAssembliesSectionFromAppSettings()
     {
       var section = NHamlConfigurationSection.GetSection();

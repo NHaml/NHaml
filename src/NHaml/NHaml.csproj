@@ -50,6 +50,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Web" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
@@ -69,6 +70,7 @@
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp2\Coco\Parser.cs" />
     <Compile Include="Compilers\CSharp2\Coco\Scanner.cs" />
+    <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
     <Compile Include="TemplateParser.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />

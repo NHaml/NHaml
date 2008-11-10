@@ -26,12 +26,19 @@ namespace NHaml.Configuration
     private const string AssembliesElement = "assemblies";
     private const string NamespacesElement = "namespaces";
     private const string AutoRecompileAttribute = "autoRecompile";
+    private const string EncodeHtmlAttribute = "encodeHtml";
     private const string TemplateCompilerAttribute = "templateCompiler";
 
     [ConfigurationProperty(AutoRecompileAttribute)]
     public virtual bool? AutoRecompile
     {
       get { return this[AutoRecompileAttribute] as bool?; }
+    }
+
+    [ConfigurationProperty(EncodeHtmlAttribute)]
+    public virtual bool? EncodeHtml
+    {
+      get { return this[EncodeHtmlAttribute] as bool?; }
     }
 
     [ConfigurationProperty(TemplateCompilerAttribute)]

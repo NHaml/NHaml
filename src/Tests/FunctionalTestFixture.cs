@@ -45,6 +45,20 @@ namespace NHaml.Tests
     }
 
     [Test]
+    public void EscapeHtmlOffByDefault()
+    {
+      AssertRender("EscapeHtml", null, "EscapeHtmlOff");
+    }
+
+    [Test]
+    public void EscapeHtmlOnByDefault()
+    {
+      _templateEngine.EncodeHtml = true;
+
+      AssertRender("EscapeHtml", null, "EscapeHtmlOn");
+    }
+
+    [Test]
     public virtual void Empty()
     {
       AssertRender("Empty");

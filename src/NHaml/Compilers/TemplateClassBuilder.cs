@@ -40,9 +40,9 @@ namespace NHaml.Compilers
       AppendOutput(value, false);
     }
 
-    public virtual void AppendCodeLine(string code)
+    public virtual void AppendCodeLine(string code, bool escapeHtml)
     {
-      AppendCode(code, true);
+      AppendCode(code, true, escapeHtml);
     }
 
     public virtual void AppendOutputLine(string value)
@@ -52,7 +52,7 @@ namespace NHaml.Compilers
 
     public virtual void AppendCode(string code)
     {
-      AppendCode(code, false);
+      AppendCode(code, false, false);
     }
 
     public virtual void BeginCodeBlock()
@@ -70,11 +70,11 @@ namespace NHaml.Compilers
       Depth--;
     }
 
-    public abstract void AppendCode(string code, bool newLine);
-    public abstract void AppendChangeOutputDepth(int depth);
+    public abstract void AppendCode(string code, bool newLine, bool escapeHtml);
     public abstract void AppendSilentCode(string code, bool closeStatement);
-    public abstract void AppendAttributeCode(string name, string code);
     public abstract void AppendPreambleCode(string code);
+    public abstract void AppendAttributeCode(string name, string code);
+    public abstract void AppendChangeOutputDepth(int depth);
 
     public abstract string Build();
   }

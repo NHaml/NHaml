@@ -96,7 +96,10 @@ namespace NHaml.Rules
 
           if (string.Equals("=", action))
           {
-            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive);
+            templateParser.TemplateClassBuilder.AppendCode(
+              content,
+              !isWhitespaceSensitive,
+              templateParser.TemplateEngine.EncodeHtml);
           }
           else
           {
