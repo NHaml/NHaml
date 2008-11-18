@@ -19,7 +19,7 @@ namespace NHaml.Compilers.IronRuby
       Preamble.AppendLine("}.compact.join(' ')");
       Preamble.AppendLine("end");
 
-      Preamble.AppendLine("def CoreRender(text_writer)");
+      Preamble.AppendLine("def core_render(text_writer)");
     }
 
     public override void AppendAttributeCode(string name, string code)
