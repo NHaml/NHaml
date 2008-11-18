@@ -20,7 +20,7 @@ namespace NHaml.Rules
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _staticAttributesRegex = new Regex(
-      @"^(?:[-\w]+\s*=\s*""[^""]+""\s*,?\s*)+$",
+      @"^(?:[-:\w]+\s*=\s*""[^""]+""\s*,?\s*)+$",
       RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _commaStripperRegex = new Regex(
