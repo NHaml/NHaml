@@ -124,6 +124,15 @@ namespace NHaml.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No partial name specified and template is not a layout.
+        /// </summary>
+        internal static string NoPartialName {
+            get {
+                return ResourceManager.GetString("NoPartialName", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Type {0} is not assignable to ITemplateCompiler.
         /// </summary>
         internal static string NotAssignableToITemplateCompiler {

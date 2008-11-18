@@ -1,14 +1,12 @@
 using System;
 using System.IO;
-using System.Text.RegularExpressions;
+
+using NHaml.Properties;
 
 namespace NHaml.Rules
 {
   public class PartialMarkupRule : MarkupRule
   {
-    private static readonly Regex _partialRegex
-      = new Regex(@"^\s*([\w-\\]+)\s*$", RegexOptions.Compiled | RegexOptions.Singleline);
-
     public override char Signifier
     {
       get { return '_'; }
@@ -21,13 +19,22 @@ namespace NHaml.Rules
 
     public override BlockClosingAction Render(TemplateParser templateParser)
     {
-      var match = _partialRegex.Match(templateParser.CurrentInputLine.NormalizedText);
+      var partialName = templateParser.CurrentInputLine.NormalizedText.Trim();
 
-      if (match.Success)
+      if (string.IsNullOrEmpty(partialName))
+      {
+        if (!string.IsNullOrEmpty(templateParser.LayoutTemplatePath))
+        {
+          templateParser.MergeTemplate(templateParser.TemplatePath);
+        }
+        else
+        {
+          throw new InvalidOperationException(Resources.NoPartialName);
+        }
+      }
+      else
       {
         var templateDirectory = Path.GetDirectoryName(templateParser.TemplatePath);
-
-        var partialName = match.Groups[1].Value;
 
         partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
 
@@ -39,10 +46,6 @@ namespace NHaml.Rules
         }
 
         templateParser.MergeTemplate(partialTemplatePath);
-      }
-      else if (!string.IsNullOrEmpty(templateParser.LayoutTemplatePath))
-      {
-        templateParser.MergeTemplate(templateParser.TemplatePath);
       }
 
       return null;

@@ -235,6 +235,9 @@
     <None Include="Templates\4Spaces.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\BadPartial.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\Tabs.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -296,9 +299,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\Escape.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\IronRuby\Application.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\IronRuby\AttributeEval.haml">

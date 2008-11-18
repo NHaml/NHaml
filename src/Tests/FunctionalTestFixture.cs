@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 
 using NUnit.Framework;
 
@@ -8,6 +9,13 @@ namespace NHaml.Tests
   [TestFixture]
   public abstract class FunctionalTestFixture : TestFixtureBase
   {
+    [Test]
+    [ExpectedException(typeof(FileNotFoundException))]
+    public void BadPartial()
+    {
+      AssertRender("BadPartial");
+    }
+
     [Test]
     public void Tabs()
     {
@@ -249,6 +257,13 @@ namespace NHaml.Tests
     public virtual void Layout()
     {
       AssertRender("Welcome", "Application");
+    }
+
+    [Test]
+    [ExpectedException(typeof(InvalidOperationException))]
+    public void LayoutNoContent()
+    {
+      AssertRender("Application");
     }
 
     [Test]

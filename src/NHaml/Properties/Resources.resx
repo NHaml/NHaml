@@ -138,6 +138,9 @@
   <data name="InvariantFail" xml:space="preserve">
     <value>Invariant Failure</value>
   </data>
+  <data name="NoPartialName" xml:space="preserve">
+    <value>No partial name specified and template is not a layout</value>
+  </data>
   <data name="NotAssignableToITemplateCompiler" xml:space="preserve">
     <value>Type {0} is not assignable to ITemplateCompiler</value>
   </data>

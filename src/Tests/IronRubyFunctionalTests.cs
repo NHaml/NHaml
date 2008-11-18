@@ -16,6 +16,7 @@ namespace NHaml.Tests
       _primaryTemplatesFolder = "IronRuby";
     }
 
+    [Test]
     public override void Layout()
     {
       _templateEngine.AddReference(typeof(string).Assembly.Location);
