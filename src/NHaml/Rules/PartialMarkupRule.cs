@@ -7,7 +7,7 @@ namespace NHaml.Rules
   public class PartialMarkupRule : MarkupRule
   {
     private static readonly Regex _partialRegex
-      = new Regex(@"^\s*([\w-\\]+)$", RegexOptions.Compiled | RegexOptions.Singleline);
+      = new Regex(@"^\s*([\w-\\]+)\s*$", RegexOptions.Compiled | RegexOptions.Singleline);
 
     public override char Signifier
     {
