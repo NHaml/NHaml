@@ -8,7 +8,7 @@ namespace NHaml
   public sealed class InputLine
   {
     private static readonly Regex _indentRegex
-      = new Regex(@"^\s*", RegexOptions.Compiled | RegexOptions.Singleline);
+      = new Regex(@"^(\s*|\t*)", RegexOptions.Compiled | RegexOptions.Singleline);
 
     private static readonly Regex _multiLineRegex
       = new Regex(@"^.+\s+(\|\s*)$", RegexOptions.Compiled | RegexOptions.Singleline);
@@ -20,13 +20,20 @@ namespace NHaml
     private readonly char _signifier;
     private readonly int _lineNumber;
     private readonly int _indentSize;
+    private readonly int _indentCount;
 
     private readonly bool _isMultiline;
 
     public InputLine(string text, int lineNumber)
+      : this(text, lineNumber, 2)
+    {
+    }
+
+    public InputLine(string text, int lineNumber, int indentSize)
     {
       _text = text;
       _lineNumber = lineNumber;
+      _indentSize = indentSize;
 
       var match = _multiLineRegex.Match(_text);
 
@@ -46,7 +53,7 @@ namespace NHaml
       }
 
       _indent = _indentRegex.Match(_text).Groups[0].Value;
-      _indentSize = _indent.Length / 2;
+      _indentCount = _indent.Length / _indentSize;
     }
 
     public char Signifier
@@ -69,9 +76,9 @@ namespace NHaml
       get { return _indent; }
     }
 
-    public int IndentSize
+    public int IndentCount
     {
-      get { return _indentSize; }
+      get { return _indentCount; }
     }
 
     public int LineNumber
@@ -96,17 +103,17 @@ namespace NHaml
       _normalizedText = _normalizedText.TrimEnd();
     }
 
+    public void ValidateIndentation()
+    {
+      if ((_indent.Length % _indentSize) != 0)
+      {
+        SyntaxException.Throw(this, Resources.IllegalIndentationSpaces, _indentSize);
+      }
+    }
+
     public override string ToString()
     {
       return LineNumber + ": " + Text;
-    }
-
-    public void ValidateIndentation()
-    {
-      if (_indent.Contains("\t") || ((_indent.Length % 2) != 0))
-      {
-        SyntaxException.Throw(this, Resources.IllegalIndentation);
-      }
     }
   }
 }

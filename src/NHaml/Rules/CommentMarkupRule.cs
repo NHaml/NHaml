@@ -48,7 +48,7 @@ namespace NHaml.Rules
         if (content.Length > 50)
         {
           templateParser.TemplateClassBuilder.AppendOutputLine(openingTag);
-          templateParser.TemplateClassBuilder.AppendOutput(templateParser.CurrentInputLine.Indent + "  ");
+          templateParser.TemplateClassBuilder.AppendOutput(templateParser.NextIndent);
           templateParser.TemplateClassBuilder.AppendOutputLine(content);
         }
         else

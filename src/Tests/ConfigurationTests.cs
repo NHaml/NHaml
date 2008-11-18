@@ -103,6 +103,26 @@ namespace NHaml.Tests
     }
 
     [Test]
+    public void CanReadUseTabsSettingFromAppSettings()
+    {
+      var section = NHamlConfigurationSection.GetSection();
+
+      Assert.IsNotNull(section);
+      Assert.IsTrue(section.UseTabs.HasValue);
+      Assert.IsFalse(section.UseTabs.Value);
+    }
+
+    [Test]
+    public void CanReadIndentSizeSettingFromAppSettings()
+    {
+      var section = NHamlConfigurationSection.GetSection();
+
+      Assert.IsNotNull(section);
+      Assert.IsTrue(section.IndentSize.HasValue);
+      Assert.AreEqual(2, section.IndentSize.Value);
+    }
+
+    [Test]
     public void CanReadEscapeHtmlFromAppSettings()
     {
       var section = NHamlConfigurationSection.GetSection();

@@ -41,8 +41,10 @@ namespace NHaml
       = new Dictionary<string, CompiledTemplate>();
 
     private ITemplateCompiler _templateCompiler = new CSharp3TemplateCompiler();
-
     private Type _templateBaseType = typeof(Template);
+
+    private bool _useTabs;
+    private int _indentSize = 2;
 
     public TemplateEngine()
     {
@@ -74,6 +76,11 @@ namespace NHaml
       if (section.AutoRecompile.HasValue)
       {
         AutoRecompile = section.AutoRecompile.Value;
+      }
+
+      if (section.UseTabs.HasValue)
+      {
+        UseTabs = section.UseTabs.Value;
       }
 
       if (section.EncodeHtml.HasValue)
@@ -112,6 +119,23 @@ namespace NHaml
 
     public bool AutoRecompile { get; set; }
     public bool EncodeHtml { get; set; }
+
+    public bool UseTabs
+    {
+      get { return _useTabs; }
+      set
+      {
+        _useTabs = value;
+
+        IndentSize = _indentSize;
+      }
+    }
+
+    public int IndentSize
+    {
+      get { return _indentSize; }
+      set { _indentSize = UseTabs ? 1 : Math.Max(2, value); }
+    }
 
     public Type TemplateBaseType
     {

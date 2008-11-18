@@ -88,11 +88,20 @@ namespace NHaml.Properties {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Illegal Indentation: Only two space characters are allowed as tabulation.
+        ///   Looks up a localized string similar to Illegal Indentation: Only {0} space character(s) allowed as indentation.
         /// </summary>
-        internal static string IllegalIndentation {
+        internal static string IllegalIndentationSpaces {
             get {
-                return ResourceManager.GetString("IllegalIndentation", resourceCulture);
+                return ResourceManager.GetString("IllegalIndentationSpaces", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Illegal Indentation: Only tabs allowed as indentation.
+        /// </summary>
+        internal static string IllegalIndentationTabs {
+            get {
+                return ResourceManager.GetString("IllegalIndentationTabs", resourceCulture);
             }
         }
         

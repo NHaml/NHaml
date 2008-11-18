@@ -60,7 +60,7 @@ namespace NHaml.Compilers.Boo
       }
 
       var booTemplateClassBuilder = (BooTemplateClassBuilder)templateParser.TemplateClassBuilder;
-      var depth = templateParser.CurrentInputLine.IndentSize;
+      var depth = templateParser.CurrentInputLine.IndentCount;
 
       booTemplateClassBuilder.AppendChangeOutputDepth(depth, true);
       booTemplateClassBuilder.AppendSilentCode(code, false);

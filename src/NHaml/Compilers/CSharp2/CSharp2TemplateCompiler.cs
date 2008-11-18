@@ -61,7 +61,7 @@ namespace NHaml.Compilers.CSharp2
         return null;
       }
 
-      var depth = templateParser.CurrentInputLine.IndentSize;
+      var depth = templateParser.CurrentInputLine.IndentCount;
 
       code = TranslateLambda(code, lambdaMatch);
 

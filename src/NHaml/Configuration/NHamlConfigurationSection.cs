@@ -28,6 +28,8 @@ namespace NHaml.Configuration
     private const string AutoRecompileAttribute = "autoRecompile";
     private const string EncodeHtmlAttribute = "encodeHtml";
     private const string TemplateCompilerAttribute = "templateCompiler";
+    private const string UseTabsAttribute = "useTabs";
+    private const string IndentSizeAttribute = "indentSize";
 
     [ConfigurationProperty(AutoRecompileAttribute)]
     public virtual bool? AutoRecompile
@@ -39,6 +41,18 @@ namespace NHaml.Configuration
     public virtual bool? EncodeHtml
     {
       get { return this[EncodeHtmlAttribute] as bool?; }
+    }
+
+    [ConfigurationProperty(UseTabsAttribute)]
+    public virtual bool? UseTabs
+    {
+      get { return this[UseTabsAttribute] as bool?; }
+    }
+
+    [ConfigurationProperty(IndentSizeAttribute)]
+    public virtual int? IndentSize
+    {
+      get { return this[IndentSizeAttribute] as int?; }
     }
 
     [ConfigurationProperty(TemplateCompilerAttribute)]

@@ -9,6 +9,28 @@ namespace NHaml.Tests
   public abstract class FunctionalTestFixture : TestFixtureBase
   {
     [Test]
+    public void Tabs()
+    {
+      _templateEngine.UseTabs = true;
+
+      AssertRender("Tabs");
+    }
+
+    [Test]
+    public void FourSpaces()
+    {
+      _templateEngine.IndentSize = 4;
+
+      AssertRender("4Spaces");
+    }
+
+//    [Test]
+//    public void Alligators()
+//    {
+//      AssertRender("Alligators");
+//    }
+
+    [Test]
     public void VeryBasic()
     {
       AssertRender("VeryBasic");

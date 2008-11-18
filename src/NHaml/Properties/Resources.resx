@@ -126,8 +126,11 @@
   <data name="ErrorParsingTag" xml:space="preserve">
     <value>Error parsing tag</value>
   </data>
-  <data name="IllegalIndentation" xml:space="preserve">
-    <value>Illegal Indentation: Only two space characters are allowed as tabulation</value>
+  <data name="IllegalIndentationSpaces" xml:space="preserve">
+    <value>Illegal Indentation: Only {0} space character(s) allowed as indentation</value>
+  </data>
+  <data name="IllegalIndentationTabs" xml:space="preserve">
+    <value>Illegal Indentation: Only tabs allowed as indentation</value>
   </data>
   <data name="InvalidTemplateBaseType" xml:space="preserve">
     <value>TemplateBaseType must inherit from CompiledTemplate</value>

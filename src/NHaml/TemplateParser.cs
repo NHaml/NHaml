@@ -16,6 +16,7 @@ namespace NHaml
 
     private readonly string _templatePath;
     private readonly string _layoutTemplatePath;
+    private readonly string _singleIndent;
 
     private readonly LinkedList<InputLine> _inputLines
       = new LinkedList<InputLine>();
@@ -42,6 +43,8 @@ namespace NHaml
       _currentNode = _inputLines.First.Next;
 
       _inputFiles.Add(primaryTemplate);
+
+      _singleIndent = _templateEngine.UseTabs ? "\t" : string.Empty.PadLeft(_templateEngine.IndentSize);
     }
 
     public TemplateEngine TemplateEngine
@@ -101,7 +104,12 @@ namespace NHaml
 
     public bool IsBlock
     {
-      get { return NextInputLine.IndentSize > CurrentInputLine.IndentSize; }
+      get { return NextInputLine.IndentCount > CurrentInputLine.IndentCount; }
+    }
+
+    public string NextIndent
+    {
+      get { return CurrentInputLine.Indent + _singleIndent; }
     }
 
     public void Parse()
@@ -145,7 +153,7 @@ namespace NHaml
         while ((line = reader.ReadLine()) != null)
         {
           _inputLines.AddBefore(_currentNode,
-            new InputLine(_currentNode.Value.Indent + line, lineNumber++));
+            new InputLine(_currentNode.Value.Indent + line, lineNumber++, _templateEngine.IndentSize));
         }
       }
 
@@ -159,8 +167,8 @@ namespace NHaml
     public void CloseBlocks()
     {
       for (var j = 0;
-           ((j <= CurrentNode.Previous.Value.IndentSize
-             - CurrentInputLine.IndentSize)
+           ((j <= CurrentNode.Previous.Value.IndentCount
+             - CurrentInputLine.IndentCount)
                && (_blockClosingActions.Count > 0));
            j++)
       {
@@ -172,7 +180,7 @@ namespace NHaml
     {
       var lineNumber = 0;
 
-      _inputLines.AddLast(new InputLine(string.Empty, lineNumber++));
+      _inputLines.AddLast(new InputLine(string.Empty, lineNumber++, _templateEngine.IndentSize));
 
       using (var reader = new StreamReader(templatePath))
       {
@@ -180,11 +188,11 @@ namespace NHaml
 
         while ((line = reader.ReadLine()) != null)
         {
-          _inputLines.AddLast(new InputLine(line, lineNumber++));
+          _inputLines.AddLast(new InputLine(line, lineNumber++, _templateEngine.IndentSize));
         }
       }
 
-      _inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), lineNumber));
+      _inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), lineNumber, _templateEngine.IndentSize));
 
       return _inputLines;
     }
