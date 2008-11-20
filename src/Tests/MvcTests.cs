@@ -15,7 +15,7 @@ namespace NHaml.Tests
   [TestFixture]
   public sealed class MvcTests : TestFixtureBase
   {
-    private MockViewEngine _viewEngine;
+    private StubViewEngine _viewEngine;
     private ControllerContext _controllerContext;
     private StringWriter _output;
 
@@ -23,7 +23,7 @@ namespace NHaml.Tests
     {
       ViewEngines.Engines.Clear();
 
-      _viewEngine = new MockViewEngine();
+      _viewEngine = new StubViewEngine();
 
       ViewEngines.Engines.Add(_viewEngine);
 
@@ -60,11 +60,11 @@ namespace NHaml.Tests
       AssertRender(_output, viewName);
     }
 
-    private class MockViewEngine : NHamlMvcViewEngine
+    private class StubViewEngine : NHamlMvcViewEngine
     {
-      public MockViewEngine()
+      public StubViewEngine()
       {
-        VirtualPathProvider = new MockVirtualPathProvider();
+        VirtualPathProvider = new StubVirtualPathProvider();
       }
 
       protected override string VirtualPathToPhysicalPath(RequestContext context, string path)
@@ -76,13 +76,13 @@ namespace NHaml.Tests
 
         return path.Replace("~/Views/Mock", TemplatesFolder);
       }
-    }
 
-    public class MockVirtualPathProvider : VirtualPathProvider
-    {
-      public override bool FileExists(string virtualPath)
+      private class StubVirtualPathProvider : VirtualPathProvider
       {
-        return true;
+        public override bool FileExists(string virtualPath)
+        {
+          return true;
+        }
       }
     }
   }
