@@ -64,7 +64,7 @@ namespace NHaml.Compilers.Boo
       foreach (CompilerError error in context.Errors)
       {
         _compilerResult.Errors.Add(new System.CodeDom.Compiler.CompilerError(
-          error.LexicalInfo.FileName,
+          error.LexicalInfo.FileName??String.Empty,
           error.LexicalInfo.Line,
           error.LexicalInfo.Column,
           error.Code,
