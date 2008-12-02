@@ -7,10 +7,10 @@
         %input{id="ProductName", type="text", name="ProductName"}
     %tr
       %td Category:
-      %td Html.DropDownList(null, "CategoryID", ViewData.Model.Categories)
+      %td= Html.DropDownList(null, "CategoryID", ViewData.Model.Categories)
     %tr
       %td Supplier:
-      %td Html.DropDownList(null, "SupplierID", ViewData.Model.Suppliers)
+      %td= Html.DropDownList(null, "SupplierID", ViewData.Model.Suppliers)
     %tr
       %td Unit Price:
       %td 

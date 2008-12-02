@@ -1,12 +1,12 @@
 !!!
 %html{xmlns="http://www.w3.org/1999/xhtml"}
   %head
-    %title NHaml C# Sample MVC Application
+    %title NHaml Boo Sample MVC Application
     %link{href="../../Content/Site.css", rel="stylesheet", type="text/css"}
   %body
     #inner
       #header
-        %h1 NHaml C# Store Manager
+        %h1 NHaml Boo Store Manager
       #menu
         %ul
           %li
@@ -14,6 +14,6 @@
           %li
             = Html.ActionLink("About Us", "About", "Home")
           %li
-            = Html.ActionLink("Products", "Category", "Products", new { ID = 1 }, null)
+            = Html.ActionLink("Products", "Category", "Products", {"ID":1},null)
       #maincontent
         _

@@ -12,7 +12,7 @@ namespace NHaml.Compilers.Boo
       : base(className)
     {
       Preamble.AppendLine(Utility.FormatInvariant("class {0}({1}):",
-        ClassName, Utility.MakeBaseClassName(baseType, '[', ']', ".")));
+        ClassName, Utility.MakeBaseClassName(baseType, "[of ", "]", ".")));
       Preamble.AppendLine("  override def CoreRender(textWriter as System.IO.TextWriter):");
     }
 
@@ -41,7 +41,7 @@ namespace NHaml.Compilers.Boo
       // prevents problems with " at the end of the string
       value = value.Replace("\"", "\"\"\"+'\"'+\"\"\"");
 
-      Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
+      Output.AppendLine( Utility.FormatInvariant(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
     }
 
     public override void AppendCode(string code, bool newLine, bool escapeHtml)

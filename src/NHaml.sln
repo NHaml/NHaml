@@ -28,6 +28,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.IronRuby"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc.IronRuby", "NHaml.Web.Mvc.IronRuby\NHaml.Web.Mvc.IronRuby.csproj", "{44CA66BE-FBB0-43FF-828E-5F2A5FAF52DB}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.Boo", "Samples\NHaml.Samples.Mvc.Boo\NHaml.Samples.Mvc.Boo.csproj", "{9699C346-0124-4DC8-A97D-60BE669ABD34}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc.Boo", "NHaml.Web.Mvc.Boo\NHaml.Web.Mvc.Boo.csproj", "{B781AF72-23C6-435A-A7B9-2496427D0F96}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -66,6 +70,14 @@ Global
 		{44CA66BE-FBB0-43FF-828E-5F2A5FAF52DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{44CA66BE-FBB0-43FF-828E-5F2A5FAF52DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{44CA66BE-FBB0-43FF-828E-5F2A5FAF52DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9699C346-0124-4DC8-A97D-60BE669ABD34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9699C346-0124-4DC8-A97D-60BE669ABD34}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9699C346-0124-4DC8-A97D-60BE669ABD34}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9699C346-0124-4DC8-A97D-60BE669ABD34}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -73,5 +85,6 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
 		{87E05CD0-D7D0-4073-BE09-D8AB9934FFB4} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
+		{9699C346-0124-4DC8-A97D-60BE669ABD34} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
 	EndGlobalSection
 EndGlobal

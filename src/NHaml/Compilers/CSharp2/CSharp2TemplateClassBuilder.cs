@@ -10,7 +10,7 @@ namespace NHaml.Compilers.CSharp2
       : base(className)
     {
       Preamble.AppendLine(Utility.FormatInvariant("public class {0} : {1} {{",
-        ClassName, Utility.MakeBaseClassName(baseType, '<', '>', ".")));
+        ClassName, Utility.MakeBaseClassName(baseType, "<", ">", ".")));
       Preamble.AppendLine("protected override void CoreRender(TextWriter textWriter){");
     }
 

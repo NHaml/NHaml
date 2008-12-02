@@ -44,9 +44,9 @@ namespace NHaml.Web.Mvc
       _templateEngine.AddReference(typeof(IView).Assembly.Location);
       _templateEngine.AddReference(typeof(NHamlMvcView<>).Assembly.Location);
 
-      foreach (var name in Assembly.GetCallingAssembly().GetReferencedAssemblies())
+      foreach( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
       {
-        _templateEngine.AddReference(Assembly.Load(name).Location);
+        _templateEngine.AddReference( assembly );
       }
     }
 

@@ -232,6 +232,13 @@ namespace NHaml
       _references.Add(assemblyLocation);
     }
 
+    public void AddReference( Assembly assembly )
+    {
+      Invariant.ArgumentNotNull( assembly, "assembly" );
+
+      _references.Add( assembly.Location );
+    }
+
     public CompiledTemplate Compile(string templatePath)
     {
       return Compile(templatePath, null, TemplateBaseType);

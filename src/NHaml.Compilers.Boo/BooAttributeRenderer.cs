@@ -75,23 +75,55 @@ namespace NHaml.Compilers.Boo
           Utility.FormatCurrentCulture(Resources.AttributesParse_ExpressionStatementExpected, type));
       }
 
-// ReSharper disable PossibleNullReferenceException
-      var expression = expressionStatement.Expression;
-// ReSharper restore PossibleNullReferenceException
+      var expression = expressionStatement != null ? expressionStatement.Expression : null;
 
       var binaryExpression = expression as BinaryExpression;
 
-      if (binaryExpression == null)
+      if( binaryExpression != null )
       {
-        var type = statement == null ? "null" : statement.GetType().FullName;
+        AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, false );
 
-        SyntaxException.Throw(templateParser.CurrentInputLine,
-          Utility.FormatCurrentCulture(Resources.AttributesParse_ExpressionStatementExpected, type));
+        return;
       }
 
-// ReSharper disable PossibleNullReferenceException
-      AppendAttribute(templateParser, binaryExpression.Left, binaryExpression.Right, false);
-// ReSharper restore PossibleNullReferenceException
+      var listLiteralExpression = expression as ListLiteralExpression;
+
+      if( listLiteralExpression != null )
+      {
+        Render( templateParser, listLiteralExpression );
+
+        return;
+      }
+
+      var statementType = statement == null ? "null" : statement.GetType().FullName;
+
+      SyntaxException.Throw( templateParser.CurrentInputLine,
+                             Utility.FormatCurrentCulture(
+                             Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
+    }
+
+    private static void Render( TemplateParser templateParser, ListLiteralExpression listLiteralExpression )
+    {
+      var first = true;
+      foreach( var item in listLiteralExpression.Items )
+      {
+        var binaryExpression = item as BinaryExpression;
+
+        if( binaryExpression != null )
+        {
+          AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, !first );
+
+          return;
+        }
+
+        var statementType = item == null ? "null" : item.GetType().FullName;
+
+        SyntaxException.Throw( templateParser.CurrentInputLine,
+                               Utility.FormatCurrentCulture(
+                               Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
+
+        first = false;
+      }
     }
 
     private static void Render(TemplateParser templateParser, HashLiteralExpression hashExpression)

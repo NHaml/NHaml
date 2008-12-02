@@ -10,7 +10,7 @@ namespace NHaml.Compilers.IronRuby
       : base(className)
     {
       Preamble.AppendLine("class " + className
-        + "<" + Utility.MakeBaseClassName(templateBaseType, '[', ']', "::"));
+        + "<" + Utility.MakeBaseClassName(templateBaseType, "[", "]", "::"));
 
       Preamble.AppendLine("def __a(as)");
       Preamble.AppendLine("as.collect { |k,v| ");

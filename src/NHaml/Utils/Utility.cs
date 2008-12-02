@@ -20,7 +20,7 @@ namespace NHaml.Utils
       return _pathCleaner.Replace(templatePath, "_").Trim('_');
     }
 
-    public static string MakeBaseClassName(Type baseType, char open, char close, string separator)
+    public static string MakeBaseClassName(Type baseType, string open, string close, string separator)
     {
       var typeName = baseType.FullName.Replace("+", separator).Replace(".", separator);
 
