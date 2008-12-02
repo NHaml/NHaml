@@ -153,7 +153,7 @@ namespace NHaml
         while ((line = reader.ReadLine()) != null)
         {
           _inputLines.AddBefore(_currentNode,
-            new InputLine(_currentNode.Value.Indent + line, lineNumber++, _templateEngine.IndentSize));
+            new InputLine(_currentNode.Value.Indent + line, templatePath, lineNumber++, _templateEngine.IndentSize));
         }
       }
 
@@ -180,7 +180,7 @@ namespace NHaml
     {
       var lineNumber = 0;
 
-      _inputLines.AddLast(new InputLine(string.Empty, lineNumber++, _templateEngine.IndentSize));
+      _inputLines.AddLast(new InputLine(string.Empty, null, lineNumber++, _templateEngine.IndentSize));
 
       using (var reader = new StreamReader(templatePath))
       {
@@ -188,11 +188,11 @@ namespace NHaml
 
         while ((line = reader.ReadLine()) != null)
         {
-          _inputLines.AddLast(new InputLine(line, lineNumber++, _templateEngine.IndentSize));
+          _inputLines.AddLast(new InputLine(line, templatePath, lineNumber++, _templateEngine.IndentSize));
         }
       }
 
-      _inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), lineNumber, _templateEngine.IndentSize));
+      _inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), null, lineNumber, _templateEngine.IndentSize));
 
       return _inputLines;
     }

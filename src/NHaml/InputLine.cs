@@ -16,6 +16,7 @@ namespace NHaml
     private string _text;
     private string _normalizedText;
 
+    private readonly string _source;
     private readonly string _indent;
     private readonly char _signifier;
     private readonly int _lineNumber;
@@ -24,14 +25,20 @@ namespace NHaml
 
     private readonly bool _isMultiline;
 
-    public InputLine(string text, int lineNumber)
-      : this(text, lineNumber, 2)
+    public InputLine( string text, int lineNumber )
+      : this( text, null, lineNumber )
     {
     }
 
-    public InputLine(string text, int lineNumber, int indentSize)
+    public InputLine(string text, string source, int lineNumber)
+      : this(text, source, lineNumber, 2)
+    {
+    }
+
+    public InputLine(string text, string source, int lineNumber, int indentSize)
     {
       _text = text;
+      _source = source;
       _lineNumber = lineNumber;
       _indentSize = indentSize;
 
@@ -64,6 +71,11 @@ namespace NHaml
     public string Text
     {
       get { return _text; }
+    }
+
+    public string Source
+    {
+      get { return _source; }
     }
 
     public string NormalizedText
