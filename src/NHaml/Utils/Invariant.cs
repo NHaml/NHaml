@@ -5,6 +5,7 @@ using NHaml.Properties;
 
 namespace NHaml.Utils
 {
+  [System.Diagnostics.DebuggerStepThrough]
   public static class Invariant
   {
     public static void IsNotNull(object maybeNull)
