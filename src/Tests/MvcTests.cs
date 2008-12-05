@@ -25,16 +25,19 @@ namespace NHaml.Tests
 
       _viewEngine = new StubViewEngine();
 
-      ViewEngines.Engines.Add(_viewEngine);
-
       var mockContext = new Mock<HttpContextBase>();
+      var mockHttpRequest = new Mock<HttpRequestBase>();
       var mockHttpResponse = new Mock<HttpResponseBase>();
 
       _output = new StringWriter();
 
+      ViewEngines.Engines.Add(_viewEngine);
+
+      mockHttpRequest.Expect(req => req.MapPath(It.IsAny<string>()))
+        .Returns<string>(FakeServerMapPath);
       mockHttpResponse.Expect(rsp => rsp.Output).Returns(_output);
       mockContext.Expect(ctx => ctx.Response).Returns(mockHttpResponse.Object);
-      mockContext.Expect(ctx => ctx.Request).Returns(new Mock<HttpRequestBase>().Object);
+      mockContext.Expect(ctx => ctx.Request).Returns(mockHttpRequest.Object);
 
       var routeData = new RouteData();
       routeData.Values.Add("controller", "Mock");
@@ -43,21 +46,135 @@ namespace NHaml.Tests
     }
 
     [Test]
-    public void MvcPartialRendering()
+    public void RenderViewWithApplicationHamlWhenMasterIsNull()
     {
-      AssertView("MvcPartial");
+      AssertView("Simple", null, "SimpleWithApplicationHamlMaster");
     }
 
-    private void AssertView(string viewName)
+    [Test]
+    public void RenderViewWhenMasterIsNullButApplicationHamlNotExists()
     {
-      var view = _viewEngine.FindView(_controllerContext, viewName, null).View;
+      var save = _viewEngine.DefaultMaster;
+      _viewEngine.DefaultMaster = "__DefaultMasterDoseNotExists";
+
+      AssertView("Simple", null, "RenderOnlyPartialView");
+
+      _viewEngine.DefaultMaster = save;
+    }
+
+    [Test]
+    public void RenderViewWithApplicationHamlWhenMasterIsEmpty()
+    {
+      AssertView("Simple", string.Empty, "SimpleWithApplicationHamlMaster");
+    }
+
+    [Test]
+    public void RenderViewWhenMasterIsEmptyButApplicationHamlNotExists()
+    {
+      var save = _viewEngine.DefaultMaster;
+      _viewEngine.DefaultMaster = "__DefaultMasterDoseNotExists";
+
+      AssertView("Simple", string.Empty, "RenderOnlyPartialView");
+
+      _viewEngine.DefaultMaster = save;
+    }
+
+    [Test]
+    public void RenderViewWithControllerNameAsMasterWhenMasterIsNull()
+    {
+      _controllerContext.RouteData.Values["controller"] = "Custom";
+      AssertView("Simple", null, "SimpleWithCustomMaster");
+    }
+
+    [Test]
+    public void RenderViewWithControllerNameAsMasterWhenMasterIsEmtpy()
+    {
+      _controllerContext.RouteData.Values["controller"] = "Custom";
+      AssertView("Simple", string.Empty, "SimpleWithCustomMaster");
+    }
+
+    [Test]
+    public void RenderSharedView()
+    {
+      AssertView("SharedSimple", null, "SimpleWithApplicationHamlMaster");
+    }
+
+    [Test]
+    public void RenderViewWithCustomMaster()
+    {
+      AssertView("Simple", "Custom", "SimpleWithCustomMaster");
+    }
+
+    [Test]
+    public void RenderViewWithCustomMasterAndVirtualPath()
+    {
+      AssertView("~/Views/Mock/Simple.haml", "~/Views/Shared/Custom.haml", "SimpleWithCustomMaster");
+    }
+
+    [Test]
+    public void RenderOnlyPartialView()
+    {
+      AssertPartialView("Simple", "RenderOnlyPartialView");
+    }
+
+    [Test]
+    public void HelperRendersPartial()
+    {
+      AssertPartialView("HelperRendersPartial", "HelperRendersPartial");
+    }
+
+    [Test]
+    public void MasterDoseNotExists()
+    {
+      var view = _viewEngine.FindView(_controllerContext, "Simple", "__MasterDoseNotExists").View;
+
+      Assert.IsNull(view, "ViewEngine should not return a view when the master file dose not exists");
+    }
+
+    [Test]
+    public void ViewDoseNotExists()
+    {
+      var view = _viewEngine.FindView(_controllerContext, "__ViewDoseNotExits", null).View;
+
+      Assert.IsNull(view, "ViewEngine should not return a view when the view file dose not exists");
+    }
+
+    private void AssertView(string viewName, string masterName, string expectedName)
+    {
+      var view = _viewEngine.FindView(_controllerContext, viewName, masterName).View;
+
+      AssertView(view, expectedName);
+    }
+
+    private void AssertPartialView(string viewName, string expectedName)
+    {
+      var view = _viewEngine.FindPartialView(_controllerContext, viewName).View;
+
+      AssertView(view, expectedName);
+    }
+
+    private void AssertView(IView view, string expectedName)
+    {
+      Assert.IsNotNull(view, "ViewEngine dose not returned a view");
 
       var mockViewContext = new Mock<ViewContext>(_controllerContext, view,
         new ViewDataDictionary(), new TempDataDictionary());
 
       view.Render(mockViewContext.Object, _output);
 
-      AssertRender(_output, viewName);
+      AssertRender(_output, "Mvc\\" + expectedName);
+    }
+
+    private static string FakeServerMapPath(string path)
+    {
+      var templateFolder = TemplatesFolder + "Mvc\\";
+
+      if (string.IsNullOrEmpty(path))
+      {
+        return templateFolder;
+      }
+
+      return templateFolder + path.Replace("~/Views/", "").Replace("/", "\\");
     }
 
     private class StubViewEngine : NHamlMvcViewEngine
@@ -67,21 +184,11 @@ namespace NHaml.Tests
         VirtualPathProvider = new StubVirtualPathProvider();
       }
 
-      protected override string VirtualPathToPhysicalPath(RequestContext context, string path)
-      {
-        if (path.Contains(FakeMasterName))
-        {
-          return null;
-        }
-
-        return path.Replace("~/Views/Mock", TemplatesFolder);
-      }
-
       private class StubVirtualPathProvider : VirtualPathProvider
       {
         public override bool FileExists(string virtualPath)
         {
-          return true;
+          return File.Exists(FakeServerMapPath(virtualPath));
         }
       }
     }
