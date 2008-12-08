@@ -265,18 +265,16 @@ namespace NHaml
         Invariant.FileExists(layoutTemplatePath);
       }
 
+      var templateCacheKey = templatePath + layoutTemplatePath;
       CompiledTemplate compiledTemplate;
 
-      if (!_compiledTemplateCache.TryGetValue(templatePath, out compiledTemplate))
+      lock( _compiledTemplateCache )
       {
-        lock (_compiledTemplateCache)
+        if( !_compiledTemplateCache.TryGetValue( templateCacheKey, out compiledTemplate ) )
         {
-          if (!_compiledTemplateCache.TryGetValue(templatePath, out compiledTemplate))
-          {
-            compiledTemplate = new CompiledTemplate(this, templatePath, layoutTemplatePath, templateBaseType);
+          compiledTemplate = new CompiledTemplate( this, templatePath, layoutTemplatePath, templateBaseType );
 
-            _compiledTemplateCache.Add(templatePath, compiledTemplate);
-          }
+          _compiledTemplateCache.Add( templateCacheKey, compiledTemplate );
         }
       }
 

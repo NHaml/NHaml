@@ -249,6 +249,9 @@
     <None Include="Templates\BadPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\ApplicationSimple.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\Mvc\Custom\Simple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

@@ -37,5 +37,18 @@ namespace NHaml.Tests
 
       Assert.AreSame(compiledTemplate1, compiledTemplate2);
     }
+
+    [Test]
+    public void TemplatesWithDifferentLayoutsAreCachedSeperate()
+    {
+      var templatePath = TemplatesFolder + @"CSharp2\Welcome.haml";
+      var layoutTemplatePath1 = TemplatesFolder + @"Application.haml";
+      var layoutTemplatePath2 = TemplatesFolder + @"ApplicationSimple.haml";
+
+      var compiledTemplate1 = _templateEngine.Compile(templatePath, layoutTemplatePath1);
+      var compiledTemplate2 = _templateEngine.Compile(templatePath, layoutTemplatePath2);
+
+      Assert.AreNotSame(compiledTemplate1, compiledTemplate2);
+    }
   }
 }

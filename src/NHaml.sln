@@ -8,7 +8,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB
 		CodingStandards.txt = CodingStandards.txt
 		License.txt = License.txt
 		NHaml.snk = NHaml.snk
-		ReSharperCodeStyle.xml = ReSharperCodeStyle.xml
 		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
 	EndProjectSection
 EndProject
