@@ -1,0 +1,100 @@
+﻿using System.IO;
+using System.Threading;
+using NHaml.Xps;
+using NUnit.Framework;
+
+namespace Tests.Xps
+{
+    [TestFixture]
+    public class XpsEngineTestFixture
+    {
+        [Test]
+        [Ignore]
+        public void PrintPreview()
+        {
+            var runner = new CrossThreadTestRunner();
+            runner.RunInSTA(
+                () =>
+                {
+
+                    var xpsHelper = new XpsEngine();
+                    xpsHelper.PrintPreview("XpsWithData.haml", "Hello");
+                });
+        }
+
+        [Test]
+        [Ignore]
+        public void Print()
+        {
+            var xpsHelper = new XpsEngine();
+            xpsHelper.Print("XpsWithData.haml", "Hello2");
+
+            Thread.Sleep(50000);
+        }
+        [Test]
+        [Ignore]
+        public void PrintAsync()
+        {
+            var xpsHelper = new XpsEngine();
+            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2");
+
+            Thread.Sleep(50000);
+        }
+
+        [Test]
+        public void WriteToFile()
+        {
+            var runner = new CrossThreadTestRunner();
+            runner.RunInSTA(
+                () =>
+                    {
+                        const string tempTarget = "temp.xps";
+                        try
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                            var xpsHelper = new XpsEngine();
+                            xpsHelper.Generate("XpsWithData.haml", "Hello", tempTarget);
+                          Assert.IsTrue(File.Exists(tempTarget));
+                        }
+                        finally
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                        }
+                    });
+        }
+        [Test]
+        public void WriteToFileAsync()
+        {
+            var runner = new CrossThreadTestRunner();
+            runner.RunInSTA(
+                () =>
+                    {
+                        const string tempTarget = "temp.xps";
+                        try
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                            var xpsHelper = new XpsEngine();
+                            xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
+                            Thread.Sleep(30000);
+                          Assert.IsTrue(File.Exists(tempTarget));
+                        }
+                        finally
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                        }
+                    });
+        }
+    }
+}

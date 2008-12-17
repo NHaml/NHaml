@@ -1,0 +1,17 @@
+﻿<Window x:Class="NHaml.Xps.DocumentDialog"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="Window1" Height="600" Width="400">
+    <Grid>
+		<Grid.RowDefinitions>
+			<RowDefinition/>
+			<RowDefinition Height="Auto"/>
+		</Grid.RowDefinitions>
+		<DocumentViewer Name="documentViewer"  Grid.Row="0"/>
+		<FlowDocumentReader Name="flowDocumentReader" Grid.Row="0" ViewingMode="Scroll" />
+		<WrapPanel FlowDirection="RightToLeft" Grid.Row="1">
+			<Button Click="closeButton_Click">Cancel</Button>
+			<Button Click="printButton_Click">Print</Button>
+		</WrapPanel>
+	</Grid>
+</Window>

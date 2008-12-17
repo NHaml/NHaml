@@ -31,6 +31,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.Boo", "Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc.Boo", "NHaml.Web.Mvc.Boo\NHaml.Web.Mvc.Boo.csproj", "{B781AF72-23C6-435A-A7B9-2496427D0F96}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Xps", "NHaml.Xps\NHaml.Xps.csproj", "{1530C1A1-D723-457F-BDFA-F13CBE486A40}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Xps", "Tests.Xps\Tests.Xps.csproj", "{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -77,6 +81,14 @@ Global
 		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B781AF72-23C6-435A-A7B9-2496427D0F96}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1530C1A1-D723-457F-BDFA-F13CBE486A40}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1530C1A1-D723-457F-BDFA-F13CBE486A40}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1530C1A1-D723-457F-BDFA-F13CBE486A40}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1530C1A1-D723-457F-BDFA-F13CBE486A40}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
