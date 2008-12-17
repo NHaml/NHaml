@@ -112,6 +112,18 @@ namespace NHaml.Xps
                                                    };
             thread2.BeginInvoke(getQueue, asyncCallback, null);
         }
+        public void PrintAsync<TData>(string viewPath, TData context, string printQueueName, AsyncCallback asyncCallback) where TData : class
+        {
+            ThreadStart thread2 = delegate
+                                      {
+                                          var printServer = new LocalPrintServer();
+                                          using (var printQueue = printServer.GetPrintQueue(printQueueName))
+                                          {
+                                              Print(viewPath, context, printQueue);
+                                          }
+                                      };
+            thread2.BeginInvoke(asyncCallback, null);
+        }
 
         public void PrintPreview<TData>(string viewPath, TData context) where TData : class
         {

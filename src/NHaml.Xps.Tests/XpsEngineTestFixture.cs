@@ -44,8 +44,17 @@ namespace NHaml.Xps.Tests
         [Ignore]
         public void PrintAsyncWithPrinter()
         {
-                var xpsHelper = new XpsEngine();
+            var xpsHelper = new XpsEngine();
+            var printServer = new LocalPrintServer();
                 xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
+            Thread.Sleep(50000);
+        }
+        [Test]
+        [Ignore]
+        public void PrintAsyncWithPrinterName()
+        {
+            var xpsHelper = new XpsEngine();
+                xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue().Name, null);
             Thread.Sleep(50000);
         }
 
