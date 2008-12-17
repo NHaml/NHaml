@@ -33,7 +33,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc.Boo", "NHaml.
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Xps", "NHaml.Xps\NHaml.Xps.csproj", "{1530C1A1-D723-457F-BDFA-F13CBE486A40}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Xps", "Tests.Xps\Tests.Xps.csproj", "{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Xps.Tests", "NHaml.Xps.Tests\NHaml.Xps.Tests.csproj", "{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
