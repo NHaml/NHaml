@@ -28,8 +28,6 @@ namespace NHaml.Xps.Tests
         {
             var xpsHelper = new XpsEngine();
             xpsHelper.Print("XpsWithData.haml", "Hello2");
-
-            Thread.Sleep(50000);
         }
         [Test]
         [Ignore]
