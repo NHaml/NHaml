@@ -1,6 +1,5 @@
 using System.Diagnostics;
 using System.IO;
-using NHaml.Xps;
 
 namespace NHaml.Xps.Tests
 {
