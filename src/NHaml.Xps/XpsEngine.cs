@@ -100,11 +100,17 @@ namespace NHaml.Xps
             thread.Start();
         }
 
-        public void PrintAsync<TData>(string viewPath, TData context, PrintQueue queue, AsyncCallback asyncCallback) where TData : class
+        public void PrintAsync<TData>(string viewPath, TData context, Func<PrintQueue> getQueue, AsyncCallback asyncCallback) where TData : class
         {
-
-            ThreadStart thread = () => Print(viewPath, context, queue);
-            thread.BeginInvoke(asyncCallback, null);
+            ParameterizedThreadStart thread2 = delegate(object obj)
+                                                   {
+                                                       var getQueue1 = (Func<PrintQueue>) obj;
+                                                       using (var printQueue = getQueue1())
+                                                       {
+                                                           Print(viewPath, context, printQueue);
+                                                       }
+                                                   };
+            thread2.BeginInvoke(getQueue, asyncCallback, null);
         }
 
         public void PrintPreview<TData>(string viewPath, TData context) where TData : class

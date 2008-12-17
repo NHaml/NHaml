@@ -1,4 +1,6 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
+using System.Printing;
 using System.Threading;
 using NHaml.Xps;
 using NUnit.Framework;
@@ -36,6 +38,14 @@ namespace NHaml.Xps.Tests
             var xpsHelper = new XpsEngine();
             xpsHelper.PrintAsync("XpsWithData.haml", "Hello2");
 
+            Thread.Sleep(50000);
+        }
+        [Test]
+        [Ignore]
+        public void PrintAsyncWithPrinter()
+        {
+                var xpsHelper = new XpsEngine();
+                xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
             Thread.Sleep(50000);
         }
 
