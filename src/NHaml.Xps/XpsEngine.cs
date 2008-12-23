@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Printing;
+using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
@@ -97,32 +98,45 @@ namespace NHaml.Xps
         {
             var thread = new Thread(
                 () => Print(viewPath, context));
+            thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
 
-        public void PrintAsync<TData>(string viewPath, TData context, Func<PrintQueue> getQueue, AsyncCallback asyncCallback) where TData : class
+        public void PrintAsync<TData>(string viewPath, TData context, Func<PrintQueue> getQueue, Action callback) where TData : class
         {
-            ParameterizedThreadStart thread2 = delegate(object obj)
+         
+            var thread = new Thread(delegate(object obj)
                                                    {
                                                        var getQueue1 = (Func<PrintQueue>) obj;
                                                        using (var printQueue = getQueue1())
                                                        {
                                                            Print(viewPath, context, printQueue);
                                                        }
-                                                   };
-            thread2.BeginInvoke(getQueue, asyncCallback, null);
+                                                       if (callback != null)
+                                                       {
+                                                           callback();
+                                                       }
+                                                   });
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
         }
-        public void PrintAsync<TData>(string viewPath, TData context, string printQueueName, AsyncCallback asyncCallback) where TData : class
+        public void PrintAsync<TData>(string viewPath, TData context, string printQueueName, Action callback) where TData : class
         {
-            ThreadStart thread2 = delegate
+            var thread = new Thread(delegate(object obj)
                                       {
                                           var printServer = new LocalPrintServer();
                                           using (var printQueue = printServer.GetPrintQueue(printQueueName))
                                           {
                                               Print(viewPath, context, printQueue);
                                           }
-                                      };
-            thread2.BeginInvoke(asyncCallback, null);
+                                          if (callback != null)
+                                          {
+                                              callback();
+                                          }
+                                      });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
         }
 
         public void PrintPreview<TData>(string viewPath, TData context) where TData : class
