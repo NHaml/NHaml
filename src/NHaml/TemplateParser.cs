@@ -11,69 +11,46 @@ namespace NHaml
 
   public sealed class TemplateParser
   {
-    private readonly TemplateEngine _templateEngine;
-    private readonly TemplateClassBuilder _templateClassBuilder;
+      private readonly string _singleIndent;
 
-    private readonly string _templatePath;
-    private readonly string _layoutTemplatePath;
-    private readonly string _singleIndent;
-
-      private readonly Stack<BlockClosingAction> _blockClosingActions
-      = new Stack<BlockClosingAction>();
-
-    private readonly StringSet _inputFiles = new StringSet();
-
-    public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
+      public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
       string templatePath, string layoutTemplatePath)
     {
-      _templateEngine = templateEngine;
-      _templateClassBuilder = templateClassBuilder;
-      _templatePath = templatePath;
-      _layoutTemplatePath = layoutTemplatePath;
+          BlockClosingActions = new Stack<BlockClosingAction>();
+          InputFiles = new StringSet();
+        TemplateEngine = templateEngine;
+      TemplateClassBuilder = templateClassBuilder;
+      TemplatePath = templatePath;
+      LayoutTemplatePath = layoutTemplatePath;
 
       string primaryTemplate;
-        if (_layoutTemplatePath == null)
+        if (LayoutTemplatePath == null)
         {
-            primaryTemplate = _templatePath;
+            primaryTemplate = TemplatePath;
         }
         else
         {
-            primaryTemplate = _layoutTemplatePath;
+            primaryTemplate = LayoutTemplatePath;
         }
 
         InputLines = BuildInputLines(primaryTemplate, templateEngine);
 
       CurrentNode = InputLines.First.Next;
 
-      _inputFiles.Add(primaryTemplate);
+      InputFiles.Add(primaryTemplate);
 
-      _singleIndent = _templateEngine.UseTabs ? "\t" : string.Empty.PadLeft(_templateEngine.IndentSize);
+      _singleIndent = TemplateEngine.UseTabs ? "\t" : string.Empty.PadLeft(TemplateEngine.IndentSize);
     }
 
-    public TemplateEngine TemplateEngine
-    {
-      get { return _templateEngine; }
-    }
+      public TemplateEngine TemplateEngine { get; private set; }
 
-    public TemplateClassBuilder TemplateClassBuilder
-    {
-      get { return _templateClassBuilder; }
-    }
+      public TemplateClassBuilder TemplateClassBuilder { get; private set; }
 
-    public string TemplatePath
-    {
-      get { return _templatePath; }
-    }
+      public string TemplatePath { get; private set; }
 
-    public string LayoutTemplatePath
-    {
-      get { return _layoutTemplatePath; }
-    }
+      public string LayoutTemplatePath { get; private set; }
 
-    public IEnumerable<string> InputFiles
-    {
-      get { return _inputFiles; }
-    }
+      public StringSet InputFiles { get; private set; }
 
       public LinkedList<InputLine> InputLines { get; private set; }
 
@@ -94,12 +71,9 @@ namespace NHaml
       get { return CurrentNode.Next.Value; }
     }
 
-    public Stack<BlockClosingAction> BlockClosingActions
-    {
-      get { return _blockClosingActions; }
-    }
+      public Stack<BlockClosingAction> BlockClosingActions { get; private set; }
 
-    public bool IsBlock
+      public bool IsBlock
     {
       get { return NextInputLine.IndentCount > CurrentInputLine.IndentCount; }
     }
@@ -150,7 +124,7 @@ namespace NHaml
         while ((line = reader.ReadLine()) != null)
         {
           InputLines.AddBefore(CurrentNode,
-            new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++, _templateEngine.IndentSize));
+            new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++, TemplateEngine.IndentSize));
         }
       }
 
@@ -158,7 +132,7 @@ namespace NHaml
 
       CurrentNode = previous.Next;
 
-      _inputFiles.Add(templatePath);
+      InputFiles.Add(templatePath);
     }
 
     public void CloseBlocks()
@@ -166,10 +140,10 @@ namespace NHaml
       for (var j = 0;
            ((j <= CurrentNode.Previous.Value.IndentCount
              - CurrentInputLine.IndentCount)
-               && (_blockClosingActions.Count > 0));
+               && (BlockClosingActions.Count > 0));
            j++)
       {
-        _blockClosingActions.Pop()();
+        BlockClosingActions.Pop()();
       }
     }
 
