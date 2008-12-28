@@ -13,15 +13,11 @@ namespace NHaml.Web.Mvc
   public abstract class NHamlMvcView<TModel> : Template, IView, IViewDataContainer
     where TModel : class
   {
-    private ViewContext _viewContext;
-
-    private ViewDataDictionary<TModel> _viewData;
-
-    public void Render(ViewContext viewContext, TextWriter writer)
+      public void Render(ViewContext viewContext, TextWriter writer)
     {
       Invariant.ArgumentNotNull(viewContext, "viewContext");
 
-      _viewContext = viewContext;
+      ViewContext = viewContext;
 
       SetViewData(viewContext.ViewData);
 
@@ -41,31 +37,25 @@ namespace NHaml.Web.Mvc
     public HtmlHelper Html { get; protected set; }
     public UrlHelper Url { get; protected set; }
 
-    public ViewContext ViewContext
-    {
-      get { return _viewContext; }
-    }
+      public ViewContext ViewContext { get; private set; }
 
-    public ViewDataDictionary<TModel> ViewData
-    {
-      get { return _viewData; }
-    }
+      public ViewDataDictionary<TModel> ViewData { get; private set; }
 
-    public TempDataDictionary TempData
+      public TempDataDictionary TempData
     {
-      get { return _viewContext.TempData; }
+      get { return ViewContext.TempData; }
     }
 
     public TModel Model
     {
-      get { return _viewData.Model; }
+      get { return ViewData.Model; }
     }
 
     [SuppressMessage("Microsoft.Usage", "CA2227")]
     [SuppressMessage("Microsoft.Design", "CA1033")]
     ViewDataDictionary IViewDataContainer.ViewData
     {
-      get { return _viewData; }
+      get { return ViewData; }
       set { SetViewData(value); }
     }
 
@@ -73,11 +63,11 @@ namespace NHaml.Web.Mvc
     {
       if (typeof(ViewDataDictionary<TModel>).IsAssignableFrom(viewData.GetType()))
       {
-        _viewData = (ViewDataDictionary<TModel>)viewData;
+        ViewData = (ViewDataDictionary<TModel>)viewData;
       }
       else
       {
-        _viewData = new ViewDataDictionary<TModel>(viewData);
+        ViewData = new ViewDataDictionary<TModel>(viewData);
       }
     }
   }

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.IO;
 using System.Printing;
-using System.Runtime.Remoting.Messaging;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
@@ -15,7 +14,6 @@ namespace NHaml.Xps
 {
     public class XpsEngine
     {
-        static XpsEngine instance;
         public XpsEngine()
         {
             TemplateEngine = new TemplateEngine();
@@ -24,15 +22,11 @@ namespace NHaml.Xps
 
         static XpsEngine()
         {
-            instance = new XpsEngine();
+            Instance = new XpsEngine();
         }
-        public static XpsEngine Instance
-        {
-            get
-            {
-                return instance;
-            }
-        }
+
+        public static XpsEngine Instance { get; private set; }
+
         public TemplateEngine TemplateEngine { get; private set; }
 
 

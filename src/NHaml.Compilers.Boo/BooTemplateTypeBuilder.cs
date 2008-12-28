@@ -7,7 +7,6 @@ using System.Text;
 using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
-using CompilerError=Boo.Lang.Compiler.CompilerError;
 
 namespace NHaml.Compilers.Boo
 {
@@ -16,34 +15,24 @@ namespace NHaml.Compilers.Boo
     private readonly BooCompiler _booCompiler
       = new BooCompiler();
 
-    private readonly CompilerResults _compilerResult =
-      new CompilerResults(new TempFileCollection());
+      private readonly TemplateEngine _templateEngine;
 
-    private readonly TemplateEngine _templateEngine;
-
-    private string _source;
-
-    [SuppressMessage("Microsoft.Security", "CA2122")]
+      [SuppressMessage("Microsoft.Security", "CA2122")]
     public BooTemplateTypeBuilder(TemplateEngine templateEngine)
     {
-      _templateEngine = templateEngine;
+          CompilerResults = new CompilerResults(new TempFileCollection());
+          _templateEngine = templateEngine;
 
       _booCompiler.Parameters.GenerateInMemory = true;
       _booCompiler.Parameters.Debug = true;
       _booCompiler.Parameters.OutputType = CompilerOutputType.Library;
     }
 
-    public string Source
-    {
-      get { return _source; }
-    }
+      public string Source { get; private set; }
 
-    public CompilerResults CompilerResults
-    {
-      get { return _compilerResult; }
-    }
+      public CompilerResults CompilerResults { get; private set; }
 
-    [SuppressMessage("Microsoft.Security", "CA2122")]
+      [SuppressMessage("Microsoft.Security", "CA2122")]
     [SuppressMessage("Microsoft.Portability", "CA1903")]
     public Type Build(string source, string typeName)
     {
@@ -51,7 +40,7 @@ namespace NHaml.Compilers.Boo
       AddReferences();
 
       _booCompiler.Parameters.Input.Clear();
-      _booCompiler.Parameters.Input.Add(new StringInput(typeName, _source));
+      _booCompiler.Parameters.Input.Add(new StringInput(typeName, Source));
       _booCompiler.Parameters.Pipeline = new CompileToMemory();
       var context = _booCompiler.Run();
 
@@ -60,10 +49,10 @@ namespace NHaml.Compilers.Boo
         return context.GeneratedAssembly.GetType(typeName);
       }
 
-      _compilerResult.Errors.Clear();
-      foreach (CompilerError error in context.Errors)
+      CompilerResults.Errors.Clear();
+      foreach (var error in context.Errors)
       {
-        _compilerResult.Errors.Add(new System.CodeDom.Compiler.CompilerError(
+        CompilerResults.Errors.Add(new System.CodeDom.Compiler.CompilerError(
           error.LexicalInfo.FileName??String.Empty,
           error.LexicalInfo.Line,
           error.LexicalInfo.Column,
@@ -96,7 +85,7 @@ namespace NHaml.Compilers.Boo
 
       sourceBuilder.AppendLine(source);
 
-      _source = sourceBuilder.ToString();
+      Source = sourceBuilder.ToString();
     }
   }
 }

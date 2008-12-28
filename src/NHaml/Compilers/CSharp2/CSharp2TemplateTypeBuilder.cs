@@ -14,59 +14,44 @@ namespace NHaml.Compilers.CSharp2
     private readonly CompilerParameters _compilerParameters
       = new CompilerParameters();
 
-    private readonly Dictionary<string, string> _providerOptions
-      = new Dictionary<string, string>();
+      private readonly TemplateEngine _templateEngine;
 
-    private readonly TemplateEngine _templateEngine;
-
-    private CompilerResults _compilerResults;
-
-    private string _source;
-
-    [SuppressMessage("Microsoft.Security", "CA2122")]
+      [SuppressMessage("Microsoft.Security", "CA2122")]
     public CSharp2TemplateTypeBuilder(TemplateEngine templateEngine)
     {
-      _templateEngine = templateEngine;
+          ProviderOptions = new Dictionary<string, string>();
+          _templateEngine = templateEngine;
 
-      _providerOptions.Add("CompilerVersion", "v2.0");
+      ProviderOptions.Add("CompilerVersion", "v2.0");
 
       _compilerParameters.GenerateInMemory = true;
       _compilerParameters.IncludeDebugInformation = false;
     }
 
-    public string Source
-    {
-      get { return _source; }
-    }
+      public string Source { get; private set; }
 
-    public CompilerResults CompilerResults
-    {
-      get { return _compilerResults; }
-    }
+      public CompilerResults CompilerResults { get; private set; }
 
-    protected Dictionary<string, string> ProviderOptions
-    {
-      get { return _providerOptions; }
-    }
+      protected Dictionary<string, string> ProviderOptions { get; private set; }
 
-    [SuppressMessage("Microsoft.Security", "CA2122")]
+      [SuppressMessage("Microsoft.Security", "CA2122")]
     [SuppressMessage("Microsoft.Portability", "CA1903")]
     public Type Build(string source, string typeName)
     {
       BuildSource(source);
 
-      Trace.WriteLine(_source);
+      Trace.WriteLine(Source);
 
       AddReferences();
 
-      var codeProvider = new CSharpCodeProvider(_providerOptions);
+      var codeProvider = new CSharpCodeProvider(ProviderOptions);
 
-      _compilerResults = codeProvider
-        .CompileAssemblyFromSource(_compilerParameters, _source);
+      CompilerResults = codeProvider
+        .CompileAssemblyFromSource(_compilerParameters, Source);
 
-      if (_compilerResults.Errors.Count == 0)
+      if (CompilerResults.Errors.Count == 0)
       {
-        return _compilerResults.CompiledAssembly.GetType(typeName);
+        return CompilerResults.CompiledAssembly.GetType(typeName);
       }
 
       return null;
@@ -94,7 +79,7 @@ namespace NHaml.Compilers.CSharp2
 
       sourceBuilder.AppendLine(source);
 
-      _source = sourceBuilder.ToString();
+      Source = sourceBuilder.ToString();
     }
   }
 }

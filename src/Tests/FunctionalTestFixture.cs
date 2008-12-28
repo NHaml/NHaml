@@ -293,17 +293,12 @@ namespace NHaml.Tests
 
   public abstract class CustomTemplate1 : Template
   {
-    private FunctionalTestFixture.CustomHelper _customHelper;
-
-    protected override void PreRender(OutputWriter outputWriter)
+      protected override void PreRender(OutputWriter outputWriter)
     {
-      _customHelper = new FunctionalTestFixture.CustomHelper(outputWriter);
+      Html = new FunctionalTestFixture.CustomHelper(outputWriter);
     }
 
-    public FunctionalTestFixture.CustomHelper Html
-    {
-      get { return _customHelper; }
-    }
+      public FunctionalTestFixture.CustomHelper Html { get; private set; }
   }
 
   public abstract class CustomTemplate2 : Template

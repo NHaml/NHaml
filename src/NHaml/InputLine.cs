@@ -13,19 +13,9 @@ namespace NHaml
     private static readonly Regex _multiLineRegex
       = new Regex(@"^.+\s+(\|\s*)$", RegexOptions.Compiled | RegexOptions.Singleline);
 
-    private string _text;
-    private string _normalizedText;
+      private readonly int _indentSize;
 
-    private readonly string _source;
-    private readonly string _indent;
-    private readonly char _signifier;
-    private readonly int _lineNumber;
-    private readonly int _indentSize;
-    private readonly int _indentCount;
-
-    private readonly bool _isMultiline;
-
-    public InputLine( string text, int lineNumber )
+      public InputLine( string text, int lineNumber )
       : this( text, null, lineNumber )
     {
     }
@@ -37,87 +27,63 @@ namespace NHaml
 
     public InputLine(string text, string source, int lineNumber, int indentSize)
     {
-      _text = text;
-      _source = source;
-      _lineNumber = lineNumber;
+      Text = text;
+      Source = source;
+      LineNumber = lineNumber;
       _indentSize = indentSize;
 
-      var match = _multiLineRegex.Match(_text);
+      var match = _multiLineRegex.Match(Text);
 
-      _isMultiline = match.Success;
+      IsMultiline = match.Success;
 
-      if (_isMultiline)
+      if (IsMultiline)
       {
-        _text = _text.Remove(match.Groups[1].Index);
+        Text = Text.Remove(match.Groups[1].Index);
       }
 
-      _normalizedText = _text.TrimStart();
+      NormalizedText = Text.TrimStart();
 
-      if (!string.IsNullOrEmpty(_normalizedText))
+      if (!string.IsNullOrEmpty(NormalizedText))
       {
-        _signifier = _normalizedText[0];
-        _normalizedText = _normalizedText.Remove(0, 1);
+        Signifier = NormalizedText[0];
+        NormalizedText = NormalizedText.Remove(0, 1);
       }
 
-      _indent = _indentRegex.Match(_text).Groups[0].Value;
-      _indentCount = _indent.Length / _indentSize;
+      Indent = _indentRegex.Match(Text).Groups[0].Value;
+      IndentCount = Indent.Length / _indentSize;
     }
 
-    public char Signifier
-    {
-      get { return _signifier; }
-    }
+      public char Signifier { get; private set; }
 
-    public string Text
-    {
-      get { return _text; }
-    }
+      public string Text { get; private set; }
 
-    public string Source
-    {
-      get { return _source; }
-    }
+      public string Source { get; private set; }
 
-    public string NormalizedText
-    {
-      get { return _normalizedText; }
-    }
+      public string NormalizedText { get; private set; }
 
-    public string Indent
-    {
-      get { return _indent; }
-    }
+      public string Indent { get; private set; }
 
-    public int IndentCount
-    {
-      get { return _indentCount; }
-    }
+      public int IndentCount { get; private set; }
 
-    public int LineNumber
-    {
-      get { return _lineNumber; }
-    }
+      public int LineNumber { get; private set; }
 
-    public bool IsMultiline
-    {
-      get { return _isMultiline; }
-    }
+      public bool IsMultiline { get; private set; }
 
-    public void Merge(InputLine nextInputLine)
+      public void Merge(InputLine nextInputLine)
     {
-      _text += nextInputLine.Text.TrimStart();
-      _normalizedText += nextInputLine.Text.TrimStart();
+      Text += nextInputLine.Text.TrimStart();
+      NormalizedText += nextInputLine.Text.TrimStart();
     }
 
     public void TrimEnd()
     {
-      _text = _text.TrimEnd();
-      _normalizedText = _normalizedText.TrimEnd();
+      Text = Text.TrimEnd();
+      NormalizedText = NormalizedText.TrimEnd();
     }
 
     public void ValidateIndentation()
     {
-      if ((_indent.Length % _indentSize) != 0)
+      if ((Indent.Length % _indentSize) != 0)
       {
         SyntaxException.Throw(this, Resources.IllegalIndentationSpaces, _indentSize);
       }

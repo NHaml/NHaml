@@ -1,4 +1,3 @@
-using System;
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
@@ -16,5 +15,5 @@ using System.Security.Permissions;
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, SkipVerification = true)]
 
 #if !NOT_CLSCOMPLIANT
-[assembly: CLSCompliant( true )]
+[assembly: System.CLSCompliant( true )]
 #endif

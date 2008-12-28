@@ -1,8 +1,6 @@
-﻿using System;
-using System.IO;
+﻿using System.IO;
 using System.Printing;
 using System.Threading;
-using NHaml.Xps;
 using NUnit.Framework;
 
 namespace NHaml.Xps.Tests
@@ -101,7 +99,7 @@ namespace NHaml.Xps.Tests
                             }
                             var xpsHelper = new XpsEngine();
                             xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
-                            Thread.Sleep(30000);
+                            Thread.Sleep(5000);
                           Assert.IsTrue(File.Exists(tempTarget));
                         }
                         finally
