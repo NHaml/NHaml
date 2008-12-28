@@ -18,12 +18,7 @@ namespace NHaml
     private readonly string _layoutTemplatePath;
     private readonly string _singleIndent;
 
-    private readonly LinkedList<InputLine> _inputLines
-      = new LinkedList<InputLine>();
-
-    private LinkedListNode<InputLine> _currentNode;
-
-    private readonly Stack<BlockClosingAction> _blockClosingActions
+      private readonly Stack<BlockClosingAction> _blockClosingActions
       = new Stack<BlockClosingAction>();
 
     private readonly StringSet _inputFiles = new StringSet();
@@ -36,11 +31,19 @@ namespace NHaml
       _templatePath = templatePath;
       _layoutTemplatePath = layoutTemplatePath;
 
-      var primaryTemplate = _layoutTemplatePath ?? _templatePath;
+      string primaryTemplate;
+        if (_layoutTemplatePath == null)
+        {
+            primaryTemplate = _templatePath;
+        }
+        else
+        {
+            primaryTemplate = _layoutTemplatePath;
+        }
 
-      _inputLines = BuildInputLines(primaryTemplate);
+        InputLines = BuildInputLines(primaryTemplate, templateEngine);
 
-      _currentNode = _inputLines.First.Next;
+      CurrentNode = InputLines.First.Next;
 
       _inputFiles.Add(primaryTemplate);
 
@@ -72,29 +75,23 @@ namespace NHaml
       get { return _inputFiles; }
     }
 
-    public LinkedList<InputLine> InputLines
-    {
-      get { return _inputLines; }
-    }
+      public LinkedList<InputLine> InputLines { get; private set; }
 
-    public LinkedListNode<InputLine> CurrentNode
-    {
-      get { return _currentNode; }
-    }
+      public LinkedListNode<InputLine> CurrentNode { get; private set; }
 
-    public LinkedListNode<InputLine> NextNode
+      public LinkedListNode<InputLine> NextNode
     {
-      get { return _currentNode.Next; }
+      get { return CurrentNode.Next; }
     }
 
     public InputLine CurrentInputLine
     {
-      get { return _currentNode.Value; }
+      get { return CurrentNode.Value; }
     }
 
     public InputLine NextInputLine
     {
-      get { return _currentNode.Next.Value; }
+      get { return CurrentNode.Next.Value; }
     }
 
     public Stack<BlockClosingAction> BlockClosingActions
@@ -137,12 +134,12 @@ namespace NHaml
 
     public void MoveNext()
     {
-      _currentNode = _currentNode.Next;
+      CurrentNode = CurrentNode.Next;
     }
 
     public void MergeTemplate(string templatePath)
     {
-      var previous = _currentNode.Previous;
+      var previous = CurrentNode.Previous;
 
       var lineNumber = 0;
 
@@ -152,14 +149,14 @@ namespace NHaml
 
         while ((line = reader.ReadLine()) != null)
         {
-          _inputLines.AddBefore(_currentNode,
-            new InputLine(_currentNode.Value.Indent + line, templatePath, lineNumber++, _templateEngine.IndentSize));
+          InputLines.AddBefore(CurrentNode,
+            new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++, _templateEngine.IndentSize));
         }
       }
 
-      _inputLines.Remove(_currentNode);
+      InputLines.Remove(CurrentNode);
 
-      _currentNode = previous.Next;
+      CurrentNode = previous.Next;
 
       _inputFiles.Add(templatePath);
     }
@@ -176,11 +173,11 @@ namespace NHaml
       }
     }
 
-    private LinkedList<InputLine> BuildInputLines(string templatePath)
+    private static LinkedList<InputLine> BuildInputLines(string templatePath, TemplateEngine templateEngine)
     {
       var lineNumber = 0;
-
-      _inputLines.AddLast(new InputLine(string.Empty, null, lineNumber++, _templateEngine.IndentSize));
+        var inputLines = new LinkedList<InputLine>();
+        inputLines.AddLast(new InputLine(string.Empty, null, lineNumber++, templateEngine.IndentSize));
 
       using (var reader = new StreamReader(templatePath))
       {
@@ -188,13 +185,13 @@ namespace NHaml
 
         while ((line = reader.ReadLine()) != null)
         {
-          _inputLines.AddLast(new InputLine(line, templatePath, lineNumber++, _templateEngine.IndentSize));
+            inputLines.AddLast(new InputLine(line, templatePath, lineNumber++, templateEngine.IndentSize));
         }
       }
 
-      _inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), null, lineNumber, _templateEngine.IndentSize));
+      inputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), null, lineNumber, templateEngine.IndentSize));
 
-      return _inputLines;
+      return inputLines;
     }
   }
 }
