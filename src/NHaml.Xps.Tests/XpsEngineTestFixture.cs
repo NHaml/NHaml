@@ -43,10 +43,21 @@ namespace NHaml.Xps.Tests
         public void PrintAsyncWithPrinter()
         {
             var xpsHelper = new XpsEngine();
-            var printServer = new LocalPrintServer();
                 xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
-            Thread.Sleep(50000);
+            Thread.Sleep(5000);
         }
+
+        [Test]
+        [Ignore]
+        public void PrintAsyncWithPrinterAndImage()
+        {
+            var fullPath = Path.GetFullPath("TestImage.gif");
+                        var xpsHelper = new XpsEngine();
+                        xpsHelper.PrintAsync("XpsWithImage.haml", fullPath);
+            Thread.Sleep(10000);
+        }
+
+        
         [Test]
         [Ignore]
         public void PrintAsyncWithPrinterName()
@@ -100,6 +111,34 @@ namespace NHaml.Xps.Tests
                             var xpsHelper = new XpsEngine();
                             xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
                             Thread.Sleep(5000);
+                          Assert.IsTrue(File.Exists(tempTarget));
+                        }
+                        finally
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                        }
+                    });
+        }
+        [Test]
+        public void WriteToFileAsyncAndImage()
+        {
+            var runner = new CrossThreadTestRunner();
+            runner.RunInSTA(
+                () =>
+                    {
+                        const string tempTarget = "temp.xps";
+                        try
+                        {
+                            if (File.Exists(tempTarget))
+                            {
+                                File.Delete(tempTarget);
+                            }
+                            var xpsHelper = new XpsEngine();
+                            xpsHelper.GenerateAsync("XpsWithImage.haml", "TestImage.gif", tempTarget, null);
+                            Thread.Sleep(10000);
                           Assert.IsTrue(File.Exists(tempTarget));
                         }
                         finally

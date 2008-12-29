@@ -101,8 +101,7 @@ namespace NHaml.Xps
          
             var thread = new Thread(delegate(object obj)
                                                    {
-                                                       var getQueue1 = (Func<PrintQueue>) obj;
-                                                       using (var printQueue = getQueue1())
+                                                       using (var printQueue = getQueue())
                                                        {
                                                            Print(viewPath, context, printQueue);
                                                        }
