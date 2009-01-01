@@ -43,7 +43,7 @@ namespace NHaml.Xps.Tests
         public void PrintAsyncWithPrinter()
         {
             var xpsHelper = new XpsEngine();
-                xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
+            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
             Thread.Sleep(5000);
         }
 
@@ -52,18 +52,18 @@ namespace NHaml.Xps.Tests
         public void PrintAsyncWithPrinterAndImage()
         {
             var fullPath = Path.GetFullPath("TestImage.gif");
-                        var xpsHelper = new XpsEngine();
-                        xpsHelper.PrintAsync("XpsWithImage.haml", fullPath);
+            var xpsHelper = new XpsEngine();
+            xpsHelper.PrintAsync("XpsWithImage.haml", fullPath);
             Thread.Sleep(10000);
         }
 
-        
+
         [Test]
         [Ignore]
         public void PrintAsyncWithPrinterName()
         {
             var xpsHelper = new XpsEngine();
-                xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue().Name, null);
+            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue().Name, null);
             Thread.Sleep(50000);
         }
 
@@ -73,26 +73,26 @@ namespace NHaml.Xps.Tests
             var runner = new CrossThreadTestRunner();
             runner.RunInSTA(
                 () =>
+                {
+                    const string tempTarget = "temp.xps";
+                    try
                     {
-                        const string tempTarget = "temp.xps";
-                        try
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
-                            var xpsHelper = new XpsEngine();
-                            xpsHelper.Generate("XpsWithData.haml", "Hello", tempTarget);
-                          Assert.IsTrue(File.Exists(tempTarget));
+                            File.Delete(tempTarget);
                         }
-                        finally
+                        var xpsHelper = new XpsEngine();
+                        xpsHelper.Generate("XpsWithData.haml", "Hello", tempTarget);
+                        Assert.IsTrue(File.Exists(tempTarget));
+                    }
+                    finally
+                    {
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
+                            File.Delete(tempTarget);
                         }
-                    });
+                    }
+                });
         }
         [Test]
         public void WriteToFileAsync()
@@ -100,27 +100,27 @@ namespace NHaml.Xps.Tests
             var runner = new CrossThreadTestRunner();
             runner.RunInSTA(
                 () =>
+                {
+                    const string tempTarget = "temp.xps";
+                    try
                     {
-                        const string tempTarget = "temp.xps";
-                        try
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
-                            var xpsHelper = new XpsEngine();
-                            xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
-                            Thread.Sleep(5000);
-                          Assert.IsTrue(File.Exists(tempTarget));
+                            File.Delete(tempTarget);
                         }
-                        finally
+                        var xpsHelper = new XpsEngine();
+                        xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
+                        Thread.Sleep(5000);
+                        Assert.IsTrue(File.Exists(tempTarget));
+                    }
+                    finally
+                    {
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
+                            File.Delete(tempTarget);
                         }
-                    });
+                    }
+                });
         }
         [Test]
         public void WriteToFileAsyncAndImage()
@@ -128,27 +128,27 @@ namespace NHaml.Xps.Tests
             var runner = new CrossThreadTestRunner();
             runner.RunInSTA(
                 () =>
+                {
+                    const string tempTarget = "temp.xps";
+                    try
                     {
-                        const string tempTarget = "temp.xps";
-                        try
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
-                            var xpsHelper = new XpsEngine();
-                            xpsHelper.GenerateAsync("XpsWithImage.haml", "TestImage.gif", tempTarget, null);
-                            Thread.Sleep(10000);
-                          Assert.IsTrue(File.Exists(tempTarget));
+                            File.Delete(tempTarget);
                         }
-                        finally
+                        var xpsHelper = new XpsEngine();
+                        xpsHelper.GenerateAsync("XpsWithImage.haml", "TestImage.gif", tempTarget, null);
+                        Thread.Sleep(10000);
+                        Assert.IsTrue(File.Exists(tempTarget));
+                    }
+                    finally
+                    {
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
+                            File.Delete(tempTarget);
                         }
-                    });
+                    }
+                });
         }
     }
 }

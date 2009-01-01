@@ -50,12 +50,15 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
+    <Reference Include="System.Data" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AssemblyLoader.cs" />
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
