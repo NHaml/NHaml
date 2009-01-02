@@ -419,7 +419,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyLoaderTests.cs" />
     <Compile Include="BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>

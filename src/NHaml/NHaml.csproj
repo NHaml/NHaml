@@ -58,7 +58,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AssemblyLoader.cs" />
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>

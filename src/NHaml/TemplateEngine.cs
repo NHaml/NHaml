@@ -95,7 +95,7 @@ namespace NHaml
 
       foreach (var assemblyConfigurationElement in section.Assemblies)
       {
-        AddReference(AssemblyLoader.Load(assemblyConfigurationElement.Name).Location);
+        AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
       }
 
       foreach (var namespaceConfigurationElement in section.Namespaces)
