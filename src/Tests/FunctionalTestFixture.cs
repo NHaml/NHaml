@@ -281,6 +281,15 @@ namespace NHaml.Tests
 
       AssertRender("CustomBaseClass");
     }
+    [Test]
+    public void ViewBaseClassGenericAnon()
+    {
+        var anonInstance = new { Property = "PropertyValue" };
+        var genericType = typeof(GenericTemplateView<>).MakeGenericType(new[] { anonInstance.GetType() });
+        _templateEngine.TemplateBaseType = genericType;
+
+        AssertRender("GenericBaseClassAnon");
+    }
 
     [Test]
     public virtual void ViewBaseClassGeneric2()
@@ -308,7 +317,11 @@ namespace NHaml.Tests
       get { return 9; }
     }
   }
+  public abstract class GenericTemplateView<TViewData> : Template
+  {
+      public TViewData ViewData { get; set; }
 
+  }
   public abstract class CustomTemplate3<T> : Template
     where T : new()
   {

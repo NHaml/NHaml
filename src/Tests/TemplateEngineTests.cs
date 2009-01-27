@@ -1,5 +1,4 @@
 using System.Linq;
-
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -50,5 +49,12 @@ namespace NHaml.Tests
 
       Assert.AreNotSame(compiledTemplate1, compiledTemplate2);
     }
+
+    public abstract class MockDataView<TViewData> : Template
+    {
+        public TViewData ViewData { get; set; }
+
+    }
+     
   }
 }
