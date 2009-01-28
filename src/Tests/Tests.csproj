@@ -252,9 +252,6 @@
     <None Include="Templates\ApplicationSimple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\AnonType.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Templates\GenericBaseClassAnon.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
