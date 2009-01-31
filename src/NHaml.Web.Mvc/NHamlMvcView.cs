@@ -28,9 +28,9 @@ namespace NHaml.Web.Mvc
 
     protected virtual void CreateHelpers(ViewContext viewContext)
     {
-      Ajax = new AjaxHelper(viewContext);
+      Ajax = new AjaxHelper(viewContext, this);
       Html = new HtmlHelper(viewContext, this);
-      Url = new UrlHelper(viewContext);
+      Url = new UrlHelper(viewContext.RequestContext);
     }
 
     public AjaxHelper Ajax { get; protected set; }

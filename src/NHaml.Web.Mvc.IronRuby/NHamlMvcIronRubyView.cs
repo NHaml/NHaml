@@ -13,9 +13,9 @@ namespace NHaml.Web.Mvc.IronRuby
   {
     protected override void CreateHelpers(ViewContext viewContext)
     {
-      Ajax = new AjaxHelper(viewContext);
+      Ajax = new AjaxHelper(viewContext, this);
       Html = new NHamlMvcIronRubyHtmlHelper(viewContext, this);
-      Url = new NHamlMvcIronRubyUrlHelper(viewContext);
+      Url = new NHamlMvcIronRubyUrlHelper(viewContext.RequestContext);
     }
   }
 }

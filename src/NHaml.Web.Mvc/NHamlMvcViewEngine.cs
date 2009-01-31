@@ -65,37 +65,36 @@ namespace NHaml.Web.Mvc
 
       PartialViewLocationFormats = ViewLocationFormats;
     }
-
-    public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName)
+    public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
     {
       if (string.IsNullOrEmpty(masterName))
       {
         var controllerName = controllerContext.RouteData.GetRequiredString("controller");
-        var result = base.FindView(controllerContext, viewName, controllerName);
+        var result = base.FindView(controllerContext, viewName, controllerName, useCache);
 
         if (result.View == null)
         {
-          result = base.FindView(controllerContext, viewName, DefaultMaster);
+          result = base.FindView(controllerContext, viewName, DefaultMaster, useCache);
         }
 
-        return result.View == null ? base.FindPartialView(controllerContext, viewName) : result;
+        return result.View == null ? base.FindPartialView(controllerContext, viewName, useCache) : result;
       }
 
-      return base.FindView(controllerContext, viewName, masterName);
+      return base.FindView(controllerContext, viewName, masterName, useCache);
     }
 
     protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
     {
       return (IView)_templateEngine.Compile(
-        VirtualPathToPhysicalPath(controllerContext, partialPath),
+        VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath),
         GetViewBaseType(controllerContext)).CreateInstance();
     }
 
     protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
     {
       return (IView)_templateEngine.Compile(
-        VirtualPathToPhysicalPath(controllerContext, viewPath),
-        VirtualPathToPhysicalPath(controllerContext, masterPath),
+        VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath),
+        VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath),
         GetViewBaseType(controllerContext)).CreateInstance();
     }
 

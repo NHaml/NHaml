@@ -126,7 +126,7 @@ namespace NHaml.Tests
     [Test]
     public void MasterDoseNotExists()
     {
-      var view = _viewEngine.FindView(_controllerContext, "Simple", "__MasterDoseNotExists").View;
+      var view = _viewEngine.FindView(_controllerContext, "Simple", "__MasterDoseNotExists", false).View;
 
       Assert.IsNull(view, "ViewEngine should not return a view when the master file dose not exists");
     }
@@ -134,21 +134,21 @@ namespace NHaml.Tests
     [Test]
     public void ViewDoseNotExists()
     {
-      var view = _viewEngine.FindView(_controllerContext, "__ViewDoseNotExits", null).View;
+      var view = _viewEngine.FindView(_controllerContext, "__ViewDoseNotExits", null, false).View;
 
       Assert.IsNull(view, "ViewEngine should not return a view when the view file dose not exists");
     }
 
     private void AssertView(string viewName, string masterName, string expectedName)
     {
-      var view = _viewEngine.FindView(_controllerContext, viewName, masterName).View;
+      var view = _viewEngine.FindView(_controllerContext, viewName, masterName, false).View;
 
       AssertView(view, expectedName);
     }
 
     private void AssertPartialView(string viewName, string expectedName)
     {
-      var view = _viewEngine.FindPartialView(_controllerContext, viewName).View;
+      var view = _viewEngine.FindPartialView(_controllerContext, viewName, false).View;
 
       AssertView(view, expectedName);
     }
@@ -156,10 +156,11 @@ namespace NHaml.Tests
     private void AssertView(IView view, string expectedName)
     {
       Assert.IsNotNull(view, "ViewEngine dose not returned a view");
-
-      var mockViewContext = new Mock<ViewContext>(_controllerContext, view,
-        new ViewDataDictionary(), new TempDataDictionary());
-
+      //ControllerContext , IView , ViewDataDictionary , TempDataDictionary 
+      var mockViewContext = new Mock<ViewContext>();
+        mockViewContext.ExpectGet(x => x.View).Returns(view);
+        mockViewContext.ExpectGet(x => x.ViewData).Returns(new ViewDataDictionary());
+        mockViewContext.ExpectGet(x => x.TempData).Returns(new TempDataDictionary());
       view.Render(mockViewContext.Object, _output);
 
       AssertRender(_output, "Mvc\\" + expectedName);

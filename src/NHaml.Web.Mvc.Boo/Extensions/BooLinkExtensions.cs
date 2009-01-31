@@ -1,149 +1,57 @@
-using System;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
-
 using Boo.Lang;
-
 using NHaml.Web.Mvc.Boo.Helpers;
 
 namespace NHaml.Web.Mvc.Boo.Extensions
 {
   public static class BooLinkExtensions
   {
-    public static String ActionLink( this HtmlHelper htmlHelper, String linkText, String actionName, Hash values )
+
+    public static string ActionLink(this HtmlHelper htmlHelper, string linkText, string actionName, Hash  routeValues)
     {
-      return LinkExtensions.ActionLink( htmlHelper, linkText, actionName, HashHelper.ToRouteValueDictionary( values ) );
+        return htmlHelper.ActionLink(linkText, actionName, HashHelper.ToRouteValueDictionary(routeValues));
     }
 
-    public static String ActionLink( this HtmlHelper htmlHelper, String linkText, String actionName, Hash values, Hash htmlAttributes )
+    public static string ActionLink(this HtmlHelper htmlHelper, string linkText, string actionName, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.ActionLink( htmlHelper,
-                                        linkText,
-                                        actionName,
-                                        HashHelper.ToRouteValueDictionary( values ),
-                                        HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.ActionLink(linkText, actionName, HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String ActionLink( this HtmlHelper htmlHelper,
-                                     String linkText,
-                                     String actionName,
-                                     String controllerName,
-                                     Hash values,
-                                     Hash htmlAttributes )
+    public static string ActionLink(this HtmlHelper htmlHelper, string linkText, string actionName, string controllerName, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.ActionLink( htmlHelper,
-                                        linkText,
-                                        actionName,
-                                        controllerName,
-                                        HashHelper.ToRouteValueDictionary( values ),
-                                        HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.ActionLink(linkText, actionName, controllerName, HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String ActionLink( this HtmlHelper htmlHelper,
-                                     String linkText,
-                                     String actionName,
-                                     String controllerName,
-                                     String protocol,
-                                     String hostName,
-                                     String fragment,
-                                     Hash values,
-                                     Hash htmlAttributes )
+    public static string ActionLink(this HtmlHelper htmlHelper, string linkText, string actionName, string controllerName, string protocol, string hostName, string fragment, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.ActionLink( htmlHelper,
-                                        linkText,
-                                        actionName,
-                                        controllerName,
-                                        protocol,
-                                        hostName,
-                                        fragment,
-                                        HashHelper.ToRouteValueDictionary( values ),
-                                        HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.ActionLink(linkText, actionName, controllerName, protocol, hostName, fragment,  HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String GenerateLink( this HtmlHelper htmlHelper,
-                                       String linkText,
-                                       String routeName,
-                                       String actionName,
-                                       String controllerName,
-                                       Hash values,
-                                       Hash htmlAttributes )
+    public static string RouteLink(this HtmlHelper htmlHelper, string linkText, Hash routeValues)
     {
-      return LinkExtensions.GenerateLink( htmlHelper,
-                                          linkText,
-                                          routeName,
-                                          actionName,
-                                          controllerName,
-                                          HashHelper.ToRouteValueDictionary( values ),
-                                          HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.RouteLink(linkText, HashHelper.ToRouteValueDictionary(routeValues));
     }
 
-    public static String GenerateLink( this HtmlHelper htmlHelper,
-                                       String linkText,
-                                       String routeName,
-                                       String actionName,
-                                       String controllerName,
-                                       String protocol,
-                                       String hostName,
-                                       String fragment,
-                                       Hash values,
-                                       Hash htmlAttributes )
+    public static string RouteLink(this HtmlHelper htmlHelper, string linkText, string routeName, Hash routeValues)
     {
-      return LinkExtensions.GenerateLink( htmlHelper,
-                                          linkText,
-                                          routeName,
-                                          actionName,
-                                          controllerName,
-                                          protocol,
-                                          hostName,
-                                          fragment,
-                                          HashHelper.ToRouteValueDictionary( values ),
-                                          HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.RouteLink(linkText, routeName,  HashHelper.ToRouteValueDictionary(routeValues));
     }
 
-    public static String RouteLink( this HtmlHelper htmlHelper, String linkText, Hash values )
+    public static string RouteLink(this HtmlHelper htmlHelper, string linkText, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.RouteLink( htmlHelper, linkText, HashHelper.ToRouteValueDictionary( values ) );
+        return htmlHelper.RouteLink(linkText,  HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String RouteLink( this HtmlHelper htmlHelper, String linkText, String name, Hash values )
+    public static string RouteLink(this HtmlHelper htmlHelper, string linkText, string routeName, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.RouteLink( htmlHelper, linkText, name, HashHelper.ToRouteValueDictionary( values ) );
+        return htmlHelper.RouteLink(linkText, routeName, HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String RouteLink( this HtmlHelper htmlHelper, String linkText, Hash values, Hash htmlAttributes )
+    public static string RouteLink(this HtmlHelper htmlHelper, string linkText, string routeName, string protocol, string hostName, string fragment, Hash routeValues, Hash htmlAttributes)
     {
-      return LinkExtensions.RouteLink( htmlHelper,
-                                       linkText,
-                                       HashHelper.ToRouteValueDictionary( values ),
-                                       HashHelper.ToRouteValueDictionary( htmlAttributes ) );
+        return htmlHelper.RouteLink(linkText, routeName, protocol, hostName, fragment, HashHelper.ToRouteValueDictionary(routeValues), HashHelper.ToRouteValueDictionary(htmlAttributes));
     }
 
-    public static String RouteLink( this HtmlHelper htmlHelper, String linkText, String routeName, Hash values, Hash htmlAttributes )
-    {
-      return LinkExtensions.RouteLink( htmlHelper,
-                                       linkText,
-                                       routeName,
-                                       HashHelper.ToRouteValueDictionary( values ),
-                                       HashHelper.ToRouteValueDictionary( htmlAttributes ) );
-    }
-
-    public static String RouteLink( this HtmlHelper htmlHelper,
-                                    String linkText,
-                                    String routeName,
-                                    String protocol,
-                                    String hostName,
-                                    String fragment,
-                                    Hash values,
-                                    Hash htmlAttributes )
-    {
-      return LinkExtensions.RouteLink( htmlHelper,
-                                       linkText,
-                                       routeName,
-                                       protocol,
-                                       hostName,
-                                       fragment,
-                                       HashHelper.ToRouteValueDictionary( values ),
-                                       HashHelper.ToRouteValueDictionary( htmlAttributes ) );
-    }
   }
 }

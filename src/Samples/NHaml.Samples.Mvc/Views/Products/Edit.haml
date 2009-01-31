@@ -6,10 +6,10 @@
       %td= Html.TextBox("ProductName", ViewData.Model.Product.ProductName)
     %tr
       %td Category:
-      %td= Html.DropDownList(null, "CategoryID", ViewData.Model.Categories)
+      %td= Html.DropDownList("CategoryID", ViewData.Model.Categories, (string)null)
     %tr
       %td Supplier:
-      %td= Html.DropDownList(null, "SupplierID", ViewData.Model.Suppliers)
+      %td= Html.DropDownList("SupplierID", ViewData.Model.Suppliers, (string)null)
     %tr
       %td Unit Price:
       %td= Html.TextBox("UnitPrice", ViewData.Model.Product.UnitPrice.ToString())

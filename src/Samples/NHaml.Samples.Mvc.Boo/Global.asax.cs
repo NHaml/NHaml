@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Web.Mvc;
 using System.Web.Routing;
-using NHaml.Web.Mvc;
 using NHaml.Web.Mvc.Boo;
 
 namespace NHaml.Samples.Mvc.Boo
