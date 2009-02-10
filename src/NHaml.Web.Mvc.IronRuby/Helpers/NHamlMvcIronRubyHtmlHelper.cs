@@ -5,38 +5,38 @@ using IronRuby.Builtins;
 
 namespace NHaml.Web.Mvc.IronRuby.Helpers
 {
-  public class NHamlMvcIronRubyHtmlHelper : HtmlHelper
-  {
-    // because IronRuby CLS method resolution is still flakey.
-
-    public NHamlMvcIronRubyHtmlHelper(ViewContext context, IViewDataContainer viewDataContainer)
-      : base(context, viewDataContainer)
+    public class NHamlMvcIronRubyHtmlHelper : HtmlHelper
     {
-    }
+        // because IronRuby CLS method resolution is still flakey.
 
-    public string ActionLink(string linkText, Hash values)
-    {
-      return this.RouteLink(linkText, values.ToRouteDictionary());
-    }
+        public NHamlMvcIronRubyHtmlHelper( ViewContext context, IViewDataContainer viewDataContainer )
+            : base( context, viewDataContainer )
+        {
+        }
 
-    public string TextBox(string name, object value)
-    {
-      return InputExtensions.TextBox(this, name, value);
-    }
+        public string ActionLink( string linkText, Hash values )
+        {
+            return this.RouteLink( linkText, values.ToRouteDictionary() );
+        }
 
-    public string TextBox(string name)
-    {
-      return InputExtensions.TextBox(this, name);
-    }
+        public string TextBox( string name, object value )
+        {
+            return InputExtensions.TextBox( this, name, value );
+        }
 
-    public string DropDownList(string name, SelectList selectList)
-    {
-      return SelectExtensions.DropDownList(this, name, selectList);
-    }
+        public string TextBox( string name )
+        {
+            return InputExtensions.TextBox( this, name );
+        }
 
-    public void RenderPartial(string partialViewName)
-    {
-      RenderPartialExtensions.RenderPartial(this, partialViewName);
+        public string DropDownList( string name, SelectList selectList )
+        {
+            return SelectExtensions.DropDownList( this, name, selectList );
+        }
+
+        public void RenderPartial( string partialViewName )
+        {
+            RenderPartialExtensions.RenderPartial( this, partialViewName );
+        }
     }
-  }
 }

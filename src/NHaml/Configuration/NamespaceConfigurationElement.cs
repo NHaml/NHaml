@@ -4,31 +4,31 @@ using System.Web;
 
 namespace NHaml.Configuration
 {
-  [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public sealed class NamespaceConfigurationElement : KeyedConfigurationElement
-  {
-    private const string NamespaceElement = "namespace";
-
-    public NamespaceConfigurationElement()
+    [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    [AspNetHostingPermission( SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    public sealed class NamespaceConfigurationElement : KeyedConfigurationElement
     {
-    }
+        private const string NamespaceElement = "namespace";
 
-    public NamespaceConfigurationElement(string name)
-    {
-      Name = name;
-    }
+        public NamespaceConfigurationElement()
+        {
+        }
 
-    public override string Key
-    {
-      get { return Name; }
-    }
+        public NamespaceConfigurationElement( string name )
+        {
+            Name = name;
+        }
 
-    [ConfigurationProperty(NamespaceElement, IsRequired = true, IsKey = true)]
-    public string Name
-    {
-      get { return (string)this[NamespaceElement]; }
-      set { this[NamespaceElement] = value; }
+        public override string Key
+        {
+            get { return Name; }
+        }
+
+        [ConfigurationProperty( NamespaceElement, IsRequired = true, IsKey = true )]
+        public string Name
+        {
+            get { return (string)this[NamespaceElement]; }
+            set { this[NamespaceElement] = value; }
+        }
     }
-  }
 }

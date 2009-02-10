@@ -6,16 +6,16 @@ using NHaml.Web.Mvc.IronRuby.Helpers;
 
 namespace NHaml.Web.Mvc.IronRuby
 {
-  [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public abstract class NHamlMvcIronRubyView<TModel> : NHamlMvcView<TModel>
-    where TModel : class
-  {
-    protected override void CreateHelpers(ViewContext viewContext)
+    [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    [AspNetHostingPermission( SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    public abstract class NHamlMvcIronRubyView<TModel> : NHamlMvcView<TModel>
+      where TModel : class
     {
-      Ajax = new AjaxHelper(viewContext, this);
-      Html = new NHamlMvcIronRubyHtmlHelper(viewContext, this);
-      Url = new NHamlMvcIronRubyUrlHelper(viewContext.RequestContext);
+        protected override void CreateHelpers( ViewContext viewContext )
+        {
+            Ajax = new AjaxHelper( viewContext, this );
+            Html = new NHamlMvcIronRubyHtmlHelper( viewContext, this );
+            Url = new NHamlMvcIronRubyUrlHelper( viewContext.RequestContext );
+        }
     }
-  }
 }

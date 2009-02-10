@@ -4,20 +4,20 @@ using System.Web;
 
 namespace NHaml.Web.Mvc.IronRuby
 {
-  [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-  public class NHamlMvcIronRubyViewEngine : NHamlMvcViewEngine
-  {
-    public NHamlMvcIronRubyViewEngine()
+    [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    [AspNetHostingPermission( SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    public class NHamlMvcIronRubyViewEngine : NHamlMvcViewEngine
     {
-      TemplateEngine.TemplateCompiler = new NHamlMvcIronRubyTemplateCompiler();
+        public NHamlMvcIronRubyViewEngine()
+        {
+            TemplateEngine.TemplateCompiler = new NHamlMvcIronRubyTemplateCompiler();
 
-      TemplateEngine.AddReference(typeof(NHamlMvcIronRubyView<>).Assembly.Location);
-    }
+            TemplateEngine.AddReference( typeof( NHamlMvcIronRubyView<> ).Assembly.Location );
+        }
 
-    protected override Type ViewGenericBaseType
-    {
-      get { return typeof(NHamlMvcIronRubyView<>); }
+        protected override Type ViewGenericBaseType
+        {
+            get { return typeof( NHamlMvcIronRubyView<> ); }
+        }
     }
-  }
 }

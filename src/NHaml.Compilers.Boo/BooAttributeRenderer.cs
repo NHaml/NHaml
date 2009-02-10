@@ -12,161 +12,161 @@ using NHaml.Utils;
 
 namespace NHaml.Compilers.Boo
 {
-  internal static class BooAttributeRenderer
-  {
-    public static void Render(TemplateParser templateParser, string attributes)
+    internal static class BooAttributeRenderer
     {
-      var errorList = new List<RecognitionException>();
-
-      var expression = BooParser.ParseExpression(2, "attributes", "{" + attributes + "}", errorList.Add);
-
-      foreach (var exception in errorList)
-      {
-        SyntaxException.Throw(templateParser.CurrentInputLine,
-          Resources.AttributesParse_BooParserError, exception.Message);
-      }
-
-      var hashLiteralExpression = expression as HashLiteralExpression;
-
-      if (hashLiteralExpression != null)
-      {
-        Render(templateParser, hashLiteralExpression);
-      }
-      else
-      {
-        var blockExpression = expression as BlockExpression;
-
-        if (blockExpression != null)
+        public static void Render( TemplateParser templateParser, string attributes )
         {
-          Render(templateParser, blockExpression);
-        }
-        else
-        {
-          SyntaxException.Throw(
-            templateParser.CurrentInputLine,
-            Utility.FormatCurrentCulture(Resources.AttributesParse_UnexpectedExpression, expression.GetType().FullName));
-        }
-      }
-    }
+            var errorList = new List<RecognitionException>();
 
-    private static void Render(TemplateParser templateParser, BlockExpression blockExpression)
-    {
-      if (blockExpression.Body == null ||
-        blockExpression.Body.Statements.Count == 0)
-      {
-        return;
-      }
+            Expression expression = BooParser.ParseExpression( 2, "attributes", "{" + attributes + "}", errorList.Add );
 
-      if (blockExpression.Body.Statements.Count > 1)
-      {
-        SyntaxException.Throw(templateParser.CurrentInputLine,
-          Resources.AttributesParse_StatementGreaterThenOne);
-      }
+            foreach( RecognitionException exception in errorList )
+            {
+                SyntaxException.Throw( templateParser.CurrentInputLine,
+                  Resources.AttributesParse_BooParserError, exception.Message );
+            }
 
-      var statement = blockExpression.Body.Statements[0];
+            var hashLiteralExpression = expression as HashLiteralExpression;
 
-      var expressionStatement = statement as ExpressionStatement;
+            if( hashLiteralExpression != null )
+            {
+                Render( templateParser, hashLiteralExpression );
+            }
+            else
+            {
+                var blockExpression = expression as BlockExpression;
 
-      if (expressionStatement == null)
-      {
-        var type = statement == null ? "null" : statement.GetType().FullName;
-
-        SyntaxException.Throw(templateParser.CurrentInputLine,
-          Utility.FormatCurrentCulture(Resources.AttributesParse_ExpressionStatementExpected, type));
-      }
-
-      var expression = expressionStatement != null ? expressionStatement.Expression : null;
-
-      var binaryExpression = expression as BinaryExpression;
-
-      if( binaryExpression != null )
-      {
-        AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, false );
-
-        return;
-      }
-
-      var listLiteralExpression = expression as ListLiteralExpression;
-
-      if( listLiteralExpression != null )
-      {
-        Render( templateParser, listLiteralExpression );
-
-        return;
-      }
-
-      var statementType = statement == null ? "null" : statement.GetType().FullName;
-
-      SyntaxException.Throw( templateParser.CurrentInputLine,
-                             Utility.FormatCurrentCulture(
-                             Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
-    }
-
-    private static void Render( TemplateParser templateParser, ListLiteralExpression listLiteralExpression )
-    {
-      var first = true;
-      foreach( var item in listLiteralExpression.Items )
-      {
-        var binaryExpression = item as BinaryExpression;
-
-        if( binaryExpression != null )
-        {
-          AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, !first );
-
-          return;
+                if( blockExpression != null )
+                {
+                    Render( templateParser, blockExpression );
+                }
+                else
+                {
+                    SyntaxException.Throw(
+                      templateParser.CurrentInputLine,
+                      Utility.FormatCurrentCulture( Resources.AttributesParse_UnexpectedExpression, expression.GetType().FullName ) );
+                }
+            }
         }
 
-        var statementType = item == null ? "null" : item.GetType().FullName;
-
-        SyntaxException.Throw( templateParser.CurrentInputLine,
-                               Utility.FormatCurrentCulture(
-                               Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
-
-        first = false;
-      }
-    }
-
-    private static void Render(TemplateParser templateParser, HashLiteralExpression hashExpression)
-    {
-      var first = true;
-      foreach (var item in hashExpression.Items)
-      {
-        AppendAttribute(templateParser, item.First, item.Second, !first);
-        first = false;
-      }
-    }
-
-    private static void AppendAttribute(TemplateParser templateParser, Expression key, Node value, bool useSeparator)
-    {
-      if (key is LiteralExpression)
-      {
-        var literal = (StringLiteralExpression)key;
-
-        AppendAttribute(templateParser, literal.Value, value.ToCodeString(), useSeparator);
-      }
-      else
-      {
-        var referenceExpression = key as ReferenceExpression;
-
-        if (referenceExpression != null)
+        private static void Render( TemplateParser templateParser, BlockExpression blockExpression )
         {
-          AppendAttribute(templateParser, referenceExpression.Name, value.ToCodeString(), useSeparator);
+            if( blockExpression.Body == null ||
+              blockExpression.Body.Statements.Count == 0 )
+            {
+                return;
+            }
+
+            if( blockExpression.Body.Statements.Count > 1 )
+            {
+                SyntaxException.Throw( templateParser.CurrentInputLine,
+                  Resources.AttributesParse_StatementGreaterThenOne );
+            }
+
+            Statement statement = blockExpression.Body.Statements[0];
+
+            var expressionStatement = statement as ExpressionStatement;
+
+            if( expressionStatement == null )
+            {
+                string type = statement == null ? "null" : statement.GetType().FullName;
+
+                SyntaxException.Throw( templateParser.CurrentInputLine,
+                  Utility.FormatCurrentCulture( Resources.AttributesParse_ExpressionStatementExpected, type ) );
+            }
+
+            Expression expression = expressionStatement != null ? expressionStatement.Expression : null;
+
+            var binaryExpression = expression as BinaryExpression;
+
+            if( binaryExpression != null )
+            {
+                AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, false );
+
+                return;
+            }
+
+            var listLiteralExpression = expression as ListLiteralExpression;
+
+            if( listLiteralExpression != null )
+            {
+                Render( templateParser, listLiteralExpression );
+
+                return;
+            }
+
+            string statementType = statement == null ? "null" : statement.GetType().FullName;
+
+            SyntaxException.Throw( templateParser.CurrentInputLine,
+              Utility.FormatCurrentCulture(
+                Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
         }
-        else
+
+        private static void Render( TemplateParser templateParser, ListLiteralExpression listLiteralExpression )
         {
-          var message = Utility.FormatCurrentCulture(
-            Resources.AttributesParse_UnexpectedAttributeExpression, key.GetType().FullName);
+            bool first = true;
+            foreach( Expression item in listLiteralExpression.Items )
+            {
+                var binaryExpression = item as BinaryExpression;
 
-          SyntaxException.Throw(templateParser.CurrentInputLine, message);
+                if( binaryExpression != null )
+                {
+                    AppendAttribute( templateParser, binaryExpression.Left, binaryExpression.Right, !first );
+
+                    return;
+                }
+
+                string statementType = item == null ? "null" : item.GetType().FullName;
+
+                SyntaxException.Throw( templateParser.CurrentInputLine,
+                  Utility.FormatCurrentCulture(
+                    Resources.AttributesParse_BinaryExpressionExpected, statementType ) );
+
+                first = false;
+            }
         }
-      }
-    }
 
-    private static void AppendAttribute(TemplateParser templateParser, string key, string value, bool useSeparator)
-    {
-      templateParser.TemplateClassBuilder.AppendAttributeCode(
-        (useSeparator ? " " : String.Empty) + key.Replace('_', '-').Replace("@", ""),
-        value);
+        private static void Render( TemplateParser templateParser, HashLiteralExpression hashExpression )
+        {
+            bool first = true;
+            foreach( ExpressionPair item in hashExpression.Items )
+            {
+                AppendAttribute( templateParser, item.First, item.Second, !first );
+                first = false;
+            }
+        }
+
+        private static void AppendAttribute( TemplateParser templateParser, Expression key, Node value, bool useSeparator )
+        {
+            if( key is LiteralExpression )
+            {
+                var literal = (StringLiteralExpression)key;
+
+                AppendAttribute( templateParser, literal.Value, value.ToCodeString(), useSeparator );
+            }
+            else
+            {
+                var referenceExpression = key as ReferenceExpression;
+
+                if( referenceExpression != null )
+                {
+                    AppendAttribute( templateParser, referenceExpression.Name, value.ToCodeString(), useSeparator );
+                }
+                else
+                {
+                    string message = Utility.FormatCurrentCulture(
+                      Resources.AttributesParse_UnexpectedAttributeExpression, key.GetType().FullName );
+
+                    SyntaxException.Throw( templateParser.CurrentInputLine, message );
+                }
+            }
+        }
+
+        private static void AppendAttribute( TemplateParser templateParser, string key, string value, bool useSeparator )
+        {
+            templateParser.TemplateClassBuilder.AppendAttributeCode(
+              (useSeparator ? " " : String.Empty) + key.Replace( '_', '-' ).Replace( "@", "" ),
+              value );
+        }
     }
-  }
 }

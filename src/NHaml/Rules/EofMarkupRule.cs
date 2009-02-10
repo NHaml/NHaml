@@ -2,18 +2,18 @@ using System;
 
 namespace NHaml.Rules
 {
-  public class EofMarkupRule : MarkupRule
-  {
-    public static readonly char SignifierChar = Convert.ToChar(26);
-
-    public override char Signifier
+    public class EofMarkupRule : MarkupRule
     {
-      get { return SignifierChar; }
-    }
+        public static readonly char SignifierChar = Convert.ToChar( 26 );
 
-    public override BlockClosingAction Render(TemplateParser templateParser)
-    {
-      return null;
+        public override char Signifier
+        {
+            get { return SignifierChar; }
+        }
+
+        public override BlockClosingAction Render( TemplateParser templateParser )
+        {
+            return null;
+        }
     }
-  }
 }

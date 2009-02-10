@@ -2,26 +2,26 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace NHaml.Rules
 {
-  [SuppressMessage("Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly")]
-  public class PlainTextMarkupRule : MarkupRule
-  {
-    [SuppressMessage("Microsoft.Security", "CA2104")]
-    public static readonly PlainTextMarkupRule Instance = new PlainTextMarkupRule();
-
-    private PlainTextMarkupRule()
+    [SuppressMessage( "Microsoft.Naming", "CA1702:CompoundWordsShouldBeCasedCorrectly" )]
+    public class PlainTextMarkupRule : MarkupRule
     {
-    }
+        [SuppressMessage( "Microsoft.Security", "CA2104" )]
+        public static readonly PlainTextMarkupRule Instance = new PlainTextMarkupRule();
 
-    public override char Signifier
-    {
-      get { return new char(); }
-    }
+        private PlainTextMarkupRule()
+        {
+        }
 
-    public override BlockClosingAction Render(TemplateParser templateParser)
-    {
-      templateParser.TemplateClassBuilder.AppendOutputLine(templateParser.CurrentInputLine.Text);
+        public override char Signifier
+        {
+            get { return new char(); }
+        }
 
-      return null;
+        public override BlockClosingAction Render( TemplateParser templateParser )
+        {
+            templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.Text );
+
+            return null;
+        }
     }
-  }
 }

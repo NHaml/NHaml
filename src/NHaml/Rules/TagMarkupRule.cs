@@ -6,180 +6,180 @@ using NHaml.Properties;
 
 namespace NHaml.Rules
 {
-  public class TagMarkupRule : MarkupRule
-  {
-    private const string Id = "id";
-    private const string Class = "class";
-
-    private static readonly Regex _tagRegex = new Regex(
-      @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?(\/|=|&=|!=)?(.*)$",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly Regex _idClassesRegex = new Regex(
-      @"(?:(?:\#([-\w]+))|(?:\.([-\w]+)))+",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly Regex _staticAttributesRegex = new Regex(
-      @"^(?:[-:\w]+\s*=\s*""[^""]+""\s*,?\s*)+$",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly Regex _commaStripperRegex = new Regex(
-      @"""\s*,\s*",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly Regex _hyphenCleanerRegex = new Regex(
-      @"\b(http|accept)\-(equiv|charset)(\s*[=:])",
-      RegexOptions.Compiled | RegexOptions.Singleline);
-
-    private static readonly List<string> _whitespaceSensitiveTags
-      = new List<string> {"textarea", "pre"};
-
-    protected virtual string PreprocessLine(InputLine inputLine)
+    public class TagMarkupRule : MarkupRule
     {
-      return inputLine.NormalizedText;
-    }
+        private const string Id = "id";
+        private const string Class = "class";
 
-    public override char Signifier
-    {
-      get { return '%'; }
-    }
+        private static readonly Regex _tagRegex = new Regex(
+          @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?(\/|=|&=|!=)?(.*)$",
+          RegexOptions.Compiled | RegexOptions.Singleline );
 
-    public override BlockClosingAction Render(TemplateParser templateParser)
-    {
-      var match = _tagRegex.Match(PreprocessLine(templateParser.CurrentInputLine));
+        private static readonly Regex _idClassesRegex = new Regex(
+          @"(?:(?:\#([-\w]+))|(?:\.([-\w]+)))+",
+          RegexOptions.Compiled | RegexOptions.Singleline );
 
-      if (!match.Success)
-      {
-        SyntaxException.Throw(templateParser.CurrentInputLine, Resources.ErrorParsingTag,
-          templateParser.CurrentInputLine);
-      }
+        private static readonly Regex _staticAttributesRegex = new Regex(
+          @"^(?:[-:\w]+\s*=\s*""[^""]+""\s*,?\s*)+$",
+          RegexOptions.Compiled | RegexOptions.Singleline );
 
-      var tagName = match.Groups[1].Value.Replace("\\", string.Empty);
+        private static readonly Regex _commaStripperRegex = new Regex(
+          @"""\s*,\s*",
+          RegexOptions.Compiled | RegexOptions.Singleline );
 
-      var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
-      var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
-      var closingTag = "</" + tagName + '>';
+        private static readonly Regex _hyphenCleanerRegex = new Regex(
+          @"\b(http|accept)\-(equiv|charset)(\s*[=:])",
+          RegexOptions.Compiled | RegexOptions.Singleline );
 
-      templateParser.TemplateClassBuilder.AppendOutput(openingTag);
+        private static readonly List<string> _whitespaceSensitiveTags
+          = new List<string> { "textarea", "pre" };
 
-      ParseAndRenderAttributes(templateParser, match);
-
-      var action = match.Groups[6].Value;
-
-      if (string.Equals("/", action)
-        || templateParser.TemplateEngine.IsAutoClosingTag(tagName))
-      {
-        templateParser.TemplateClassBuilder.AppendOutputLine(" />");
-
-        return null;
-      }
-
-      var content = match.Groups[7].Value.Trim();
-
-      if (string.IsNullOrEmpty(content))
-      {
-        templateParser.TemplateClassBuilder.AppendOutputLine(">");
-        closingTag = templateParser.CurrentInputLine.Indent + closingTag;
-      }
-      else
-      {
-        if ((content.Length > 50)
-          || string.Equals("=", action)
-            || string.Equals("&=", action)
-              || string.Equals("!=", action))
+        protected virtual string PreprocessLine( InputLine inputLine )
         {
-          templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
-
-          if (!isWhitespaceSensitive)
-          {
-            templateParser.TemplateClassBuilder.AppendOutput(templateParser.NextIndent);
-          }
-
-          if (string.Equals("=", action))
-          {
-            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive,
-              templateParser.TemplateEngine.EncodeHtml);
-          }
-          else if (string.Equals("&=", action))
-          {
-            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, true);
-          }
-          else if (string.Equals("!=", action))
-          {
-            templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, false);
-          }
-          else
-          {
-            templateParser.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
-          }
-
-          if (!isWhitespaceSensitive)
-          {
-            closingTag = templateParser.CurrentInputLine.Indent + closingTag;
-          }
+            return inputLine.NormalizedText;
         }
-        else
+
+        public override char Signifier
         {
-          templateParser.TemplateClassBuilder.AppendOutput(">" + content);
+            get { return '%'; }
         }
-      }
 
-      return () => templateParser.TemplateClassBuilder.AppendOutputLine(closingTag);
-    }
-
-    private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)
-    {
-      var idAndClasses = tagMatch.Groups[2].Value;
-      var attributesHash = tagMatch.Groups[4].Value.Trim();
-
-      var match = _idClassesRegex.Match(idAndClasses);
-
-      var classes = new List<string>();
-
-      foreach (Capture capture in match.Groups[2].Captures)
-      {
-        classes.Add(capture.Value);
-      }
-
-      if (classes.Count > 0)
-      {
-        attributesHash = PrependAttribute(attributesHash, Class, string.Join(" ", classes.ToArray()));
-      }
-
-      string id = null;
-
-      foreach (Capture capture in match.Groups[1].Captures)
-      {
-        id = capture.Value;
-      }
-
-      if (!string.IsNullOrEmpty(id))
-      {
-        attributesHash = PrependAttribute(attributesHash, Id, id);
-      }
-
-      if (!string.IsNullOrEmpty(attributesHash))
-      {
-        templateParser.TemplateClassBuilder.AppendOutput(" ");
-
-        if (_staticAttributesRegex.IsMatch(attributesHash))
+        public override BlockClosingAction Render( TemplateParser templateParser )
         {
-          templateParser.TemplateClassBuilder.AppendOutput(_commaStripperRegex.Replace(attributesHash, "\" "));
+            var match = _tagRegex.Match( PreprocessLine( templateParser.CurrentInputLine ) );
+
+            if( !match.Success )
+            {
+                SyntaxException.Throw( templateParser.CurrentInputLine, Resources.ErrorParsingTag,
+                  templateParser.CurrentInputLine );
+            }
+
+            var tagName = match.Groups[1].Value.Replace( "\\", string.Empty );
+
+            var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains( tagName );
+            var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
+            var closingTag = "</" + tagName + '>';
+
+            templateParser.TemplateClassBuilder.AppendOutput( openingTag );
+
+            ParseAndRenderAttributes( templateParser, match );
+
+            var action = match.Groups[6].Value;
+
+            if( string.Equals( "/", action )
+              || templateParser.TemplateEngine.IsAutoClosingTag( tagName ) )
+            {
+                templateParser.TemplateClassBuilder.AppendOutputLine( " />" );
+
+                return null;
+            }
+
+            var content = match.Groups[7].Value.Trim();
+
+            if( string.IsNullOrEmpty( content ) )
+            {
+                templateParser.TemplateClassBuilder.AppendOutputLine( ">" );
+                closingTag = templateParser.CurrentInputLine.Indent + closingTag;
+            }
+            else
+            {
+                if( (content.Length > 50)
+                  || string.Equals( "=", action )
+                    || string.Equals( "&=", action )
+                      || string.Equals( "!=", action ) )
+                {
+                    templateParser.TemplateClassBuilder.AppendOutput( ">", !isWhitespaceSensitive );
+
+                    if( !isWhitespaceSensitive )
+                    {
+                        templateParser.TemplateClassBuilder.AppendOutput( templateParser.NextIndent );
+                    }
+
+                    if( string.Equals( "=", action ) )
+                    {
+                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive,
+                          templateParser.TemplateEngine.EncodeHtml );
+                    }
+                    else if( string.Equals( "&=", action ) )
+                    {
+                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive, true );
+                    }
+                    else if( string.Equals( "!=", action ) )
+                    {
+                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive, false );
+                    }
+                    else
+                    {
+                        templateParser.TemplateClassBuilder.AppendOutput( content, !isWhitespaceSensitive );
+                    }
+
+                    if( !isWhitespaceSensitive )
+                    {
+                        closingTag = templateParser.CurrentInputLine.Indent + closingTag;
+                    }
+                }
+                else
+                {
+                    templateParser.TemplateClassBuilder.AppendOutput( ">" + content );
+                }
+            }
+
+            return () => templateParser.TemplateClassBuilder.AppendOutputLine( closingTag );
         }
-        else
+
+        private static void ParseAndRenderAttributes( TemplateParser templateParser, Match tagMatch )
         {
-          var cleanAttributes = _hyphenCleanerRegex.Replace(attributesHash, "$1_$2$3");
+            var idAndClasses = tagMatch.Groups[2].Value;
+            var attributesHash = tagMatch.Groups[4].Value.Trim();
 
-          templateParser.TemplateEngine.TemplateCompiler.RenderAttributes(templateParser, cleanAttributes);
+            var match = _idClassesRegex.Match( idAndClasses );
+
+            var classes = new List<string>();
+
+            foreach( Capture capture in match.Groups[2].Captures )
+            {
+                classes.Add( capture.Value );
+            }
+
+            if( classes.Count > 0 )
+            {
+                attributesHash = PrependAttribute( attributesHash, Class, string.Join( " ", classes.ToArray() ) );
+            }
+
+            string id = null;
+
+            foreach( Capture capture in match.Groups[1].Captures )
+            {
+                id = capture.Value;
+            }
+
+            if( !string.IsNullOrEmpty( id ) )
+            {
+                attributesHash = PrependAttribute( attributesHash, Id, id );
+            }
+
+            if( !string.IsNullOrEmpty( attributesHash ) )
+            {
+                templateParser.TemplateClassBuilder.AppendOutput( " " );
+
+                if( _staticAttributesRegex.IsMatch( attributesHash ) )
+                {
+                    templateParser.TemplateClassBuilder.AppendOutput( _commaStripperRegex.Replace( attributesHash, "\" " ) );
+                }
+                else
+                {
+                    var cleanAttributes = _hyphenCleanerRegex.Replace( attributesHash, "$1_$2$3" );
+
+                    templateParser.TemplateEngine.TemplateCompiler.RenderAttributes( templateParser, cleanAttributes );
+                }
+            }
         }
-      }
-    }
 
-    private static string PrependAttribute(string attributesHash, string name, string value)
-    {
-      var attribute = name + "=\"" + value + "\"";
+        private static string PrependAttribute( string attributesHash, string name, string value )
+        {
+            var attribute = name + "=\"" + value + "\"";
 
-      return string.IsNullOrEmpty(attributesHash) ? attribute : attribute + "," + attributesHash;
+            return string.IsNullOrEmpty( attributesHash ) ? attribute : attribute + "," + attributesHash;
+        }
     }
-  }
 }

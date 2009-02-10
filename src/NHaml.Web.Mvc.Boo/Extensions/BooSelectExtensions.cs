@@ -11,22 +11,22 @@ namespace NHaml.Web.Mvc.Boo.Extensions
     public static class BooSelectExtensions
     {
 
-        public static string DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, Hash htmlAttributes)
+        public static string DropDownList( this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, Hash htmlAttributes )
         {
-            return htmlHelper.DropDownList(name, selectList, HashHelper.ToStringKeyDictinary(htmlAttributes));
+            return htmlHelper.DropDownList( name, selectList, HashHelper.ToStringKeyDictinary( htmlAttributes ) );
         }
 
 
-        public static string DropDownList(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, string optionLabel, Hash htmlAttributes)
+        public static string DropDownList( this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, string optionLabel, Hash htmlAttributes )
         {
-            return htmlHelper.DropDownList(name, selectList, optionLabel, HashHelper.ToStringKeyDictinary(htmlAttributes));
+            return htmlHelper.DropDownList( name, selectList, optionLabel, HashHelper.ToStringKeyDictinary( htmlAttributes ) );
         }
 
 
 
-        public static string ListBox(this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, Hash htmlAttributes)
+        public static string ListBox( this HtmlHelper htmlHelper, string name, IEnumerable<SelectListItem> selectList, Hash htmlAttributes )
         {
-            return htmlHelper.ListBox(name, selectList, HashHelper.ToStringKeyDictinary(htmlAttributes));
+            return htmlHelper.ListBox( name, selectList, HashHelper.ToStringKeyDictinary( htmlAttributes ) );
         }
 
 

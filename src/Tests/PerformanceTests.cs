@@ -8,46 +8,46 @@ using NUnit.Framework;
 
 namespace NHaml.Tests
 {
-  [TestFixture]
-  [Ignore]
-  public class PerformanceTests : TestFixtureBase
-  {
-    [Test]
-    public void CS2AttributeCompilationPerformance()
+    [TestFixture]
+    [Ignore]
+    public class PerformanceTests : TestFixtureBase
     {
-      _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
+        [Test]
+        public void CS2AttributeCompilationPerformance()
+        {
+            _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
 
-      var stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
 
-      stopwatch.Start();
+            stopwatch.Start();
 
-      for (var i = 0; i < 100; i++)
-      {
-        _templateEngine.Compile(TemplatesFolder + @"CSharp2\AttributeEval.haml");
-      }
+            for( var i = 0; i < 100; i++ )
+            {
+                _templateEngine.Compile( TemplatesFolder + @"CSharp2\AttributeEval.haml" );
+            }
 
-      stopwatch.Stop();
+            stopwatch.Stop();
 
-      Console.WriteLine(stopwatch.ElapsedMilliseconds);
+            Console.WriteLine( stopwatch.ElapsedMilliseconds );
+        }
+
+        [Test]
+        public void CS3AttributeCompilationPerformance()
+        {
+            _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
+
+            var stopwatch = new Stopwatch();
+
+            stopwatch.Start();
+
+            for( var i = 0; i < 100; i++ )
+            {
+                _templateEngine.Compile( TemplatesFolder + @"CSharp2\AttributeEval.haml" );
+            }
+
+            stopwatch.Stop();
+
+            Console.WriteLine( stopwatch.ElapsedMilliseconds );
+        }
     }
-
-    [Test]
-    public void CS3AttributeCompilationPerformance()
-    {
-      _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
-
-      var stopwatch = new Stopwatch();
-
-      stopwatch.Start();
-
-      for (var i = 0; i < 100; i++)
-      {
-        _templateEngine.Compile(TemplatesFolder + @"CSharp2\AttributeEval.haml");
-      }
-
-      stopwatch.Stop();
-
-      Console.WriteLine(stopwatch.ElapsedMilliseconds);
-    }
-  }
 }

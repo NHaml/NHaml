@@ -4,89 +4,89 @@ using System.Configuration;
 
 namespace NHaml.Configuration
 {
-  public abstract class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
-    where T : KeyedConfigurationElement, new()
-  {
-    public override ConfigurationElementCollectionType CollectionType
+    public abstract class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
+      where T : KeyedConfigurationElement, new()
     {
-      get { return ConfigurationElementCollectionType.AddRemoveClearMap; }
-    }
-
-    protected override ConfigurationElement CreateNewElement()
-    {
-      return new T();
-    }
-
-    protected override Object GetElementKey(ConfigurationElement element)
-    {
-      return ((T)element).Key;
-    }
-
-    public T this[int index]
-    {
-      get { return (T)BaseGet(index); }
-      set
-      {
-        if (BaseGet(index) != null)
+        public override ConfigurationElementCollectionType CollectionType
         {
-          BaseRemoveAt(index);
+            get { return ConfigurationElementCollectionType.AddRemoveClearMap; }
         }
 
-        BaseAdd(index, value);
-      }
-    }
+        protected override ConfigurationElement CreateNewElement()
+        {
+            return new T();
+        }
 
-    public new T this[string name]
-    {
-      get { return (T)BaseGet(name); }
-    }
+        protected override Object GetElementKey( ConfigurationElement element )
+        {
+            return ((T)element).Key;
+        }
 
-    public new IEnumerator<T> GetEnumerator()
-    {
-      var enumerator = base.GetEnumerator();
+        public T this[int index]
+        {
+            get { return (T)BaseGet( index ); }
+            set
+            {
+                if( BaseGet( index ) != null )
+                {
+                    BaseRemoveAt( index );
+                }
 
-      while (enumerator.MoveNext())
-      {
-        yield return (T)enumerator.Current;
-      }
-    }
+                BaseAdd( index, value );
+            }
+        }
 
-    public int IndexOf(T element)
-    {
-      return BaseIndexOf(element);
-    }
+        public new T this[string name]
+        {
+            get { return (T)BaseGet( name ); }
+        }
 
-    public void Add(T element)
-    {
-      BaseAdd(element);
-    }
+        public new IEnumerator<T> GetEnumerator()
+        {
+            var enumerator = base.GetEnumerator();
 
-    protected override void BaseAdd(ConfigurationElement element)
-    {
-      BaseAdd(element, false);
-    }
+            while( enumerator.MoveNext() )
+            {
+                yield return (T)enumerator.Current;
+            }
+        }
 
-    public void Remove(T element)
-    {
-      if (BaseIndexOf(element) >= 0)
-      {
-        BaseRemove(element.Key);
-      }
-    }
+        public int IndexOf( T element )
+        {
+            return BaseIndexOf( element );
+        }
 
-    public void RemoveAt(int index)
-    {
-      BaseRemoveAt(index);
-    }
+        public void Add( T element )
+        {
+            BaseAdd( element );
+        }
 
-    public void Remove(string name)
-    {
-      BaseRemove(name);
-    }
+        protected override void BaseAdd( ConfigurationElement element )
+        {
+            BaseAdd( element, false );
+        }
 
-    public void Clear()
-    {
-      BaseClear();
+        public void Remove( T element )
+        {
+            if( BaseIndexOf( element ) >= 0 )
+            {
+                BaseRemove( element.Key );
+            }
+        }
+
+        public void RemoveAt( int index )
+        {
+            BaseRemoveAt( index );
+        }
+
+        public void Remove( string name )
+        {
+            BaseRemove( name );
+        }
+
+        public void Clear()
+        {
+            BaseClear();
+        }
     }
-  }
 }

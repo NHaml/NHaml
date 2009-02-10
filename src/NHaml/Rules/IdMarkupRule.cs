@@ -1,15 +1,15 @@
 namespace NHaml.Rules
 {
-  public class IdMarkupRule : TagMarkupRule
-  {
-    public override char Signifier
+    public class IdMarkupRule : TagMarkupRule
     {
-      get { return '#'; }
-    }
+        public override char Signifier
+        {
+            get { return '#'; }
+        }
 
-    protected override string PreprocessLine(InputLine inputLine)
-    {
-      return "div#" + inputLine.NormalizedText;
+        protected override string PreprocessLine( InputLine inputLine )
+        {
+            return "div#" + inputLine.NormalizedText;
+        }
     }
-  }
 }

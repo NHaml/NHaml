@@ -5,18 +5,18 @@ using IronRuby.Builtins;
 
 namespace NHaml.Web.Mvc.IronRuby.Helpers
 {
-  public class NHamlMvcIronRubyUrlHelper : UrlHelper
-  {
-    // because IronRuby CLS method resolution is still flakey.
-
-    public NHamlMvcIronRubyUrlHelper(RequestContext context)
-      : base(context)
+    public class NHamlMvcIronRubyUrlHelper : UrlHelper
     {
-    }
+        // because IronRuby CLS method resolution is still flakey.
 
-    public string Action(Hash values)
-    {
-      return RouteUrl(values.ToRouteDictionary());
+        public NHamlMvcIronRubyUrlHelper( RequestContext context )
+            : base( context )
+        {
+        }
+
+        public string Action( Hash values )
+        {
+            return RouteUrl( values.ToRouteDictionary() );
+        }
     }
-  }
 }

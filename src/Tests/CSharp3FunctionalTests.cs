@@ -4,17 +4,17 @@ using NUnit.Framework;
 
 namespace NHaml.Tests
 {
-  [TestFixture]
-  public class CSharp3FunctionalTests : FunctionalTestFixture
-  {
-    public override void SetUp()
+    [TestFixture]
+    public class CSharp3FunctionalTests : FunctionalTestFixture
     {
-      base.SetUp();
+        public override void SetUp()
+        {
+            base.SetUp();
 
-      _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
+            _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
 
-      _primaryTemplatesFolder = "CSharp3";
-      _secondaryTemplatesFolder = "CSharp2";
+            _primaryTemplatesFolder = "CSharp3";
+            _secondaryTemplatesFolder = "CSharp2";
+        }
     }
-  }
 }

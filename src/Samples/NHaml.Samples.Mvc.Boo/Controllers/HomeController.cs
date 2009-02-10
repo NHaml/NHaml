@@ -2,16 +2,16 @@
 
 namespace NHaml.Samples.Mvc.Boo.Controllers
 {
-  public class HomeController : Controller
-  {
-    public ActionResult Index()
+    public class HomeController : Controller
     {
-      return View("Index");
-    }
+        public ActionResult Index()
+        {
+            return View( "Index" );
+        }
 
-    public ActionResult About()
-    {
-      return View("About");
+        public ActionResult About()
+        {
+            return View( "About" );
+        }
     }
-  }
 }
