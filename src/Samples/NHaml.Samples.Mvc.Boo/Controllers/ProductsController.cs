@@ -40,7 +40,7 @@ namespace NHaml.Samples.Mvc.Boo.Controllers
         public ActionResult Create()
         {
             var product = new Product();
-            UpdateModel( product, Request.Form.AllKeys );
+            UpdateModel( product );
 
             northwind.AddProduct( product );
             northwind.SubmitChanges();
@@ -67,7 +67,7 @@ namespace NHaml.Samples.Mvc.Boo.Controllers
         public ActionResult Update( int id )
         {
             var product = northwind.GetProductById( id );
-            UpdateModel( product, Request.Form.AllKeys );
+            UpdateModel( product );
 
             northwind.SubmitChanges();
 
