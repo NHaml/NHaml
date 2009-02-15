@@ -24,13 +24,13 @@ namespace NHaml.Compilers.Boo
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            string templateSource = templateParser.TemplateClassBuilder.Build();
+            var templateSource = templateParser.TemplateClassBuilder.Build();
 
             //Console.WriteLine(templateSource);
 
             var typeBuilder = new BooTemplateTypeBuilder( templateParser.TemplateEngine );
 
-            Type templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
+            var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
 
             if( templateType == null )
             {
@@ -43,9 +43,9 @@ namespace NHaml.Compilers.Boo
 
         public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
         {
-            string code = templateParser.CurrentInputLine.NormalizedText;
+            var code = templateParser.CurrentInputLine.NormalizedText;
 
-            Match lambdaMatch = LambdaRegex.Match( code );
+            var lambdaMatch = LambdaRegex.Match( code );
 
             if( !lambdaMatch.Success )
             {
@@ -62,7 +62,7 @@ namespace NHaml.Compilers.Boo
             }
 
             var booTemplateClassBuilder = (BooTemplateClassBuilder)templateParser.TemplateClassBuilder;
-            int depth = templateParser.CurrentInputLine.IndentCount;
+            var depth = templateParser.CurrentInputLine.IndentCount;
 
             booTemplateClassBuilder.AppendChangeOutputDepth( depth, true );
             booTemplateClassBuilder.AppendSilentCode( code, false );

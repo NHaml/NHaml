@@ -28,7 +28,7 @@ namespace NHaml.Compilers.Boo
                 return;
             }
 
-            string method = newLine ? "WriteLine" : "Write";
+            var method = newLine ? "WriteLine" : "Write";
 
             if( !_disableOutputIndentationShrink && Depth > 0 )
             {
@@ -95,7 +95,7 @@ namespace NHaml.Compilers.Boo
 
         public override void AppendAttributeCode( string name, string code )
         {
-            string varName = "a" + AttributeCount++;
+            var varName = "a" + AttributeCount++;
 
             Output.AppendLine( IndentString + varName + "=Convert.ToString(" + code + ")" );
             Output.AppendLine( IndentString + "unless string.IsNullOrEmpty(" + varName + "):" );

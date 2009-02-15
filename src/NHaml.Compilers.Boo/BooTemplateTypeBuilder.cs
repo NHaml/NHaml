@@ -44,7 +44,7 @@ namespace NHaml.Compilers.Boo
             _booCompiler.Parameters.Input.Clear();
             _booCompiler.Parameters.Input.Add( new StringInput( typeName, Source ) );
             _booCompiler.Parameters.Pipeline = new CompileToMemory();
-            CompilerContext context = _booCompiler.Run();
+            var context = _booCompiler.Run();
 
             if( context.Errors.Count == 0 )
             {
@@ -52,7 +52,7 @@ namespace NHaml.Compilers.Boo
             }
 
             CompilerResults.Errors.Clear();
-            foreach( CompilerError error in context.Errors )
+            foreach(var error in context.Errors )
             {
                 CompilerResults.Errors.Add( new System.CodeDom.Compiler.CompilerError(
                   error.LexicalInfo.FileName ?? String.Empty,
@@ -68,9 +68,9 @@ namespace NHaml.Compilers.Boo
         [SuppressMessage( "Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods" )]
         private void AddReferences()
         {
-            foreach( string assemblyFile in _templateEngine.References )
+            foreach(var assemblyFile in _templateEngine.References )
             {
-                Assembly assembly = Assembly.LoadFrom( assemblyFile );
+                var assembly = Assembly.LoadFrom( assemblyFile );
 
                 _booCompiler.Parameters.References.Add( assembly );
             }
@@ -80,7 +80,7 @@ namespace NHaml.Compilers.Boo
         {
             var sourceBuilder = new StringBuilder();
 
-            foreach( string usingStatement in _templateEngine.Usings )
+            foreach(var usingStatement in _templateEngine.Usings )
             {
                 sourceBuilder.AppendLine( "import " + usingStatement );
             }
