@@ -23,7 +23,7 @@ namespace NHaml.Xps
                 flowDocumentReader.Document = (FlowDocument)document;
 
             }
-            else if (document is FixedDocument || document is FixedDocumentSequence)
+            else if (document is IDocumentPaginatorSource)
             {
                 flowDocumentReader.Visibility = Visibility.Hidden;
                 documentViewer.Document = (IDocumentPaginatorSource)document;
