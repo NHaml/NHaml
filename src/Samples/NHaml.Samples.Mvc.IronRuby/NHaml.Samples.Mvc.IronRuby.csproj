@@ -148,6 +148,6 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>copy /Y $(ProjectDir)App_Data\Northwind-Template.sdf $(ProjectDir)App_Data\Northwind.sdf</PreBuildEvent>
+    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" </PreBuildEvent>
   </PropertyGroup>
 </Project>
