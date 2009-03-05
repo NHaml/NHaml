@@ -1,4 +1,6 @@
+#if !NOT_CLSCOMPLIANT
 using System;
+#endif
 using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;

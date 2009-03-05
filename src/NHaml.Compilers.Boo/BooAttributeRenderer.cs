@@ -18,9 +18,9 @@ namespace NHaml.Compilers.Boo
         {
             var errorList = new List<RecognitionException>();
 
-            Expression expression = BooParser.ParseExpression( 2, "attributes", "{" + attributes + "}", errorList.Add );
+            var expression = BooParser.ParseExpression( 2, "attributes", "{" + attributes + "}", errorList.Add );
 
-            foreach( RecognitionException exception in errorList )
+            foreach( var exception in errorList )
             {
                 SyntaxException.Throw( templateParser.CurrentInputLine,
                   Resources.AttributesParse_BooParserError, exception.Message );
@@ -63,19 +63,19 @@ namespace NHaml.Compilers.Boo
                   Resources.AttributesParse_StatementGreaterThenOne );
             }
 
-            Statement statement = blockExpression.Body.Statements[0];
+            var statement = blockExpression.Body.Statements[0];
 
             var expressionStatement = statement as ExpressionStatement;
 
             if( expressionStatement == null )
             {
-                string type = statement == null ? "null" : statement.GetType().FullName;
+                var type = statement == null ? "null" : statement.GetType().FullName;
 
                 SyntaxException.Throw( templateParser.CurrentInputLine,
                   Utility.FormatCurrentCulture( Resources.AttributesParse_ExpressionStatementExpected, type ) );
             }
 
-            Expression expression = expressionStatement != null ? expressionStatement.Expression : null;
+            var expression = expressionStatement != null ? expressionStatement.Expression : null;
 
             var binaryExpression = expression as BinaryExpression;
 
@@ -95,7 +95,7 @@ namespace NHaml.Compilers.Boo
                 return;
             }
 
-            string statementType = statement == null ? "null" : statement.GetType().FullName;
+            var statementType = statement == null ? "null" : statement.GetType().FullName;
 
             SyntaxException.Throw( templateParser.CurrentInputLine,
               Utility.FormatCurrentCulture(
@@ -104,8 +104,8 @@ namespace NHaml.Compilers.Boo
 
         private static void Render( TemplateParser templateParser, ListLiteralExpression listLiteralExpression )
         {
-            bool first = true;
-            foreach( Expression item in listLiteralExpression.Items )
+            var first = true;
+            foreach( var item in listLiteralExpression.Items )
             {
                 var binaryExpression = item as BinaryExpression;
 
@@ -116,7 +116,7 @@ namespace NHaml.Compilers.Boo
                     return;
                 }
 
-                string statementType = item == null ? "null" : item.GetType().FullName;
+                var statementType = item == null ? "null" : item.GetType().FullName;
 
                 SyntaxException.Throw( templateParser.CurrentInputLine,
                   Utility.FormatCurrentCulture(
@@ -128,8 +128,8 @@ namespace NHaml.Compilers.Boo
 
         private static void Render( TemplateParser templateParser, HashLiteralExpression hashExpression )
         {
-            bool first = true;
-            foreach( ExpressionPair item in hashExpression.Items )
+            var first = true;
+            foreach( var item in hashExpression.Items )
             {
                 AppendAttribute( templateParser, item.First, item.Second, !first );
                 first = false;
@@ -154,7 +154,7 @@ namespace NHaml.Compilers.Boo
                 }
                 else
                 {
-                    string message = Utility.FormatCurrentCulture(
+                    var message = Utility.FormatCurrentCulture(
                       Resources.AttributesParse_UnexpectedAttributeExpression, key.GetType().FullName );
 
                     SyntaxException.Throw( templateParser.CurrentInputLine, message );
