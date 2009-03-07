@@ -11,18 +11,16 @@ namespace NHaml.Samples.MonoRail.Controllers
 
         //
         // Products/Category/1
-
         public void Category(int id)
         {
-            var category = northwind.GetCategoryById( id );
+            var category = northwind.GetCategoryById(id);
 
             PropertyBag["category"] = category;
-        base.RenderView("List");
+            base.RenderView("List");
         }
 
         //
         // Products/New
-
         public void New()
         {
             //var viewData = new ProductsNewViewData
@@ -53,12 +51,12 @@ namespace NHaml.Samples.MonoRail.Controllers
 
         public void Edit( int id )
         {
-            //var viewData = new ProductsEditViewData { Product = northwind.GetProductById( id ) };
+            var viewData = new ProductsEditViewData { Product = northwind.GetProductById(id) };
 
-            //viewData.Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID );
-            //viewData.Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID );
+            viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID);
+            viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID);
 
-            //return View( "Edit", viewData );
+            return View("Edit", viewData);
         }
 
         //

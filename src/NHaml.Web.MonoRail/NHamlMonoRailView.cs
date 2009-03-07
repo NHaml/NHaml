@@ -23,7 +23,7 @@ namespace NHaml.Web.MonoRail
 
             CreateHelpers(engineContext);
 
-            Render( writer );
+            Render(writer);
         }
 
         
