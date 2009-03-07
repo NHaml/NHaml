@@ -51,12 +51,12 @@ namespace NHaml.Samples.MonoRail.Controllers
 
         public void Edit( int id )
         {
-            var viewData = new ProductsEditViewData { Product = northwind.GetProductById(id) };
+            //var viewData = new ProductsEditViewData { Product = northwind.GetProductById(id) };
 
-            viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID);
-            viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID);
+            //viewData.Categories = new SelectList(northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID);
+            //viewData.Suppliers = new SelectList(northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID);
 
-            return View("Edit", viewData);
+            //return View("Edit", viewData);
         }
 
         //
