@@ -81,7 +81,7 @@ namespace NHaml.Compilers.CSharp2
             var varName = "a" + AttributeCount++;
 
             AppendSilentCode( "string " + varName + "=Convert.ToString(" + code + ")", true );
-            AppendSilentCode( "if (!string.IsNullOrEmpty(" + varName + ")){", false );
+            AppendSilentCode( "if (" + varName + "!=null){", false );
             AppendOutput( name + "=\"" );
             Output.AppendLine( "textWriter.Write(" + varName + ");" );
             AppendOutput( "\"" );

@@ -98,7 +98,7 @@ namespace NHaml.Compilers.Boo
             var varName = "a" + AttributeCount++;
 
             Output.AppendLine( IndentString + varName + "=Convert.ToString(" + code + ")" );
-            Output.AppendLine( IndentString + "unless string.IsNullOrEmpty(" + varName + "):" );
+            Output.AppendLine( IndentString + "unless " + varName + " == null:" );
             BeginCodeBlock();
             AppendOutput( name + "=\"" );
             AppendSilentCode( "textWriter.Write(" + varName + ")", true );

@@ -56,12 +56,13 @@ namespace NHaml.Compilers.CSharp3
         {
             var value = propertyDescriptor.GetValue( obj );
             var name = propertyDescriptor.Name.Replace( '_', '-' );
-
-            var invariantValue = Convert.ToString( value, CultureInfo.InvariantCulture );
+            
             var invariantName = Convert.ToString( name, CultureInfo.InvariantCulture );
 
-            if( !string.IsNullOrEmpty( invariantValue ) )
+            if( value != null )
             {
+                var invariantValue = Convert.ToString( value, CultureInfo.InvariantCulture );
+
                 attributes.Append( separator + invariantName + "=\"" + invariantValue + "\"" );
             }
         }
