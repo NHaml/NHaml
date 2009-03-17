@@ -39,6 +39,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail", "NHaml
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.MonoRail", "Samples\NHaml.Samples.MonoRail\NHaml.Samples.MonoRail.csproj", "{F461BA12-81DF-4027-97B0-432473217259}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Conversion.GUI", "NHaml.Conversion.GUI\NHaml.Conversion.GUI.csproj", "{4921904C-453F-49C6-B2C4-58688C3E720B}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -101,6 +103,10 @@ Global
 		{F461BA12-81DF-4027-97B0-432473217259}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4921904C-453F-49C6-B2C4-58688C3E720B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4921904C-453F-49C6-B2C4-58688C3E720B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4921904C-453F-49C6-B2C4-58688C3E720B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4921904C-453F-49C6-B2C4-58688C3E720B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -50,21 +50,21 @@ namespace NHaml.Tests
 
         protected void AssertRender( string templateName, string layoutName, string expectedName )
         {
-            var templatePath = TemplatesFolder + _primaryTemplatesFolder + "\\" + templateName + ".haml";
+            var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
 
             if( !File.Exists( templatePath ) )
             {
-                templatePath = TemplatesFolder + _secondaryTemplatesFolder + "\\" + templateName + ".haml";
+                templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
             }
 
             if( !File.Exists( templatePath ) )
             {
-                templatePath = TemplatesFolder + templateName + ".haml";
+                templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
             }
 
             if( !string.IsNullOrEmpty( layoutName ) )
             {
-                layoutName = TemplatesFolder + layoutName + ".haml";
+                layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
             }
 
             var compiledTemplate = _templateEngine.Compile( templatePath, layoutName );

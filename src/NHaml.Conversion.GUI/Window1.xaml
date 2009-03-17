@@ -1,0 +1,27 @@
+﻿<Window x:Class="NHaml.Conversion.GUI.Window1"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    Title="NHaml Converter" Height="451" Width="665">
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="5*" />
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="1*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <WrapPanel Grid.ColumnSpan="2">
+            <Button Click="Convert">Convert</Button>
+        </WrapPanel>
+        <TextBlock Grid.Row="1">Html</TextBlock>
+        <TextBlock Grid.Row="1" Grid.Column="2">NHaml</TextBlock>
+        <TextBox Grid.Row="2" AcceptsReturn="True" AcceptsTab="True" Name="htmlTextBox" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" />
+        <TextBox Grid.Row="2" Grid.Column="2" IsReadOnly="True" Name="nhamlTextBox" VerticalScrollBarVisibility="Visible" HorizontalScrollBarVisibility="Visible" />
+        <TextBlock Grid.Row="3">Errors</TextBlock>
+        <TextBox Grid.Row="4" IsReadOnly="True" Grid.ColumnSpan="2" Name="errorsTextBox" />
+    </Grid>
+</Window>
