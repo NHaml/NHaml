@@ -95,6 +95,12 @@
     <None Include="Expected\4Spaces.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Expected\Class.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\Id.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Expected\Mvc\HelperRendersPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -246,6 +252,12 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\ApplicationSimple.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Class.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\Id.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\GenericBaseClassAnon.haml">

@@ -11,7 +11,7 @@ namespace NHaml.Conversion.GUI
         private int indent;
         TextWriter textWriter;
         private bool isFirstElement = true;
-        private bool isInsidePre = false;
+        private bool isInsidePre;
         public string IndentString{ get; set;}
 
 
@@ -169,11 +169,24 @@ namespace NHaml.Conversion.GUI
             }
             if (navigator.LocalName == "div")
             {
-                textWriter.Write("#");
                 var temp = navigator.CreateNavigator();
                 if (temp.MoveToAttribute("id", null))
                 {
+                    textWriter.Write("#");
                     textWriter.Write(temp.Value);
+                }
+                else if (temp.MoveToAttribute("class", null))
+                {
+                    var strings = temp.Value.Split(new []{' '}, StringSplitOptions.RemoveEmptyEntries);
+                    foreach (var s in strings)
+                    {
+                        textWriter.Write(".");
+                        textWriter.Write(s);
+                    }
+                }
+                else
+                {
+                    textWriter.Write("%div");       
                 }
             }
             else if (navigator.Prefix == string.Empty)

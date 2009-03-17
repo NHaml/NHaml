@@ -42,6 +42,25 @@ namespace NHaml.Tests
         }
      
         [Test]
+        public void ClassTest()
+        {
+            var importer = new Importer
+                               {
+                                   IncludeDocType = false,
+                               };
+            RunTest(importer, "Class");
+        }
+        [Test]
+        public void IdTest()
+        {
+            var importer = new Importer
+                               {
+                                   IncludeDocType = false,
+                               };
+            RunTest(importer, "Id");
+        }
+     
+        [Test]
         public void TabsTest()
         {
             var importer = new Importer
