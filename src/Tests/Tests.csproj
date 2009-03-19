@@ -465,9 +465,9 @@
       <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
       <Name>NHaml.Compilers.IronRuby</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHaml.Conversion.GUI\NHaml.Conversion.GUI.csproj">
+    <ProjectReference Include="..\NHaml.Generator.Wpf\NHaml.Generator.Wpf.csproj">
       <Project>{4921904C-453F-49C6-B2C4-58688C3E720B}</Project>
-      <Name>NHaml.Conversion.GUI</Name>
+      <Name>NHaml.Generator.Wpf</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>

@@ -1,5 +1,4 @@
 ﻿using System.IO;
-using NHaml.Conversion.GUI;
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -10,14 +9,14 @@ namespace NHaml.Tests
         [Test]
         public void AutoCloseTest()
         {
-            var importer = new Importer {IncludeDocType = false};
+            var importer = new Generator.Wpf.Generator {IncludeDocType = false};
             RunTest(importer, "AutoClose");
         }   
 
         [Test]
         public void FourSpacesTest()
         {
-            var importer = new Importer
+            var importer = new Generator.Wpf.Generator
                                {
                                    IndentString = "    "
                                };
@@ -27,14 +26,14 @@ namespace NHaml.Tests
         [Test]
         public void ReferenceExample1Test()
         {
-            var importer = new Importer { IncludeDocType = false };
+            var importer = new Generator.Wpf.Generator { IncludeDocType = false };
             RunTest(importer, "ReferenceExample1");
         }
      
         [Test]
         public void ReferenceExample2Test()
         {
-            var importer = new Importer
+            var importer = new Generator.Wpf.Generator
                                {
                                    IncludeDocType = false,
                                };
@@ -44,7 +43,7 @@ namespace NHaml.Tests
         [Test]
         public void ClassTest()
         {
-            var importer = new Importer
+            var importer = new Generator.Wpf.Generator
                                {
                                    IncludeDocType = false,
                                };
@@ -53,7 +52,7 @@ namespace NHaml.Tests
         [Test]
         public void IdTest()
         {
-            var importer = new Importer
+            var importer = new Generator.Wpf.Generator
                                {
                                    IncludeDocType = false,
                                };
@@ -63,7 +62,7 @@ namespace NHaml.Tests
         [Test]
         public void TabsTest()
         {
-            var importer = new Importer
+            var importer = new Generator.Wpf.Generator
                                {
                                    IndentString = "\t"
                                };
@@ -74,7 +73,7 @@ namespace NHaml.Tests
         [Test]
         public void VeryBasicTest()
         {
-            var importer = new Importer();
+            var importer = new Generator.Wpf.Generator();
             RunTest(importer, "VeryBasic");
         }
 
@@ -82,11 +81,11 @@ namespace NHaml.Tests
         [Test]
         public void WhitespaceSensitiveTest()
         {
-            var importer = new Importer {IncludeDocType = false};
+            var importer = new Generator.Wpf.Generator {IncludeDocType = false};
             RunTest(importer, "WhitespaceSensitive");
         }
 
-        private static void RunTest(Importer importer, string file)
+        private static void RunTest(Generator.Wpf.Generator generator, string file)
         {
             string actual;
             using (var memoryStream = new MemoryStream())
@@ -95,7 +94,7 @@ namespace NHaml.Tests
                 {
                     using (var reader = File.OpenText("Expected/" + file + ".xhtml"))
                     {
-                        importer.Import(reader, textWriter);
+                        generator.Import(reader, textWriter);
                     }
 
                     memoryStream.Position = 0;

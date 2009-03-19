@@ -39,7 +39,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail", "NHaml
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.MonoRail", "Samples\NHaml.Samples.MonoRail\NHaml.Samples.MonoRail.csproj", "{F461BA12-81DF-4027-97B0-432473217259}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Conversion.GUI", "NHaml.Conversion.GUI\NHaml.Conversion.GUI.csproj", "{4921904C-453F-49C6-B2C4-58688C3E720B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Generator.Wpf", "NHaml.Generator.Wpf\NHaml.Generator.Wpf.csproj", "{4921904C-453F-49C6-B2C4-58688C3E720B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
