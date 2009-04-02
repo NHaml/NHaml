@@ -12,20 +12,17 @@ namespace NHaml.Web.Mvc.Boo.Extensions
     {
         public static String ValidationMessage( this HtmlHelper htmlHelper, String modelName, Hash htmlAttributes )
         {
-            return ValidationExtensions.ValidationMessage( htmlHelper, modelName, HashHelper.ToStringKeyDictinary( htmlAttributes ) );
+            return htmlHelper.ValidationMessage(modelName, HashHelper.ToStringKeyDictinary( htmlAttributes ));
         }
 
         public static String ValidationMessage( this HtmlHelper htmlHelper, String modelName, String validationMessage, Hash htmlAttributes )
         {
-            return ValidationExtensions.ValidationMessage( htmlHelper,
-                                                           modelName,
-                                                           validationMessage,
-                                                           HashHelper.ToStringKeyDictinary( htmlAttributes ) );
+            return htmlHelper.ValidationMessage(modelName, validationMessage, HashHelper.ToStringKeyDictinary( htmlAttributes ));
         }
 
         public static String ValidationSummary( this HtmlHelper htmlHelper, Hash htmlAttributes )
         {
-            return ValidationExtensions.ValidationSummary( htmlHelper, HashHelper.ToStringKeyDictinary( htmlAttributes ) );
+            return htmlHelper.ValidationSummary("Validation errors occured.", HashHelper.ToStringKeyDictinary(htmlAttributes));
         }
     }
 }
