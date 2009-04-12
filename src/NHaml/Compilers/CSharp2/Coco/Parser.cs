@@ -3995,8 +3995,7 @@ namespace NHaml.Compilers.CSharp2.Coco
 
         public void Parse()
         {
-            la = new Token();
-            la.val = "";
+            la = new Token {val = ""};
             Get();
             CS2();
 

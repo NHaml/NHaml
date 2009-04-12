@@ -16,9 +16,10 @@ namespace NHaml.Compilers.CSharp2
           @"^(.+)(\(.*\))\s*=>\s*$",
           RegexOptions.Compiled | RegexOptions.Singleline );
 
+
         private static readonly Regex _keywordEscaperRegex = new Regex(
-          @"((^|\s)(class\s*=))|((^|\s)(for\s*=))",
-          RegexOptions.Compiled | RegexOptions.Singleline );
+              @"((^|\s|,)(class\s*=))|((^|\s|,)(for\s*=))",
+              RegexOptions.Compiled | RegexOptions.Singleline);
 
         public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
         {
@@ -77,7 +78,7 @@ namespace NHaml.Compilers.CSharp2
 
         public void RenderAttributes( TemplateParser templateParser, string attributes )
         {
-            attributes = _keywordEscaperRegex.Replace( attributes, "@$3$6" );
+            attributes = _keywordEscaperRegex.Replace(attributes, "$2$5@$3$6");
 
             RenderAttributesCore( templateParser, attributes );
         }

@@ -722,10 +722,12 @@ namespace NHaml.Compilers.CSharp2.Coco
             }
 
             var apx = 0;
-            t = new Token();
-            t.pos = pos;
-            t.col = col;
-            t.line = line;
+            t = new Token
+                    {
+                        pos = pos,
+                        col = col,
+                        line = line
+                    };
             int state;
             if( start.ContainsKey( ch ) )
             {
