@@ -110,13 +110,6 @@
   <ItemGroup>
     <Compile Include="Controllers\ProductsController.vb" />
     <Compile Include="Controllers\HomeController.vb" />
-    <Compile Include="Default.aspx.designer.vb">
-      <DependentUpon>Default.aspx</DependentUpon>
-    </Compile>
-    <Compile Include="Default.aspx.vb">
-      <DependentUpon>Default.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
     <Compile Include="Global.asax.vb">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -177,4 +170,7 @@
       </FlavorProperties>
     </VisualStudio>
   </ProjectExtensions>
+  <PropertyGroup>
+    <PostBuildEvent>del $(TargetDir)Microsoft.Scripting.ExtensionAttribute.*</PostBuildEvent>
+  </PropertyGroup>
 </Project>

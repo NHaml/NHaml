@@ -1,16 +1,7 @@
-﻿<%@ Page Language="vb" AutoEventWireup="false" CodeBehind="Default.aspx.vb" Inherits="NHaml.Samples.Mvc.VisualBasic._Default" %>
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-
-<html xmlns="http://www.w3.org/1999/xhtml" >
-<head runat="server">
-    <title></title>
-</head>
-<body>
-    <form id="form1" runat="server">
-    <div>
-    
-    </div>
-    </form>
-</body>
-</html>
+﻿<%@ Page Language="vb" %>
+<script runat="server">
+    Protected Sub Page_Load(ByVal sender As Object, ByVal e As EventArgs)
+        Response.Redirect("~/Home.mvc/Index")
+    End Sub
+</script>
+<!-- Please do not delete this file.  It is used to ensure that ASP.NET MVC is activated by IIS when a user makes a "/" request to the server. -->
