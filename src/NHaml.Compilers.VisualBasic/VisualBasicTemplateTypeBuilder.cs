@@ -23,7 +23,7 @@ namespace NHaml.Compilers.VisualBasic
             _templateEngine = templateEngine;
             _templateEngine.AddReference(GetType().Assembly);
 
-            ProviderOptions.Add("CompilerVersion", "v2.0");
+            ProviderOptions.Add("CompilerVersion", "v3.5");
 
             _compilerParameters.GenerateInMemory = true;
             _compilerParameters.IncludeDebugInformation = false;
