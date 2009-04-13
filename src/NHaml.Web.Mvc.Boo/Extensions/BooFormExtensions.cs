@@ -12,7 +12,7 @@ namespace NHaml.Web.Mvc.Boo.Extensions
     {
         public static MvcForm BeginForm( this HtmlHelper htmlHelper, Hash values )
         {
-            return FormExtensions.BeginForm( htmlHelper, HashHelper.ToRouteValueDictionary( values ) );
+            return htmlHelper.BeginForm(HashHelper.ToRouteValueDictionary( values ));
         }
 
         public static MvcForm BeginForm( this HtmlHelper htmlHelper,
@@ -20,10 +20,7 @@ namespace NHaml.Web.Mvc.Boo.Extensions
                                          String controllerName,
                                          Hash values )
         {
-            return FormExtensions.BeginForm( htmlHelper,
-                                             actionName,
-                                             controllerName,
-                                             HashHelper.ToRouteValueDictionary( values ) );
+            return htmlHelper.BeginForm(actionName, controllerName, HashHelper.ToRouteValueDictionary( values ));
         }
 
         public static MvcForm BeginForm( this HtmlHelper htmlHelper,
@@ -32,11 +29,7 @@ namespace NHaml.Web.Mvc.Boo.Extensions
                                          Hash values,
                                          FormMethod method )
         {
-            return FormExtensions.BeginForm( htmlHelper,
-                                             actionName,
-                                             controllerName,
-                                             HashHelper.ToRouteValueDictionary( values ),
-                                             method );
+            return htmlHelper.BeginForm(actionName, controllerName, HashHelper.ToRouteValueDictionary( values ), method);
         }
 
         public static MvcForm BeginForm( this HtmlHelper htmlHelper,
@@ -45,11 +38,7 @@ namespace NHaml.Web.Mvc.Boo.Extensions
                                          FormMethod method,
                                          Hash htmlAttributes )
         {
-            return FormExtensions.BeginForm( htmlHelper,
-                                             actionName,
-                                             controllerName,
-                                             method,
-                                             HashHelper.ToStringKeyDictinary( htmlAttributes ) );
+            return htmlHelper.BeginForm(actionName, controllerName, method, HashHelper.ToStringKeyDictinary( htmlAttributes ));
         }
 
         public static MvcForm BeginForm( this HtmlHelper htmlHelper,
@@ -59,12 +48,7 @@ namespace NHaml.Web.Mvc.Boo.Extensions
                                          FormMethod method,
                                          Hash htmlAttributes )
         {
-            return FormExtensions.BeginForm( htmlHelper,
-                                             actionName,
-                                             controllerName,
-                                             HashHelper.ToRouteValueDictionary( values ),
-                                             method,
-                                             HashHelper.ToStringKeyDictinary( htmlAttributes ) );
+            return htmlHelper.BeginForm(actionName, controllerName, HashHelper.ToRouteValueDictionary( values ), method, HashHelper.ToStringKeyDictinary( htmlAttributes ));
         }
     }
 }
