@@ -257,6 +257,42 @@
     <None Include="Templates\Class.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\VisualBasic\AttributeEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\Conditionals.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\LambdaEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\LoopEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\MultiLine.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\NullAttributes.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\Partials.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\Preamble.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\SilentEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\SimpleEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\SwitchEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\VisualBasic\Welcome.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\Id.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -433,6 +469,7 @@
     <Compile Include="BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="VisualBasicFunctionalTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="MvcTests.cs" />
     <Compile Include="IronRubyFunctionalTests.cs" />
@@ -464,6 +501,10 @@
     <ProjectReference Include="..\NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj">
       <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
       <Name>NHaml.Compilers.IronRuby</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHaml.Compilers.VisualBasic\NHaml.Compilers.VisualBasic.csproj">
+      <Project>{4184100B-81EB-4FCA-9A15-250B6BEFBC4A}</Project>
+      <Name>NHaml.Compilers.VisualBasic</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml.Generator.Wpf\NHaml.Generator.Wpf.csproj">
       <Project>{4921904C-453F-49C6-B2C4-58688C3E720B}</Project>
