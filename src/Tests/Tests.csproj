@@ -433,7 +433,6 @@
     <Compile Include="BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Class1.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="MvcTests.cs" />
     <Compile Include="IronRubyFunctionalTests.cs" />
