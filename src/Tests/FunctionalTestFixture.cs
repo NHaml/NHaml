@@ -194,6 +194,17 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public void AttributeNamespaceAndDynamic()
+        {
+            AssertRender("AttributeNamespaceAndDynamic");
+        }
+        [Test]
+        public void IdAndDynamic()
+        {
+            AssertRender("IdAndDynamic");
+        }
+
+        [Test]
         public void SimpleEval()
         {
             AssertRender("SimpleEval");

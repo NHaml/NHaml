@@ -10,7 +10,7 @@ namespace NHaml.Compilers.CSharp2.Coco
     [GeneratedCode( "Coco", "1.0.0.0" )]
     [DebuggerNonUserCode]
     [CompilerGenerated]
-    public class Parser
+    internal class Parser
     {
         private const int _EOF = 0;
         private const int _ident = 1;
@@ -4328,7 +4328,7 @@ namespace NHaml.Compilers.CSharp2.Coco
     [GeneratedCode( "Coco", "1.0.0.0" )]
     [DebuggerNonUserCode]
     [CompilerGenerated]
-    public class Errors
+    internal class Errors
     {
         public int count; // number of errors detected
         //public System.IO.TextWriter errorStream = Console.Out;   // error messages go to this stream

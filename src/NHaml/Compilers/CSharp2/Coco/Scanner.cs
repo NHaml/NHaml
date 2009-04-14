@@ -10,7 +10,7 @@ namespace NHaml.Compilers.CSharp2.Coco
     [GeneratedCode( "Coco", "1.0.0.0" )]
     [DebuggerNonUserCode]
     [CompilerGenerated]
-    public class Token
+    internal class Token
     {
         public int kind; // token kind
         public int pos; // token position in the source text (starting at 0)
@@ -26,7 +26,7 @@ namespace NHaml.Compilers.CSharp2.Coco
     [GeneratedCode( "Coco", "1.0.0.0" )]
     [DebuggerNonUserCode]
     [CompilerGenerated]
-    public class Buffer
+    internal class Buffer
     {
         // This Buffer supports the following cases:
         // 1) seekable stream (file)
@@ -285,7 +285,7 @@ namespace NHaml.Compilers.CSharp2.Coco
     [GeneratedCode( "Coco", "1.0.0.0" )]
     [DebuggerNonUserCode]
     [CompilerGenerated]
-    public class Scanner
+    internal class Scanner
     {
         private const char EOL = '\n';
         private const int eofSym = 0; /* pdt */

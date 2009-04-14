@@ -1,10 +1,7 @@
 using System;
 using System.Collections;
-using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
-using NHaml.Compilers.CSharp2.Coco;
-using NHaml.Compilers.VisualBasic.Properties;
 using NHaml.Exceptions;
 
 namespace NHaml.Compilers.VisualBasic
@@ -82,7 +79,63 @@ namespace NHaml.Compilers.VisualBasic
             RenderAttributesCore( templateParser, attributes );
         }
 
+        protected  void RenderAttributesCore(TemplateParser templateParser, string attributes)
+        {
+            
+            var method = string.Format("{0}.RenderAttributesAnonymousObject(New With {{{1}}})",
+                GetType().FullName,
+                attributes);
 
+            templateParser.TemplateClassBuilder
+                .AppendCode(method);
+        }
+
+<<<<<<< .mine
+        public static string RenderAttributesAnonymousObject(object attributeSource)
+=======
+
+    	static void RenderAttributesCore(TemplateParser templateParser, string attributes)
+>>>>>>> .r130
+        {
+            if (attributeSource != null)
+            {
+                var properties = TypeDescriptor.GetProperties(attributeSource);
+
+                if (properties.Count > 0)
+                {
+                    var attributes = new StringBuilder();
+
+                    AppendAttribute(attributeSource, properties[0], attributes, null);
+
+                    for (var i = 1; i < properties.Count; i++)
+                    {
+                        AppendAttribute(attributeSource, properties[i], attributes, " ");
+                    }
+
+                    return attributes.ToString();
+                }
+            }
+
+            return null;
+        }
+<<<<<<< .mine
+        private static void AppendAttribute(object obj, PropertyDescriptor propertyDescriptor,
+       StringBuilder attributes, string separator)
+        {
+            var value = propertyDescriptor.GetValue(obj);
+            var name = propertyDescriptor.Name.Replace('_', '-');
+
+            var invariantName = Convert.ToString(name, CultureInfo.InvariantCulture);
+
+            if (value != null)
+            {
+                var invariantValue = Convert.ToString(value, CultureInfo.InvariantCulture);
+
+                attributes.Append(separator + invariantName + "=\"" + invariantValue + "\"");
+            }
+        }
+=======
+>>>>>>> .r130
         private static void AppendAttribute( TemplateParser templateParser, DictionaryEntry variable, string separator )
         {
             var code = variable.Value.ToString();
@@ -101,31 +154,6 @@ namespace NHaml.Compilers.VisualBasic
                 + lambdaMatch.Groups[2].Captures[0].Value + " => {";
         }
 
-
-    	static void RenderAttributesCore(TemplateParser templateParser, string attributes)
-        {
-            var stream = new MemoryStream(Encoding.UTF8.GetBytes("class _ {object " + attributes + ";}"));
-            var scanner = new Scanner(stream);
-            var parser = new Parser(scanner);
-
-            parser.Parse();
-
-            if (parser.errors.count > 0)
-            {
-                SyntaxException.Throw(templateParser.CurrentInputLine, Resources.AttributesParse_ParserError);
-            }
-
-            if (parser.variables.Count > 0)
-            {
-                AppendAttribute(templateParser, parser.variables[0], null);
-
-                for (var i = 1; i < parser.variables.Count; i++)
-                {
-                    AppendAttribute(templateParser, parser.variables[i], " ");
-                }
-            }
-        }
-  
 
     }
 }
