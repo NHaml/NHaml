@@ -1,5 +1,6 @@
 using System;
-using System.Collections;
+using System.ComponentModel;
+using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
@@ -90,12 +91,7 @@ namespace NHaml.Compilers.VisualBasic
                 .AppendCode(method);
         }
 
-<<<<<<< .mine
         public static string RenderAttributesAnonymousObject(object attributeSource)
-=======
-
-    	static void RenderAttributesCore(TemplateParser templateParser, string attributes)
->>>>>>> .r130
         {
             if (attributeSource != null)
             {
@@ -118,7 +114,6 @@ namespace NHaml.Compilers.VisualBasic
 
             return null;
         }
-<<<<<<< .mine
         private static void AppendAttribute(object obj, PropertyDescriptor propertyDescriptor,
        StringBuilder attributes, string separator)
         {
@@ -134,17 +129,15 @@ namespace NHaml.Compilers.VisualBasic
                 attributes.Append(separator + invariantName + "=\"" + invariantValue + "\"");
             }
         }
-=======
->>>>>>> .r130
-        private static void AppendAttribute( TemplateParser templateParser, DictionaryEntry variable, string separator )
-        {
-            var code = variable.Value.ToString();
-            //TODO: prob a better way to replay escaped quotes
-            code = code.Replace("\\\"", "\"\"");
-            templateParser.TemplateClassBuilder.AppendAttributeCode(
-                separator + variable.Key.ToString().Replace( '_', '-' ).Replace( "@", "" ),
-                code );
-        }
+        //private static void AppendAttribute( TemplateParser templateParser, DictionaryEntry variable, string separator )
+        //{
+        //    var code = variable.Value.ToString();
+        //    //TODO: prob a better way to replay escaped quotes
+        //    code = code.Replace("\\\"", "\"\"");
+        //    templateParser.TemplateClassBuilder.AppendAttributeCode(
+        //        separator + variable.Key.ToString().Replace( '_', '-' ).Replace( "@", "" ),
+        //        code );
+        //}
 
 
         public static string TranslateLambda(string codeLine, Match lambdaMatch)
