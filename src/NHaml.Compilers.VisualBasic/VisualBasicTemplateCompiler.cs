@@ -1,7 +1,5 @@
 using System;
 using System.Collections;
-using System.ComponentModel;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -104,7 +102,7 @@ namespace NHaml.Compilers.VisualBasic
         }
 
 
-        protected virtual void RenderAttributesCore(TemplateParser templateParser, string attributes)
+    	static void RenderAttributesCore(TemplateParser templateParser, string attributes)
         {
             var stream = new MemoryStream(Encoding.UTF8.GetBytes("class _ {object " + attributes + ";}"));
             var scanner = new Scanner(stream);
@@ -129,20 +127,5 @@ namespace NHaml.Compilers.VisualBasic
         }
   
 
-        private static void AppendAttribute(object obj, PropertyDescriptor propertyDescriptor,
-          StringBuilder attributes, string separator)
-        {
-            var value = propertyDescriptor.GetValue(obj);
-            var name = propertyDescriptor.Name.Replace('_', '-');
-
-            var invariantName = Convert.ToString(name, CultureInfo.InvariantCulture);
-
-            if (value != null)
-            {
-                var invariantValue = Convert.ToString(value, CultureInfo.InvariantCulture);
-
-                attributes.Append(separator + invariantName + "=\"" + invariantValue + "\"");
-            }
-        }
     }
 }
