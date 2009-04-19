@@ -58,6 +58,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="AttributeParser.cs" />
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>

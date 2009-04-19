@@ -3,7 +3,6 @@ using System.Web;
 using System.Web.Hosting;
 using System.Web.Mvc;
 using System.Web.Routing;
-
 using Moq;
 
 using NHaml.Web.Mvc;
@@ -50,6 +49,7 @@ namespace NHaml.Tests
         {
             AssertView("Simple", null, "SimpleWithApplicationHamlMaster");
         }
+   
 
         [Test]
         public void RenderViewWhenMasterIsNullButApplicationHamlNotExists()
