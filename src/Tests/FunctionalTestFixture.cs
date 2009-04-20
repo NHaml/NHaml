@@ -293,7 +293,7 @@ namespace NHaml.Tests
             AssertRender("CustomBaseClass");
         }
 
-        [Test,Ignore("I currently dose not know how to handle this, because the parsers can not handle the <>Anon types.")]
+        [Test,Ignore("I currently dont not know how to handle this, because the parsers can not handle the <>Anon types.")]
         public void ViewBaseClassGenericAnon()
         {
             var anonInstance = new { Property = "PropertyValue" };
