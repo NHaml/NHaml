@@ -95,15 +95,8 @@ namespace NHaml.Compilers.Boo
 
         public override void AppendAttributeCode( string name, string code )
         {
-            var varName = "a" + AttributeCount++;
-
-            Output.AppendLine( IndentString + varName + "=Convert.ToString(" + code + ")" );
-            Output.AppendLine( IndentString + "unless " + varName + " == null:" );
-            BeginCodeBlock();
-            AppendOutput( name + "=\"" );
-            AppendSilentCode( "textWriter.Write(" + varName + ")", true );
-            AppendOutput( "\"" );
-            EndCodeBlock();
+            var format = string.Format("{0}RenderAttributeIfValueNotNull(textWriter, \"{1}\",Convert.ToString({2}))", IndentString, name, code);
+            Output.AppendLine(format);
         }
 
         public override void BeginCodeBlock()

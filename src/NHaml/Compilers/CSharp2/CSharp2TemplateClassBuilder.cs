@@ -76,16 +76,11 @@ namespace NHaml.Compilers.CSharp2
             }
         }
 
+
         public override void AppendAttributeCode( string name, string code )
         {
-            var varName = "a" + AttributeCount++;
-
-            AppendSilentCode( "string " + varName + "=Convert.ToString(" + code + ")", true );
-            AppendSilentCode( "if (" + varName + "!=null){", false );
-            AppendOutput( name + "=\"" );
-            Output.AppendLine( "textWriter.Write(" + varName + ");" );
-            AppendOutput( "\"" );
-            AppendSilentCode( "}", false );
+            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",Convert.ToString({1}));", name, code);
+            AppendSilentCode(format, false);
         }
 
         public override void BeginCodeBlock()

@@ -1,3 +1,4 @@
+using System;
 using System.IO;
 
 using NHaml.Utils;
@@ -27,6 +28,16 @@ namespace NHaml
         protected OutputWriter Output
         {
             get { return _outputWriter; }
+        }
+        protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeKey, string attributeValue)
+        {
+            var asString = Convert.ToString(attributeValue);
+            if (asString != null)
+            {
+                textWriter.Write(@"{0}=""", attributeKey);
+                textWriter.Write(asString);
+                textWriter.Write(@"""");
+            }
         }
     }
 }

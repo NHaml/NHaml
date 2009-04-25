@@ -26,7 +26,6 @@ namespace NHaml.Compilers
 
         public int Depth { get; set; }
         public int BlockDepth { get; set; }
-        public int AttributeCount { get; set; }
 
         public string ClassName
         {

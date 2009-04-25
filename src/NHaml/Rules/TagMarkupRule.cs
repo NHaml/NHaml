@@ -162,6 +162,17 @@ namespace NHaml.Rules
             {
                 templateParser.TemplateClassBuilder.AppendOutput( " " );
 
+                //var attributeParser = new AttributeParser(attributesHash);
+                //attributeParser.Parse();
+                //foreach (var attributeKeyValue in attributeParser.Values)
+                //{
+                //    templateParser.TemplateClassBuilder.AppendOutput(string.Format("{0}=\"", attributeKeyValue.Key));
+                //    var values = AttributeValueParser.Parse(attributeKeyValue.Value);
+                //    foreach (var list in values)
+                //    {
+
+                //    }
+                //}
                 if( _staticAttributesRegex.IsMatch( attributesHash ) )
                 {
                     templateParser.TemplateClassBuilder.AppendOutput( _commaStripperRegex.Replace( attributesHash, "\" " ) );

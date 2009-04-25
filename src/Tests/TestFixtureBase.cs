@@ -1,7 +1,6 @@
 using System;
 using System.Diagnostics;
 using System.IO;
-
 using NHaml.Compilers.CSharp2;
 
 using NUnit.Framework;
@@ -79,6 +78,7 @@ namespace NHaml.Tests
 
         protected static void AssertRender( StringWriter output, string expectedName )
         {
+            //Clipboard.SetText(output.ToString());
             Console.WriteLine( output );
 
             Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );

@@ -79,22 +79,18 @@ namespace NHaml.Compilers.VisualBasic
 
         public override void AppendAttributeCode( string name, string code )
         {
-            var varName = "a" + AttributeCount++;
 
+            string format;
             if (code.StartsWith("'") && code.EndsWith("'") && code.Length == 3)
             {
-                AppendSilentCode(string.Format("Dim {0} As String=Convert.ToString(\"{1}\"c)", varName, code[1]), true);
+                format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", Convert.ToString(\"{1}\"c))", name, code);
             }
             else
             {
-                AppendSilentCode(string.Format("Dim {0} As String=Convert.ToString({1})", varName, code), true);
-    
+                format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", Convert.ToString({1}))", name, code);
             }
-            AppendSilentCode(string.Format("If ({0} IsNot Nothing) Then", varName), false);
-            AppendOutput( name + "=\"" );
-            Output.AppendLine( string.Format("textWriter.Write({0})", varName) );
-            AppendOutput( "\"" );
-            AppendSilentCode( "End If", false );
+
+            Output.AppendLine(format);
         }
 
         public override void BeginCodeBlock()

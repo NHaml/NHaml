@@ -30,6 +30,7 @@ namespace NHaml.Compilers.Boo
 
             var typeBuilder = new BooTemplateTypeBuilder( templateParser.TemplateEngine );
 
+           // Debug.WriteLine(templateSource);
             var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
 
             if( templateType == null )
