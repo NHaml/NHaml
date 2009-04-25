@@ -40,6 +40,15 @@ namespace NHaml.Compilers.VisualBasic
         {
             if( code != null )
             {
+                if (code.StartsWith("'") && code.EndsWith("'") && code.Length == 3)
+                {
+                    code = "(Convert.ToString(\"" + code + "\"c))";
+                }
+                else
+                {
+                    code = "(Convert.ToString(" + code + "))";
+                }
+
 
                 code = "(Convert.ToString(" + code + "))";
 
@@ -89,8 +98,7 @@ namespace NHaml.Compilers.VisualBasic
             {
                 format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", Convert.ToString({1}))", name, code);
             }
-
-            Output.AppendLine(format);
+            AppendSilentCode(format, true);
         }
 
         public override void BeginCodeBlock()

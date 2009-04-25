@@ -168,10 +168,7 @@ namespace NHaml.Rules
                 //{
                 //    templateParser.TemplateClassBuilder.AppendOutput(string.Format("{0}=\"", attributeKeyValue.Key));
                 //    var values = AttributeValueParser.Parse(attributeKeyValue.Value);
-                //    foreach (var list in values)
-                //    {
-
-                //    }
+                 
                 //}
                 if( _staticAttributesRegex.IsMatch( attributesHash ) )
                 {
