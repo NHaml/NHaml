@@ -496,7 +496,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeParserRegexTests.cs" />
     <Compile Include="AttributeValueParserTests.cs" />
     <Compile Include="BooFunctionalTests.cs">
       <SubType>Code</SubType>
