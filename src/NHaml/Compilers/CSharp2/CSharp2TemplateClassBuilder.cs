@@ -79,8 +79,8 @@ namespace NHaml.Compilers.CSharp2
 
         public override void AppendAttributeCode( string name, string code )
         {
-            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",Convert.ToString({1}));", name, code);
-            AppendSilentCode(format, false);
+            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",Convert.ToString({1}))", name, code);
+            AppendSilentCode(format, true);
         }
 
         public override void BeginCodeBlock()
