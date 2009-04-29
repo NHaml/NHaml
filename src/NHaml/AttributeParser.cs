@@ -26,13 +26,15 @@ namespace NHaml
 
             pattern += @"\s*=\s*"; // equal
 
+            //Todo: add support for a.b.c and _ when 
             pattern += @"(?:(?<rvalue>\w+)"; // reference as value
             pattern += "|";
             pattern += @"(?:""(?<svalue>((?:\\"")|[^""])*)"")"; // double quotes
             pattern += "|";
             pattern += @"(?:'(?<svalue>((?:\\')|[^'])*)')"; // single quotes
             pattern += "|";
-            pattern += @"(?:#{(?<dvalue>[^}]*)}))"; // dynamic
+            //Todo: allow to escape }
+            pattern += @"(?:#{(?<dvalue>[^}]*)}))"; // expression
 
             pattern += @")?"; // end optinal value for only reference
 
@@ -88,7 +90,7 @@ namespace NHaml
                 }
                 else if( groupDynamicValue.Success )
                 {
-                    type = NHamlAttributeType.Dynamic;
+                    type = NHamlAttributeType.Expression;
                     value = groupDynamicValue.Value;
                 }
                 else

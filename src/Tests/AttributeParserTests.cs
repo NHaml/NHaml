@@ -62,9 +62,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "1+1", NHamlAttributeType.Dynamic);
-            AssertAttribute(parser, "b", "\"t\"", NHamlAttributeType.Dynamic);
-            AssertAttribute(parser, "c", "f.ToString()", NHamlAttributeType.Dynamic);
+            AssertAttribute(parser, "a", "1+1", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "b", "\"t\"", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "c", "f.ToString()", NHamlAttributeType.Expression);
         }
 
         [Test]
@@ -118,7 +118,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "a", "a", NHamlAttributeType.Reference);
             AssertAttribute(parser, "b", "b", NHamlAttributeType.Reference);
             AssertAttribute(parser, "c", "c", NHamlAttributeType.String);
-            AssertAttribute(parser, "d", "d", NHamlAttributeType.Dynamic);
+            AssertAttribute(parser, "d", "d", NHamlAttributeType.Expression);
         }
 
         [Test]
@@ -158,14 +158,14 @@ namespace NHaml.Tests
 
         [Test]
         [ExpectedException( typeof( SyntaxException ) )]
-        public void ThrowExceptionOnForgottenDynamicClose()
+        public void ThrowExceptionOnForgottenExpressionClose()
         {
             new AttributeParser( @" a=#{text " ).Parse();
         }
 
         [Test]
         [ExpectedException( typeof( SyntaxException ) )]
-        public void ThrowExceptionOnForgottenDynamicOpen()
+        public void ThrowExceptionOnForgottenExpressionOpen()
         {
             new AttributeParser( @" a=text} " ).Parse();
         }
