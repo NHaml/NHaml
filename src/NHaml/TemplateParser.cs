@@ -13,8 +13,9 @@ namespace NHaml
     {
         private readonly string _singleIndent;
 
-        public TemplateParser( TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
-        string templatePath, string layoutTemplatePath )
+        public TemplateParser( 
+            TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
+            string templatePath, string layoutTemplatePath )
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
             InputFiles = new StringSet();
@@ -33,6 +34,8 @@ namespace NHaml
                 primaryTemplate = LayoutTemplatePath;
             }
 
+            Meta = new Dictionary<string, string>();
+
             InputLines = BuildInputLines( primaryTemplate, templateEngine );
 
             CurrentNode = InputLines.First.Next;
@@ -41,6 +44,8 @@ namespace NHaml
 
             _singleIndent = TemplateEngine.UseTabs ? "\t" : string.Empty.PadLeft( TemplateEngine.IndentSize );
         }
+
+        public Dictionary<string, string> Meta { get; private set; }
 
         public TemplateEngine TemplateEngine { get; private set; }
 

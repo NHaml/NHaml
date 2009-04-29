@@ -1,17 +1,17 @@
+using System;
 using System.Text;
 
 namespace NHaml.Compilers
 {
     public abstract class TemplateClassBuilder
     {
-        private readonly string _className;
-
         private readonly StringBuilder _output = new StringBuilder();
         private readonly StringBuilder _preamble = new StringBuilder();
 
-        protected TemplateClassBuilder( string className )
+        protected TemplateClassBuilder( string className, Type baseType )
         {
-            _className = className;
+            ClassName = className;
+            BaseType = baseType;
         }
 
         protected StringBuilder Output
@@ -24,13 +24,11 @@ namespace NHaml.Compilers
             get { return _preamble; }
         }
 
+        public Type BaseType { get; set; }
         public int Depth { get; set; }
         public int BlockDepth { get; set; }
 
-        public string ClassName
-        {
-            get { return _className; }
-        }
+        public string ClassName { get; private set; }
 
         public abstract void AppendOutput( string value, bool newLine );
 

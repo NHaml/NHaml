@@ -11,13 +11,13 @@ namespace NHaml.Tests
     {
         [Test]
         [ExpectedException(typeof(FileNotFoundException))]
-        public void BadPartial()
+        public virtual void BadPartial()
         {
             AssertRender("BadPartial");
         }
 
         [Test]
-        public void Tabs()
+        public virtual void Tabs()
         {
             _templateEngine.UseTabs = true;
 
@@ -25,63 +25,63 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void FourSpaces()
+        public virtual void FourSpaces()
         {
             _templateEngine.IndentSize = 4;
 
             AssertRender("4Spaces");
         }
 
-        //    [Test]
-        //    public void Alligators()
-        //    {
-        //      AssertRender("Alligators");
-        //    }
+        [Test, Ignore( "Not implemented yet." )]
+        public virtual void Alligators()
+        {
+            AssertRender("Alligators");
+        }
 
         [Test]
-        public void VeryBasic()
+        public virtual void VeryBasic()
         {
             AssertRender("VeryBasic");
         }
 
         [Test]
-        public void SharedPartial()
+        public virtual void SharedPartial()
         {
             AssertRender("SharedPartial");
         }
 
         [Test]
-        public void Partials2()
+        public virtual void Partials2()
         {
             AssertRender("Partials2");
         }
 
         [Test]
-        public void Javascript()
+        public virtual void Javascript()
         {
             AssertRender("Javascript");
         }
 
         [Test]
-        public void Doctype()
+        public virtual void Doctype()
         {
             AssertRender("Doctype");
         }
 
         [Test]
-        public void Escape()
+        public virtual void Escape()
         {
             AssertRender("Escape");
         }
 
         [Test]
-        public void EscapeHtmlOffByDefault()
+        public virtual void EscapeHtmlOffByDefault()
         {
             AssertRender("EscapeHtml", null, "EscapeHtmlOff");
         }
 
         [Test]
-        public void EscapeHtmlOnByDefault()
+        public virtual void EscapeHtmlOnByDefault()
         {
             _templateEngine.EncodeHtml = true;
 
@@ -95,49 +95,92 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void AutoClose()
+        public virtual void AutoClose()
         {
             AssertRender("AutoClose");
         }
 
         [Test]
-        public void ReferenceExample1()
+        public virtual void ReferenceExample1()
         {
             AssertRender("ReferenceExample1");
         }
 
         [Test]
-        public void ReferenceExample2()
+        public virtual void ReferenceExample2()
         {
             AssertRender("ReferenceExample2");
         }
 
         [Test]
-        public void List()
+        public virtual void List()
         {
             AssertRender("List");
         }
 
         [Test]
-        public void TagParsing()
+        public virtual void TagParsing()
         {
             AssertRender("TagParsing");
         }
 
         [Test]
-        public void OriginalEngine()
+        public virtual void OriginalEngine()
         {
             AssertRender("OriginalEngine");
         }
 
         [Test]
-        public void Comments()
+        public virtual void Comments()
         {
             AssertRender("Comments");
         }
+        
+        [Test]
+        public virtual void MetaModel()
+        {
+            _templateEngine.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.AddReference( typeof( Action ).Assembly.Location );
+
+            var template = CreateTemplate( "MetaModel", null );
+
+            Assert.IsInstanceOfType( typeof( CustomGenericTemplate<string> ), template );
+
+            ((CustomGenericTemplate<string>) template).Model = "NHaml";
+
+            var output = new StringWriter();
+
+            template.Render( output );
+
+            AssertRender( output, "MetaModel" );
+        }
 
         [Test]
-        public void WhitespaceSensitive()
+        public virtual void MetaWithoutModel()
+        {
+            _templateEngine.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.AddReference( typeof( Action ).Assembly.Location );
+
+            var template = CreateTemplate( "MetaWithoutModel", null );
+
+            Assert.IsInstanceOfType( typeof( CustomGenericTemplate<object> ), template );
+
+            var output = new StringWriter();
+
+            template.Render( output );
+
+            AssertRender( output, "MetaWithoutModel" );
+        }
+
+        public class CustomGenericTemplate<T> : Template
+        {
+            public T Model { get; set; }
+
+            public string ModelType { get { return typeof (T).FullName; } }
+        }
+
+        [Test]
+        public virtual void WhitespaceSensitive()
         {
             AssertRender("WhitespaceSensitive");
         }
@@ -188,36 +231,36 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void AttributeEval()
+        public virtual void AttributeEval()
         {
             AssertRender("AttributeEval");
         }
 
         [Test]
-        public void AttributeNamespaceAndDynamic()
+        public virtual void AttributeNamespaceAndDynamic()
         {
             AssertRender("AttributeNamespaceAndDynamic");
         }
         [Test]
-        public void IdAndDynamic()
+        public virtual void IdAndDynamic()
         {
             AssertRender("IdAndDynamic");
         }
 
         [Test]
-        public void SimpleEval()
+        public virtual void SimpleEval()
         {
             AssertRender("SimpleEval");
         }
 
         [Test]
-        public void SilentEval()
+        public virtual void SilentEval()
         {
             AssertRender("SilentEval");
         }
 
         [Test]
-        public void LoopEval()
+        public virtual void LoopEval()
         {
             AssertRender("LoopEval");
         }
@@ -229,37 +272,37 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void Conditionals()
+        public virtual void Conditionals()
         {
             AssertRender("Conditionals");
         }
 
         [Test]
-        public void MultiLine()
+        public virtual void MultiLine()
         {
             AssertRender("MultiLine");
         }
 
         [Test]
-        public void NullAttributes()
+        public virtual void NullAttributes()
         {
             AssertRender("NullAttributes");
         }
 
         [Test]
-        public void Partials()
+        public virtual void Partials()
         {
             AssertRender("Partials");
         }
 
         [Test]
-        public void Preamble()
+        public virtual void Preamble()
         {
             AssertRender("Preamble");
         }
 
         [Test]
-        public void Welcome()
+        public virtual void Welcome()
         {
             AssertRender("Welcome");
         }
@@ -272,13 +315,13 @@ namespace NHaml.Tests
 
         [Test]
         [ExpectedException(typeof(InvalidOperationException))]
-        public void LayoutNoContent()
+        public virtual void LayoutNoContent()
         {
             AssertRender("Application");
         }
 
         [Test]
-        public void ViewBaseClass()
+        public virtual void ViewBaseClass()
         {
             _templateEngine.TemplateBaseType = typeof(CustomTemplate2);
 
@@ -286,7 +329,7 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void ViewBaseClassGeneric()
+        public virtual void ViewBaseClassGeneric()
         {
             _templateEngine.TemplateBaseType = typeof(CustomTemplate3<List<int>>);
 
@@ -294,7 +337,7 @@ namespace NHaml.Tests
         }
 
         [Test,Ignore("I currently dont not know how to handle this, because the parsers can not handle the <>Anon types.")]
-        public void ViewBaseClassGenericAnon()
+        public virtual void ViewBaseClassGenericAnon()
         {
             var anonInstance = new { Property = "PropertyValue" };
             var genericType = typeof( GenericTemplateView<> ).MakeGenericType( new[] { anonInstance.GetType() } );

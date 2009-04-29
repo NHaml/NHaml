@@ -49,6 +49,7 @@ namespace NHaml
         public TemplateEngine()
         {
             AddRule( new EofMarkupRule() );
+            AddRule( new MetaMarkupRule() );
             AddRule( new DocTypeMarkupRule() );
             AddRule( new TagMarkupRule() );
             AddRule( new ClassMarkupRule() );

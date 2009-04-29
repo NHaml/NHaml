@@ -49,6 +49,16 @@ namespace NHaml.Tests
 
         protected void AssertRender( string templateName, string layoutName, string expectedName )
         {
+            var output = new StringWriter();
+            var template = CreateTemplate( templateName, layoutName );
+
+            template.Render( output );
+
+            AssertRender( output, expectedName );
+        }
+
+        protected Template CreateTemplate( string templateName, string layoutName )
+        {
             var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
 
             if( !File.Exists( templatePath ) )
@@ -67,13 +77,7 @@ namespace NHaml.Tests
             }
 
             var compiledTemplate = _templateEngine.Compile( templatePath, layoutName );
-            var template = compiledTemplate.CreateInstance();
-
-            var output = new StringWriter();
-
-            template.Render( output );
-
-            AssertRender( output, expectedName );
+            return compiledTemplate.CreateInstance();
         }
 
         protected static void AssertRender( StringWriter output, string expectedName )

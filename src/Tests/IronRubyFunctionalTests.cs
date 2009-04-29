@@ -24,9 +24,22 @@ namespace NHaml.Tests
             AssertRender( "Welcome", "Application" );
         }
 
+        [Test,Ignore]
         public override void LambdaEval()
         {
-            // doesn't work
+            base.LambdaEval();
+        }
+
+        [Test, Ignore]
+        public override void MetaModel()
+        {
+            base.MetaModel();
+        }
+
+        [Test, Ignore]
+        public override void MetaWithoutModel()
+        {
+            base.MetaWithoutModel();
         }
     }
 }

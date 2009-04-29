@@ -1,5 +1,5 @@
 using System;
-
+using System.Text;
 using NHaml.Utils;
 
 namespace NHaml.Compilers.IronRuby
@@ -7,19 +7,8 @@ namespace NHaml.Compilers.IronRuby
     internal sealed class IronRubyTemplateClassBuilder : TemplateClassBuilder
     {
         public IronRubyTemplateClassBuilder( string className, Type templateBaseType )
-            : base( className )
+            : base( className, templateBaseType )
         {
-            Preamble.AppendLine( "class " + className
-              + "<" + Utility.MakeBaseClassName( templateBaseType, "[", "]", "::" ) );
-
-            Preamble.AppendLine( "def __a(as)" );
-            Preamble.AppendLine( "as.collect { |k,v| " );
-            Preamble.AppendLine( "next unless v" );
-            Preamble.AppendLine( "\"#{k.to_s.gsub('_','-')}=\\\"#{v}\\\"\"" );
-            Preamble.AppendLine( "}.compact.join(' ')" );
-            Preamble.AppendLine( "end" );
-
-            Preamble.AppendLine( "def core_render(text_writer)" );
         }
 
         public override void AppendAttributeCode( string name, string code )
@@ -94,9 +83,24 @@ namespace NHaml.Compilers.IronRuby
         {
             Output.AppendLine( "end;end" );
 
-            Preamble.Append( Output );
+            var result = new StringBuilder();
 
-            return Preamble.ToString();
+            result.AppendLine( "class " + ClassName + "<" + Utility.MakeBaseClassName( BaseType, "[", "]", "::" ) );
+
+            result.AppendLine( "def __a(as)" );
+            result.AppendLine( "as.collect { |k,v| " );
+            result.AppendLine( "next unless v" );
+            result.AppendLine( "\"#{k.to_s.gsub('_','-')}=\\\"#{v}\\\"\"" );
+            result.AppendLine( "}.compact.join(' ')" );
+            result.AppendLine( "end" );
+
+            result.AppendLine( "def core_render(text_writer)" );
+
+            result.Append(Preamble);
+
+            result.Append(Output);
+
+            return result.ToString();
         }
     }
 }

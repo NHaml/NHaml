@@ -75,6 +75,7 @@
     <Compile Include="Compilers\CSharp2\Coco\Parser.cs" />
     <Compile Include="Compilers\CSharp2\Coco\Scanner.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
+    <Compile Include="Rules\MetaMarkupRule.cs" />
     <Compile Include="TemplateParser.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />

@@ -1,5 +1,5 @@
 using System;
-
+using System.Text;
 using NHaml.Utils;
 
 namespace NHaml.Compilers.VisualBasic
@@ -7,11 +7,8 @@ namespace NHaml.Compilers.VisualBasic
     internal sealed class VisualBasicTemplateClassBuilder : TemplateClassBuilder
     {
         public VisualBasicTemplateClassBuilder(string className, Type baseType)
-            : base( className )
+            : base( className, baseType )
         {
-            Preamble.AppendLine( Utility.FormatInvariant( "public Class {0} \r\nInherits {1} ",
-                                                          ClassName, Utility.MakeBaseClassName( baseType, "(Of ", ")", "." ) ) );
-            Preamble.AppendLine("Protected Overrides Sub CoreRender(ByVal textWriter As TextWriter)");
         }
 
         public override void AppendOutput( string value, bool newLine )
@@ -123,9 +120,16 @@ namespace NHaml.Compilers.VisualBasic
             Output.AppendLine( "End Sub" );
             Output.Append( "End Class" );
 
-            Preamble.Append( Output );
+            var result = new StringBuilder();
 
-            return Preamble.ToString();
+            result.AppendLine( Utility.FormatInvariant( "public Class {0} \r\nInherits {1} ",
+                                              ClassName, Utility.MakeBaseClassName( BaseType, "(Of ", ")", "." ) ) );
+            result.AppendLine( "Protected Overrides Sub CoreRender(ByVal textWriter As TextWriter)" );
+
+            result.Append( Preamble );
+            result.Append( Output );
+
+            return result.ToString();
         }
     }
 }

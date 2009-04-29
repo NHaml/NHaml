@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-
+using NHaml.Exceptions;
 using NHaml.Utils;
 
 namespace NHaml
@@ -59,10 +59,36 @@ namespace NHaml
             var templateClassBuilder = _templateEngine.TemplateCompiler.CreateTemplateClassBuilder(
               Utility.MakeClassName( _templatePath ), _templateBaseType );
 
-            var templateParser
-              = new TemplateParser( _templateEngine, templateClassBuilder, _templatePath, _layoutTemplatePath );
+            var templateParser = new TemplateParser( _templateEngine, templateClassBuilder, _templatePath, _layoutTemplatePath );
 
             templateParser.Parse();
+
+            if( _templateBaseType.IsGenericTypeDefinition )
+            {
+                string model;
+                Type modelType = null;
+
+                if( templateParser.Meta.TryGetValue( "model", out model ) )
+                {
+                    foreach( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
+                    {
+                        modelType = assembly.GetType( model, false, true );
+
+                        if( modelType != null )
+                            break;
+                    }
+
+                    if( modelType == null )
+                        throw new TemplateCompilationException( string.Format(
+                                                                   "The given model type '{0}' was not found.", model ) );
+                }
+                else
+                    modelType = typeof (object);
+
+                templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
+
+                _templateEngine.AddReference( modelType.Assembly );
+            }
 
             _templateFactory = _templateEngine.TemplateCompiler.Compile( templateParser );
 

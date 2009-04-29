@@ -53,13 +53,9 @@ namespace NHaml.Compilers.IronRuby
                 get { return _renderAction; }
             }
 
-            public override void Render( TextWriter textWriter )
-            {
-                _scriptEngine.Operations.Call( _renderAction, textWriter );
-            }
-
             protected override void CoreRender( TextWriter textWriter )
             {
+                _scriptEngine.Operations.Call( _renderAction, textWriter );
             }
         }
     }

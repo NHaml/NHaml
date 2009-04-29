@@ -1,5 +1,5 @@
 using System;
-
+using System.Text;
 using NHaml.Utils;
 
 namespace NHaml.Compilers.CSharp2
@@ -7,11 +7,8 @@ namespace NHaml.Compilers.CSharp2
     internal sealed class CSharp2TemplateClassBuilder : TemplateClassBuilder
     {
         public CSharp2TemplateClassBuilder( string className, Type baseType )
-            : base( className )
+            : base( className, baseType )
         {
-            Preamble.AppendLine( Utility.FormatInvariant( "public class {0} : {1} {{",
-              ClassName, Utility.MakeBaseClassName( baseType, "<", ">", "." ) ) );
-            Preamble.AppendLine( "protected override void CoreRender(TextWriter textWriter){" );
         }
 
         public override void AppendOutput( string value, bool newLine )
@@ -104,9 +101,16 @@ namespace NHaml.Compilers.CSharp2
         {
             Output.Append( "}}" );
 
-            Preamble.Append( Output );
+            var result = new StringBuilder();
 
-            return Preamble.ToString();
+            result.AppendLine( Utility.FormatInvariant( "public class {0} : {1} {{",
+                ClassName, Utility.MakeBaseClassName( BaseType, "<", ">", "." ) ) );
+            result.AppendLine( "protected override void CoreRender(TextWriter textWriter){" );
+
+            result.Append( Preamble );
+            result.Append( Output );
+
+            return result.ToString();
         }
     }
 }

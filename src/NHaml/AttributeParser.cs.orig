@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using System.IO;
+using System.Xml;
 
 namespace NHaml
 {
@@ -12,6 +13,9 @@ namespace NHaml
         public static Regex KeyValueSplitRegex;
 
         private readonly string attributes;
+<<<<<<< HEAD:src/NHaml/AttributeParser.cs
+        XmlReader reader;
+=======
 
         private State? state;
         private string currentValue;
@@ -19,6 +23,7 @@ namespace NHaml
         private bool isCurrentCode;
         private bool isSingleQuotes;
         private int index;
+>>>>>>> Integrate MetaMarkup to provide model type inside of a template file.:src/NHaml/AttributeParser.cs
 
         private enum State
         {
@@ -27,20 +32,13 @@ namespace NHaml
             Key
         }
 
-        static AttributeParser()
-        {
-            StartCodeRegex = new Regex(@"[\w:]*(?<ToTrim>\s*=\s*\#{)$");
-            KeyValueSplitRegex = new Regex(@"[\w:]*(?<ToTrim>\s*,\s*)$");
-            StartTextWithDoubleQuotesRegex = new Regex("[\\w:]*(?<ToTrim>\\s*=\\s*\")$");
-            StartTextWithSingleQuotesRegex = new Regex("[\\w:]*(?<ToTrim>\\s*=\\s*\')$");
-            StartTextWithOutQuotesRegex = new Regex(@"[\w:]*(?<ToTrim>\s*=.*)$");
-        }
-
         // So at the moment, I'm leaning towards {foo="bar"} or {foo=bar} for
         // static attributes and {foo=#{bar}} for dynamic ones. Thoughts?
         public AttributeParser(string attributes)
         {
             this.attributes = attributes.TrimStart();
+<<<<<<< HEAD:src/NHaml/AttributeParser.cs
+=======
             Values = new List<KeyValuePair>();
         }
 
@@ -95,82 +93,31 @@ namespace NHaml
                     }
                 }
             }
+>>>>>>> Integrate MetaMarkup to provide model type inside of a template file.:src/NHaml/AttributeParser.cs
         }
 
-        private void ProcessTextChar(char character)
+        public Dictionary<string, string> Values { get; set; }
+
+        public void Parse()
         {
-
-            var substring = attributes.Substring(0, index + 1);
-            Regex regex;
-            if (isSingleQuotes)
-            {
-                regex = StartTextWithSingleQuotesRegex;
-            }
-            else
-            {
-                regex = StartTextWithDoubleQuotesRegex;
-            }
-            var group = regex.Match(substring).Groups["ToTrim"];
-            if (group.Success)
-            {
-                index = index - group.Value.Length;
-                state = State.Key;
-                return;
-            }
-
-            currentValue = character + currentValue;
-            index--;
-        }
-
-        private void ProcessKeyChar(char character)
-        {
-
-            var substring = attributes.Substring(0, index + 1);
-            var group = KeyValueSplitRegex.Match(substring).Groups["ToTrim"];
-            if (group.Success)
-            {
-                AddCurrentToValues();
-                state = null;
-                index = index - group.Value.Length;
-                return;
-            }
-
-            currentKey = character + currentKey;
-            if (index == 0)
-            {
-                AddCurrentToValues();
-                state = null;
-                return;
-            }
-            index--;
-        }
-
-        private void AddCurrentToValues()
-        {
-            Values.Insert(0, new KeyValuePair
-            {
-                IsCode = isCurrentCode,
-                Key = currentKey,
-                Value = currentValue
-            });
-        }
-
-        private void ProcessCodeChar(char character)
-        {
+<<<<<<< HEAD:src/NHaml/AttributeParser.cs
+            Values = new Dictionary<string, string>();
+            reader = XmlReader.Create(new StringReader(string.Format("<node {0}/>", attributes)));
+            reader.MoveToContent();
+            while (reader.MoveToNextAttribute())
+=======
             var substring = attributes.Substring(0, index + 1);
             var group = StartCodeRegex.Match(substring).Groups["ToTrim"];
            
             if (group.Success)
+>>>>>>> Integrate MetaMarkup to provide model type inside of a template file.:src/NHaml/AttributeParser.cs
             {
-                index = index - group.Value.Length;
-                state = State.Key;
-                return;
+                Values.Add(reader.Name, reader.Value);
             }
-
-            currentValue = character + currentValue;
-            index--;
         }
 
+<<<<<<< HEAD:src/NHaml/AttributeParser.cs
+=======
         public List<KeyValuePair> Values { get; set; }
 
         public class KeyValuePair
@@ -179,5 +126,6 @@ namespace NHaml
             public string Value;
             public bool IsCode;
         }
+>>>>>>> Integrate MetaMarkup to provide model type inside of a template file.:src/NHaml/AttributeParser.cs
     }
 }

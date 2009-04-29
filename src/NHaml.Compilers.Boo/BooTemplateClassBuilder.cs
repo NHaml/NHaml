@@ -1,5 +1,5 @@
 using System;
-
+using System.Text;
 using NHaml.Utils;
 
 namespace NHaml.Compilers.Boo
@@ -9,11 +9,8 @@ namespace NHaml.Compilers.Boo
         private bool _disableOutputIndentationShrink;
 
         public BooTemplateClassBuilder( string className, Type baseType )
-            : base( className )
+            : base( className, baseType )
         {
-            Preamble.AppendLine( Utility.FormatInvariant( "class {0}({1}):",
-              ClassName, Utility.MakeBaseClassName( baseType, "[of ", "]", "." ) ) );
-            Preamble.AppendLine( "  override def CoreRender(textWriter as System.IO.TextWriter):" );
         }
 
         public string IndentString
@@ -116,9 +113,16 @@ namespace NHaml.Compilers.Boo
 
         public override string Build()
         {
-            Preamble.Append( Output );
+            var result = new StringBuilder();
 
-            return Preamble.ToString();
+            result.AppendLine( Utility.FormatInvariant( "class {0}({1}):",
+                ClassName, Utility.MakeBaseClassName( BaseType, "[of ", "]", "." ) ) );
+            result.AppendLine( "  override def CoreRender(textWriter as System.IO.TextWriter):" );
+
+            result.Append(Preamble);
+            result.Append(Output);
+
+            return result.ToString();
         }
     }
 }

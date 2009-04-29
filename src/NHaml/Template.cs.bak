@@ -1,4 +1,8 @@
+<<<<<<< HEAD:src/NHaml/Template.cs
 using System;
+=======
+using System.Collections.Generic;
+>>>>>>> Integrate MetaMarkup to provide model type inside of a template file.:src/NHaml/Template.cs
 using System.IO;
 
 using NHaml.Utils;
@@ -31,7 +35,6 @@ namespace NHaml
         {
             get { return _outputWriter; }
         }
-
         protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeKey, string attributeValue)
         {
             var asString = Convert.ToString(attributeValue);
