@@ -74,6 +74,8 @@
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp2\Coco\Parser.cs" />
     <Compile Include="Compilers\CSharp2\Coco\Scanner.cs" />
+    <Compile Include="NHamlAttribute.cs" />
+    <Compile Include="NHamlAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
     <Compile Include="Rules\MetaMarkupRule.cs" />
     <Compile Include="TemplateParser.cs" />
