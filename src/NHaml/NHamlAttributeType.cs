@@ -3,7 +3,7 @@ namespace NHaml
     public enum NHamlAttributeType
     {
         String,
-        Dynamic,
+        Expression,
         Reference
     }
 }
