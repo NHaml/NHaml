@@ -32,8 +32,8 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(2, parser.Attributes.Count);
-            AssertAttribute(parser, "b", "a\\'b\\'", NHamlAttributeType.String);
-            AssertAttribute(parser, "dd", "\\\"d\\\"e", NHamlAttributeType.String);
+            AssertAttribute(parser, "b", "a'b'", NHamlAttributeType.String);
+            AssertAttribute(parser, "dd", "\"d\"e", NHamlAttributeType.String);
         }
 
         [Test]
@@ -82,7 +82,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "aaa", "1+1", NHamlAttributeType.Expression);
             AssertAttribute(parser, "bb", "\"t\"", NHamlAttributeType.Expression);
             AssertAttribute(parser, "c", "f.ToString()", NHamlAttributeType.Expression);
-            AssertAttribute(parser, "d", @"f=>\{return 1\}", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "d", @"f=>{return 1}", NHamlAttributeType.Expression);
         }
 
         [Test]

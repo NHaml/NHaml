@@ -8,6 +8,10 @@ namespace NHaml
     public class AttributeParser
     {
         private static readonly Regex _parser;
+        private static readonly Regex _escapedDoubleQuotesRegex;
+        private static readonly Regex _escapedSingleQuotesRegex;
+        private static readonly Regex _escapedExpressionBeginQuotesRegex;
+        private static readonly Regex _escapedExpressionEndQuotesRegex;
         private readonly string attributesString;
         private List<NHamlAttribute> _attributes = new List<NHamlAttribute>();
 
@@ -29,11 +33,10 @@ namespace NHaml
 
             pattern += @"(?:(?<rvalue>(\.|\w)+)"; // reference as value
             pattern += "|";
-            pattern += @"(?:""(?<svalue>((?:\\"")|[^""])*)"")"; // double quotes
+            pattern += @"(?:""(?<sdqvalue>((?:\\"")|[^""])*)"")"; // double quotes
             pattern += "|";
-            pattern += @"(?:'(?<svalue>((?:\\')|[^'])*)')"; // single quotes
+            pattern += @"(?:'(?<ssqvalue>((?:\\')|[^'])*)')"; // single quotes
             pattern += "|";
-            //Todo: allow to escape }
             pattern += @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))"; // expression
 
             pattern += @")?"; // end optinal value for only reference
@@ -41,6 +44,11 @@ namespace NHaml
             pattern += @"\s*"; // whitespace for next
 
             _parser = new Regex(pattern, RegexOptions.Compiled);
+
+            _escapedDoubleQuotesRegex = new Regex( @"\\""", RegexOptions.Compiled );
+            _escapedSingleQuotesRegex = new Regex( @"\\'", RegexOptions.Compiled );
+            _escapedExpressionBeginQuotesRegex = new Regex( @"\\{", RegexOptions.Compiled );
+            _escapedExpressionEndQuotesRegex = new Regex( @"\\}", RegexOptions.Compiled );
         }
 
         public AttributeParser(string attributesString)
@@ -69,29 +77,36 @@ namespace NHaml
 
                 var groupSchema = match.Groups["schema"];
                 var groupName = match.Groups["name"];
-                var groupStringValue = match.Groups["svalue"];
+                var groupStringDoulbeQuoteValue = match.Groups["sdqvalue"];
+                var groupStringSingleQuoteValue = match.Groups["ssqvalue"];
                 var groupReferenceValue = match.Groups["rvalue"];
-                var groupDynamicValue = match.Groups["dvalue"];
+                var groupExpressionValue = match.Groups["dvalue"];
 
                 var schmea = groupSchema.Success ? groupSchema.Value : null;
                 var name = groupName.Value;
                 string value;
                 NHamlAttributeType type;
 
-                if (groupStringValue.Success)
+                if (groupStringDoulbeQuoteValue.Success)
                 {
                     type = NHamlAttributeType.String;
-                    value = groupStringValue.Value;
+                    value = _escapedDoubleQuotesRegex.Replace(groupStringDoulbeQuoteValue.Value, "\"");
                 }
-                else if (groupReferenceValue.Success)
+                else if( groupStringSingleQuoteValue.Success )
+                {
+                    type = NHamlAttributeType.String;
+                    value = _escapedSingleQuotesRegex.Replace(groupStringSingleQuoteValue.Value, "'");
+                }
+                else if( groupReferenceValue.Success )
                 {
                     type = NHamlAttributeType.Reference;
                     value = groupReferenceValue.Value;
                 }
-                else if (groupDynamicValue.Success)
+                else if (groupExpressionValue.Success)
                 {
                     type = NHamlAttributeType.Expression;
-                    value = groupDynamicValue.Value;
+                    value = _escapedExpressionBeginQuotesRegex.Replace(groupExpressionValue.Value, "{");
+                    value = _escapedExpressionEndQuotesRegex.Replace(value, "}");
                 }
                 else
                 {
