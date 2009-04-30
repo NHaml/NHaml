@@ -7,10 +7,6 @@ namespace NHaml.Compilers.Boo
 {
     public sealed class BooTemplateCompiler : ITemplateCompiler
     {
-        private static readonly Regex _keywordEscaperRegex = new Regex(
-          @"((^|\s)(class\s*:))|((^|\s)(for\s*:))",
-          RegexOptions.Compiled | RegexOptions.Singleline );
-
         public static readonly Regex LambdaRegex = new Regex(
           @"^(.+)(def\(.*\))\s*$",
           RegexOptions.Compiled | RegexOptions.Singleline );

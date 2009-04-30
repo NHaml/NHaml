@@ -11,10 +11,6 @@ namespace NHaml.Compilers.CSharp2
           RegexOptions.Compiled | RegexOptions.Singleline );
 
 
-        private static readonly Regex _keywordEscaperRegex = new Regex(
-              @"((^|\s|,)(class\s*=))|((^|\s|,)(for\s*=))",
-              RegexOptions.Compiled | RegexOptions.Singleline);
-
         public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
         {
             return new CSharp2TemplateClassBuilder( className, templateBaseType );
