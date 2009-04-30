@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using NHaml.Utils;
 
@@ -11,8 +12,23 @@ namespace NHaml.Compilers.IronRuby
         {
         }
 
-        public override void AppendAttributeCode( string name, string code )
+        public override void AppendAttribute(string schema, string name, List<AttributeValueParser.Item> values)
         {
+            var code = new StringBuilder();
+            foreach (var item in values)
+            {
+                if (item.IsCode)
+                {
+                    code.AppendFormat("{0} + ", item.Value);
+                }
+                else
+                {
+                    code.AppendFormat("\"{0}\" + ", item.Value.Replace("\"", "\\\""));
+                }
+            }
+            code.Remove(code.Length - 2, 2);
+            var format = string.Format("RenderAttributeIfValueNotNull(text_writer, \"{0}\", \"{1}\", {2})", schema, name, code);
+            AppendSilentCode(format, true);
         }
 
         public override void AppendPreambleCode( string code )

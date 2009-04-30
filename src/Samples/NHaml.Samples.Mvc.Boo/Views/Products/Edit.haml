@@ -1,5 +1,5 @@
 %h2= ViewData.Model.Product.ProductName
-%form{action=Url.Action("Update", {"ID":ViewData.Model.Product.ProductId}), method="post"}
+%form{action='#{Url.Action("Update", {"ID":ViewData.Model.Product.ProductId})}' method="post"}
   %table
     %tr
       %td Name:

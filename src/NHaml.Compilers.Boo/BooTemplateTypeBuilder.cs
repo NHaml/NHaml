@@ -6,19 +6,20 @@ using System.Text;
 using Boo.Lang.Compiler;
 using Boo.Lang.Compiler.IO;
 using Boo.Lang.Compiler.Pipelines;
+using Boo.Lang.Parser;
 
 namespace NHaml.Compilers.Boo
 {
     internal sealed class BooTemplateTypeBuilder
     {
-        private readonly BooCompiler _booCompiler
-          = new BooCompiler();
+        private readonly BooCompiler _booCompiler;
 
         private readonly TemplateEngine _templateEngine;
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         public BooTemplateTypeBuilder( TemplateEngine templateEngine )
         {
+            _booCompiler = new BooCompiler();
             CompilerResults = new CompilerResults( new TempFileCollection() );
             _templateEngine = templateEngine;
 
@@ -39,7 +40,8 @@ namespace NHaml.Compilers.Boo
             AddReferences();
 
             _booCompiler.Parameters.Input.Clear();
-            _booCompiler.Parameters.Input.Add( new StringInput( typeName, Source ) );
+            _booCompiler.Parameters.Input.Add(new StringInput(typeName, Source)); 
+            _booCompiler.Parameters.References.Add(typeof(BooParser).Assembly);
             _booCompiler.Parameters.Pipeline = new CompileToMemory();
             var context = _booCompiler.Run();
 

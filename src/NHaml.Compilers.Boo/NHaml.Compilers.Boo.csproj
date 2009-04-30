@@ -62,9 +62,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="BooAttributeRenderer.cs">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="BooTemplateCompiler.cs" />
     <Compile Include="BooTemplateClassBuilder.cs" />
     <Compile Include="BooTemplateTypeBuilder.cs" />

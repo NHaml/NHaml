@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using NHaml.Utils;
 
@@ -83,18 +84,23 @@ namespace NHaml.Compilers.VisualBasic
             }
         }
 
-        public override void AppendAttributeCode( string name, string code )
-        {
 
-            string format;
-            if (code.StartsWith("'") && code.EndsWith("'") && code.Length == 3)
+        public override void AppendAttribute(string schema, string name, List<AttributeValueParser.Item> values)
+        {
+            var code = new StringBuilder();
+            foreach (var item in values)
             {
-                format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", Convert.ToString(\"{1}\"c))", name, code);
+                if (item.IsCode)
+                {
+                    code.AppendFormat("Convert.ToString({0}) + ", item.Value);
+                }
+                else
+                {
+                    code.AppendFormat("\"{0}\" + ", item.Value.Replace("\\\"", "\"\""));
+                }
             }
-            else
-            {
-                format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", Convert.ToString({1}))", name, code);
-            }
+            code.Remove(code.Length - 2, 2);
+            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\", \"{1}\",{2})", schema, name, code);
             AppendSilentCode(format, true);
         }
 

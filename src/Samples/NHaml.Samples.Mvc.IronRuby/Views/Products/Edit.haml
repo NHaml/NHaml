@@ -1,5 +1,5 @@
 %h2= view_data.model.product.ProductName
-%form{:action => url.action({:action => 'Update', :id => view_data.model.product.ProductId}), :method => 'post'}
+%form{action = url.action({:action => 'Update', :id => view_data.model.product.ProductId}) method = "post"}
   %table
     %tr
       %td Name:

@@ -13,7 +13,7 @@ namespace NHaml
         private static readonly Regex _escapedExpressionBeginQuotesRegex;
         private static readonly Regex _escapedExpressionEndQuotesRegex;
         private readonly string attributesString;
-        private List<NHamlAttribute> _attributes = new List<NHamlAttribute>();
+        private List<NHamlAttribute> _attributes;
 
         static AttributeParser()
         {
@@ -25,7 +25,7 @@ namespace NHaml
 
             pattern += @"(?:(?<schema>\w+)\:)?"; // schema
 
-            pattern += @"(?<name>\w+)"; // attribute name
+            pattern += @"(?<name>[\w-]+)"; // attribute name
 
             pattern += @"("; // start optinal value for only reference
 
@@ -53,6 +53,7 @@ namespace NHaml
 
         public AttributeParser(string attributesString)
         {
+            _attributes = new List<NHamlAttribute>();
             this.attributesString = attributesString;
         }
 

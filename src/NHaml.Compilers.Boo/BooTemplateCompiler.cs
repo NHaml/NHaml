@@ -76,12 +76,7 @@ namespace NHaml.Compilers.Boo
               };
         }
 
-        public void RenderAttributes( TemplateParser templateParser, string attributes )
-        {
-            attributes = _keywordEscaperRegex.Replace( attributes, "@$3$6" );
 
-            BooAttributeRenderer.Render( templateParser, attributes );
-        }
 
         #endregion
     }

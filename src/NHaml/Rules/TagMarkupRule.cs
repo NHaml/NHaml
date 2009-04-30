@@ -19,18 +19,6 @@ namespace NHaml.Rules
           @"(?:(?:\#([-\w]+))|(?:\.([-\w]+)))+",
           RegexOptions.Compiled | RegexOptions.Singleline );
 
-        private static readonly Regex _staticAttributesRegex = new Regex(
-          @"^(?:[-:\w]+\s*=\s*""[^""]+""\s*,?\s*)+$",
-          RegexOptions.Compiled | RegexOptions.Singleline );
-
-        private static readonly Regex _commaStripperRegex = new Regex(
-          @"""\s*,\s*",
-          RegexOptions.Compiled | RegexOptions.Singleline );
-
-        private static readonly Regex _hyphenCleanerRegex = new Regex(
-          @"\b(http|accept)\-(equiv|charset)(\s*[=:])",
-          RegexOptions.Compiled | RegexOptions.Singleline );
-
         private static readonly List<string> _whitespaceSensitiveTags
           = new List<string> { "textarea", "pre" };
 
@@ -158,36 +146,30 @@ namespace NHaml.Rules
                 attributesHash = PrependAttribute( attributesHash, Id, id );
             }
 
-            if( !string.IsNullOrEmpty( attributesHash ) )
+            if (!string.IsNullOrEmpty(attributesHash))
             {
-                templateParser.TemplateClassBuilder.AppendOutput( " " );
+                // templateParser.TemplateClassBuilder.AppendOutput( " " );
 
-                //var attributeParser = new AttributeParser(attributesHash);
-                //attributeParser.Parse();
-                //foreach (var attributeKeyValue in attributeParser.Values)
-                //{
-                //    templateParser.TemplateClassBuilder.AppendOutput(string.Format("{0}=\"", attributeKeyValue.Key));
-                //    var values = AttributeValueParser.Parse(attributeKeyValue.Value);
-                 
-                //}
-                if( _staticAttributesRegex.IsMatch( attributesHash ) )
+                var attributeParser = new AttributeParser(attributesHash);
+                attributeParser.Parse();
+                foreach (var attribute in attributeParser.Attributes)
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput( _commaStripperRegex.Replace( attributesHash, "\" " ) );
-                }
-                else
-                {
-                    var cleanAttributes = _hyphenCleanerRegex.Replace( attributesHash, "$1_$2$3" );
-
-                    templateParser.TemplateEngine.TemplateCompiler.RenderAttributes( templateParser, cleanAttributes );
+                    var values = AttributeValueParser.Parse(attribute.Value);
+                    var schema = attribute.Schema;
+                    if (schema == null)
+                    {
+                        schema = string.Empty;
+                    }
+                    templateParser.TemplateClassBuilder.AppendAttribute(schema, attribute.Name, values);
                 }
             }
         }
 
-        private static string PrependAttribute( string attributesHash, string name, string value )
+        private static string PrependAttribute(string attributesHash, string name, string value)
         {
             var attribute = name + "=\"" + value + "\"";
 
-            return string.IsNullOrEmpty( attributesHash ) ? attribute : attribute + "," + attributesHash;
+            return string.IsNullOrEmpty(attributesHash) ? attribute : attribute + " " + attributesHash;
         }
     }
 }

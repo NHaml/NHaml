@@ -226,12 +226,12 @@ namespace NHaml.Generator.Wpf
                 if ((attributeNavigator.LocalName != "id") && (attributeNavigator.LocalName != "class"))
                 {
                     added = true;
-                    stringBuilder.AppendFormat("{0}=\"{1}\", ", attributeNavigator.LocalName, attributeNavigator.Value);
+                    stringBuilder.AppendFormat("{0}=\"{1}\" ", attributeNavigator.LocalName, attributeNavigator.Value);
                 }
             }
             if (added)
             {
-                stringBuilder.Remove(stringBuilder.Length - 2, 2);
+                stringBuilder.Remove(stringBuilder.Length - 1, 1);
             }
             if (stringBuilder.Length > 0)
             {

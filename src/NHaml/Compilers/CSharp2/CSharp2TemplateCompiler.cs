@@ -1,12 +1,6 @@
 using System;
-using System.Collections;
-using System.IO;
-using System.Text;
 using System.Text.RegularExpressions;
-
-using NHaml.Compilers.CSharp2.Coco;
 using NHaml.Exceptions;
-using NHaml.Properties;
 
 namespace NHaml.Compilers.CSharp2
 {
@@ -76,43 +70,9 @@ namespace NHaml.Compilers.CSharp2
               };
         }
 
-        public void RenderAttributes( TemplateParser templateParser, string attributes )
-        {
-            attributes = _keywordEscaperRegex.Replace(attributes, "$2$5@$3$6");
+    
 
-            RenderAttributesCore( templateParser, attributes );
-        }
-
-        protected virtual void RenderAttributesCore( TemplateParser templateParser, string attributes )
-        {
-            var stream = new MemoryStream( Encoding.UTF8.GetBytes( "class _ {object " + attributes + ";}" ) );
-            var scanner = new Scanner( stream );
-            var parser = new Parser( scanner );
-
-            parser.Parse();
-
-            if( parser.errors.count > 0 )
-            {
-                SyntaxException.Throw( templateParser.CurrentInputLine, Resources.AttributesParseError );
-            }
-
-            if( parser.variables.Count > 0 )
-            {
-                AppendAttribute( templateParser, parser.variables[0], null );
-
-                for( var i = 1; i < parser.variables.Count; i++ )
-                {
-                    AppendAttribute( templateParser, parser.variables[i], " " );
-                }
-            }
-        }
-
-        private static void AppendAttribute( TemplateParser templateParser, DictionaryEntry variable, string separator )
-        {
-            templateParser.TemplateClassBuilder.AppendAttributeCode(
-              separator + variable.Key.ToString().Replace( '_', '-' ).Replace( "@", "" ),
-              variable.Value.ToString() );
-        }
+  
 
         public virtual string TranslateLambda( string codeLine, Match lambdaMatch )
         {

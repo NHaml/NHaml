@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
 using NHaml.Utils;
 
@@ -74,9 +75,22 @@ namespace NHaml.Compilers.CSharp2
         }
 
 
-        public override void AppendAttributeCode( string name, string code )
+        public override void AppendAttribute(string schema, string name, List<AttributeValueParser.Item> values)
         {
-            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",Convert.ToString({1}))", name, code);
+            var code = new StringBuilder();
+            foreach (var item in values)
+            {
+                if (item.IsCode)
+                {
+                    code.AppendFormat("Convert.ToString({0}) + ", item.Value);
+                }
+                else
+                {
+                    code.AppendFormat("\"{0}\" + ", item.Value.Replace("\"", "\\\""));
+                }
+            }
+            code.Remove(code.Length - 2, 2);
+            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema, name, code);
             AppendSilentCode(format, true);
         }
 
