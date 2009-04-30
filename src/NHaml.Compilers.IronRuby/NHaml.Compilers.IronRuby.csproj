@@ -37,7 +37,7 @@
     <WarningLevel>3</WarningLevel>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRules>-Microsoft.Design#CA2210;-Microsoft.Design#CA1020;-Microsoft.Security#CA2116</CodeAnalysisRules>
-    <DocumentationFile>bin\Release\NHaml.Compilers.IronRuby.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\NHaml.Compilers.IronRuby.xml</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
