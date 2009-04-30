@@ -72,8 +72,6 @@
     </Compile>
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
-    <Compile Include="Compilers\CSharp2\Coco\Parser.cs" />
-    <Compile Include="Compilers\CSharp2\Coco\Scanner.cs" />
     <Compile Include="NHamlAttribute.cs" />
     <Compile Include="NHamlAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
@@ -130,10 +128,6 @@
     <None Include="..\NHaml.snk">
       <Link>Properties\NHaml.snk</Link>
     </None>
-    <None Include="Compilers\CSharp2\Coco\CSharp2.ATG" />
-    <None Include="Compilers\CSharp2\Coco\Gen.cmd" />
-    <None Include="Compilers\CSharp2\Coco\Parser.frame" />
-    <None Include="Compilers\CSharp2\Coco\Scanner.frame" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
