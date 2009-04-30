@@ -74,14 +74,15 @@ namespace NHaml.Tests
         [Test]
         public void Expressions()
         {
-            var parser = new AttributeParser("aaa=#{1+1} bb=#{\"t\"} c=#{f.ToString()}");
+            var parser = new AttributeParser("aaa=#{1+1} bb=#{\"t\"} c=#{f.ToString()} d=#{f=>\\{return 1\\}}");
 
             parser.Parse();
 
-            Assert.AreEqual(3, parser.Attributes.Count);
+            Assert.AreEqual(4, parser.Attributes.Count);
             AssertAttribute(parser, "aaa", "1+1", NHamlAttributeType.Expression);
             AssertAttribute(parser, "bb", "\"t\"", NHamlAttributeType.Expression);
             AssertAttribute(parser, "c", "f.ToString()", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "d", @"f=>\{return 1\}", NHamlAttributeType.Expression);
         }
 
         [Test]

@@ -34,7 +34,7 @@ namespace NHaml
             pattern += @"(?:'(?<svalue>((?:\\')|[^'])*)')"; // single quotes
             pattern += "|";
             //Todo: allow to escape }
-            pattern += @"(?:#{(?<dvalue>[^}]*)}))"; // expression
+            pattern += @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))"; // expression
 
             pattern += @")?"; // end optinal value for only reference
 
