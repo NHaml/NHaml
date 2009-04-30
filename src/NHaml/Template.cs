@@ -32,12 +32,13 @@ namespace NHaml
             get { return _outputWriter; }
         }
 
-        protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName, string attributeValue)
+        protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName, object attributeValue)
         {
-            var asString = Convert.ToString(attributeValue);
-            if (asString != null)
+            if( attributeValue != null )
             {
-                if (attributeSchema.Length == 0)
+                var asString = Convert.ToString( attributeValue );
+
+                if( attributeSchema.Length == 0 )
                 {
                     textWriter.Write(@" {0}=""", attributeName);
                 }
@@ -45,6 +46,7 @@ namespace NHaml
                 {
                     textWriter.Write(@" {0}:{1}=""", attributeSchema, attributeName);
                 }
+
                 textWriter.Write(asString);
                 textWriter.Write(@"""");
             }

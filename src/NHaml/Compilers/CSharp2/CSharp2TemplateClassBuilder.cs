@@ -90,7 +90,7 @@ namespace NHaml.Compilers.CSharp2
                 }
             }
             code.Remove(code.Length - 2, 2);
-            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema, name, code);
+            var format = string.Format("RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",({2}))", schema, name, code);
             AppendSilentCode(format, true);
         }
 

@@ -27,7 +27,9 @@ namespace NHaml.Compilers.IronRuby
                 }
             }
             code.Remove(code.Length - 2, 2);
-            var format = string.Format("RenderAttributeIfValueNotNull(text_writer, \"{0}\", \"{1}\", {2})", schema, name, code);
+
+            var format = string.Format("render_attribute_if_value_not_null(text_writer, \"{0}\", \"{1}\", ({2}))", schema, name, code);
+
             AppendSilentCode(format, true);
         }
 
@@ -102,14 +104,6 @@ namespace NHaml.Compilers.IronRuby
             var result = new StringBuilder();
 
             result.AppendLine( "class " + ClassName + "<" + Utility.MakeBaseClassName( BaseType, "[", "]", "::" ) );
-
-            result.AppendLine( "def __a(as)" );
-            result.AppendLine( "as.collect { |k,v| " );
-            result.AppendLine( "next unless v" );
-            result.AppendLine( "\"#{k.to_s.gsub('_','-')}=\\\"#{v}\\\"\"" );
-            result.AppendLine( "}.compact.join(' ')" );
-            result.AppendLine( "end" );
-
             result.AppendLine( "def core_render(text_writer)" );
 
             result.Append(Preamble);

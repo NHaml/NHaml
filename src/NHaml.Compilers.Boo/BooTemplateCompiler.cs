@@ -11,8 +11,6 @@ namespace NHaml.Compilers.Boo
           @"^(.+)(def\(.*\))\s*$",
           RegexOptions.Compiled | RegexOptions.Singleline );
 
-        #region ITemplateCompiler Members
-
         public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
         {
             return new BooTemplateClassBuilder( className, templateBaseType );
@@ -71,9 +69,5 @@ namespace NHaml.Compilers.Boo
                   booTemplateClassBuilder.EndCodeBlock();
               };
         }
-
-
-
-        #endregion
     }
 }
