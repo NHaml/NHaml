@@ -13,9 +13,8 @@ namespace NHaml
         private static readonly Regex _escapedExpressionBeginQuotesRegex;
         private static readonly Regex _escapedExpressionEndQuotesRegex;
         private readonly string attributesString;
-        private List<NHamlAttribute> _attributes;
 
-        static AttributeParser()
+    	static AttributeParser()
         {
             // far more readable the a large string and 
             // since there is not dynamic code the compiler
@@ -27,7 +26,7 @@ namespace NHaml
 
             pattern += @"(?<name>[\w-]+)"; // attribute name
 
-            pattern += @"("; // start optinal value for only reference
+            pattern += @"("; // start optional value for only reference
 
             pattern += @"\s*=\s*"; // equal
 
@@ -39,7 +38,7 @@ namespace NHaml
             pattern += "|";
             pattern += @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))"; // expression
 
-            pattern += @")?"; // end optinal value for only reference
+            pattern += @")?"; // end optional value for only reference
 
             pattern += @"\s*"; // whitespace for next
 
@@ -53,18 +52,15 @@ namespace NHaml
 
         public AttributeParser(string attributesString)
         {
-            _attributes = new List<NHamlAttribute>();
+            Attributes = new List<NHamlAttribute>();
             this.attributesString = attributesString;
         }
 
-        public ICollection<NHamlAttribute> Attributes
-        {
-            get { return _attributes; }
-        }
+    	public List<NHamlAttribute> Attributes { get; private set; }
 
-        public void Parse()
+    	public void Parse()
         {
-            _attributes.Clear();
+            Attributes.Clear();
 
             var matches = _parser.Matches(attributesString);
 
@@ -115,7 +111,7 @@ namespace NHaml
                     type = NHamlAttributeType.Reference;
                 }
 
-                _attributes.Add(new NHamlAttribute(schmea, name, value, type));
+                Attributes.Add(new NHamlAttribute(schmea, name, value, type));
             }
         }
 
