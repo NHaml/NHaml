@@ -193,6 +193,10 @@ namespace NHaml.Tests
             {
                 _output = output;
             }
+            public static void Foo()
+            {
+                
+            }
 
             public void Tag(Action action)
             {

@@ -5,6 +5,7 @@ using Moq;
 using NHaml.Compilers.Boo;
 using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
+using NHaml.Compilers.FSharp;
 using NHaml.Compilers.IronRuby;
 using NHaml.Configuration;
 
@@ -39,6 +40,14 @@ namespace NHaml.Tests
         {
             CreateAndAssertTemplateCompiler( "NHaml.Compilers.Boo.BooTemplateCompiler, NHaml.Compilers.Boo",
               typeof( BooTemplateCompiler ) );
+        }
+
+
+        [Test]
+        public void CanCreateFSharpTemplateCompilerFromFullName()
+        {
+            CreateAndAssertTemplateCompiler("NHaml.Compilers.FSharp.FSharpTemplateCompiler, NHaml.Compilers.FSharp",
+              typeof(FSharpTemplateCompiler));
         }
 
         [Test]

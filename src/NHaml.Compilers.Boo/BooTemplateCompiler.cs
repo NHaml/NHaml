@@ -20,8 +20,6 @@ namespace NHaml.Compilers.Boo
         {
             var templateSource = templateParser.TemplateClassBuilder.Build();
 
-            //Console.WriteLine(templateSource);
-
             var typeBuilder = new BooTemplateTypeBuilder( templateParser.TemplateEngine );
 
            // Debug.WriteLine(templateSource);
@@ -42,31 +40,31 @@ namespace NHaml.Compilers.Boo
 
             var lambdaMatch = LambdaRegex.Match( code );
 
+            var templateClassBuilder = (BooTemplateClassBuilder)templateParser.TemplateClassBuilder;
             if( !lambdaMatch.Success )
             {
-                templateParser.TemplateClassBuilder.AppendSilentCode( code, !templateParser.IsBlock );
+                templateClassBuilder.AppendSilentCode(code, !templateParser.IsBlock);
 
                 if( templateParser.IsBlock )
                 {
-                    templateParser.TemplateClassBuilder.BeginCodeBlock();
+                    templateClassBuilder.BeginCodeBlock();
 
-                    return () => templateParser.TemplateClassBuilder.EndCodeBlock();
+                    return templateClassBuilder.EndCodeBlock;
                 }
 
                 return null;
             }
 
-            var booTemplateClassBuilder = (BooTemplateClassBuilder)templateParser.TemplateClassBuilder;
             var depth = templateParser.CurrentInputLine.IndentCount;
 
-            booTemplateClassBuilder.AppendChangeOutputDepth( depth, true );
-            booTemplateClassBuilder.AppendSilentCode( code, false );
-            booTemplateClassBuilder.BeginCodeBlock();
+            templateClassBuilder.AppendChangeOutputDepth( depth, true );
+            templateClassBuilder.AppendSilentCode( code, false );
+            templateClassBuilder.BeginCodeBlock();
 
             return () =>
               {
-                  booTemplateClassBuilder.AppendChangeOutputDepth( depth, false );
-                  booTemplateClassBuilder.EndCodeBlock();
+                  templateClassBuilder.AppendChangeOutputDepth( depth, false );
+                  templateClassBuilder.EndCodeBlock();
               };
         }
     }

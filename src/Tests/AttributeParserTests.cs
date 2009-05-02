@@ -71,6 +71,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "c", "#{a}", NHamlAttributeType.String);
         }
 
+
         [Test]
         public void Expressions()
         {

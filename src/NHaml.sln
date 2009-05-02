@@ -47,6 +47,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc.VisualBasic",
 EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NHaml.Samples.Mvc.VisualBasic", "Samples\NHaml.Samples.Mvc.VisualBasic\NHaml.Samples.Mvc.VisualBasic.vbproj", "{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.FSharp", "NHaml.Compilers.FSharp\NHaml.Compilers.FSharp.csproj", "{FEDE4641-1834-42E0-BD10-84D1136882E2}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Library1", "Library1\Library1.fsproj", "{E3443F7E-517B-4F9F-B562-F3F99FBC8DC2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -125,6 +129,14 @@ Global
 		{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E3443F7E-517B-4F9F-B562-F3F99FBC8DC2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E3443F7E-517B-4F9F-B562-F3F99FBC8DC2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E3443F7E-517B-4F9F-B562-F3F99FBC8DC2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E3443F7E-517B-4F9F-B562-F3F99FBC8DC2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -69,8 +69,10 @@ namespace NHaml
             foreach (Match match in matches)
             {
                 if (!match.Success)
+                {
                     //Todo: put message in resource
                     throw new SyntaxException(string.Format("Attribute '{0}' is not valid.", match.Value));
+                }
 
                 var groupSchema = match.Groups["schema"];
                 var groupName = match.Groups["name"];
@@ -79,7 +81,11 @@ namespace NHaml
                 var groupReferenceValue = match.Groups["rvalue"];
                 var groupExpressionValue = match.Groups["dvalue"];
 
-                var schmea = groupSchema.Success ? groupSchema.Value : null;
+                string schmea = null;
+                if (groupSchema.Success)
+                {
+                    schmea = groupSchema.Value;
+                }
                 var name = groupName.Value;
                 string value;
                 NHamlAttributeType type;
@@ -135,13 +141,17 @@ namespace NHaml
         private void CheckMatch(int matchIndex, int currentIndex)
         {
             if (matchIndex == currentIndex)
+            {
                 return;
+            }
 
             var length = matchIndex - currentIndex;
             var result = attributesString.Substring(currentIndex, length).Trim();
 
             if (result.Length == 0)
+            {
                 return;
+            }
 
             //Todo: put massage into resource
             var message = new StringBuilder();

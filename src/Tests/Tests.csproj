@@ -275,6 +275,63 @@
     <None Include="Templates\Class.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\FSharp\AttributeEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\AttributeNamespaceAndDynamic.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\Conditionals.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\Copy of MultiLine.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\CustomBaseClass.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\IdAndDynamic.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\LambdaEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\LoopEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\MetaModel.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\MetaWithoutModel.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\MultiLine.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\NullAttributes.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\Partials.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\Preamble.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\SilentEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\SimpleEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\SwitchEval.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\Welcome.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\FSharp\_Menu.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\MetaWithoutModel.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -513,6 +570,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AttributeParserTests.cs" />
+    <Compile Include="FSharpFunctionalTests.cs" />
     <Compile Include="VisualBasicFunctionalTests.cs" />
     <Compile Include="ImporterTests.cs" />
     <Compile Include="MvcTests.cs" />
@@ -541,6 +599,10 @@
     <ProjectReference Include="..\NHaml.Compilers.Boo\NHaml.Compilers.Boo.csproj">
       <Project>{E9AFFBF2-A4E1-459A-9BB7-80A59D4AA8FD}</Project>
       <Name>NHaml.Compilers.Boo</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHaml.Compilers.FSharp\NHaml.Compilers.FSharp.csproj">
+      <Project>{FEDE4641-1834-42E0-BD10-84D1136882E2}</Project>
+      <Name>NHaml.Compilers.FSharp</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj">
       <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>

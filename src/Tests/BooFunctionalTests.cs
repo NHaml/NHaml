@@ -1,5 +1,4 @@
 using NHaml.Compilers.Boo;
-
 using NUnit.Framework;
 
 namespace NHaml.Tests
