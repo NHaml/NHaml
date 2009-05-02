@@ -7,15 +7,18 @@ namespace NHaml
 {
     public abstract class Template
     {
-        private readonly OutputWriter _outputWriter = new OutputWriter();
+        public Template()
+        {
+            Output = new OutputWriter();
+        }
 
         public void Render( TextWriter textWriter )
         {
             Invariant.ArgumentNotNull( textWriter, "textWriter" );
 
-            _outputWriter.TextWriter = textWriter;
+            Output.TextWriter = textWriter;
 
-            PreRender( _outputWriter );
+            PreRender( Output );
             CoreRender( textWriter );
         }
 
@@ -27,10 +30,7 @@ namespace NHaml
         {
         }
 
-        protected OutputWriter Output
-        {
-            get { return _outputWriter; }
-        }
+        public OutputWriter Output { get; private set; }
 
         protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName, object attributeValue)
         {

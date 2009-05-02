@@ -1,37 +1,37 @@
-- Html.Tag() () ->
+- x.Html.Tag() fun() ->
   The Content for
   the div
 
-- Html.Tag("div") () ->
+- x.Html.Tag("div") fun() ->
   The Content for
   the div
 
-- Html.Tag("div") () ->
+- x.Html.Tag("div") fun() ->
   %p 
     The Content for
     the div
 
-- Html.Tag("div") () ->
+- x.Html.Tag("div") fun() ->
   The Content for the div
 
-- Html.Tag("div") () ->
-  - Html.Tag("div") () ->
+- x.Html.Tag("div") fun() ->
+  - x.Html.Tag("div") fun() ->
     The Content for the div
 
-- Html.Tag("div") () ->
-  - Html.Tag("div") () ->
-    - Html.Tag("div") () ->
+- x.Html.Tag("div") fun() ->
+  - x.Html.Tag("div") fun() ->
+    - x.Html.Tag("div") fun() ->
       The Content for the div
 
-- Html.Tag("body") () ->
+- x.Html.Tag("body") fun() ->
   _ Welcome
 
-- Html.Tag("body") () ->
-  - Html.Tag("div") () ->
+- x.Html.Tag("body") fun() ->
+  - x.Html.Tag("div") fun() ->
     _ Welcome
 
-- Html.Tag("div", 42) (int n) ->
+- x.Html.Tag("div", 42) fun(n:int) ->
   = "N was: " + n
 
-- Html.Tag("div", 21, 21) (int i, int j) ->
+- x.Html.Tag("div", 21, 21) fun(i:int, j:int) ->
   = "N was: " + (i + j)

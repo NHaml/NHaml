@@ -7,8 +7,8 @@ namespace NHaml.Compilers.FSharp
     public class FSharpTemplateCompiler : ITemplateCompiler
     {
         private static readonly Regex LambdaRegex = new Regex(
-            @"^(.+)(\(.*\))\s*->\s*$",
-            RegexOptions.Compiled | RegexOptions.Singleline );
+          @"^(.+)(fun\(.*\))\s*->\s*$",
+          RegexOptions.Compiled | RegexOptions.Singleline);
 
         public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
         {
@@ -53,8 +53,8 @@ namespace NHaml.Compilers.FSharp
             }
 
             var depth = templateParser.CurrentInputLine.IndentCount;
-
             code = TranslateLambda(code, lambdaMatch);
+
             templateClassBuilder.AppendChangeOutputDepth( depth );
             templateClassBuilder.AppendSilentCode( code, true );
 
@@ -65,14 +65,12 @@ namespace NHaml.Compilers.FSharp
                        };
         }
 
-
-        public string TranslateLambda(string codeLine, Match lambdaMatch)
+        public  string TranslateLambda(string codeLine, Match lambdaMatch)
         {
-            return codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2)
-              + (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ")
-                + lambdaMatch.Groups[2].Captures[0].Value + " => {";
+            var methodBeingCalled = codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2);
+            var s = (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ");
+            var argDefinition = lambdaMatch.Groups[2].Captures[0].Value;
+            return string.Format("{0}{1}{2} -> ", methodBeingCalled, s, argDefinition);
         }
-  
-
     }
 }

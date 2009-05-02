@@ -46,7 +46,7 @@ namespace NHaml.Compilers.CSharp2
                 {
                     templateParser.TemplateClassBuilder.BeginCodeBlock();
 
-                    return () => templateParser.TemplateClassBuilder.EndCodeBlock();
+                    return templateParser.TemplateClassBuilder.EndCodeBlock;
                 }
 
                 return null;

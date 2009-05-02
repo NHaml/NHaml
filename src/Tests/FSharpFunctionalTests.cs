@@ -19,10 +19,7 @@ namespace NHaml.Tests
         {
             
         }
-        //TODO: not sure how to do this yet
-        public override void LambdaEval()
-        {
-        }
+
     }
 #endif
 }

@@ -75,7 +75,7 @@ namespace NHaml.Compilers.FSharp
 
             if (BlockDepth != depth)
             {
-                Output.AppendLine(IndentString + "Output.Depth = " + depth);
+                Output.AppendLine(IndentString + "let x.Output.Depth = " + depth);
                 BlockDepth = depth;
             }
         }
@@ -113,12 +113,12 @@ namespace NHaml.Compilers.FSharp
         public override void BeginCodeBlock()
         {
             Depth++;
-            Output.AppendLine();
+            Output.AppendLine(IndentString + "(");
         }
 
         public override void EndCodeBlock()
         {
-            Output.AppendLine();
+            Output.AppendLine(IndentString + ")");
             Depth--;
         }
 
