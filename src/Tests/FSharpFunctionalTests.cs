@@ -3,6 +3,7 @@ using NUnit.Framework;
 
 namespace NHaml.Tests
 {
+#if (DEBUG)
     [TestFixture]
     public class FSharpFunctionalTests : FunctionalTestFixture
     {
@@ -23,4 +24,5 @@ namespace NHaml.Tests
         {
         }
     }
+#endif
 }
