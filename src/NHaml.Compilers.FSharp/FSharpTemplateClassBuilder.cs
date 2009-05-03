@@ -75,7 +75,7 @@ namespace NHaml.Compilers.FSharp
 
             if (BlockDepth != depth)
             {
-                Output.AppendLine(IndentString + "let x.Output.Depth = " + depth);
+                Output.AppendLine(IndentString + "let this.Output.Depth = " + depth);
                 BlockDepth = depth;
             }
         }
@@ -106,7 +106,7 @@ namespace NHaml.Compilers.FSharp
                 }
             }
             code.Remove(code.Length - 2, 2);
-            var format = string.Format("x.RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema, name, code);
+            var format = string.Format("this.RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema, name, code);
             AppendCode(format);
         }
 
@@ -134,11 +134,11 @@ namespace NHaml.Compilers.FSharp
             var result = new StringBuilder();
 
             var baseClassName = Utility.MakeBaseClassName( BaseType, "<", ">", "." );
-            result.Append( Utility.FormatInvariant( "type {0}() = inherit {1}()",ClassName, baseClassName ) );
+            result.Append( Utility.FormatInvariant( "type {0}() as this = inherit {1}()",ClassName, baseClassName ) );
             if (Preamble.Length > 0 || Output.Length > 0)
             {
                 result.AppendLine(" with");
-                result.AppendLine("override x.CoreRender(textWriter:TextWriter) =");
+                result.AppendLine("override this.CoreRender(textWriter:TextWriter) =");
 
                 result.Append(Preamble);
                 result.Append(Output);
