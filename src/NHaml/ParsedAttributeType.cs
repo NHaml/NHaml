@@ -1,6 +1,6 @@
 namespace NHaml
 {
-    public enum NHamlAttributeType
+    public enum ParsedAttributeType
     {
         String,
         Expression,

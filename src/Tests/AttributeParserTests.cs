@@ -7,13 +7,13 @@ namespace NHaml.Tests
     [TestFixture]
     public class AttributeParserTests
     {
-        private static void AssertAttribute(AttributeParser parser, string name, string value, NHamlAttributeType type)
+        private static void AssertAttribute(AttributeParser parser, string name, string value, ParsedAttributeType type)
         {
             AssertAttribute(parser, null, name, value, type);
         }
 
         private static void AssertAttribute(AttributeParser parser, string schema, string name, string value,
-                                            NHamlAttributeType type)
+                                            ParsedAttributeType type)
         {
             var attribute = parser.Attributes.FirstOrDefault(a => a.Name == name);
 
@@ -32,8 +32,8 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(2, parser.Attributes.Count);
-            AssertAttribute(parser, "b", "a'b'", NHamlAttributeType.String);
-            AssertAttribute(parser, "dd", "\"d\"e", NHamlAttributeType.String);
+            AssertAttribute(parser, "b", "a'b'", ParsedAttributeType.String);
+            AssertAttribute(parser, "dd", "\"d\"e", ParsedAttributeType.String);
         }
 
         [Test]
@@ -44,9 +44,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "b", NHamlAttributeType.String);
-            AssertAttribute(parser, "cc", "d", NHamlAttributeType.String);
-            AssertAttribute(parser, "eee", "f", NHamlAttributeType.String);
+            AssertAttribute(parser, "a", "b", ParsedAttributeType.String);
+            AssertAttribute(parser, "cc", "d", ParsedAttributeType.String);
+            AssertAttribute(parser, "eee", "f", ParsedAttributeType.String);
         }
 
         [Test]
@@ -67,8 +67,8 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(2, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "#{\"a\"}", NHamlAttributeType.String);
-            AssertAttribute(parser, "c", "#{a}", NHamlAttributeType.String);
+            AssertAttribute(parser, "a", "#{\"a\"}", ParsedAttributeType.String);
+            AssertAttribute(parser, "c", "#{a}", ParsedAttributeType.String);
         }
 
 
@@ -80,10 +80,10 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(4, parser.Attributes.Count);
-            AssertAttribute(parser, "aaa", "1+1", NHamlAttributeType.Expression);
-            AssertAttribute(parser, "bb", "\"t\"", NHamlAttributeType.Expression);
-            AssertAttribute(parser, "c", "f.ToString()", NHamlAttributeType.Expression);
-            AssertAttribute(parser, "d", @"f=>{return 1}", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "aaa", "1+1", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "bb", "\"t\"", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "c", "f.ToString()", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "d", @"f=>{return 1}", ParsedAttributeType.Expression);
         }
 
         [Test]
@@ -94,9 +94,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "a", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "cc", "cc", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "e", "e", NHamlAttributeType.Reference);
+            AssertAttribute(parser, "a", "a", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "cc", "cc", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "e", "e", ParsedAttributeType.Reference);
         }
 
         [Test]
@@ -107,11 +107,11 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(5, parser.Attributes.Count);
-            AssertAttribute(parser, "aa", "b", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "c", "d", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "eee", "f", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "ff", "ff.aa", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "ggg", "ggg.bb.aa", NHamlAttributeType.Reference);
+            AssertAttribute(parser, "aa", "b", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "c", "d", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "eee", "f", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "ff", "ff.aa", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "ggg", "ggg.bb.aa", ParsedAttributeType.Reference);
         }
 
         [Test]
@@ -122,9 +122,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "b", "b", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "b", "ccc", "eee", NHamlAttributeType.String);
-            AssertAttribute(parser, "eee", "c", "e", NHamlAttributeType.Reference);
+            AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "b", "ccc", "eee", ParsedAttributeType.String);
+            AssertAttribute(parser, "eee", "c", "e", ParsedAttributeType.Reference);
         }
 
 
@@ -136,9 +136,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "b", NHamlAttributeType.String);
-            AssertAttribute(parser, "c", "d", NHamlAttributeType.String);
-            AssertAttribute(parser, "ee", "f", NHamlAttributeType.String);
+            AssertAttribute(parser, "a", "b", ParsedAttributeType.String);
+            AssertAttribute(parser, "c", "d", ParsedAttributeType.String);
+            AssertAttribute(parser, "ee", "f", ParsedAttributeType.String);
         }
 
         [Test]
@@ -149,10 +149,10 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(4, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "a", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "bbb", "b", NHamlAttributeType.Reference);
-            AssertAttribute(parser, "c", "c", NHamlAttributeType.String);
-            AssertAttribute(parser, "dd", "d", NHamlAttributeType.Expression);
+            AssertAttribute(parser, "a", "a", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "bbb", "b", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "c", "c", ParsedAttributeType.String);
+            AssertAttribute(parser, "dd", "d", ParsedAttributeType.Expression);
         }
 
         [Test]

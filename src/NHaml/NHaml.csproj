@@ -70,8 +70,8 @@
     </Compile>
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
-    <Compile Include="NHamlAttribute.cs" />
-    <Compile Include="NHamlAttributeType.cs" />
+    <Compile Include="ParsedAttribute.cs" />
+    <Compile Include="ParsedAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
     <Compile Include="Rules\MetaMarkupRule.cs" />
     <Compile Include="TemplateParser.cs" />

@@ -52,11 +52,11 @@ namespace NHaml
 
         public AttributeParser(string attributesString)
         {
-            Attributes = new List<NHamlAttribute>();
+            Attributes = new List<ParsedAttribute>();
             this.attributesString = attributesString;
         }
 
-    	public List<NHamlAttribute> Attributes { get; private set; }
+    	public List<ParsedAttribute> Attributes { get; private set; }
 
     	public void Parse()
         {
@@ -82,42 +82,43 @@ namespace NHaml
                 var groupExpressionValue = match.Groups["dvalue"];
 
                 string schmea = null;
-                if (groupSchema.Success)
+                var name = groupName.Value;
+                string value;
+                ParsedAttributeType type;
+
+                if( groupSchema.Success )
                 {
                     schmea = groupSchema.Value;
                 }
-                var name = groupName.Value;
-                string value;
-                NHamlAttributeType type;
 
                 if (groupStringDoulbeQuoteValue.Success)
                 {
-                    type = NHamlAttributeType.String;
+                    type = ParsedAttributeType.String;
                     value = _escapedDoubleQuotesRegex.Replace(groupStringDoulbeQuoteValue.Value, "\"");
                 }
                 else if( groupStringSingleQuoteValue.Success )
                 {
-                    type = NHamlAttributeType.String;
+                    type = ParsedAttributeType.String;
                     value = _escapedSingleQuotesRegex.Replace(groupStringSingleQuoteValue.Value, "'");
                 }
                 else if( groupReferenceValue.Success )
                 {
-                    type = NHamlAttributeType.Reference;
+                    type = ParsedAttributeType.Reference;
                     value = groupReferenceValue.Value;
                 }
                 else if (groupExpressionValue.Success)
                 {
-                    type = NHamlAttributeType.Expression;
+                    type = ParsedAttributeType.Expression;
                     value = _escapedExpressionBeginQuotesRegex.Replace(groupExpressionValue.Value, "{");
                     value = _escapedExpressionEndQuotesRegex.Replace(value, "}");
                 }
                 else
                 {
                     value = name;
-                    type = NHamlAttributeType.Reference;
+                    type = ParsedAttributeType.Reference;
                 }
 
-                Attributes.Add(new NHamlAttribute(schmea, name, value, type));
+                Attributes.Add(new ParsedAttribute(schmea, name, value, type));
             }
         }
 
@@ -157,8 +158,8 @@ namespace NHaml
             var message = new StringBuilder();
             message.AppendLine( "Error while parsing attribute:" );
             message.AppendLine( attributesString );
-            message.Append( new string( ' ', currentIndex ) );
-            message.Append( new string( '^', length ) );
+            message.Append( new string( '-', currentIndex ) );
+            message.Append( '^' );
             throw new SyntaxException( message.ToString() );
         }
     }
