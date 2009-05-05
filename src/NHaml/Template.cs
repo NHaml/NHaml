@@ -43,17 +43,17 @@ namespace NHaml
             {
                 var asString = Convert.ToString(attributeValue);
 
-                if (attributeSchema.Length == 0)
+                if (string.IsNullOrEmpty(attributeSchema))
                 {
-                    textWriter.Write(@" {0}=""", attributeName);
+                    textWriter.Write(" {0}=\"", attributeName);
                 }
                 else
                 {
-                    textWriter.Write(@" {0}:{1}=""", attributeSchema, attributeName);
+                    textWriter.Write(" {0}:{1}=\"", attributeSchema, attributeName);
                 }
 
                 textWriter.Write(asString);
-                textWriter.Write(@"""");
+                textWriter.Write("\"");
             }
         }
     }

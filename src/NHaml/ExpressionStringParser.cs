@@ -55,6 +55,9 @@ namespace NHaml
                 var token = _expressionString.Substring( index, _expressionString.Length-index );
                 Tokens.Add( new ExpressionStringToken( token, false ) );
             }
+
+            if( Tokens.Count == 0 )
+                Tokens.Add(new ExpressionStringToken(string.Empty, false));
         }
     }
 }

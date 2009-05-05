@@ -68,6 +68,6 @@ namespace NHaml.Compilers
         public abstract void AppendChangeOutputDepth(int depth);
 
         public abstract string Build();
-        public abstract void AppendAttribute(string schema, string name, List<AttributeValueParser.Item> values);
+        public abstract void AppendAttributeTokens( string schema, string name, IEnumerable<ExpressionStringToken> values );
     }
 }

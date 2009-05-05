@@ -7,22 +7,21 @@ namespace NHaml.Compilers.FSharp
 {
     internal sealed class FSharpTemplateClassBuilder : TemplateClassBuilder
     {
-
         private bool _disableOutputIndentationShrink;
 
-        public FSharpTemplateClassBuilder( string className, Type baseType )
-            : base( className, baseType )
+        public FSharpTemplateClassBuilder(string className, Type baseType)
+            : base(className, baseType)
         {
         }
 
         public string IndentString
         {
-            get { return new string(' ', 4 + ((Depth < 0 ? 0 : Depth) * 2)); }
+            get { return new string(' ', 4 + ((Depth < 0 ? 0 : Depth)*2)); }
         }
 
-        public override void AppendOutput( string value, bool newLine )
+        public override void AppendOutput(string value, bool newLine)
         {
-            if( value == null )
+            if (value == null)
             {
                 return;
             }
@@ -31,20 +30,20 @@ namespace NHaml.Compilers.FSharp
 
             if (!_disableOutputIndentationShrink && Depth > 0)
             {
-                if (value.StartsWith(string.Empty.PadLeft(Depth * 2), StringComparison.Ordinal))
+                if (value.StartsWith(string.Empty.PadLeft(Depth*2), StringComparison.Ordinal))
                 {
-                    value = value.Remove(0, Depth * 2);
+                    value = value.Remove(0, Depth*2);
                 }
             }
 
-            value = value.Replace( "\"", "\"\"" );
+            value = value.Replace("\"", "\"\"");
 
-            Output.AppendLine( string.Format("{0}textWriter.{1}(@\"{2}\")", IndentString, method, value) );
+            Output.AppendLine(string.Format("{0}textWriter.{1}(@\"{2}\")", IndentString, method, value));
         }
 
-        public override void AppendCode( string code, bool newLine, bool escapeHtml )
+        public override void AppendCode(string code, bool newLine, bool escapeHtml)
         {
-            if( code != null )
+            if( !string.IsNullOrEmpty( code ) )
             {
                 if (!code.StartsWith("\"") || !code.EndsWith("\""))
                 {
@@ -55,12 +54,12 @@ namespace NHaml.Compilers.FSharp
                     code = string.Format("({0})", code);
                 }
 
-                if( escapeHtml )
+                if (escapeHtml)
                 {
                     code = "(HttpUtility.HtmlEncode" + code + ")";
                 }
 
-                Output.AppendLine(IndentString + "textWriter." + (newLine ? "WriteLine" : "Write") + code  );
+                Output.AppendLine(IndentString + "textWriter." + (newLine ? "WriteLine" : "Write") + code);
             }
         }
 
@@ -75,14 +74,14 @@ namespace NHaml.Compilers.FSharp
 
             if (BlockDepth != depth)
             {
-                Output.AppendLine(IndentString + "let this.Output.Depth = " + depth);
+                //Output.AppendLine(IndentString + "let this.Output.Depth = " + depth);
                 BlockDepth = depth;
             }
         }
 
-        public override void AppendSilentCode( string code, bool closeStatement )
+        public override void AppendSilentCode(string code, bool closeStatement)
         {
-            if( code != null )
+            if (code != null)
             {
                 code = code.Trim();
 
@@ -90,23 +89,26 @@ namespace NHaml.Compilers.FSharp
             }
         }
 
-
-        public override void AppendAttribute(string schema, string name, List<AttributeValueParser.Item> values)
+        public override void AppendAttributeTokens(string schema, string name, IEnumerable<ExpressionStringToken> values)
         {
             var code = new StringBuilder();
             foreach (var item in values)
             {
-                if (item.IsCode)
+                if (item.IsExpression)
                 {
-                    code.AppendFormat("Convert.ToString({0}) + ", item.Value);
+                    code.AppendFormat("({0}) + ", item.Value);
                 }
                 else
                 {
                     code.AppendFormat("\"{0}\" + ", item.Value.Replace("\"", "\\\""));
                 }
             }
-            code.Remove(code.Length - 2, 2);
-            var format = string.Format("this.RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema, name, code);
+            if (code.Length > 3)
+            {
+                code.Remove(code.Length - 3, 3);
+            }
+            var format = string.Format("this.RenderAttributeIfValueNotNull(textWriter, \"{0}\",\"{1}\",{2})", schema,
+                                       name, code);
             AppendCode(format);
         }
 
@@ -122,7 +124,15 @@ namespace NHaml.Compilers.FSharp
             Depth--;
         }
 
-        public override void AppendPreambleCode( string code )
+        public void EndCodeBlockOnLastLine()
+        {
+            var linebreakLength = Environment.NewLine.Length;
+            Output.Remove( Output.Length - linebreakLength, linebreakLength );
+            Output.AppendLine( ")" );
+            Depth--;
+        }
+
+        public override void AppendPreambleCode(string code)
         {
             Preamble.AppendLine(IndentString + code);
         }
@@ -133,8 +143,8 @@ namespace NHaml.Compilers.FSharp
 
             var result = new StringBuilder();
 
-            var baseClassName = Utility.MakeBaseClassName( BaseType, "<", ">", "." );
-            result.Append( Utility.FormatInvariant( "type {0}() as this = inherit {1}()",ClassName, baseClassName ) );
+            var baseClassName = Utility.MakeBaseClassName(BaseType, "<", ">", ".");
+            result.Append(Utility.FormatInvariant("type {0}() as this = inherit {1}()", ClassName, baseClassName));
             if (Preamble.Length > 0 || Output.Length > 0)
             {
                 result.AppendLine(" with");

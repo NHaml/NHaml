@@ -12,7 +12,10 @@ namespace NHaml.Tests
 
             parser.Parse();
 
-            Assert.AreEqual( 0, parser.Tokens.Count );
+            Assert.AreEqual( 1, parser.Tokens.Count );
+
+            Assert.AreEqual( "", parser.Tokens[0].Value );
+            Assert.IsFalse( parser.Tokens[0].IsExpression );
         }
 
         [Test]

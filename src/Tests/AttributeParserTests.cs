@@ -15,13 +15,25 @@ namespace NHaml.Tests
         private static void AssertAttribute(AttributeParser parser, string schema, string name, string value,
                                             ParsedAttributeType type)
         {
-            var attribute = parser.Attributes.FirstOrDefault(a => a.Name == name);
+            var attribute = parser.Attributes.FirstOrDefault(a => a.Name == name && a.Schema == schema);
 
             Assert.IsNotNull(attribute, string.Format("Attribute '{0}' not found.", name));
 
             Assert.AreEqual(schema, attribute.Schema, "Schema");
             Assert.AreEqual(value, attribute.Value, "Value");
             Assert.AreEqual(type, attribute.Type, "Type");
+        }
+
+        [Test]
+        public void AttributeWithSchemaIsDifferent()
+        {
+            var parser = new AttributeParser("lang='en' xml:lang='en:us'");
+
+            parser.Parse();
+
+            Assert.AreEqual(2, parser.Attributes.Count);
+            AssertAttribute(parser, null, "lang", "en", ParsedAttributeType.String);
+            AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.String);
         }
 
         [Test]
@@ -60,6 +72,19 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public void EncodingIsIgnoredIfItIsUsedAsStopper()
+        {
+            var parser = new AttributeParser(@" a=""abc\"" b='abc\' c=#{abc\} ");
+
+            parser.Parse();
+
+            Assert.AreEqual(3, parser.Attributes.Count);
+            AssertAttribute(parser, "a", @"abc\", ParsedAttributeType.String);
+            AssertAttribute(parser, "b", @"abc\", ParsedAttributeType.String);
+            AssertAttribute(parser, "c", @"abc\", ParsedAttributeType.Expression);
+        }
+
+        [Test]
         public void ExpressionInsideOfDoubleSingleQuotesAndEncodedQuotes()
         {
             var parser = new AttributeParser("a='#{\"a\"}' c=\"#{a}\"");
@@ -83,19 +108,6 @@ namespace NHaml.Tests
             AssertAttribute(parser, "bb", "\"t\"", ParsedAttributeType.Expression);
             AssertAttribute(parser, "c", "f.ToString()", ParsedAttributeType.Expression);
             AssertAttribute(parser, "d", @"f=>{return 1}", ParsedAttributeType.Expression);
-        }
-
-        [Test]
-        public void EncodingIsIgnoredIfItIsUsedAsStopper()
-        {
-            var parser = new AttributeParser( @" a=""abc\"" b='abc\' c=#{abc\} " );
-
-            parser.Parse();
-
-            Assert.AreEqual( 3, parser.Attributes.Count );
-            AssertAttribute( parser, "a", @"abc\", ParsedAttributeType.String );
-            AssertAttribute( parser, "b", @"abc\", ParsedAttributeType.String );
-            AssertAttribute( parser, "c", @"abc\", ParsedAttributeType.Expression );
         }
 
         [Test]
@@ -167,75 +179,64 @@ namespace NHaml.Tests
             AssertAttribute(parser, "dd", "d", ParsedAttributeType.Expression);
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
+        public void ThrowExceptionOnDoubleAttribute()
+        {
+            new AttributeParser(@" abc=a abc=b ").Parse();
+        }
+
+        [Test, ExpectedException(typeof (SyntaxException))]
+        public void ThrowExceptionOnDoubleAttributeWithDifferentCase()
+        {
+            new AttributeParser(@" abc=a AbC=b aBc=c ").Parse();
+        }
+
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnEmtpyAfterEqual()
         {
             new AttributeParser(@" a= ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenDoubleSingleQuoteClose()
         {
             new AttributeParser(@" a=""text ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenDoubleSingleQuoteOpen()
         {
             new AttributeParser(@" a=text"" ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenExpressionClose()
         {
             new AttributeParser(@" a=#{text ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenExpressionOpen()
         {
             new AttributeParser(@" a=text} ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenSingleQuoteClose()
         {
             new AttributeParser(@" a='text ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnForgottenSingleQuoteOpen()
         {
             new AttributeParser(@" a=text' ").Parse();
         }
 
-        [Test]
-        [ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof (SyntaxException))]
         public void ThrowExceptionOnOnlyShema()
         {
             new AttributeParser(@" a: ").Parse();
         }
-
-        [Test]
-        [ExpectedException( typeof( SyntaxException ) )]
-        public void ThrowExceptionOnDoubleAttribute()
-        {
-            new AttributeParser( @" abc=a abc=b " ).Parse();
-        }
-
-        [Test]
-        [ExpectedException( typeof( SyntaxException ) )]
-        public void ThrowExceptionOnDoubleAttributeWithDifferentCase()
-        {
-            new AttributeParser( @" abc=a AbC=b aBc=c " ).Parse();
-        }
-
     }
 }

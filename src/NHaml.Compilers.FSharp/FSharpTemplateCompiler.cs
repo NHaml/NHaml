@@ -57,11 +57,13 @@ namespace NHaml.Compilers.FSharp
 
             templateClassBuilder.AppendChangeOutputDepth( depth );
             templateClassBuilder.AppendSilentCode( code, true );
+            templateClassBuilder.Depth++;
 
             return () =>
                        {
                            templateClassBuilder.AppendChangeOutputDepth( depth, false );
-                           templateClassBuilder.EndCodeBlock();
+                           //templateClassBuilder.Depth--;
+                           templateClassBuilder.EndCodeBlockOnLastLine();
                        };
         }
 

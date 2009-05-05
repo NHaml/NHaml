@@ -8,14 +8,14 @@ namespace NHaml
 {
     public class AttributeParser
     {
-        private static readonly Regex _parser;
         private static readonly Regex _escapedDoubleQuotesRegex;
-        private static readonly Regex _escapedSingleQuotesRegex;
         private static readonly Regex _escapedExpressionBeginQuotesRegex;
         private static readonly Regex _escapedExpressionEndQuotesRegex;
+        private static readonly Regex _escapedSingleQuotesRegex;
+        private static readonly Regex _parser;
         private readonly string attributesString;
 
-    	static AttributeParser()
+        static AttributeParser()
         {
             // far more readable the a large string and 
             // since there is not dynamic code the compiler
@@ -45,10 +45,10 @@ namespace NHaml
 
             _parser = new Regex(pattern, RegexOptions.Compiled);
 
-            _escapedDoubleQuotesRegex = new Regex( @"\\""", RegexOptions.Compiled );
-            _escapedSingleQuotesRegex = new Regex( @"\\'", RegexOptions.Compiled );
-            _escapedExpressionBeginQuotesRegex = new Regex( @"\\{", RegexOptions.Compiled );
-            _escapedExpressionEndQuotesRegex = new Regex( @"\\}", RegexOptions.Compiled );
+            _escapedDoubleQuotesRegex = new Regex(@"\\""", RegexOptions.Compiled);
+            _escapedSingleQuotesRegex = new Regex(@"\\'", RegexOptions.Compiled);
+            _escapedExpressionBeginQuotesRegex = new Regex(@"\\{", RegexOptions.Compiled);
+            _escapedExpressionEndQuotesRegex = new Regex(@"\\}", RegexOptions.Compiled);
         }
 
         public AttributeParser(string attributesString)
@@ -57,9 +57,9 @@ namespace NHaml
             this.attributesString = attributesString;
         }
 
-    	public List<ParsedAttribute> Attributes { get; private set; }
+        public List<ParsedAttribute> Attributes { get; private set; }
 
-    	public void Parse()
+        public void Parse()
         {
             Attributes.Clear();
 
@@ -87,7 +87,7 @@ namespace NHaml
                 string value;
                 ParsedAttributeType type;
 
-                if( groupSchema.Success )
+                if (groupSchema.Success)
                 {
                     schmea = groupSchema.Value;
                 }
@@ -97,12 +97,12 @@ namespace NHaml
                     type = ParsedAttributeType.String;
                     value = _escapedDoubleQuotesRegex.Replace(groupStringDoulbeQuoteValue.Value, "\"");
                 }
-                else if( groupStringSingleQuoteValue.Success )
+                else if (groupStringSingleQuoteValue.Success)
                 {
                     type = ParsedAttributeType.String;
                     value = _escapedSingleQuotesRegex.Replace(groupStringSingleQuoteValue.Value, "'");
                 }
-                else if( groupReferenceValue.Success )
+                else if (groupReferenceValue.Success)
                 {
                     type = ParsedAttributeType.Reference;
                     value = groupReferenceValue.Value;
@@ -122,9 +122,14 @@ namespace NHaml
                 foreach (var attribute in Attributes)
                 {
                     //Todo: put message in resource
-                    if( attribute.Name.Equals( name, StringComparison.InvariantCultureIgnoreCase ) )
-                        ThrowErrorAtPosition(string.Format("The attribute '{0}' is already defined.", name),
-                                             groupName.Index);
+                    if (string.Equals(attribute.Schema, schmea, StringComparison.InvariantCultureIgnoreCase) &&
+                        string.Equals(attribute.Name, name, StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        ThrowErrorAtPosition(
+                            string.Format("The attribute '{0}' is already defined.",
+                                          (schmea != null ? schmea + ":" + name : name)),
+                            groupName.Index);
+                    }
                 }
 
                 Attributes.Add(new ParsedAttribute(schmea, name, value, type));
@@ -164,17 +169,17 @@ namespace NHaml
             }
 
             //Todo: put massage into resource
-            ThrowErrorAtPosition( "Invalid attribute found.", currentIndex );
+            ThrowErrorAtPosition("Invalid attribute found.", currentIndex);
         }
 
-        private void ThrowErrorAtPosition( string message, int index )
+        private void ThrowErrorAtPosition(string message, int index)
         {
             var output = new StringBuilder();
-            output.AppendLine( message );
-            output.AppendLine( attributesString );
-            output.Append( new string( '-', index ) );
-            output.Append( '^' );
-            throw new SyntaxException( output.ToString() );
+            output.AppendLine(message);
+            output.AppendLine(attributesString);
+            output.Append(new string('-', index));
+            output.Append('^');
+            throw new SyntaxException(output.ToString());
         }
     }
 }

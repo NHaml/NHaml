@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-
 using NHaml.Exceptions;
 using NHaml.Properties;
 
@@ -8,159 +7,167 @@ namespace NHaml.Rules
 {
     public class TagMarkupRule : MarkupRule
     {
-        private const string Id = "id";
         private const string Class = "class";
-
-        private static readonly Regex _tagRegex = new Regex(
-          @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?(\/|=|&=|!=)?(.*)$",
-          RegexOptions.Compiled | RegexOptions.Singleline );
+        private const string Id = "id";
 
         private static readonly Regex _idClassesRegex = new Regex(
-          @"(?:(?:\#([-\w]+))|(?:\.([-\w]+)))+",
-          RegexOptions.Compiled | RegexOptions.Singleline );
+            @"(?:(?:\#([-\w]+))|(?:\.([-\w]+)))+",
+            RegexOptions.Compiled | RegexOptions.Singleline);
+
+        private static readonly Regex _tagRegex = new Regex(
+            @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?(\/|=|&=|!=)?(.*)$",
+            RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static readonly List<string> _whitespaceSensitiveTags
-          = new List<string> { "textarea", "pre" };
-
-        protected virtual string PreprocessLine( InputLine inputLine )
-        {
-            return inputLine.NormalizedText;
-        }
+            = new List<string> {"textarea", "pre"};
 
         public override char Signifier
         {
             get { return '%'; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        protected virtual string PreprocessLine(InputLine inputLine)
         {
-            var match = _tagRegex.Match( PreprocessLine( templateParser.CurrentInputLine ) );
+            return inputLine.NormalizedText;
+        }
 
-            if( !match.Success )
+        public override BlockClosingAction Render(TemplateParser templateParser)
+        {
+            var match = _tagRegex.Match(PreprocessLine(templateParser.CurrentInputLine));
+
+            if (!match.Success)
             {
-                SyntaxException.Throw( templateParser.CurrentInputLine, Resources.ErrorParsingTag,
-                  templateParser.CurrentInputLine );
+                SyntaxException.Throw(templateParser.CurrentInputLine, Resources.ErrorParsingTag,
+                                      templateParser.CurrentInputLine);
             }
 
-            var tagName = match.Groups[1].Value.Replace( "\\", string.Empty );
+            var tagName = match.Groups[1].Value.Replace("\\", string.Empty);
 
-            var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains( tagName );
+            var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
             var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
             var closingTag = "</" + tagName + '>';
 
-            templateParser.TemplateClassBuilder.AppendOutput( openingTag );
+            templateParser.TemplateClassBuilder.AppendOutput(openingTag);
 
-            ParseAndRenderAttributes( templateParser, match );
+            ParseAndRenderAttributes(templateParser, match);
 
             var action = match.Groups[6].Value;
 
-            if( string.Equals( "/", action )
-              || templateParser.TemplateEngine.IsAutoClosingTag( tagName ) )
+            if (string.Equals("/", action)
+                || templateParser.TemplateEngine.IsAutoClosingTag(tagName))
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine( " />" );
+                templateParser.TemplateClassBuilder.AppendOutputLine(" />");
 
                 return null;
             }
 
             var content = match.Groups[7].Value.Trim();
 
-            if( string.IsNullOrEmpty( content ) )
+            if (string.IsNullOrEmpty(content))
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine( ">" );
+                templateParser.TemplateClassBuilder.AppendOutputLine(">");
                 closingTag = templateParser.CurrentInputLine.Indent + closingTag;
             }
             else
             {
-                if( (content.Length > 50)
-                  || string.Equals( "=", action )
-                    || string.Equals( "&=", action )
-                      || string.Equals( "!=", action ) )
+                if ((content.Length > 50)
+                    || string.Equals("=", action)
+                    || string.Equals("&=", action)
+                    || string.Equals("!=", action))
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput( ">", !isWhitespaceSensitive );
+                    templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
 
-                    if( !isWhitespaceSensitive )
+                    if (!isWhitespaceSensitive)
                     {
-                        templateParser.TemplateClassBuilder.AppendOutput( templateParser.NextIndent );
+                        templateParser.TemplateClassBuilder.AppendOutput(templateParser.NextIndent);
                     }
 
-                    if( string.Equals( "=", action ) )
+                    if (string.Equals("=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive,
-                          templateParser.TemplateEngine.EncodeHtml );
+                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive,
+                                                                       templateParser.TemplateEngine.EncodeHtml);
                     }
-                    else if( string.Equals( "&=", action ) )
+                    else if (string.Equals("&=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive, true );
+                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, true);
                     }
-                    else if( string.Equals( "!=", action ) )
+                    else if (string.Equals("!=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode( content, !isWhitespaceSensitive, false );
+                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, false);
                     }
                     else
                     {
-                        templateParser.TemplateClassBuilder.AppendOutput( content, !isWhitespaceSensitive );
+                        templateParser.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
                     }
 
-                    if( !isWhitespaceSensitive )
+                    if (!isWhitespaceSensitive)
                     {
                         closingTag = templateParser.CurrentInputLine.Indent + closingTag;
                     }
                 }
                 else
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput( ">" + content );
+                    templateParser.TemplateClassBuilder.AppendOutput(">" + content);
                 }
             }
 
-            return () => templateParser.TemplateClassBuilder.AppendOutputLine( closingTag );
+            return () => templateParser.TemplateClassBuilder.AppendOutputLine(closingTag);
         }
 
-        private static void ParseAndRenderAttributes( TemplateParser templateParser, Match tagMatch )
+        private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)
         {
             var idAndClasses = tagMatch.Groups[2].Value;
             var attributesHash = tagMatch.Groups[4].Value.Trim();
 
-            var match = _idClassesRegex.Match( idAndClasses );
+            var match = _idClassesRegex.Match(idAndClasses);
 
             var classes = new List<string>();
 
-            foreach( Capture capture in match.Groups[2].Captures )
+            foreach (Capture capture in match.Groups[2].Captures)
             {
-                classes.Add( capture.Value );
+                classes.Add(capture.Value);
             }
 
-            if( classes.Count > 0 )
+            if (classes.Count > 0)
             {
-                attributesHash = PrependAttribute( attributesHash, Class, string.Join( " ", classes.ToArray() ) );
+                attributesHash = PrependAttribute(attributesHash, Class, string.Join(" ", classes.ToArray()));
             }
 
             string id = null;
 
-            foreach( Capture capture in match.Groups[1].Captures )
+            foreach (Capture capture in match.Groups[1].Captures)
             {
                 id = capture.Value;
             }
 
-            if( !string.IsNullOrEmpty( id ) )
+            if (!string.IsNullOrEmpty(id))
             {
-                attributesHash = PrependAttribute( attributesHash, Id, id );
+                attributesHash = PrependAttribute(attributesHash, Id, id);
             }
 
             if (!string.IsNullOrEmpty(attributesHash))
             {
-                // templateParser.TemplateClassBuilder.AppendOutput( " " );
-
                 var attributeParser = new AttributeParser(attributesHash);
                 attributeParser.Parse();
+
                 foreach (var attribute in attributeParser.Attributes)
                 {
-                    var values = AttributeValueParser.Parse(attribute.Value);
-                    var schema = attribute.Schema;
-                    if (schema == null)
+                    if (attribute.Type == ParsedAttributeType.String)
                     {
-                        schema = string.Empty;
+                        var expressionStringParser = new ExpressionStringParser(attribute.Value);
+
+                        expressionStringParser.Parse();
+
+                        templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
+                                                                                  expressionStringParser.Tokens);
                     }
-                    templateParser.TemplateClassBuilder.AppendAttribute(schema, attribute.Name, values);
+                    else
+                    {
+                        var token = new ExpressionStringToken(attribute.Value, true);
+
+                        templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
+                                                                                  new[] {token});
+                    }
                 }
             }
         }
