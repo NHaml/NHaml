@@ -21,27 +21,24 @@ namespace NHaml
             // since there is not dynamic code the compiler
             // can optimize it to one string.
 
-            var pattern = "";
+            var pattern = string.Concat(
+                @"(?:(?<schema>\w+)\:)?", // schema
 
-            pattern += @"(?:(?<schema>\w+)\:)?"; // schema
+                @"(?<name>[\w-]+)", // attribute name
 
-            pattern += @"(?<name>[\w-]+)"; // attribute name
+                @"(", // start optional value for only reference
 
-            pattern += @"("; // start optional value for only reference
+                @"\s*=\s*", // equal
 
-            pattern += @"\s*=\s*"; // equal
-
-            pattern += @"(?:(?<rvalue>(\.|\w)+)"; // reference as value
-            pattern += "|";
-            pattern += @"(?:""(?<sdqvalue>((?:\\"")|[^""])*)"")"; // double quotes
-            pattern += "|";
-            pattern += @"(?:'(?<ssqvalue>((?:\\')|[^'])*)')"; // single quotes
-            pattern += "|";
-            pattern += @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))"; // expression
-
-            pattern += @")?"; // end optional value for only reference
-
-            pattern += @"\s*"; // whitespace for next
+                @"(?:(?<rvalue>(\.|\w)+)", // reference as value
+                "|",
+                @"(?:""(?<sdqvalue>((?:\\"")|[^""])*)"")", // double quotes
+                "|",
+                @"(?:'(?<ssqvalue>((?:\\')|[^'])*)')", // single quotes
+                "|",
+                @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))", // expression
+                @")?", // end optional value for only reference
+                @"\s*"); // whitespace for next
 
             _parser = new Regex(pattern, RegexOptions.Compiled);
 
