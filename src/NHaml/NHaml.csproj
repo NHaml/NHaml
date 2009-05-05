@@ -70,6 +70,7 @@
     </Compile>
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
+    <Compile Include="ExpressionStringParser.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="ParsedAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Text;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
@@ -118,6 +119,14 @@ namespace NHaml
                     type = ParsedAttributeType.Reference;
                 }
 
+                foreach (var attribute in Attributes)
+                {
+                    //Todo: put message in resource
+                    if( attribute.Name.Equals( name, StringComparison.InvariantCultureIgnoreCase ) )
+                        ThrowErrorAtPosition(string.Format("The attribute '{0}' is already defined.", name),
+                                             groupName.Index);
+                }
+
                 Attributes.Add(new ParsedAttribute(schmea, name, value, type));
             }
         }
@@ -155,12 +164,17 @@ namespace NHaml
             }
 
             //Todo: put massage into resource
-            var message = new StringBuilder();
-            message.AppendLine( "Error while parsing attribute:" );
-            message.AppendLine( attributesString );
-            message.Append( new string( '-', currentIndex ) );
-            message.Append( '^' );
-            throw new SyntaxException( message.ToString() );
+            ThrowErrorAtPosition( "Invalid attribute found.", currentIndex );
+        }
+
+        private void ThrowErrorAtPosition( string message, int index )
+        {
+            var output = new StringBuilder();
+            output.AppendLine( message );
+            output.AppendLine( attributesString );
+            output.Append( new string( '-', index ) );
+            output.Append( '^' );
+            throw new SyntaxException( output.ToString() );
         }
     }
 }

@@ -71,7 +71,6 @@ namespace NHaml.Tests
             AssertAttribute(parser, "c", "#{a}", ParsedAttributeType.String);
         }
 
-
         [Test]
         public void Expressions()
         {
@@ -84,6 +83,19 @@ namespace NHaml.Tests
             AssertAttribute(parser, "bb", "\"t\"", ParsedAttributeType.Expression);
             AssertAttribute(parser, "c", "f.ToString()", ParsedAttributeType.Expression);
             AssertAttribute(parser, "d", @"f=>{return 1}", ParsedAttributeType.Expression);
+        }
+
+        [Test]
+        public void EncodingIsIgnoredIfItIsUsedAsStopper()
+        {
+            var parser = new AttributeParser( @" a=""abc\"" b='abc\' c=#{abc\} " );
+
+            parser.Parse();
+
+            Assert.AreEqual( 3, parser.Attributes.Count );
+            AssertAttribute( parser, "a", @"abc\", ParsedAttributeType.String );
+            AssertAttribute( parser, "b", @"abc\", ParsedAttributeType.String );
+            AssertAttribute( parser, "c", @"abc\", ParsedAttributeType.Expression );
         }
 
         [Test]
@@ -210,5 +222,20 @@ namespace NHaml.Tests
         {
             new AttributeParser(@" a: ").Parse();
         }
+
+        [Test]
+        [ExpectedException( typeof( SyntaxException ) )]
+        public void ThrowExceptionOnDoubleAttribute()
+        {
+            new AttributeParser( @" abc=a abc=b " ).Parse();
+        }
+
+        [Test]
+        [ExpectedException( typeof( SyntaxException ) )]
+        public void ThrowExceptionOnDoubleAttributeWithDifferentCase()
+        {
+            new AttributeParser( @" abc=a AbC=b aBc=c " ).Parse();
+        }
+
     }
 }
