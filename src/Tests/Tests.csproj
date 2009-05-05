@@ -570,6 +570,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AttributeParserTests.cs" />
+    <Compile Include="ExpressionStringParserTests.cs" />
     <Compile Include="FSharpFunctionalTests.cs" />
     <Compile Include="VisualBasicFunctionalTests.cs" />
     <Compile Include="ImporterTests.cs" />
