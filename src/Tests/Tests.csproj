@@ -275,6 +275,12 @@
     <None Include="Templates\Class.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\ApplicationPart1.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\ApplicationPart2.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\FSharp\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>

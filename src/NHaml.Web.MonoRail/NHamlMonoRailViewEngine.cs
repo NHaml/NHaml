@@ -77,20 +77,24 @@ namespace NHaml.Web.MonoRail
         }
 
         //Taken from boo view engine
-        private string GetLayoutFile(IControllerContext controllerContext)
+        private IList<string> GetLayoutFile(IControllerContext controllerContext)
         {
+            var list = new List<string>();
             if (controllerContext.LayoutNames != null && controllerContext.LayoutNames.Length != 0)
             {
-                var layoutTemplate = controllerContext.LayoutNames[0];
-                if (!layoutTemplate.StartsWith("/"))
+                for (var index = 0; index < controllerContext.LayoutNames.Length; index++)
                 {
-                    layoutTemplate = @"layouts\" + layoutTemplate;
+                    var layoutName = controllerContext.LayoutNames[index];
+                    var layoutTemplate = layoutName;
+                    if (!layoutTemplate.StartsWith("/"))
+                    {
+                        layoutTemplate = @"layouts\" + layoutTemplate;
+                    }
+                    layoutTemplate = layoutTemplate + ViewFileExtension;
+                    list.Add(Path.Combine(ViewSourceLoader.ViewRootDir, layoutTemplate));
                 }
-                layoutTemplate = layoutTemplate + ViewFileExtension;
-                return Path.Combine(ViewSourceLoader.ViewRootDir, layoutTemplate) ;
-
             }
-            return null;
+            return list;
         }
         protected virtual FileInfo CreateFileInfo(string viewRootDirectory, string viewPath)
         {

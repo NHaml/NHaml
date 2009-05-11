@@ -11,7 +11,7 @@ namespace NHaml
         private readonly TemplateEngine _templateEngine;
 
         private readonly string _templatePath;
-        private readonly string _layoutTemplatePath;
+        private readonly IList<string> _layoutTemplatePaths;
 
         private readonly Type _templateBaseType;
 
@@ -23,11 +23,11 @@ namespace NHaml
         private readonly object _sync = new object();
 
         internal CompiledTemplate( TemplateEngine templateEngine, string templatePath,
-          string layoutTemplatePath, Type templateBaseType )
+          IList<string> layoutTemplatePaths, Type templateBaseType )
         {
             _templateEngine = templateEngine;
             _templatePath = templatePath;
-            _layoutTemplatePath = layoutTemplatePath;
+            _layoutTemplatePaths =  layoutTemplatePaths;
             _templateBaseType = templateBaseType;
 
             Compile();
@@ -59,7 +59,8 @@ namespace NHaml
             var templateClassBuilder = _templateEngine.TemplateCompiler.CreateTemplateClassBuilder(
               Utility.MakeClassName( _templatePath ), _templateBaseType );
 
-            var templateParser = new TemplateParser( _templateEngine, templateClassBuilder, _templatePath, _layoutTemplatePath );
+            TemplateParser templateParser = new TemplateParser(_templateEngine, templateClassBuilder,
+                                                               _layoutTemplatePaths, _templatePath);
 
             templateParser.Parse();
 

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
+using System.Text;
 using System.Web;
 
 using NHaml.Compilers;
@@ -242,12 +243,12 @@ namespace NHaml
 
         public CompiledTemplate Compile( string templatePath )
         {
-            return Compile( templatePath, null, TemplateBaseType );
+            return Compile( templatePath, (string)null, TemplateBaseType );
         }
 
         public CompiledTemplate Compile( string templatePath, Type templateBaseType )
         {
-            return Compile( templatePath, null, templateBaseType );
+            return Compile( templatePath, (string)null, templateBaseType );
         }
 
         public CompiledTemplate Compile( string templatePath, string layoutTemplatePath )
@@ -255,27 +256,47 @@ namespace NHaml
             return Compile( templatePath, layoutTemplatePath, TemplateBaseType );
         }
 
-        public CompiledTemplate Compile( string templatePath, string layoutTemplatePath, Type templateBaseType )
+        public CompiledTemplate Compile(string templatePath, string layoutTemplatePath, Type templateBaseType)
+        {
+            if (string.IsNullOrEmpty(layoutTemplatePath))
+            {
+                return Compile(templatePath, new List<string>(), templateBaseType);
+            }
+            else
+            {
+                return Compile(templatePath, new List<string> {layoutTemplatePath}, templateBaseType);
+            }
+        }
+
+        public CompiledTemplate Compile(string templatePath, List<string> layoutTemplatePaths)
+        {
+            return Compile(templatePath, layoutTemplatePaths, TemplateBaseType);
+        }
+
+        public CompiledTemplate Compile( string templatePath, IList<string> layoutTemplatePaths, Type templateBaseType )
         {
             Invariant.ArgumentNotEmpty( templatePath, "templatePath" );
             Invariant.FileExists( templatePath );
             Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
 
-            if( !string.IsNullOrEmpty( layoutTemplatePath ) )
+            var templateCacheKey = new StringBuilder(templatePath );
+            
+            foreach (var layoutTemplatePath in layoutTemplatePaths)
             {
-                Invariant.FileExists( layoutTemplatePath );
+                    Invariant.FileExists(layoutTemplatePath);
+                templateCacheKey.AppendFormat("{0}, ", layoutTemplatePath);
             }
 
-            var templateCacheKey = templatePath + layoutTemplatePath;
             CompiledTemplate compiledTemplate;
 
             lock( _compiledTemplateCache )
             {
-                if( !_compiledTemplateCache.TryGetValue( templateCacheKey, out compiledTemplate ) )
+                var key = templateCacheKey.ToString();
+                if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate( this, templatePath, layoutTemplatePath, templateBaseType );
+                    compiledTemplate = new CompiledTemplate( this, templatePath, layoutTemplatePaths, templateBaseType );
 
-                    _compiledTemplateCache.Add( templateCacheKey, compiledTemplate );
+                    _compiledTemplateCache.Add( key, compiledTemplate );
                 }
             }
 

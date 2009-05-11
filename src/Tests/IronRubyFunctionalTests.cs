@@ -31,6 +31,11 @@ namespace NHaml.Tests
         }
 
         [Test, Ignore]
+        public override void MultiLayout()
+        {
+            base.MultiLayout();
+        }
+        [Test, Ignore]
         public override void MetaModel()
         {
             base.MetaModel();

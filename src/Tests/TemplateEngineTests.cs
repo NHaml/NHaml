@@ -37,6 +37,8 @@ namespace NHaml.Tests
             Assert.AreSame( compiledTemplate1, compiledTemplate2 );
         }
 
+     
+
         [Test]
         public void TemplatesWithDifferentLayoutsAreCachedSeperate()
         {

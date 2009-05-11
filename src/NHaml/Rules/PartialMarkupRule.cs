@@ -21,20 +21,23 @@ namespace NHaml.Rules
         {
             var partialName = templateParser.CurrentInputLine.NormalizedText.Trim();
 
-            if( string.IsNullOrEmpty( partialName ) )
+            if (string.IsNullOrEmpty(partialName))
             {
-                if( !string.IsNullOrEmpty( templateParser.LayoutTemplatePath ) )
+                if (templateParser.CurrentTemplateIndex +1 == templateParser.MergedTemplatePaths.Count)
                 {
-                    templateParser.MergeTemplate( templateParser.TemplatePath );
+                    throw new InvalidOperationException(Resources.NoPartialName);
                 }
-                else
+                var templatePath = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex+1];
+                if (string.IsNullOrEmpty(templatePath))
                 {
-                    throw new InvalidOperationException( Resources.NoPartialName );
+                    throw new InvalidOperationException(Resources.NoPartialName);
                 }
+                templateParser.MergeTemplate(templatePath, true);
+               templateParser. CurrentTemplateIndex++;
             }
             else
             {
-                var templateDirectory = Path.GetDirectoryName( templateParser.TemplatePath );
+                var templateDirectory = Path.GetDirectoryName( templateParser.TemplatePath);
 
                 partialName = partialName.Insert( partialName.LastIndexOf( @"\", StringComparison.OrdinalIgnoreCase ) + 1, "_" );
 
@@ -45,7 +48,7 @@ namespace NHaml.Rules
                     partialTemplatePath = Path.Combine( templateDirectory, @"..\" + partialName + ".haml" );
                 }
 
-                templateParser.MergeTemplate( partialTemplatePath );
+                templateParser.MergeTemplate( partialTemplatePath, true );
             }
 
             return null;
