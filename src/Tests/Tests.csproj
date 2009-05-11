@@ -290,9 +290,6 @@
     <None Include="Templates\FSharp\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\Copy of MultiLine.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Templates\FSharp\CustomBaseClass.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
