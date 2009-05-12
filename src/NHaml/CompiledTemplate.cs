@@ -59,7 +59,7 @@ namespace NHaml
             var templateClassBuilder = _templateEngine.TemplateCompiler.CreateTemplateClassBuilder(
               Utility.MakeClassName( _templatePath ), _templateBaseType );
 
-            TemplateParser templateParser = new TemplateParser(_templateEngine, templateClassBuilder,
+            var templateParser = new TemplateParser(_templateEngine, templateClassBuilder,
                                                                _layoutTemplatePaths, _templatePath);
 
             templateParser.Parse();

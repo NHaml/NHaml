@@ -45,6 +45,12 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public virtual void SelfClosing()
+        {
+            AssertRender("SelfClosing");
+        }
+
+        [Test]
         public virtual void SharedPartial()
         {
             AssertRender("SharedPartial");

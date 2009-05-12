@@ -122,9 +122,8 @@ namespace NHaml
                     if (string.Equals(attribute.Schema, schmea, StringComparison.InvariantCultureIgnoreCase) &&
                         string.Equals(attribute.Name, name, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        ThrowErrorAtPosition(
-                            string.Format("The attribute '{0}' is already defined.",
-                                          (schmea != null ? schmea + ":" + name : name)),
+                        var attributeName = (schmea != null ? schmea + ":" + name : name);
+                        ThrowErrorAtPosition(string.Format("The attribute '{0}' is already defined.",attributeName),
                             groupName.Index);
                     }
                 }
