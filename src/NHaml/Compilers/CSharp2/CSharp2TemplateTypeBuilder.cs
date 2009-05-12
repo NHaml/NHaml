@@ -74,7 +74,7 @@ namespace NHaml.Compilers.CSharp2
 
             foreach( var usingStatement in _templateEngine.Usings )
             {
-                sourceBuilder.AppendLine( "using " + usingStatement + ";" );
+                sourceBuilder.AppendLine( string.Format("using {0};", usingStatement) );
             }
 
             sourceBuilder.AppendLine( source );

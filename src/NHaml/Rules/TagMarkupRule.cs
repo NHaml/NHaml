@@ -45,7 +45,7 @@ namespace NHaml.Rules
 
             var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
             var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
-            var closingTag = "</" + tagName + '>';
+            var closingTag = string.Format("</{0}>", tagName);
 
             templateParser.TemplateClassBuilder.AppendOutput(openingTag);
 
@@ -174,9 +174,9 @@ namespace NHaml.Rules
 
         private static string PrependAttribute(string attributesHash, string name, string value)
         {
-            var attribute = name + "=\"" + value + "\"";
+            var attribute = string.Format("{0}=\"{1}\"", name, value);
 
-            return string.IsNullOrEmpty(attributesHash) ? attribute : attribute + " " + attributesHash;
+            return string.IsNullOrEmpty(attributesHash) ? attribute : string.Format("{0} {1}", attribute, attributesHash);
         }
     }
 }

@@ -9,7 +9,7 @@ namespace NHaml.Rules
 
         protected override string PreprocessLine( InputLine inputLine )
         {
-            return "div." + inputLine.NormalizedText;
+            return string.Format("div.{0}", inputLine.NormalizedText);
         }
     }
 }

@@ -29,7 +29,7 @@ namespace NHaml.Compilers.IronRuby
 
             foreach( var reference in templateParser.TemplateEngine.References )
             {
-                ruby.AppendLine( "require '" + reference + "'" );
+                ruby.AppendLine( string.Format("require '{0}'", reference) );
             }
 
             ruby.Append( templateParser.TemplateClassBuilder.Build() );
@@ -80,7 +80,7 @@ namespace NHaml.Compilers.IronRuby
 
         public void RenderAttributes( TemplateParser templateParser, string attributes )
         {
-            templateParser.TemplateClassBuilder.AppendCode( "__a(" + attributes + ")" );
+            templateParser.TemplateClassBuilder.AppendCode( string.Format("__a({0})", attributes) );
         }
     }
 }

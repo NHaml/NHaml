@@ -122,7 +122,7 @@ namespace NHaml
                     if (string.Equals(attribute.Schema, schmea, StringComparison.InvariantCultureIgnoreCase) &&
                         string.Equals(attribute.Name, name, StringComparison.InvariantCultureIgnoreCase))
                     {
-                        var attributeName = (schmea != null ? schmea + ":" + name : name);
+                        var attributeName = (schmea != null ? string.Format("{0}:{1}", schmea, name) : name);
                         ThrowErrorAtPosition(string.Format("The attribute '{0}' is already defined.",attributeName),
                             groupName.Index);
                     }

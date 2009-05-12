@@ -40,22 +40,22 @@ namespace NHaml.Compilers.VisualBasic
             {
                 if (code.StartsWith("'") && code.EndsWith("'") && code.Length == 3)
                 {
-                    code = "(Convert.ToString(\"" + code + "\"c))";
+                    code = string.Format("(Convert.ToString(\"{0}\"c))", code);
                 }
                 else
                 {
-                    code = "(Convert.ToString(" + code + "))";
+                    code = string.Format("(Convert.ToString({0}))", code);
                 }
 
 
-                code = "(Convert.ToString(" + code + "))";
+                code = string.Format("(Convert.ToString({0}))", code);
 
                 if (escapeHtml)
                 {
-                    code = "(HttpUtility.HtmlEncode" + code + ")";
+                    code = string.Format("(HttpUtility.HtmlEncode{0})", code);
                 }
 
-                Output.AppendLine("textWriter." + (newLine ? "WriteLine" : "Write") + code);
+                Output.AppendLine(string.Format("textWriter.{0}{1}", (newLine ? "WriteLine" : "Write"), code));
             }
         }
 

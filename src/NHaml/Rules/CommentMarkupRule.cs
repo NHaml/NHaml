@@ -1,3 +1,4 @@
+using System.Text;
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
@@ -29,36 +30,37 @@ namespace NHaml.Rules
             var ieBlock = match.Groups[1].Value;
             var content = match.Groups[2].Value;
 
-            var openingTag = templateParser.CurrentInputLine.Indent + "<!--";
-            var closingTag = "-->";
+            var openingTag = new StringBuilder(templateParser.CurrentInputLine.Indent);
+            openingTag.Append("<!--");
+            var closingTag = new StringBuilder("-->");
 
             if( !string.IsNullOrEmpty( ieBlock ) )
             {
-                openingTag += ieBlock + '>';
-                closingTag = "<![endif]" + closingTag;
+                openingTag.AppendFormat("{0}>",ieBlock);
+                closingTag.Insert(0,"<![endif]");
             }
 
             if( string.IsNullOrEmpty( content ) )
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine( openingTag );
-                closingTag = templateParser.CurrentInputLine.Indent + closingTag;
+                templateParser.TemplateClassBuilder.AppendOutputLine( openingTag.ToString() );
+                closingTag.Insert(0, templateParser.CurrentInputLine.Indent);
             }
             else
             {
                 if( content.Length > 50 )
                 {
-                    templateParser.TemplateClassBuilder.AppendOutputLine( openingTag );
+                    templateParser.TemplateClassBuilder.AppendOutputLine( openingTag.ToString() );
                     templateParser.TemplateClassBuilder.AppendOutput( templateParser.NextIndent );
                     templateParser.TemplateClassBuilder.AppendOutputLine( content );
                 }
                 else
                 {
                     templateParser.TemplateClassBuilder.AppendOutput( openingTag + content );
-                    closingTag = ' ' + closingTag;
+                    closingTag.Insert(0, ' ');
                 }
             }
 
-            return () => templateParser.TemplateClassBuilder.AppendOutputLine( closingTag );
+            return () => templateParser.TemplateClassBuilder.AppendOutputLine( closingTag.ToString() );
         }
     }
 }

@@ -31,21 +31,22 @@ namespace NHaml.Compilers.CSharp2
                 }
             }
 
-            Output.AppendLine("textWriter." + method + "(@\"" + value + "\");");
+            Output.AppendLine(string.Format("textWriter.{0}(@\"{1}\");", method, value));
         }
 
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
         {
             if (code != null)
             {
-                code = "(Convert.ToString(" + code + "))";
+                code = string.Format("(Convert.ToString({0}))", code);
 
                 if (escapeHtml)
                 {
-                    code = "(HttpUtility.HtmlEncode" + code + ")";
+                    code = string.Format("(HttpUtility.HtmlEncode{0})", code);
                 }
 
-                Output.AppendLine("textWriter." + (newLine ? "WriteLine" : "Write") + code + ";");
+                var method = (newLine ? "WriteLine" : "Write");
+                Output.AppendLine(string.Format("textWriter.{0}{1};", method, code));
             }
         }
 
@@ -53,7 +54,7 @@ namespace NHaml.Compilers.CSharp2
         {
             if (BlockDepth != depth)
             {
-                Output.AppendLine("Output.Depth = " + depth + ";");
+                Output.AppendLine(string.Format("Output.Depth = {0};", depth));
 
                 BlockDepth = depth;
             }

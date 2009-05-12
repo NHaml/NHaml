@@ -46,14 +46,14 @@ namespace NHaml.Compilers.Boo
         {
             if (code != null)
             {
-                code = "(Convert.ToString(" + code + "))";
+                code = string.Format("(Convert.ToString({0}))", code);
 
                 if (escapeHtml)
                 {
-                    code = "(HttpUtility.HtmlEncode" + code + ")";
+                    code = string.Format("(HttpUtility.HtmlEncode{0})", code);
                 }
 
-                Output.AppendLine(IndentString + "textWriter." + (newLine ? "WriteLine" : "Write") + code + ";");
+                Output.AppendLine(string.Format("{0}textWriter.{1}{2};", IndentString, (newLine ? "WriteLine" : "Write"), code));
             }
         }
 
@@ -68,7 +68,7 @@ namespace NHaml.Compilers.Boo
 
             if (BlockDepth != depth)
             {
-                Output.AppendLine(IndentString + "Output.Depth = " + depth);
+                Output.AppendLine(string.Format("{0}Output.Depth = {1}", IndentString, depth));
                 BlockDepth = depth;
             }
         }

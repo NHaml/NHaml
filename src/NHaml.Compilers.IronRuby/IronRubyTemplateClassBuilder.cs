@@ -60,7 +60,7 @@ namespace NHaml.Compilers.IronRuby
                 }
             }
 
-            Output.AppendLine("text_writer." + method + "('" + value.Replace("'", "\\'") + "')");
+            Output.AppendLine(string.Format("text_writer.{0}('{1}')", method, value.Replace("'", "\\'")));
         }
 
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
@@ -69,10 +69,10 @@ namespace NHaml.Compilers.IronRuby
             {
                 if (escapeHtml)
                 {
-                    code = "System::Web::HttpUtility.HtmlEncode(" + code + ")";
+                    code = string.Format("System::Web::HttpUtility.HtmlEncode({0})", code);
                 }
 
-                Output.AppendLine("text_writer." + (newLine ? "WriteLine" : "Write") + "(" + code + ")");
+                Output.AppendLine(string.Format("text_writer.{0}({1})", (newLine ? "WriteLine" : "Write"), code));
             }
         }
 
@@ -108,7 +108,8 @@ namespace NHaml.Compilers.IronRuby
 
             var result = new StringBuilder();
 
-            result.AppendLine("class " + ClassName + "<" + Utility.MakeBaseClassName(BaseType, "[", "]", "::"));
+            var baseClassName = Utility.MakeBaseClassName(BaseType, "[", "]", "::");
+            result.AppendLine(string.Format("class {0}<{1}", ClassName, baseClassName));
             result.AppendLine("def core_render(text_writer)");
 
             result.Append(Preamble);

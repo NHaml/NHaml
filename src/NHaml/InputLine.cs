@@ -91,7 +91,7 @@ namespace NHaml
 
         public override string ToString()
         {
-            return LineNumber + ": " + Text;
+            return string.Format("{0}: {1}", LineNumber, Text);
         }
     }
 }

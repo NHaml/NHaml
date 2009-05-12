@@ -56,10 +56,10 @@ namespace NHaml.Compilers.FSharp
 
                 if (escapeHtml)
                 {
-                    code = "(HttpUtility.HtmlEncode" + code + ")";
+                    code = string.Format("(HttpUtility.HtmlEncode{0})", code);
                 }
 
-                Output.AppendLine(IndentString + "textWriter." + (newLine ? "WriteLine" : "Write") + code);
+                Output.AppendLine(string.Format("{0}textWriter.{1}{2}", IndentString, (newLine ? "WriteLine" : "Write"), code));
             }
         }
 

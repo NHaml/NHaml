@@ -70,11 +70,10 @@ namespace NHaml.Compilers.VisualBasic
 
         public static string TranslateLambda(string codeLine, Match lambdaMatch)
         {
-            return codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2)
-              + (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ")
-                + lambdaMatch.Groups[2].Captures[0].Value + " => {";
+            var part2 = lambdaMatch.Groups[2].Captures[0].Value;
+            var part0 = codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2);
+            var part1 = (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ");
+            return string.Format("{0}{1}{2} => {{", part0, part1, part2);
         }
-
-
     }
 }

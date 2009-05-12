@@ -36,14 +36,14 @@ namespace NHaml.Exceptions
 
                     if( line - 1 > 0 )
                     {
-                        message.AppendLine( (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ) + ": " + lines[line - 1] );
+                        message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line - 1]) );
                     }
 
-                    message.AppendLine( (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ) + ": " + lines[line] );
+                    message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line]) );
 
                     if( line + 1 < lines.Length )
                     {
-                        message.AppendLine( (line + 1).ToString( "0000", CultureInfo.CurrentUICulture ) + ": " + lines[line + 1] );
+                        message.AppendLine( string.Format("{0}: {1}", (line + 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line + 1]) );
                     }
 
                     message.AppendLine();

@@ -14,7 +14,7 @@ namespace NHaml.Compilers.IronRuby
             _scriptEngine = scriptEngine;
 
             _renderAction = _scriptEngine.CreateScriptSourceFromString(
-              className + ".new.method(:render)" ).Execute();
+              string.Format("{0}.new.method(:render)", className) ).Execute();
         }
 
         public ScriptEngine ScriptEngine
