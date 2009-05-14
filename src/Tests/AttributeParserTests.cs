@@ -118,9 +118,9 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "true", ParsedAttributeType.String);
-            AssertAttribute(parser, "cc", "true", ParsedAttributeType.String);
-            AssertAttribute(parser, "e", "true", ParsedAttributeType.String);
+            AssertAttribute(parser, "a", "a", ParsedAttributeType.String);
+            AssertAttribute(parser, "cc", "cc", ParsedAttributeType.String);
+            AssertAttribute(parser, "e", "e", ParsedAttributeType.String);
         }
 
         [Test]
@@ -146,7 +146,7 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.Reference);
+            AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.String);
             AssertAttribute(parser, "b", "ccc", "eee", ParsedAttributeType.String);
             AssertAttribute(parser, "eee", "c", "e", ParsedAttributeType.Reference);
         }

@@ -112,7 +112,7 @@ namespace NHaml
                 }
                 else
                 {
-                    value = "true";
+                    value = name;
                     type = ParsedAttributeType.String;
                 }
 
