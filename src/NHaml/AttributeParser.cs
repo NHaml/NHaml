@@ -112,8 +112,8 @@ namespace NHaml
                 }
                 else
                 {
-                    value = name;
-                    type = ParsedAttributeType.Reference;
+                    value = "true";
+                    type = ParsedAttributeType.String;
                 }
 
                 foreach (var attribute in Attributes)
