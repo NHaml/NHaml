@@ -33,22 +33,25 @@ namespace NHaml
         private readonly StringSet _autoClosingTags =
           new StringSet( DefaultAutoClosingTags );
 
-        private readonly MarkupRule[] _markupRules = new MarkupRule[128];
+        private readonly MarkupRule[] _markupRules;
 
-        private readonly StringSet _references = new StringSet( DefaultReferences );
-        private readonly StringSet _usings = new StringSet( DefaultUsings );
+        private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache;
 
-        private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache
-          = new Dictionary<string, CompiledTemplate>();
-
-        private ITemplateCompiler _templateCompiler = new CSharp3TemplateCompiler();
-        private Type _templateBaseType = typeof( Template );
+        private ITemplateCompiler _templateCompiler;
+        private Type _templateBaseType;
 
         private bool _useTabs;
-        private int _indentSize = 2;
+        private int _indentSize;
 
         public TemplateEngine()
         {
+            _markupRules = new MarkupRule[128];
+            _compiledTemplateCache = new Dictionary<string, CompiledTemplate>();
+            Usings = new StringSet( DefaultUsings );
+            References = new StringSet( DefaultReferences );
+            _indentSize = 2;
+            _templateBaseType = typeof( Template );
+            _templateCompiler = new CSharp3TemplateCompiler();
             AddRule( new EofMarkupRule() );
             AddRule( new MetaMarkupRule() );
             AddRule( new DocTypeMarkupRule() );
@@ -155,7 +158,7 @@ namespace NHaml
 
                 AddReferences( _templateBaseType );
 
-                _usings.Add( _templateBaseType.Namespace );
+                Usings.Add( _templateBaseType.Namespace );
 
                 ClearCompiledTemplatesCache();
             }
@@ -169,15 +172,9 @@ namespace NHaml
             }
         }
 
-        public IEnumerable<string> Usings
-        {
-            get { return _usings; }
-        }
+        public StringSet Usings { get; private set; }
 
-        public IEnumerable<string> References
-        {
-            get { return _references; }
-        }
+        public StringSet References { get; private set; }
 
         internal void AddRule( MarkupRule markupRule )
         {
@@ -209,7 +206,7 @@ namespace NHaml
         {
             Invariant.ArgumentNotEmpty( @namespace, "namespace" );
 
-            _usings.Add( @namespace );
+            Usings.Add( @namespace );
         }
 
         public void AddReferences( Type type )
@@ -231,14 +228,14 @@ namespace NHaml
         {
             Invariant.ArgumentNotEmpty( assemblyLocation, "assemblyLocation" );
 
-            _references.Add( assemblyLocation );
+            References.Add( assemblyLocation );
         }
 
         public void AddReference( Assembly assembly )
         {
             Invariant.ArgumentNotNull( assembly, "assembly" );
 
-            _references.Add( assembly.Location );
+            References.Add( assembly.Location );
         }
 
         public CompiledTemplate Compile( string templatePath )
