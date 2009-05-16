@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using Castle.MonoRail.Framework;
@@ -21,6 +22,11 @@ namespace NHaml.Web.MonoRail
 
             InitializeTemplateEngine();
         }
+        public void SetViewSourceLoader(IViewSourceLoader loader)
+        {
+            ViewSourceLoader = loader;
+        }
+
         private void InitializeTemplateEngine()
         {
             DefaultMaster = "application";
@@ -47,13 +53,17 @@ namespace NHaml.Web.MonoRail
         public override void GenerateJS(string templateName, TextWriter output, JSCodeGeneratorInfo generatorInfo, IEngineContext context, IController controller, IControllerContext controllerContext)
         {
         }
-
+        public string ViewRootDir
+        {
+            get { return ViewSourceLoader.ViewRootDir; }
+        }
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller, IControllerContext controllerContext)
         {
             var templateFileName = GetTemplateFileName(templateName);
             var layoutTemplatePath = GetLayoutFile(controllerContext);
             var compiledTemplate = _templateEngine.Compile(templateFileName, layoutTemplatePath, typeof(NHamlMonoRailView));
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
+            template.ViewEngine = this;
             template.Render(context, output, controllerContext);
         }
 
@@ -148,6 +158,25 @@ namespace NHaml.Web.MonoRail
         }
 
 
+        /// <summary>
+        /// This takes a filename and return an instance of the view ready to be used.
+        /// If the file does not exist, an exception is raised
+        /// The cache is checked to see if the file has already been compiled, and it had been
+        /// a check is made to see that the compiled instance is newer then the file's modification date.
+        /// If the file has not been compiled, or the version on disk is newer than the one in memory, a new
+        /// version is compiled.
+        /// Finally, an instance is created and returned	
+        /// </summary>
+        public NHamlMonoRailView GetCompiledScriptInstance(string file)
+        {
+            // normalize filename - replace / or \ to the system path seperator
+            var filename = file.Replace('/', Path.DirectorySeparatorChar)
+                .Replace('\\', Path.DirectorySeparatorChar);
 
+            filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
+            Trace.WriteLine(string.Format("Getting compiled instnace of {0}", filename));
+
+            return (NHamlMonoRailView) _templateEngine.Compile(file).CreateInstance();
+        }
     }
 }
