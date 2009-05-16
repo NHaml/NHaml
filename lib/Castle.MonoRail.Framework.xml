@@ -17033,6 +17033,12 @@
             <param name="name">The name.</param>
             <returns></returns>
         </member>
+        <member name="M:Castle.MonoRail.Framework.IViewComponentFactory.Release(Castle.MonoRail.Framework.ViewComponent)">
+            <summary>
+            Releasess the view component.
+            </summary>
+            <param name="instance">The view component instance</param>
+        </member>
         <member name="P:Castle.MonoRail.Framework.IViewComponentFactory.Registry">
             <summary>
             Gets the registry.

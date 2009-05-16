@@ -61,6 +61,9 @@
   <ItemGroup>
     <Compile Include="NHamlMonoRailView.cs" />
     <Compile Include="NHamlMonoRailViewEngine.cs" />
+    <Compile Include="NHamlViewComponentContext.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

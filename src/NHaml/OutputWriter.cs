@@ -5,21 +5,15 @@ namespace NHaml
 {
     public sealed class OutputWriter
     {
-        private TextWriter _textWriter;
-
         private bool _indentComing = true;
 
-        public TextWriter TextWriter
-        {
-            get { return _textWriter; }
-            set { _textWriter = value; }
-        }
+        public TextWriter TextWriter { get; set; }
 
         public void WriteLine( string value )
         {
             WriteIndent();
 
-            _textWriter.WriteLine( value );
+            TextWriter.WriteLine( value );
 
             _indentComing = true;
         }
@@ -28,7 +22,7 @@ namespace NHaml
         {
             WriteIndent();
 
-            _textWriter.Write( value );
+            TextWriter.Write( value );
         }
 
         public void Indent()
@@ -47,7 +41,7 @@ namespace NHaml
         {
             if( _indentComing )
             {
-                _textWriter.Write( string.Empty.PadLeft( Depth * 2 ) );
+                TextWriter.Write( string.Empty.PadLeft( Depth * 2 ) );
 
                 _indentComing = false;
             }
