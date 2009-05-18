@@ -48,21 +48,22 @@ namespace NHaml.Compilers.FSharp
             CompilerResults = codeProvider
                 .CompileAssemblyFromSource( _compilerParameters, Source );
 
-            if( CompilerResults.Errors.Count == 0 )
+            foreach (CompilerError result in CompilerResults.Errors)
             {
+                if (!result.IsWarning)
+                {
+                    return null;
+                }
+            }
                 var assembly = CompilerResults.CompiledAssembly;
                 var fullTypeName = "TempNHamlNamespace." + typeName;
                 return assembly.GetType(fullTypeName, true, true);
-            }
-
-            return null;
         }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         private void AddReferences()
         {
             _compilerParameters.ReferencedAssemblies.Clear();
-            //_compilerParameters.ReferencedAssemblies.Add()
 
             foreach( var assembly in _templateEngine.References )
             {

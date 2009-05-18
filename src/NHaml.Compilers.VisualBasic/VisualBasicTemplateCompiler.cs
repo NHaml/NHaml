@@ -17,7 +17,7 @@ namespace NHaml.Compilers.VisualBasic
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build();
+            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
             var typeBuilder = new VisualBasicTemplateTypeBuilder(templateParser.TemplateEngine);
             var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
 

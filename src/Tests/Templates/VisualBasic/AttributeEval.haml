@@ -2,7 +2,7 @@
 %p{class="foo" http-equiv="#{10-9}" for="bazbob" accept-charset='#{string.Join("-", tempstring)}'} Foo
 %p{class="bar" http-equiv="1" for="bazbob" accept-charset="1-2-3"} Bar
 - Dim b As string = ""
-%p{class='class=b=\"class=b\"' id="class=b=foo, id=b=bar"} Bar
+%p{class='class=b=""class=b""' id="class=b=foo, id=b=bar"} Bar
 %html{lang="en" xml:lang="en" xmlns="http://www.w3.org/1999/xhtml"} Baz
 - b = "bar"
 %p#foo{title="Pip" class="#{b}"} Bum

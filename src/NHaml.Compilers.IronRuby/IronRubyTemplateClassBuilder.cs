@@ -12,7 +12,7 @@ namespace NHaml.Compilers.IronRuby
         {
         }
 
-        public override void AppendAttributeTokens(string schema, string name, IEnumerable<ExpressionStringToken> values)
+        public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
         {
             var code = new StringBuilder();
             foreach (var item in values)
@@ -102,7 +102,7 @@ namespace NHaml.Compilers.IronRuby
             base.EndCodeBlock();
         }
 
-        public override string Build()
+        public override string Build(IList<string> imports)
         {
             Output.AppendLine("end;end");
 

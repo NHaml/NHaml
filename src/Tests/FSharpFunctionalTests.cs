@@ -21,9 +21,10 @@ namespace NHaml.Tests
         }
 
         [Ignore("Until i work out how to do multilevel lambdas")]
+        [Test]
         public override void LambdaEval()
         {
-           // base.LambdaEval();
+            base.LambdaEval();
         }
     }
 #endif

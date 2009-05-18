@@ -18,7 +18,7 @@ namespace NHaml.Compilers.CSharp2
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build();
+            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
             var typeBuilder = CreateTemplateTypeBuilder( templateParser.TemplateEngine );
             var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
 

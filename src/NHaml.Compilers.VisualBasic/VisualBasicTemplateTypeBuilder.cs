@@ -3,7 +3,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
 using Microsoft.VisualBasic;
 
 namespace NHaml.Compilers.VisualBasic
@@ -18,7 +17,6 @@ namespace NHaml.Compilers.VisualBasic
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         public VisualBasicTemplateTypeBuilder( TemplateEngine templateEngine )
         {
-
             ProviderOptions = new Dictionary<string, string>();
             _templateEngine = templateEngine;
             _templateEngine.AddReference(GetType().Assembly);
@@ -39,23 +37,26 @@ namespace NHaml.Compilers.VisualBasic
         [SuppressMessage( "Microsoft.Portability", "CA1903" )]
         public Type Build( string source, string typeName )
         {
-            BuildSource( source );
+            BuildSource(source);
 
-            Trace.WriteLine( Source );
+            Trace.WriteLine(Source);
 
             AddReferences();
 
             var codeProvider = new VBCodeProvider(ProviderOptions);
 
             CompilerResults = codeProvider
-                .CompileAssemblyFromSource( _compilerParameters, Source );
+                .CompileAssemblyFromSource(_compilerParameters, Source);
 
-            if( CompilerResults.Errors.Count == 0 )
+            foreach (CompilerError result in CompilerResults.Errors)
             {
-                return CompilerResults.CompiledAssembly.GetType( typeName );
+                if (!result.IsWarning)
+                {
+                    return null;
+                }
             }
+            return CompilerResults.CompiledAssembly.GetType(typeName);
 
-            return null;
         }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
@@ -71,16 +72,7 @@ namespace NHaml.Compilers.VisualBasic
 
         private void BuildSource( string source )
         {
-            var sourceBuilder = new StringBuilder();
-
-            foreach( var usingStatement in _templateEngine.Usings )
-            {
-                sourceBuilder.AppendLine("Imports " + usingStatement);
-            }
-
-            sourceBuilder.AppendLine( source );
-
-            Source = sourceBuilder.ToString();
+            Source = source;
         }
     }
 }

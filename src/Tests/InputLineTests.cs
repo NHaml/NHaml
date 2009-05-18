@@ -2,6 +2,7 @@ using NUnit.Framework;
 
 namespace NHaml.Tests
 {
+  
     [TestFixture]
     public class InputLineTests
     {

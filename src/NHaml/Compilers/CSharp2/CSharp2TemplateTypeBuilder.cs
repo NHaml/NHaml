@@ -3,8 +3,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-
 using Microsoft.CSharp;
 
 namespace NHaml.Compilers.CSharp2
@@ -21,6 +19,7 @@ namespace NHaml.Compilers.CSharp2
         {
             ProviderOptions = new Dictionary<string, string>();
             _templateEngine = templateEngine;
+            _templateEngine.AddReference(GetType().Assembly);
 
             ProviderOptions.Add( "CompilerVersion", "v2.0" );
 
@@ -34,27 +33,30 @@ namespace NHaml.Compilers.CSharp2
 
         protected Dictionary<string, string> ProviderOptions { get; private set; }
 
-        [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        [SuppressMessage( "Microsoft.Portability", "CA1903" )]
-        public Type Build( string source, string typeName )
+        [SuppressMessage("Microsoft.Security", "CA2122")]
+        [SuppressMessage("Microsoft.Portability", "CA1903")]
+        public Type Build(string source, string typeName)
         {
-            BuildSource( source );
+            BuildSource(source);
 
-            Trace.WriteLine( Source );
+            Trace.WriteLine(Source);
 
             AddReferences();
 
-            var codeProvider = new CSharpCodeProvider( ProviderOptions );
+            var codeProvider = new CSharpCodeProvider(ProviderOptions);
 
             CompilerResults = codeProvider
-              .CompileAssemblyFromSource( _compilerParameters, Source );
-
-            if( CompilerResults.Errors.Count == 0 )
+                .CompileAssemblyFromSource(_compilerParameters, Source);
+            foreach (CompilerError result in CompilerResults.Errors)
             {
-                return CompilerResults.CompiledAssembly.GetType( typeName );
+                if (!result.IsWarning)
+                {
+                    return null;
+                }
             }
 
-            return null;
+            return CompilerResults.CompiledAssembly.GetType(typeName);
+
         }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
@@ -70,16 +72,7 @@ namespace NHaml.Compilers.CSharp2
 
         private void BuildSource( string source )
         {
-            var sourceBuilder = new StringBuilder();
-
-            foreach( var usingStatement in _templateEngine.Usings )
-            {
-                sourceBuilder.AppendLine( string.Format("using {0};", usingStatement) );
-            }
-
-            sourceBuilder.AppendLine( source );
-
-            Source = sourceBuilder.ToString();
+            Source = source;
         }
     }
 }

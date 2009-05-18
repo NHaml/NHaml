@@ -76,15 +76,17 @@ namespace NHaml.Tests
                 layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
             }
 
-            var compiledTemplate = _templateEngine.Compile( templatePath, layoutName );
+            var stopwatch = Stopwatch.StartNew();
+
+            var compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
+            stopwatch.Stop();
+            Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
             return compiledTemplate.CreateInstance();
         }
 
         protected static void AssertRender( StringWriter output, string expectedName )
         {
-            //Clipboard.SetText(output.ToString());
             Console.WriteLine( output );
-
             Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );
         }
     }

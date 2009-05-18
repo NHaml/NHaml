@@ -17,7 +17,7 @@ namespace NHaml.Compilers.FSharp
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build();
+            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
             var typeBuilder = new FSharpTemplateTypeBuilder( templateParser.TemplateEngine );
             var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
 
@@ -61,9 +61,12 @@ namespace NHaml.Compilers.FSharp
 
             return () =>
                        {
-                           templateClassBuilder.AppendChangeOutputDepth( depth, false );
-                           //templateClassBuilder.Depth--;
-                           templateClassBuilder.EndCodeBlockOnLastLine();
+
+                           templateParser.TemplateClassBuilder.AppendChangeOutputDepth(depth);
+                           templateParser.TemplateClassBuilder.AppendSilentCode(")", true);
+                           //TODO:
+                          // templateClassBuilder.AppendChangeOutputDepth( depth, false );
+                       
                        };
         }
 

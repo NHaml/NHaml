@@ -14,7 +14,18 @@ namespace NHaml.Compilers
             BaseType = baseType;
         }
 
-        public Type BaseType { get; set; }
+        private Type _baseType;
+        public Type BaseType
+        {
+            get
+            {
+                return _baseType;
+            }
+            set
+            {
+                _baseType = value;
+            }
+        }
 
         protected StringBuilder Output { get; private set; }
 
@@ -67,7 +78,7 @@ namespace NHaml.Compilers
         public abstract void AppendPreambleCode(string code);
         public abstract void AppendChangeOutputDepth(int depth);
 
-        public abstract string Build();
-        public abstract void AppendAttributeTokens( string schema, string name, IEnumerable<ExpressionStringToken> values );
+        public abstract string Build(IList<string> imports);
+        public abstract void AppendAttributeTokens( string schema, string name, IList<ExpressionStringToken> values );
     }
 }

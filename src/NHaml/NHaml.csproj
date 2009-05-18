@@ -60,6 +60,7 @@
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Compilers\CodeDomClassBuilder.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp3\CSharp3TemplateCompiler.cs">
       <SubType>Code</SubType>

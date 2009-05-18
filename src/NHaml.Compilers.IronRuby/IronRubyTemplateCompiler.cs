@@ -32,7 +32,7 @@ namespace NHaml.Compilers.IronRuby
                 ruby.AppendLine( string.Format("require '{0}'", reference) );
             }
 
-            ruby.Append( templateParser.TemplateClassBuilder.Build() );
+            ruby.Append(templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings));
 
             var templateSource = ruby.ToString();
 

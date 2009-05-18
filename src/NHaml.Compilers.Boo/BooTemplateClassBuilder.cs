@@ -90,7 +90,7 @@ namespace NHaml.Compilers.Boo
             Output.AppendLine();
         }
 
-        public override void AppendAttributeTokens(string schema, string name, IEnumerable<ExpressionStringToken> values)
+        public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
         {
             var code = new StringBuilder();
             foreach (var item in values)
@@ -130,7 +130,7 @@ namespace NHaml.Compilers.Boo
             Preamble.AppendLine(new string(' ', 4) + (code).Trim());
         }
 
-        public override string Build()
+        public override string Build(IList<string> imports)
         {
             var result = new StringBuilder();
 
