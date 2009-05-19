@@ -116,7 +116,8 @@ namespace NHaml
 
                     CurrentInputLine.ValidateIndentation();
 
-                    TemplateEngine.GetRule(CurrentInputLine).Process(this);
+                    var rule = TemplateEngine.GetRule(CurrentInputLine);
+                    rule.Process(this);
                 }
 
                 CloseBlocks();
@@ -139,10 +140,15 @@ namespace NHaml
             {
                 string line;
 
-                while( (line = reader.ReadLine()) != null )
+                while ((line = reader.ReadLine()) != null)
                 {
-                    InputLines.AddBefore( CurrentNode,
-                      new InputLine( CurrentNode.Value.Indent + line, templatePath, lineNumber++, TemplateEngine.IndentSize ) );
+                    if (line.Length == 0)
+                    {
+                        continue;
+                    }
+                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++,
+                                                  TemplateEngine.IndentSize);
+                    InputLines.AddBefore(CurrentNode, inputLine);
                 }
             }
             if (replaceCurrentNode)
@@ -158,12 +164,11 @@ namespace NHaml
         public void CloseBlocks()
         {
             for( var j = 0;
-                 ((j <= CurrentNode.Previous.Value.IndentCount
-                   - CurrentInputLine.IndentCount)
-                     && (BlockClosingActions.Count > 0));
+                 ((j <= CurrentNode.Previous.Value.IndentCount - CurrentInputLine.IndentCount) && (BlockClosingActions.Count > 0));
                  j++ )
             {
-                BlockClosingActions.Pop()();
+                var blockClosingAction = BlockClosingActions.Pop();
+                blockClosingAction();
             }
         }
 
