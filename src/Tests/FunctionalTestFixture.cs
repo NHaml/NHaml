@@ -17,6 +17,12 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public virtual void BlankLine()
+        {
+            AssertRender("BlankLine");
+        }
+
+        [Test]
         public virtual void Tabs()
         {
             _templateEngine.UseTabs = true;
