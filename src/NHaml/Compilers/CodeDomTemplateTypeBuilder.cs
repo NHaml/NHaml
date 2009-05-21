@@ -27,7 +27,7 @@ namespace NHaml.Compilers
 
         public CompilerResults CompilerResults { get; private set; }
 
-        protected Dictionary<string, string> ProviderOptions { get; private set; }
+        public Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage("Microsoft.Security", "CA2122")]
         [SuppressMessage("Microsoft.Portability", "CA1903")]
@@ -38,10 +38,8 @@ namespace NHaml.Compilers
             Trace.WriteLine(Source);
 
             AddReferences();
-
-            var codeProvider = GetCodeProvider();
-
-            CompilerResults = codeProvider
+            
+            CompilerResults = CodeDomProvider
                 .CompileAssemblyFromSource(_compilerParameters, Source);
             foreach (CompilerError result in CompilerResults.Errors)
             {
@@ -55,12 +53,13 @@ namespace NHaml.Compilers
 
         }
 
+        public CodeDomProvider CodeDomProvider { get; set; }
+
         protected virtual Type ExtractType(string typeName)
         {
             return CompilerResults.CompiledAssembly.GetType(typeName);
         }
 
-        protected abstract CodeDomProvider GetCodeProvider();
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         private void AddReferences()

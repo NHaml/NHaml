@@ -1,14 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using Microsoft.VisualBasic;
 
 namespace NHaml.Compilers.VisualBasic
 {
     internal sealed class VisualBasicTemplateClassBuilder : CodeDomClassBuilder
     {
         public VisualBasicTemplateClassBuilder(string className, Type baseType)
-            : base(className, baseType, new VBCodeProvider())
+            : base(className, baseType)
         {
         }
 

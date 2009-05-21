@@ -1,5 +1,8 @@
 using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.FSharp.Compiler.CodeDom;
 
 namespace NHaml.Compilers.FSharp
 {
@@ -16,6 +19,11 @@ namespace NHaml.Compilers.FSharp
             return new FSharpTemplateClassBuilder( className, templateBaseType );
         }
 
+        protected override CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary)
+        {
+            return new FSharpCodeProvider();
+        }
+
         public override string TranslateLambda(string codeLine, Match lambdaMatch)
         {
             var methodBeingCalled = codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2);
@@ -24,7 +32,7 @@ namespace NHaml.Compilers.FSharp
             return string.Format("{0}{1}{2} -> ", methodBeingCalled, s, argDefinition);
         }
 
-        public override ITemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
         {
             return new FSharpTemplateTypeBuilder(templateEngine);
         }

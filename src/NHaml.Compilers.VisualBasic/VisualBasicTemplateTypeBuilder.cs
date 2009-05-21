@@ -1,6 +1,4 @@
-using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.VisualBasic;
 
 namespace NHaml.Compilers.VisualBasic
 {
@@ -14,10 +12,6 @@ namespace NHaml.Compilers.VisualBasic
         }
 
 
-        protected override CodeDomProvider GetCodeProvider()
-        {
-            return new VBCodeProvider(ProviderOptions);
-        }
 
        
     }

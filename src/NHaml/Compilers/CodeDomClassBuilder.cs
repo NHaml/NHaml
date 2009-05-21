@@ -9,14 +9,15 @@ namespace NHaml.Compilers
 {
     public abstract class CodeDomClassBuilder : TemplateClassBuilder
     {
-        private readonly CodeDomProvider _provider;
         protected CodeMemberMethod RenderMethod{ get; set; }
+
+        public CodeDomProvider CodeDomProvider { get; set; }
+
         private int preambleCount;
 
-        public CodeDomClassBuilder(string className, Type baseType, CodeDomProvider provider)
+        public CodeDomClassBuilder(string className, Type baseType)
             : base(className, baseType)
         {
-            _provider = provider;
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
@@ -353,7 +354,7 @@ namespace NHaml.Compilers
                 }
                 
 
-                var generator = _provider.CreateGenerator(writer);
+                var generator = CodeDomProvider.CreateGenerator(writer);
                 var options = new CodeGeneratorOptions();
                 var declaration = new CodeTypeDeclaration
                                       {

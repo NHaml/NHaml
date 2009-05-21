@@ -1,4 +1,6 @@
 using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
 
@@ -19,9 +21,15 @@ namespace NHaml.Compilers
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
             var typeBuilder = CreateTemplateTypeBuilder( templateParser.TemplateEngine );
-            var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
+            //TODO: leaky abstraction 
+            var classBuilder = (CodeDomClassBuilder) templateParser.TemplateClassBuilder;
+            var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
+            classBuilder.CodeDomProvider = provider;
+            typeBuilder.CodeDomProvider = provider;
+            var templateSource = classBuilder.Build(templateParser.TemplateEngine.Usings);
+            
+            var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
 
             if( templateType == null )
             {
@@ -31,6 +39,8 @@ namespace NHaml.Compilers
 
             return new TemplateFactory( templateType );
         }
+
+        protected abstract CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary);
 
         public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
         {
@@ -70,6 +80,6 @@ namespace NHaml.Compilers
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
 
-        public abstract ITemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine);
+        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine);
     }
 }

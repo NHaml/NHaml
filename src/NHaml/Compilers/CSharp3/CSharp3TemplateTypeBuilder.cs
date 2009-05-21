@@ -1,6 +1,3 @@
-using System.CodeDom.Compiler;
-using Microsoft.CSharp;
-
 namespace NHaml.Compilers.CSharp3
 {
     internal sealed class CSharp3TemplateTypeBuilder : CodeDomTemplateTypeBuilder
@@ -11,9 +8,6 @@ namespace NHaml.Compilers.CSharp3
             ProviderOptions.Add("CompilerVersion", "v3.5");
         }
 
-        protected override CodeDomProvider GetCodeProvider()
-        {
-            return new CSharpCodeProvider(ProviderOptions);
-        }
+      
     }
 }

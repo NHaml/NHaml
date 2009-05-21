@@ -1,5 +1,8 @@
 using System;
+using System.CodeDom.Compiler;
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using Microsoft.VisualBasic;
 
 namespace NHaml.Compilers.VisualBasic
 {
@@ -17,6 +20,11 @@ namespace NHaml.Compilers.VisualBasic
             return new VisualBasicTemplateClassBuilder(className, templateBaseType);
         }
 
+        protected override CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary)
+        {
+            return new VBCodeProvider(dictionary);
+        }
+
         public override string TranslateLambda(string codeLine, Match lambdaMatch)
         {
             var part2 = lambdaMatch.Groups[2].Captures[0].Value;
@@ -25,7 +33,7 @@ namespace NHaml.Compilers.VisualBasic
             return string.Format("{0}{1}{2} => {{", part0, part1, part2);
         }
 
-        public override ITemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
         {
             return  new VisualBasicTemplateTypeBuilder(templateEngine);
         }

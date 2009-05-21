@@ -1,6 +1,4 @@
-using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
-using Microsoft.CSharp;
 
 namespace NHaml.Compilers.CSharp2
 {
@@ -13,10 +11,6 @@ namespace NHaml.Compilers.CSharp2
             ProviderOptions.Add( "CompilerVersion", "v2.0" );
         }
 
-        protected override CodeDomProvider GetCodeProvider()
-        {
-            return new CSharpCodeProvider(ProviderOptions);
-        }
 
     }
 }

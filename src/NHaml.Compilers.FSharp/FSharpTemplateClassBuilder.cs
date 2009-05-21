@@ -1,6 +1,5 @@
 using System;
 using System.CodeDom;
-using Microsoft.FSharp.Compiler.CodeDom;
 
 namespace NHaml.Compilers.FSharp
 {
@@ -8,7 +7,7 @@ namespace NHaml.Compilers.FSharp
     {
 
         public FSharpTemplateClassBuilder(string className, Type baseType)
-            : base(className, baseType, new FSharpCodeProvider())
+            : base(className, baseType)
         {
         }
 

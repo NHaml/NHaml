@@ -1,8 +1,6 @@
 using System;
-using System.CodeDom.Compiler;
 using System.Diagnostics.CodeAnalysis;
 using System.Text;
-using Microsoft.FSharp.Compiler.CodeDom;
 
 namespace NHaml.Compilers.FSharp
 {
@@ -22,10 +20,6 @@ namespace NHaml.Compilers.FSharp
             var fullTypeName = "TempNHamlNamespace." + typeName;
             return assembly.GetType(fullTypeName, true, true);
 
-        }
-        protected override CodeDomProvider GetCodeProvider()
-        {
-            return new FSharpCodeProvider();
         }
 
 
