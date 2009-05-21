@@ -11,19 +11,19 @@ namespace NHaml.Compilers
         private readonly CompilerParameters _compilerParameters
             = new CompilerParameters();
 
-        private readonly TemplateEngine _templateEngine;
+        public TemplateEngine TemplateEngine { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         public CodeDomTemplateTypeBuilder( TemplateEngine templateEngine )
         {
             ProviderOptions = new Dictionary<string, string>();
-            _templateEngine = templateEngine;
-            _templateEngine.AddReference(GetType().Assembly);
+            TemplateEngine = templateEngine;
+            TemplateEngine.AddReference(GetType().Assembly);
             _compilerParameters.GenerateInMemory = true;
             _compilerParameters.IncludeDebugInformation = false;
         }
 
-        public string Source { get; private set; }
+        public string Source { get; protected set; }
 
         public CompilerResults CompilerResults { get; private set; }
 
@@ -51,8 +51,13 @@ namespace NHaml.Compilers
                 }
             }
 
-            return CompilerResults.CompiledAssembly.GetType(typeName);
+            return ExtractType(typeName);
 
+        }
+
+        protected virtual Type ExtractType(string typeName)
+        {
+            return CompilerResults.CompiledAssembly.GetType(typeName);
         }
 
         protected abstract CodeDomProvider GetCodeProvider();
@@ -62,7 +67,7 @@ namespace NHaml.Compilers
         {
             _compilerParameters.ReferencedAssemblies.Clear();
 
-            foreach( var assembly in _templateEngine.References )
+            foreach( var assembly in TemplateEngine.References )
             {
                 _compilerParameters.ReferencedAssemblies.Add( assembly );
             }
