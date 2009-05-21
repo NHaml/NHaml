@@ -48,7 +48,19 @@ namespace NHaml
 
         public TemplateEngine TemplateEngine { get; private set; }
 
-        public TemplateClassBuilder TemplateClassBuilder { get; private set; }
+        private TemplateClassBuilder _templateClassBuilder;
+        public TemplateClassBuilder TemplateClassBuilder
+        {
+            get
+            {
+                return _templateClassBuilder;
+            }
+            private set
+            {
+                _templateClassBuilder = value;
+            }
+        }
+
         public string TemplatePath { get; private set; }
 
         public List<string> MergedTemplatePaths { get; private set; }

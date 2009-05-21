@@ -61,6 +61,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Compilers\CodeDomClassBuilder.cs" />
+    <Compile Include="Compilers\CodeDomTemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp3\CSharp3TemplateCompiler.cs">
       <SubType>Code</SubType>
@@ -68,6 +69,7 @@
     <Compile Include="Compilers\CSharp3\CSharp3TemplateTypeBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />

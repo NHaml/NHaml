@@ -7,7 +7,7 @@ using Microsoft.VisualBasic;
 
 namespace NHaml.Compilers.VisualBasic
 {
-    internal class VisualBasicTemplateTypeBuilder
+    internal class VisualBasicTemplateTypeBuilder : ITemplateTypeBuilder
     {
         private readonly CompilerParameters _compilerParameters
             = new CompilerParameters();

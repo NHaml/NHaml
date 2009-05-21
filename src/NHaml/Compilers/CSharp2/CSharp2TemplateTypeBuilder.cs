@@ -7,7 +7,7 @@ using Microsoft.CSharp;
 
 namespace NHaml.Compilers.CSharp2
 {
-    internal class CSharp2TemplateTypeBuilder
+    public class CSharp2TemplateTypeBuilder : ITemplateTypeBuilder
     {
         private readonly CompilerParameters _compilerParameters
           = new CompilerParameters();

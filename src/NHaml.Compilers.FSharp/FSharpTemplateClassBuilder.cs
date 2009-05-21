@@ -12,18 +12,12 @@ namespace NHaml.Compilers.FSharp
         {
         }
 
-        public string IndentString
-        {
-            get { return new string(' ', 4 + ((Depth < 0 ? 0 : Depth) * 2)); }
-        }
-      
-
-
+ 
         protected override void RenderBeginBlock()
         {
             RenderMethod.Statements.Add(new CodeSnippetStatement
             {
-                Value = IndentString + "(",
+                Value = " (",
             });
         }
 
@@ -32,7 +26,7 @@ namespace NHaml.Compilers.FSharp
         {
             RenderMethod.Statements.Add(new CodeSnippetStatement
             {
-                Value = IndentString + ")",
+                Value = " )",
             });
         }
 

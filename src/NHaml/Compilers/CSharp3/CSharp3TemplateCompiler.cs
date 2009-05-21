@@ -17,7 +17,7 @@ namespace NHaml.Compilers.CSharp3
         }
 
 
-        internal override CSharp2TemplateTypeBuilder CreateTemplateTypeBuilder( TemplateEngine templateEngine )
+        public override ITemplateTypeBuilder CreateTemplateTypeBuilder( TemplateEngine templateEngine )
         {
             return new CSharp3TemplateTypeBuilder( templateEngine );
         }

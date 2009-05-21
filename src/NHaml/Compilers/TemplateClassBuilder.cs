@@ -14,18 +14,7 @@ namespace NHaml.Compilers
             BaseType = baseType;
         }
 
-        private Type _baseType;
-        public Type BaseType
-        {
-            get
-            {
-                return _baseType;
-            }
-            set
-            {
-                _baseType = value;
-            }
-        }
+        public Type BaseType { get; set; }
 
         protected StringBuilder Output { get; private set; }
 
