@@ -5,12 +5,8 @@ namespace NHaml.Compilers.CSharp2
 {
     public class CSharp2TemplateCompiler : CodeDomTemplateCompiler
     {
-        private static readonly Regex lambdaRegex = new Regex(
-          @"^(.+)(\(.*\))\s*=>\s*$",
-          RegexOptions.Compiled | RegexOptions.Singleline );
 
-
-        public CSharp2TemplateCompiler() : base(lambdaRegex)
+        public CSharp2TemplateCompiler() : base(@"^(.+)(\(.*\))\s*=>\s*$")
         {
         }
 

@@ -3,12 +3,10 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Text;
-using Microsoft.FSharp.Compiler.CodeDom;
 
-namespace NHaml.Compilers.FSharp
+namespace NHaml.Compilers
 {
-    internal class FSharpTemplateTypeBuilder : ITemplateTypeBuilder
+    public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
         private readonly CompilerParameters _compilerParameters
             = new CompilerParameters();
@@ -16,13 +14,11 @@ namespace NHaml.Compilers.FSharp
         private readonly TemplateEngine _templateEngine;
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public FSharpTemplateTypeBuilder( TemplateEngine templateEngine )
+        public CodeDomTemplateTypeBuilder( TemplateEngine templateEngine )
         {
             ProviderOptions = new Dictionary<string, string>();
             _templateEngine = templateEngine;
-
-            ProviderOptions.Add( "CompilerVersion", "v2.0" );
-
+            _templateEngine.AddReference(GetType().Assembly);
             _compilerParameters.GenerateInMemory = true;
             _compilerParameters.IncludeDebugInformation = false;
         }
@@ -33,21 +29,20 @@ namespace NHaml.Compilers.FSharp
 
         protected Dictionary<string, string> ProviderOptions { get; private set; }
 
-        [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        [SuppressMessage( "Microsoft.Portability", "CA1903" )]
-        public Type Build( string source, string typeName )
+        [SuppressMessage("Microsoft.Security", "CA2122")]
+        [SuppressMessage("Microsoft.Portability", "CA1903")]
+        public Type Build(string source, string typeName)
         {
-            BuildSource( source );
+            BuildSource(source);
 
-            Trace.WriteLine( Source );
+            Trace.WriteLine(Source);
 
             AddReferences();
 
-            var codeProvider = new FSharpCodeProvider(  );
+            var codeProvider = GetCodeProvider();
 
             CompilerResults = codeProvider
-                .CompileAssemblyFromSource( _compilerParameters, Source );
-
+                .CompileAssemblyFromSource(_compilerParameters, Source);
             foreach (CompilerError result in CompilerResults.Errors)
             {
                 if (!result.IsWarning)
@@ -55,10 +50,12 @@ namespace NHaml.Compilers.FSharp
                     return null;
                 }
             }
-                var assembly = CompilerResults.CompiledAssembly;
-                var fullTypeName = "TempNHamlNamespace." + typeName;
-                return assembly.GetType(fullTypeName, true, true);
+
+            return CompilerResults.CompiledAssembly.GetType(typeName);
+
         }
+
+        protected abstract CodeDomProvider GetCodeProvider();
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         private void AddReferences()
@@ -71,20 +68,9 @@ namespace NHaml.Compilers.FSharp
             }
         }
 
-        private void BuildSource( string source )
+        protected virtual void BuildSource( string source )
         {
-            var sourceBuilder = new StringBuilder();
-
-            sourceBuilder.AppendLine("#light ");
-            sourceBuilder.AppendLine("namespace TempNHamlNamespace");
-            foreach( var usingStatement in _templateEngine.Usings )
-            {
-                sourceBuilder.AppendLine( "open " + usingStatement);
-            }
-
-            sourceBuilder.AppendLine( source);
-
-            Source = sourceBuilder.ToString();
+            Source = source;
         }
     }
 }

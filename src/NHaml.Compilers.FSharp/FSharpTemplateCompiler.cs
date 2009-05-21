@@ -1,76 +1,32 @@
 using System;
 using System.Text.RegularExpressions;
-using NHaml.Exceptions;
 
 namespace NHaml.Compilers.FSharp
 {
-    public class FSharpTemplateCompiler : ITemplateCompiler
+    public class FSharpTemplateCompiler : CodeDomTemplateCompiler
     {
-        private static readonly Regex LambdaRegex = new Regex(
-          @"^(.+)(fun\(.*\))\s*->\s*$",
-          RegexOptions.Compiled | RegexOptions.Singleline);
 
-        public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
+        public FSharpTemplateCompiler()
+            : base(@"^(.+)(fun\(.*\))\s*->\s*$")
+        {
+        }
+
+        public override TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
         {
             return new FSharpTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile( TemplateParser templateParser )
-        {
-            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
-            var typeBuilder = new FSharpTemplateTypeBuilder( templateParser.TemplateEngine );
-            var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
-
-            if( templateType == null )
-            {
-                TemplateCompilationException.Throw( typeBuilder.CompilerResults,
-                                                    typeBuilder.Source, templateParser.TemplatePath );
-            }
-
-            return new TemplateFactory( templateType );
-        }
-
-        public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
-        {
-            var code = templateParser.CurrentInputLine.NormalizedText;
-
-            var lambdaMatch = LambdaRegex.Match( code );
-
-            if( !lambdaMatch.Success )
-            {
-                templateParser.TemplateClassBuilder
-                    .AppendSilentCode(code, !templateParser.IsBlock);
-
-                if( templateParser.IsBlock )
-                {
-                    templateParser.TemplateClassBuilder.BeginCodeBlock();
-
-                    return templateParser.TemplateClassBuilder.EndCodeBlock;
-                }
-
-                return null;
-            }
-
-            var depth = templateParser.CurrentInputLine.IndentCount;
-            code = TranslateLambda(code, lambdaMatch);
-
-            templateParser.TemplateClassBuilder.AppendChangeOutputDepth(depth);
-            templateParser.TemplateClassBuilder.AppendSilentCode(code, true);
-
-            return () =>
-                       {
-
-                           templateParser.TemplateClassBuilder.AppendChangeOutputDepth(depth);
-                           templateParser.TemplateClassBuilder.AppendSilentCode(")", true);
-                       };
-        }
-
-        public  string TranslateLambda(string codeLine, Match lambdaMatch)
+        public override string TranslateLambda(string codeLine, Match lambdaMatch)
         {
             var methodBeingCalled = codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2);
             var s = (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ");
             var argDefinition = lambdaMatch.Groups[2].Captures[0].Value;
             return string.Format("{0}{1}{2} -> ", methodBeingCalled, s, argDefinition);
+        }
+
+        public override ITemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
+        {
+            return new FSharpTemplateTypeBuilder(templateEngine);
         }
     }
 }

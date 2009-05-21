@@ -7,9 +7,12 @@ namespace NHaml.Compilers
     public abstract class CodeDomTemplateCompiler : ITemplateCompiler
     {
 
-        protected CodeDomTemplateCompiler(Regex lambdaRegex)
+        private readonly Regex lambdaRegex;
+
+        protected CodeDomTemplateCompiler(string lambdaRegex)
         {
-            LambdaRegex = lambdaRegex;
+            this.lambdaRegex = new Regex(lambdaRegex,
+                RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
         public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType);
@@ -33,7 +36,7 @@ namespace NHaml.Compilers
         {
             var code = templateParser.CurrentInputLine.NormalizedText;
 
-            var lambdaMatch = LambdaRegex.Match( code );
+            var lambdaMatch = lambdaRegex.Match( code );
 
             if( !lambdaMatch.Success )
             {
@@ -63,7 +66,6 @@ namespace NHaml.Compilers
                        };
         }
 
-        protected Regex LambdaRegex { get; set; }
 
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);

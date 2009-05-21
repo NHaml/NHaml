@@ -5,11 +5,9 @@ namespace NHaml.Compilers.VisualBasic
 {
     public class VisualBasicTemplateCompiler : CodeDomTemplateCompiler
     {
-        private static readonly Regex lambdaRegex = new Regex(
-            @"^(.+)(\(.*\))\s*=>\s*$",
-            RegexOptions.Compiled | RegexOptions.Singleline );
 
-        public VisualBasicTemplateCompiler() : base(lambdaRegex)
+        public VisualBasicTemplateCompiler()
+            : base(@"^(.+)(\(.*\))\s*=>\s*$")
         {
         }
 
