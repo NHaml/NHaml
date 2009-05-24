@@ -11,7 +11,7 @@ namespace NHaml.Web.MonoRail
 
         public override char Signifier
         {
-            get { return '^'; }
+            get { return '@'; }
         }
 
         protected virtual string PreprocessLine(InputLine inputLine)
