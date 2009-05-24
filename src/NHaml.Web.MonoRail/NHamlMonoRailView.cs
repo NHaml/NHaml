@@ -11,40 +11,7 @@ using NHaml.Utils;
 namespace NHaml.Web.MonoRail
 {
 
-    public class  Temp2 : NHamlMonoRailView
-    {
-        protected override void CoreRender(TextWriter textWriter)
-        {
-            Component("Component1", new Dictionary<string, object> {{"a",4+3}}, () =>
-                                                                          {
-                                                                              textWriter.WriteLine(@"- MySite");
-                                                                              textWriter.WriteLine(@"- MySite");
-                                                                          }
-                ).
-                AddSection("Section1", x =>
-                                           {
-                                               x.WriteLine(@"- MySite");
-                                               x.WriteLine(@"- MySite");
-                                           }
-                ).
-                AddSection("Section2", x =>
-                                           {
-                                               x.WriteLine(@"- MySite");
-                                               x.WriteLine(@"- MySite");
-                                           }
-                ).Render();
-            base.CoreRender(textWriter);
-        }
-
-    }
-    public class  Temp : NHamlMonoRailView
-    {
-        protected override void CoreRender(TextWriter textWriter)
-        {
-            var dictionary = NHamlMonoRailView.GetDictionaryFromKeyValue(new KeyValuePair<string, object>("a", 4 + 3), new KeyValuePair<string, object>("a", 4 + 3));
-
-        }
-    }
+ 
     //TODO: the monorail integration here is based mostly on the brail view engine. Need to talk to castle guys and ask them how they want me to document this fact.
 
     [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]

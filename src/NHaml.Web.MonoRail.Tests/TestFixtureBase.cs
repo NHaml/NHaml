@@ -23,7 +23,7 @@ namespace NHaml.Web.MonoRail.Tests
         protected DefaultViewComponentFactory ViewComponentFactory;
         protected string _primaryTemplatesFolder;
         protected string _secondaryTemplatesFolder;
-        protected string Area = null;
+        protected string Area;
         protected string ControllerName = "test_controller";
         protected StubEngineContext StubEngineContext;
         protected string Action = "test_action";

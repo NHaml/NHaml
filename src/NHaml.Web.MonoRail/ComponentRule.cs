@@ -7,7 +7,7 @@ namespace NHaml.Web.MonoRail
 {
     public class ComponentRule : MarkupRule
     {
-        private static int tempDictionaryCount = 0;
+        private static int tempDictionaryCount;
 
         public override char Signifier
         {
