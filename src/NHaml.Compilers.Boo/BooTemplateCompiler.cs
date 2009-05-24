@@ -2,6 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
+using NHaml.Rules;
 
 namespace NHaml.Compilers.Boo
 {
@@ -52,7 +53,7 @@ namespace NHaml.Compilers.Boo
                     return templateClassBuilder.EndCodeBlock;
                 }
 
-                return null;
+                return MarkupRule.EmptyClosingAction;
             }
 
             var depth = templateParser.CurrentInputLine.IndentCount;

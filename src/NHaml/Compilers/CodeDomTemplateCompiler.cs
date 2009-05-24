@@ -3,6 +3,7 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
+using NHaml.Rules;
 
 namespace NHaml.Compilers
 {
@@ -60,7 +61,7 @@ namespace NHaml.Compilers
                     return templateParser.TemplateClassBuilder.EndCodeBlock;
                 }
 
-                return null;
+                return MarkupRule.EmptyClosingAction;
             }
 
             var depth = templateParser.CurrentInputLine.IndentCount;

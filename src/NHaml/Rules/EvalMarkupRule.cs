@@ -15,7 +15,7 @@ namespace NHaml.Rules
               templateParser.CurrentInputLine.NormalizedText.Trim(),
               templateParser.TemplateEngine.EncodeHtml );
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

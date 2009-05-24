@@ -51,7 +51,7 @@ namespace NHaml.Rules
                 templateParser.MergeTemplate( partialTemplatePath, true );
             }
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

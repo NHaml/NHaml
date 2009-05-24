@@ -84,7 +84,7 @@ namespace NHaml.Rules
                 templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.Text );
             }
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

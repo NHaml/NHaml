@@ -9,7 +9,7 @@ namespace NHaml.Compilers
 {
     public abstract class CodeDomClassBuilder : TemplateClassBuilder
     {
-        protected CodeMemberMethod RenderMethod{ get; set; }
+        public CodeMemberMethod RenderMethod{ get; set; }
 
         public CodeDomProvider CodeDomProvider { get; set; }
 
@@ -218,7 +218,6 @@ namespace NHaml.Compilers
                     _invoke1.Parameters.Add(new CodeSnippetExpression
                                                 {
                                                     Value = expressionStringToken.Value
-
                                                 });
                 }
                 else
@@ -227,66 +226,12 @@ namespace NHaml.Compilers
                     _invoke1.Parameters.Add(new CodePrimitiveExpression
                                                 {
                                                     Value = expressionStringToken.Value
-
                                                 });
                 }
             }
             else
             {
-                var arrayExpression = new CodeArrayCreateExpression
-                                          {
-                                              CreateType = new CodeTypeReference("System.String", 1)
-                                                               {
-                                                                   ArrayElementType = stringType
-                                                               },
-                                              Size = 0
-                                          };
-
-
-                foreach (var expressionStringToken in values)
-                {
-                    if (expressionStringToken.IsExpression)
-                    {
-                        var toStringExpression = new CodeMethodInvokeExpression
-                                                     {
-                                                         Method = new CodeMethodReferenceExpression
-                                                                      {
-                                                                          MethodName = "ToString",
-                                                                          TargetObject =
-                                                                              new CodeVariableReferenceExpression
-                                                                                  {
-                                                                                      VariableName = "Convert"
-                                                                                  }
-                                                                      }
-                                                     };
-
-                        toStringExpression.Parameters.Add(new CodeSnippetExpression
-                                                              {
-                                                                  Value = expressionStringToken.Value
-                                                              });
-                        arrayExpression.Initializers.Add(toStringExpression);
-                    }
-                    else
-                    {
-                        var _value3 = new CodePrimitiveExpression
-                                          {
-                                              Value = expressionStringToken.Value
-                                          };
-                        arrayExpression.Initializers.Add(_value3);
-                    }
-                }
-                var concatExpression = new CodeMethodInvokeExpression
-                                           {
-                                               Method = new CodeMethodReferenceExpression
-                                                            {
-                                                                MethodName = "Concat",
-                                                                TargetObject = new CodeTypeReferenceExpression
-                                                                                   {
-                                                                                       Type = stringType
-                                                                                   }
-                                                            }
-                                           };
-                concatExpression.Parameters.Add(arrayExpression);
+                var concatExpression = GetConcatExpression(values);
                 _invoke1.Parameters.Add(concatExpression);
             }
 
@@ -304,6 +249,65 @@ namespace NHaml.Compilers
 
         }
 
+        public static CodeMethodInvokeExpression GetConcatExpression(IList<ExpressionStringToken> values)
+        {
+            var stringType = new CodeTypeReference(typeof(string));
+            var arrayExpression = new CodeArrayCreateExpression
+            {
+                CreateType = new CodeTypeReference("System.String", 1)
+                {
+                    ArrayElementType = stringType
+                },
+                Size = 0
+            };
+
+
+            foreach (var expressionStringToken in values)
+            {
+                if (expressionStringToken.IsExpression)
+                {
+                    var toStringExpression = new CodeMethodInvokeExpression
+                    {
+                        Method = new CodeMethodReferenceExpression
+                        {
+                            MethodName = "ToString",
+                            TargetObject =
+                                new CodeVariableReferenceExpression
+                                {
+                                    VariableName = "Convert"
+                                }
+                        }
+                    };
+
+                    toStringExpression.Parameters.Add(new CodeSnippetExpression
+                    {
+                        Value = expressionStringToken.Value
+                    });
+                    arrayExpression.Initializers.Add(toStringExpression);
+                }
+                else
+                {
+                    var _value3 = new CodePrimitiveExpression
+                    {
+                        Value = expressionStringToken.Value
+                    };
+                    arrayExpression.Initializers.Add(_value3);
+                }
+            }
+            var concatExpression = new CodeMethodInvokeExpression
+            {
+                Method = new CodeMethodReferenceExpression
+                {
+                    MethodName = "Concat",
+                    TargetObject = new CodeTypeReferenceExpression
+                    {
+                        Type = stringType
+                    }
+                }
+            };
+            concatExpression.Parameters.Add(arrayExpression);
+            return concatExpression;
+        }
         public override void BeginCodeBlock()
         {
             Depth++;

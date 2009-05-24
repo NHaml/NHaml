@@ -12,7 +12,7 @@ namespace NHaml.Rules
             templateParser.TemplateClassBuilder.AppendOutput( templateParser.CurrentInputLine.Indent );
             templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.NormalizedText );
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

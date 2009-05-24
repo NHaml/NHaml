@@ -15,9 +15,6 @@ namespace NHaml.Exceptions
     [DebuggerStepThrough]
     public sealed class TemplateCompilationException : Exception
     {
-        private readonly CompilerResults _compilerResults;
-        private readonly string _templateSource;
-
         public static void Throw( CompilerResults compilerResults, string templateSource, string templatePath )
         {
             var message = new StringBuilder();
@@ -49,20 +46,16 @@ namespace NHaml.Exceptions
                     message.AppendLine();
                 }
             }
-
             throw new TemplateCompilationException( message.ToString(), compilerResults, templateSource );
         }
 
         private TemplateCompilationException( string message, CompilerResults compilerResults, string compiledTemplateSource )
             : base( message )
         {
-            _compilerResults = compilerResults;
-            _templateSource = compiledTemplateSource;
+            CompilerResults = compilerResults;
+            TemplateSource = compiledTemplateSource;
         }
 
-        public TemplateCompilationException()
-        {
-        }
 
         public TemplateCompilationException( string message )
             : base( message )
@@ -79,23 +72,17 @@ namespace NHaml.Exceptions
         {
         }
 
-        public CompilerResults CompilerResults
-        {
-            get { return _compilerResults; }
-        }
+        public CompilerResults CompilerResults { get; private set; }
 
-        public string TemplateSource
-        {
-            get { return _templateSource; }
-        }
+        public string TemplateSource { get; private set; }
 
         [SecurityPermission( SecurityAction.LinkDemand, Flags = SecurityPermissionFlag.SerializationFormatter )]
         public override void GetObjectData( SerializationInfo info, StreamingContext context )
         {
             base.GetObjectData( info, context );
 
-            info.AddValue( "_compilerResults", _compilerResults );
-            info.AddValue( "_templateSource", _templateSource );
+            info.AddValue( "_compilerResults", CompilerResults );
+            info.AddValue( "_templateSource", TemplateSource );
         }
     }
 }

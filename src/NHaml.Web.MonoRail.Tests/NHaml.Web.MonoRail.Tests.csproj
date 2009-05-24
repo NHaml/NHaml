@@ -12,6 +12,8 @@
     <AssemblyName>NHaml.Web.MonoRail.Tests</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <TargetFrameworkSubset>
+    </TargetFrameworkSubset>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -57,13 +59,50 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CSharp2FunctionalTests.cs" />
+    <Compile Include="FunctionalTestFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="RenderBodyComponent.cs" />
+    <Compile Include="RenderParametersComponent.cs" />
+    <Compile Include="RenderSectionComponent.cs" />
+    <Compile Include="RenderTextComponent.cs" />
+    <Compile Include="TestFixtureBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\NHaml.Web.MonoRail\NHaml.Web.MonoRail.csproj">
       <Project>{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}</Project>
       <Name>NHaml.Web.MonoRail</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NHaml\NHaml.csproj">
+      <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
+      <Name>NHaml</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Expected\RenderParametersComponent.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\RenderSectionComponent.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\RenderTextComponent.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Expected\RenderBodyComponent.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\RenderParametersComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\RenderSectionComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\RenderTextComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Templates\RenderBodyComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

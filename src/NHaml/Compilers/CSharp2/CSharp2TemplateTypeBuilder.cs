@@ -14,3 +14,4 @@ namespace NHaml.Compilers.CSharp2
 
     }
 }
+

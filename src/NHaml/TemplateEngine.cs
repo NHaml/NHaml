@@ -28,7 +28,7 @@ namespace NHaml
           };
 
         private static readonly string[] DefaultUsings
-          = new[] { "System", "System.IO", "System.Web", "NHaml", "NHaml.Utils" };
+          = new[] { "System", "System.IO", "System.Web", "NHaml", "NHaml.Utils","System.Collections.Generic" };
 
         private readonly StringSet _autoClosingTags =
           new StringSet( DefaultAutoClosingTags );
@@ -176,7 +176,7 @@ namespace NHaml
 
         public StringSet References { get; private set; }
 
-        internal void AddRule( MarkupRule markupRule )
+        public void AddRule( MarkupRule markupRule )
         {
             Invariant.ArgumentNotNull( markupRule, "markupRule" );
 

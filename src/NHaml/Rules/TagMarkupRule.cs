@@ -58,7 +58,7 @@ namespace NHaml.Rules
             {
                 templateParser.TemplateClassBuilder.AppendOutputLine(" />");
 
-                return null;
+                return EmptyClosingAction;
             }
 
             var content = match.Groups[7].Value.Trim();

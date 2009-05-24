@@ -75,7 +75,7 @@ namespace NHaml.Compilers.IronRuby
                 }
             }
 
-            return null;
+            return MarkupRule.EmptyClosingAction;
         }
 
         public void RenderAttributes( TemplateParser templateParser, string attributes )

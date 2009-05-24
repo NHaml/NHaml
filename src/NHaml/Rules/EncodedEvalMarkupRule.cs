@@ -21,7 +21,7 @@ namespace NHaml.Rules
 
             templateParser.TemplateClassBuilder.AppendCodeLine( code, true );
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

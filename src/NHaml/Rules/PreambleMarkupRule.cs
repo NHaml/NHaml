@@ -16,7 +16,7 @@ namespace NHaml.Rules
                 templateParser.TemplateClassBuilder.AppendPreambleCode( code );
             }
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

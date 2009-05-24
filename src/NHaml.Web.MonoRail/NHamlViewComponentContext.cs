@@ -18,7 +18,7 @@ namespace NHaml.Web.MonoRail
         /// <param name="name">The name.</param>
         /// <param name="text">The text.</param>
         /// <param name="parameters">The parameters.</param>
-        public NHamlViewComponentContext(NHamlMonoRailView parent, Action<TextWriter> body,
+        public NHamlViewComponentContext(NHamlMonoRailView parent, Action body,
                                          string name, TextWriter text, IDictionary parameters)
         {
             this.parent = parent;
@@ -29,7 +29,7 @@ namespace NHaml.Web.MonoRail
         }
 
 
-        public Action<TextWriter> Body { get; set; }
+        public Action Body { get; set; }
 
         #region IViewComponentContext Members
 
@@ -59,7 +59,7 @@ namespace NHaml.Web.MonoRail
             }
             using (parent.SetOutputStream(writer))
             {
-                Body(writer);
+                Body();
             }
         }
 
@@ -91,14 +91,19 @@ namespace NHaml.Web.MonoRail
         public void RenderSection(string sectionName, TextWriter writer)
         {
             if (HasSection(sectionName) == false)
+            {
                 return; //matching the NVelocity behavior, but maybe should throw?
+            }
             var callable = (Action<TextWriter>) sections[sectionName];
             callable(writer );
         }
 
         public IViewEngine ViewEngine
         {
-            get { return parent.ViewEngine; }
+            get
+            {
+                return parent.ViewEngine;
+            }
         }
 
         #endregion

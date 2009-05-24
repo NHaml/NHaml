@@ -13,7 +13,7 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

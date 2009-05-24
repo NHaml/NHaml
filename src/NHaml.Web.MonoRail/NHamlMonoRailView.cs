@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
 using System.Security.Permissions;
 using System.Web;
@@ -9,6 +10,41 @@ using NHaml.Utils;
 
 namespace NHaml.Web.MonoRail
 {
+
+    public class  Temp2 : NHamlMonoRailView
+    {
+        protected override void CoreRender(TextWriter textWriter)
+        {
+            Component("Component1", new Dictionary<string, object> {{"a",4+3}}, () =>
+                                                                          {
+                                                                              textWriter.WriteLine(@"- MySite");
+                                                                              textWriter.WriteLine(@"- MySite");
+                                                                          }
+                ).
+                AddSection("Section1", x =>
+                                           {
+                                               x.WriteLine(@"- MySite");
+                                               x.WriteLine(@"- MySite");
+                                           }
+                ).
+                AddSection("Section2", x =>
+                                           {
+                                               x.WriteLine(@"- MySite");
+                                               x.WriteLine(@"- MySite");
+                                           }
+                ).Render();
+            base.CoreRender(textWriter);
+        }
+
+    }
+    public class  Temp : NHamlMonoRailView
+    {
+        protected override void CoreRender(TextWriter textWriter)
+        {
+            var dictionary = NHamlMonoRailView.GetDictionaryFromKeyValue(new KeyValuePair<string, object>("a", 4 + 3), new KeyValuePair<string, object>("a", 4 + 3));
+
+        }
+    }
     //TODO: the monorail integration here is based mostly on the brail view engine. Need to talk to castle guys and ask them how they want me to document this fact.
 
     [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
@@ -16,6 +52,16 @@ namespace NHaml.Web.MonoRail
     public abstract class NHamlMonoRailView : Template
     {
         private NHamlMonoRailView parent;
+
+        public static IDictionary<string,object> GetDictionaryFromKeyValue(params KeyValuePair<string, object>[] keyValuePairs)
+        {
+            var dictionary = new Dictionary<string, object>();
+            foreach (var keyValuePair in keyValuePairs)
+            {
+                dictionary.Add(keyValuePair.Key, keyValuePair.Value);
+            }
+            return dictionary;
+        }
 
         public void Render(IEngineContext engineContext, TextWriter writer, IControllerContext controllerContext)
         {
@@ -59,21 +105,25 @@ namespace NHaml.Web.MonoRail
 
         public NHamlMonoRailViewEngine ViewEngine { get; set; }
 
-
-
-        public void Component(string componentName)
+        public ComponentData Component(string componentName, IDictionary<string,object> parameters, Action action)
         {
-            Component(componentName, new Hashtable());
+            return new ComponentData(this, componentName, parameters, action);
+        }
+        public ComponentData Component(string componentName, IDictionary<string, object> parameters)
+        {
+            return new ComponentData(this, componentName, parameters);
         }
 
-        public void Component(string componentName, IDictionary parameters)
+        public void RenderComponent(ComponentData componentData)
         {
-			var componentContext =
-                new NHamlViewComponentContext(this, null, componentName, Output.TextWriter,
-				                              new Hashtable(parameters, StringComparer.InvariantCultureIgnoreCase));
-			AddViewComponentProperties(componentContext.ComponentParameters);
+            var componentContext = new NHamlViewComponentContext(this, componentData.Body, componentData.Name, Output.TextWriter, (IDictionary)componentData.Parameters);
+            foreach (var section in componentData.Sections)
+            {
+                componentContext.RegisterSection(section.Key, section.Value);
+            }
+            AddViewComponentProperties(componentContext.ComponentParameters);
 			var componentFactory = (IViewComponentFactory) ViewContext.GetService(typeof(IViewComponentFactory));
-			var component = componentFactory.Create(componentName);
+			var component = componentFactory.Create(componentData.Name);
 			component.Init(ViewContext, componentContext);
 			component.Render();
 			if (componentContext.ViewToRender != null)
@@ -196,5 +246,43 @@ namespace NHaml.Web.MonoRail
                 return subviewName.Substring(1) + ViewEngine.ViewFileExtension;
             return Path.Combine(ViewEngine.ViewRootDir, subviewName) + ViewEngine.ViewFileExtension;
         }
+
+
+    
+    }
+
+    public class ComponentData
+    {
+        public NHamlMonoRailView View { get; set; }
+        public string Name { get; set; }
+        public IDictionary<string, object> Parameters { get; set; }
+        public Dictionary<string, Action<TextWriter>> Sections{ get; set;}
+
+        public ComponentData(NHamlMonoRailView view, string name, IDictionary<string, object> parameters):this(view,name, parameters, null)
+        {
+        }
+        public ComponentData(NHamlMonoRailView view, string name, IDictionary<string, object> parameters, Action action)
+        {
+            Body = action;
+            View = view;
+            Name = name;
+            Parameters = parameters;
+            Sections = new Dictionary<string, Action<TextWriter>>();
+        }
+
+        public Action Body { get; set; }
+
+        public ComponentData AddSection(string sectionName, Action<TextWriter> action)
+        {
+            Sections.Add(sectionName,action);
+            return this;
+        }
+
+        public void Render()
+        {
+            View.RenderComponent(this);
+        }
     }
 }
+
+

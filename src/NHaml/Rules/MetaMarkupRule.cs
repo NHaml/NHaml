@@ -20,7 +20,7 @@ namespace NHaml.Rules
 
             templateParser.Meta[match.Groups[1].Value] = match.Groups[2].Value;
 
-            return null;
+            return EmptyClosingAction;
         }
     }
 }

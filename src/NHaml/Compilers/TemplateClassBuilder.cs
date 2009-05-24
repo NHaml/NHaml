@@ -49,7 +49,7 @@ namespace NHaml.Compilers
 
         public virtual void BeginCodeBlock()
         {
-            Depth++;
+            Indent();
         }
 
         public virtual void EndCodeBlock()
@@ -57,9 +57,13 @@ namespace NHaml.Compilers
             Unindent();
         }
 
-        public virtual void Unindent()
+        public void Unindent()
         {
             Depth--;
+        }
+        public void Indent()
+        {
+            Depth++;
         }
 
         public abstract void AppendCode(string code, bool newLine, bool escapeHtml);
