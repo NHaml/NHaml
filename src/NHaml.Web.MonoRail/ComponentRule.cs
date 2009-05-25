@@ -41,16 +41,18 @@ namespace NHaml.Web.MonoRail
 
             var dictionaryLocalVariable = AppendCreateDictionaryLocalVariable(dictionary, builder);
 
-            var code = string.Format("{0}Component(\"{1}\", {2}, () =>",
+        	builder.CurrentTextWriterVariableName = "x";
+            var code = string.Format("{0}Component(\"{1}\", {2}, (x) =>",
                                      templateParser.CurrentInputLine.Indent, componentName, dictionaryLocalVariable);
 
             builder.AppendSilentCode(code, false);
             builder.BeginCodeBlock();
-            return () =>
-                       {
-                           builder.EndCodeBlock();
-                           builder.AppendSilentCode(").Render();", false);
-                       };
+			return () =>
+			       	{
+			       		builder.EndCodeBlock();
+			       		builder.AppendSilentCode(").Render();", false);
+			       		builder.CurrentTextWriterVariableName = TemplateClassBuilder.DefaultTextWriterVariableName;
+			       	};
         }
 
         private static string AppendCreateDictionaryLocalVariable(string dictionary, CodeDomClassBuilder builder)

@@ -11,7 +11,8 @@ using NHaml.Utils;
 namespace NHaml.Web.MonoRail
 {
 
- 
+
+
     //TODO: the monorail integration here is based mostly on the brail view engine. Need to talk to castle guys and ask them how they want me to document this fact.
 
     [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
@@ -72,7 +73,7 @@ namespace NHaml.Web.MonoRail
 
         public NHamlMonoRailViewEngine ViewEngine { get; set; }
 
-        public ComponentData Component(string componentName, IDictionary<string,object> parameters, Action action)
+        public ComponentData Component(string componentName, IDictionary<string,object> parameters, Action<TextWriter> action)
         {
             return new ComponentData(this, componentName, parameters, action);
         }
@@ -228,7 +229,7 @@ namespace NHaml.Web.MonoRail
         public ComponentData(NHamlMonoRailView view, string name, IDictionary<string, object> parameters):this(view,name, parameters, null)
         {
         }
-        public ComponentData(NHamlMonoRailView view, string name, IDictionary<string, object> parameters, Action action)
+        public ComponentData(NHamlMonoRailView view, string name, IDictionary<string, object> parameters, Action<TextWriter> action)
         {
             Body = action;
             View = view;
@@ -237,7 +238,7 @@ namespace NHaml.Web.MonoRail
             Sections = new Dictionary<string, Action<TextWriter>>();
         }
 
-        public Action Body { get; set; }
+        public Action<TextWriter> Body { get; set; }
 
         public ComponentData AddSection(string sectionName, Action<TextWriter> action)
         {

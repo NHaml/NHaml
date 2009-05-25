@@ -18,7 +18,7 @@ namespace NHaml.Web.MonoRail
         /// <param name="name">The name.</param>
         /// <param name="text">The text.</param>
         /// <param name="parameters">The parameters.</param>
-        public NHamlViewComponentContext(NHamlMonoRailView parent, Action body,
+        public NHamlViewComponentContext(NHamlMonoRailView parent, Action<TextWriter> body,
                                          string name, TextWriter text, IDictionary parameters)
         {
             this.parent = parent;
@@ -29,7 +29,7 @@ namespace NHaml.Web.MonoRail
         }
 
 
-        public Action Body { get; set; }
+        public Action<TextWriter> Body { get; set; }
 
         #region IViewComponentContext Members
 
@@ -59,7 +59,7 @@ namespace NHaml.Web.MonoRail
             }
             using (parent.SetOutputStream(writer))
             {
-                Body();
+                Body(writer);
             }
         }
 

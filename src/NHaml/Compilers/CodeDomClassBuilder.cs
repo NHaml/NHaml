@@ -15,7 +15,7 @@ namespace NHaml.Compilers
 
         private int preambleCount;
 
-        public CodeDomClassBuilder(string className, Type baseType)
+    	public CodeDomClassBuilder(string className, Type baseType)
             : base(className, baseType)
         {
             RenderMethod = new CodeMemberMethod
@@ -54,7 +54,7 @@ namespace NHaml.Compilers
                                                        TargetObject =
                                                            new CodeVariableReferenceExpression
                                                                {
-                                                                   VariableName = "textWriter"
+                                                                   VariableName = CurrentTextWriterVariableName
                                                                }
                                                    }
                                   };
@@ -84,7 +84,7 @@ namespace NHaml.Compilers
                                                          TargetObject =
                                                              new CodeVariableReferenceExpression
                                                                  {
-                                                                     VariableName = "textWriter"
+                                                                     VariableName = CurrentTextWriterVariableName
                                                                  }
                                                      }
                                     };
@@ -189,6 +189,7 @@ namespace NHaml.Compilers
             }
         
         }
+
 
         public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
         {

@@ -6,14 +6,20 @@ namespace NHaml.Compilers
 {
     public abstract class TemplateClassBuilder
     {
+
+		public const string DefaultTextWriterVariableName = "textWriter";
         protected TemplateClassBuilder(string className, Type baseType)
         {
+
+			CurrentTextWriterVariableName = DefaultTextWriterVariableName; 
             Output = new StringBuilder();
             Preamble = new StringBuilder();
             ClassName = className;
             BaseType = baseType;
         }
 
+
+		public string CurrentTextWriterVariableName { get; set; }
         public Type BaseType { get; set; }
 
         protected StringBuilder Output { get; private set; }

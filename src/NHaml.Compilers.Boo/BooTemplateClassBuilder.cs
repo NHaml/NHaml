@@ -39,7 +39,7 @@ namespace NHaml.Compilers.Boo
             // prevents problems with " at the end of the string
             value = value.Replace("\"", "\"\"\"+'\"'+\"\"\"");
 
-            Output.AppendLine(Utility.FormatInvariant(IndentString + "textWriter.{0}(\"\"\"{1}\"\"\")", method, value));
+            Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.{1}(\"\"\"{2}\"\"\")", CurrentTextWriterVariableName, method, value));
         }
 
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
