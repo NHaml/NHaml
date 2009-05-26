@@ -16,6 +16,16 @@ namespace NHaml
 {
     public sealed class TemplateEngine
     {
+
+		
+		public IDictionary<string, IMarkupExtension> MarkupExtensions { get; set; }
+
+	
+		public void AddExtension(IMarkupExtension markupExtension)
+		{
+			MarkupExtensions.Add(markupExtension.Signifier, markupExtension);
+		}
+
         private static readonly string[] DefaultAutoClosingTags
           = new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" };
 
@@ -54,6 +64,7 @@ namespace NHaml
             _templateCompiler = new CSharp3TemplateCompiler();
             AddRule( new EofMarkupRule() );
             AddRule( new MetaMarkupRule() );
+			AddRule(new NamedExtensionRule(this));
             AddRule( new DocTypeMarkupRule() );
             AddRule( new TagMarkupRule() );
             AddRule( new ClassMarkupRule() );
@@ -65,8 +76,10 @@ namespace NHaml
             AddRule( new CommentMarkupRule() );
             AddRule( new EscapeMarkupRule() );
             AddRule( new PartialMarkupRule() );
+			MarkupExtensions = new Dictionary<string, IMarkupExtension>();
 
             Configure();
+
         }
 
         private void Configure()

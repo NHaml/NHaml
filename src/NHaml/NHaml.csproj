@@ -75,9 +75,11 @@
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />
     <Compile Include="ExpressionStringToken.cs" />
+    <Compile Include="Rules\NamedExtensionRule.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="ParsedAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
+    <Compile Include="Rules\IMarkupExtension.cs" />
     <Compile Include="Rules\MetaMarkupRule.cs" />
     <Compile Include="TemplateParser.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />

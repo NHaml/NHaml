@@ -19,8 +19,8 @@ namespace NHaml.Web.MonoRail
         public NHamlMonoRailViewEngine()
         {
             TemplateEngine = new TemplateEngine();
-            TemplateEngine.AddRule(new ComponentRule());
-            TemplateEngine.AddRule(new ComponentSectionRule());
+			TemplateEngine.AddExtension(new ComponentSectionExtension());
+			TemplateEngine.AddExtension(new ComponentExtension());
 
             InitializeTemplateEngine();
         }
