@@ -43,9 +43,11 @@ namespace NHaml.Web.MonoRail.Tests
 
             PropertyBag = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
             Helpers = new HelperDictionary();
-            var services = new StubMonoRailServices();
-            services.UrlBuilder = new DefaultUrlBuilder(new StubServerUtility(), new StubRoutingEngine());
-            services.UrlTokenizer = new DefaultUrlTokenizer();
+            var services = new StubMonoRailServices
+                               {
+                                   UrlBuilder = new DefaultUrlBuilder(new StubServerUtility(), new StubRoutingEngine()),
+                                   UrlTokenizer = new DefaultUrlTokenizer()
+                               };
             var urlInfo = new UrlInfo(
                 "example.org", "test", "/TestBrail", "http", 80,
                 "http://test.example.org/test_area/test_controller/test_action.tdd",
@@ -72,6 +74,8 @@ namespace NHaml.Web.MonoRail.Tests
             Helpers["DateFormatHelper"] = Helpers["DateFormat"] = new DateFormatHelper(StubEngineContext);
 
 
+
+            var loader = new FileAssemblyViewSourceLoader("Views");
             _monoRailViewEngine = new NHamlMonoRailViewEngine
             {
                 TemplateEngine =
@@ -79,6 +83,7 @@ namespace NHaml.Web.MonoRail.Tests
                     TemplateCompiler = new CSharp3TemplateCompiler()
                 }
             };
+            _monoRailViewEngine.SetViewSourceLoader(loader);
             _templateEngine = _monoRailViewEngine.TemplateEngine;
             _templateEngine.TemplateBaseType = typeof(NHamlMonoRailView);
             
@@ -141,7 +146,10 @@ namespace NHaml.Web.MonoRail.Tests
             var compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
             stopwatch.Stop();
             Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
-            return (NHamlMonoRailView) compiledTemplate.CreateInstance();
+            var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
+            //TODOL should use _monoRailViewEngine.Process
+            template.ViewEngine = _monoRailViewEngine;
+            return template;
         }
 
         protected static void AssertRender( StringWriter output, string expectedName )

@@ -72,6 +72,7 @@ namespace NHaml.Web.MonoRail
         //Taken from boo view engine
         private string GetTemplateFileName(string templateName)
         {
+
             var file = templateName + ViewFileExtension;
             var filename = file.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
             filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
@@ -108,15 +109,7 @@ namespace NHaml.Web.MonoRail
             }
             return list;
         }
-        protected virtual FileInfo CreateFileInfo(string viewRootDirectory, string viewPath)
-        {
-            if (Path.IsPathRooted(viewPath))
-            {
-                viewPath = viewPath.Substring(Path.GetPathRoot(viewPath).Length);
-            }
 
-            return new FileInfo(Path.Combine(viewRootDirectory, viewPath));
-        }
         public override void Process(string templateName, string layoutName, TextWriter output, IDictionary<string, object> parameters)
         {
             var controllerContext = new ControllerContext();
