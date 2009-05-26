@@ -28,21 +28,21 @@ namespace NHaml.Web.Mvc
         {
             DefaultMaster = "application";
 
-            _templateEngine.AddUsing("System.Web");
-            _templateEngine.AddUsing("System.Web.Mvc");
-            _templateEngine.AddUsing("System.Web.Mvc.Html");
-            _templateEngine.AddUsing("System.Web.Routing");
+            _templateEngine.Options.AddUsing( "System.Web" );
+            _templateEngine.Options.AddUsing( "System.Web.Mvc" );
+            _templateEngine.Options.AddUsing( "System.Web.Mvc.Html" );
+            _templateEngine.Options.AddUsing( "System.Web.Routing" );
 
-            _templateEngine.AddUsing("NHaml.Web.Mvc");
+            _templateEngine.Options.AddUsing( "NHaml.Web.Mvc" );
 
-            _templateEngine.AddReference(typeof(UserControl).Assembly.Location);
-            _templateEngine.AddReference(typeof(RouteValueDictionary).Assembly.Location);
-            _templateEngine.AddReference(typeof(DataContext).Assembly.Location);
-            _templateEngine.AddReference(typeof(LinkExtensions).Assembly.Location);
-            _templateEngine.AddReference(typeof(Action).Assembly.Location);
-            _templateEngine.AddReference(typeof(Expression).Assembly.Location);
-            _templateEngine.AddReference(typeof(IView).Assembly.Location);
-            _templateEngine.AddReference(typeof(NHamlMvcView<>).Assembly.Location);
+            _templateEngine.Options.AddReference( typeof( UserControl ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( RouteValueDictionary ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( LinkExtensions ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( Expression ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( IView ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( NHamlMvcView<> ).Assembly.Location );
         }
 
         protected TemplateEngine TemplateEngine

@@ -19,8 +19,8 @@ namespace NHaml.Web.MonoRail
         public NHamlMonoRailViewEngine()
         {
             TemplateEngine = new TemplateEngine();
-			TemplateEngine.AddExtension(new ComponentSectionExtension());
-			TemplateEngine.AddExtension(new ComponentExtension());
+			TemplateEngine.Options.AddExtension(new ComponentSectionExtension());
+            TemplateEngine.Options.AddExtension( new ComponentExtension() );
 
             InitializeTemplateEngine();
         }
@@ -33,16 +33,16 @@ namespace NHaml.Web.MonoRail
         {
             DefaultMaster = "application";
 
-            TemplateEngine.AddUsing("System.Web");
-            TemplateEngine.AddUsing("NHaml.Web.MonoRail");
-            TemplateEngine.AddUsing("Castle.MonoRail.Framework.Helpers");
-            
+            TemplateEngine.Options.AddUsing( "System.Web" );
+            TemplateEngine.Options.AddUsing( "NHaml.Web.MonoRail" );
+            TemplateEngine.Options.AddUsing( "Castle.MonoRail.Framework.Helpers" );
 
-            TemplateEngine.AddReference(typeof(HtmlHelper).Assembly.Location);
-            TemplateEngine.AddReference(typeof(NHamlMonoRailViewEngine).Assembly.Location);
-            TemplateEngine.AddReference(typeof(DataContext).Assembly.Location);
-            TemplateEngine.AddReference(typeof(Action).Assembly.Location);
-            TemplateEngine.AddReference(typeof(Expression).Assembly.Location);
+
+            TemplateEngine.Options.AddReference( typeof( HtmlHelper ).Assembly.Location );
+            TemplateEngine.Options.AddReference( typeof( NHamlMonoRailViewEngine ).Assembly.Location );
+            TemplateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
+            TemplateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
+            TemplateEngine.Options.AddReference( typeof( Expression ).Assembly.Location );
             
         }
 

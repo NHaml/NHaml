@@ -4,7 +4,7 @@ namespace NHaml.Web.MonoRail
 {
     public class ComponentSectionExtension : IMarkupExtension
     {
-        public string Signifier
+        public string Name
         {
             get { return "Section"; }
         }

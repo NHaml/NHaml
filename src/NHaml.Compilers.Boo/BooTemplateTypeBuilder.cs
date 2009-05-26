@@ -67,7 +67,7 @@ namespace NHaml.Compilers.Boo
         [SuppressMessage( "Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods" )]
         private void AddReferences()
         {
-            foreach(var assemblyFile in _templateEngine.References )
+            foreach( var assemblyFile in _templateEngine.Options.References )
             {
                 var assembly = Assembly.LoadFrom( assemblyFile );
 
@@ -79,7 +79,7 @@ namespace NHaml.Compilers.Boo
         {
             var sourceBuilder = new StringBuilder();
 
-            foreach(var usingStatement in _templateEngine.Usings )
+            foreach( var usingStatement in _templateEngine.Options.Usings )
             {
                 sourceBuilder.AppendLine( "import " + usingStatement );
             }

@@ -17,7 +17,7 @@ namespace NHaml.Xps
         public XpsEngine()
         {
             TemplateEngine = new TemplateEngine();
-            TemplateEngine.AddReferences(typeof(DataView<>));
+            TemplateEngine.Options.AddReferences( typeof( DataView<> ) );
         }
 
         static XpsEngine()

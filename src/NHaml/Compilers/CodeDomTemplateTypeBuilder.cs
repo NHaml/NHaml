@@ -18,7 +18,7 @@ namespace NHaml.Compilers
         {
             ProviderOptions = new Dictionary<string, string>();
             TemplateEngine = templateEngine;
-            TemplateEngine.AddReference(GetType().Assembly);
+            TemplateEngine.Options.AddReference( GetType().Assembly );
             _compilerParameters.GenerateInMemory = true;
             _compilerParameters.IncludeDebugInformation = false;
         }
@@ -66,7 +66,7 @@ namespace NHaml.Compilers
         {
             _compilerParameters.ReferencedAssemblies.Clear();
 
-            foreach( var assembly in TemplateEngine.References )
+            foreach( var assembly in TemplateEngine.Options.References )
             {
                 _compilerParameters.ReferencedAssemblies.Add( assembly );
             }

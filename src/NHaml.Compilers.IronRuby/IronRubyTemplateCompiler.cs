@@ -27,12 +27,12 @@ namespace NHaml.Compilers.IronRuby
         {
             var ruby = new StringBuilder();
 
-            foreach( var reference in templateParser.TemplateEngine.References )
+            foreach( var reference in templateParser.TemplateEngine.Options.References )
             {
                 ruby.AppendLine( string.Format("require '{0}'", reference) );
             }
 
-            ruby.Append(templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings));
+            ruby.Append( templateParser.TemplateClassBuilder.Build( templateParser.TemplateEngine.Options.Usings ) );
 
             var templateSource = ruby.ToString();
 

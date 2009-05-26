@@ -34,13 +34,13 @@ namespace NHaml
             }
             InputFiles.Add(templatePath2);
 
-            if (TemplateEngine.UseTabs)
+            if( TemplateEngine.Options.UseTabs )
             {
                 _singleIndent = "\t";
             }
             else
             {
-                _singleIndent = string.Empty.PadLeft(TemplateEngine.IndentSize);
+                _singleIndent = string.Empty.PadLeft( TemplateEngine.Options.IndentSize );
             }
         }
 
@@ -92,9 +92,9 @@ namespace NHaml
         public void Parse()
         {
             InputLines = new LinkedList<InputLine>();
-            InputLines.AddLast(new InputLine(string.Empty, null, 0, TemplateEngine.IndentSize));
+            InputLines.AddLast( new InputLine( string.Empty, null, 0, TemplateEngine.Options.IndentSize ) );
 
-            InputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar.ToString(), null, 1, TemplateEngine.IndentSize));
+            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar.ToString(), null, 1, TemplateEngine.Options.IndentSize ) );
 
             CurrentNode = InputLines.First.Next;
             for (CurrentTemplateIndex = 0; CurrentTemplateIndex < MergedTemplatePaths.Count; CurrentTemplateIndex++)
@@ -148,7 +148,7 @@ namespace NHaml
                         continue;
                     }
                     var inputLine = new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++,
-                                                  TemplateEngine.IndentSize);
+                                                  TemplateEngine.Options.IndentSize );
                     InputLines.AddBefore(CurrentNode, inputLine);
                 }
             }

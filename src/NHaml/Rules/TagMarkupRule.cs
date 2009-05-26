@@ -54,7 +54,7 @@ namespace NHaml.Rules
             var action = match.Groups[6].Value;
 
             if (string.Equals("/", action)
-                || templateParser.TemplateEngine.IsAutoClosingTag(tagName))
+                || templateParser.TemplateEngine.Options.IsAutoClosingTag(tagName))
             {
                 templateParser.TemplateClassBuilder.AppendOutputLine(" />");
 
@@ -85,7 +85,7 @@ namespace NHaml.Rules
                     if (string.Equals("=", action))
                     {
                         templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive,
-                                                                       templateParser.TemplateEngine.EncodeHtml);
+                                                                       templateParser.TemplateEngine.Options.EncodeHtml );
                     }
                     else if (string.Equals("&=", action))
                     {

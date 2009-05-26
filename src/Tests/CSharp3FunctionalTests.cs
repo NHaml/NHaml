@@ -11,7 +11,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new CSharp3TemplateCompiler();
 
             _primaryTemplatesFolder = "CSharp3";
             _secondaryTemplatesFolder = "CSharp2";

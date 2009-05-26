@@ -25,7 +25,7 @@ namespace NHaml.Tests
         [SetUp]
         public virtual void SetUp()
         {
-            _templateEngine = new TemplateEngine { TemplateCompiler = new CSharp2TemplateCompiler() };
+            _templateEngine = new TemplateEngine {Options = {TemplateCompiler = new CSharp2TemplateCompiler()}};
 
             _primaryTemplatesFolder = "CSharp2";
         }

@@ -11,7 +11,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateCompiler = new FSharpTemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new FSharpTemplateCompiler();
 
             _primaryTemplatesFolder = "FSharp";
         }

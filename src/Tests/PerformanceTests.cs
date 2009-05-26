@@ -15,7 +15,7 @@ namespace NHaml.Tests
         [Test]
         public void CS2AttributeCompilationPerformance()
         {
-            _templateEngine.TemplateCompiler = new CSharp2TemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new CSharp2TemplateCompiler();
 
             var stopwatch = new Stopwatch();
 
@@ -34,7 +34,7 @@ namespace NHaml.Tests
         [Test]
         public void CS3AttributeCompilationPerformance()
         {
-            _templateEngine.TemplateCompiler = new CSharp3TemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new CSharp3TemplateCompiler();
 
             var stopwatch = new Stopwatch();
 

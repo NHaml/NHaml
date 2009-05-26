@@ -10,7 +10,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateCompiler = new VisualBasicTemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
 
             _primaryTemplatesFolder = "VisualBasic";
         }

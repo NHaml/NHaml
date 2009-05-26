@@ -10,7 +10,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateCompiler = new BooTemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
 
             _primaryTemplatesFolder = "Boo";
         }

@@ -28,7 +28,7 @@ namespace NHaml.Compilers
             var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
             classBuilder.CodeDomProvider = provider;
             typeBuilder.CodeDomProvider = provider;
-            var templateSource = classBuilder.Build(templateParser.TemplateEngine.Usings);
+            var templateSource = classBuilder.Build( templateParser.TemplateEngine.Options.Usings );
             
             var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
 

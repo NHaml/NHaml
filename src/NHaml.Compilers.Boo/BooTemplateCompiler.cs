@@ -19,7 +19,7 @@ namespace NHaml.Compilers.Boo
 
         public TemplateFactory Compile( TemplateParser templateParser )
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build(templateParser.TemplateEngine.Usings);
+            var templateSource = templateParser.TemplateClassBuilder.Build( templateParser.TemplateEngine.Options.Usings );
 
             var typeBuilder = new BooTemplateTypeBuilder( templateParser.TemplateEngine );
 

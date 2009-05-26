@@ -29,7 +29,7 @@ namespace NHaml.Compilers.FSharp
 
             sourceBuilder.AppendLine("#light ");
             sourceBuilder.AppendLine("namespace TempNHamlNamespace");
-            foreach( var usingStatement in TemplateEngine.Usings )
+            foreach( var usingStatement in TemplateEngine.Options.Usings )
             {
                 sourceBuilder.AppendLine( "open " + usingStatement);
             }

@@ -9,7 +9,7 @@ namespace NHaml.Web.MonoRail
     {
         private static int tempDictionaryCount;
 
-        public string Signifier
+        public string Name
         {
             get { return "Component"; }
         }

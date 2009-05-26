@@ -25,7 +25,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void Tabs()
         {
-            _templateEngine.UseTabs = true;
+            _templateEngine.Options.UseTabs = true;
 
             AssertRender("Tabs");
         }
@@ -33,7 +33,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void FourSpaces()
         {
-            _templateEngine.IndentSize = 4;
+            _templateEngine.Options.IndentSize = 4;
 
             AssertRender("4Spaces");
         }
@@ -95,7 +95,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void EscapeHtmlOnByDefault()
         {
-            _templateEngine.EncodeHtml = true;
+            _templateEngine.Options.EncodeHtml = true;
 
             AssertRender("EscapeHtml", null, "EscapeHtmlOn");
         }
@@ -151,8 +151,8 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaModel()
         {
-            _templateEngine.TemplateBaseType = typeof( CustomGenericTemplate<> );
-            _templateEngine.AddReference( typeof( Action ).Assembly.Location );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate( "MetaModel", null );
 
@@ -170,8 +170,8 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaWithoutModel()
         {
-            _templateEngine.TemplateBaseType = typeof( CustomGenericTemplate<> );
-            _templateEngine.AddReference( typeof( Action ).Assembly.Location );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate( "MetaWithoutModel", null );
 
@@ -240,8 +240,8 @@ namespace NHaml.Tests
         [Test]
         public virtual void LambdaEval()
         {
-            _templateEngine.TemplateBaseType = typeof(CustomTemplate1);
-            _templateEngine.AddReference(typeof(Action).Assembly.Location);
+            _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate1 );
+            _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             AssertRender("LambdaEval");
         }
@@ -368,7 +368,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void ViewBaseClass()
         {
-            _templateEngine.TemplateBaseType = typeof(CustomTemplate2);
+            _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate2 );
 
             AssertRender("CustomBaseClass");
         }
@@ -376,7 +376,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void ViewBaseClassGeneric()
         {
-            _templateEngine.TemplateBaseType = typeof(CustomTemplate3<List<int>>);
+            _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate3<List<int>> );
 
             AssertRender("CustomBaseClass");
         }
@@ -386,7 +386,7 @@ namespace NHaml.Tests
         {
             var anonInstance = new { Property = "PropertyValue" };
             var genericType = typeof( GenericTemplateView<> ).MakeGenericType( new[] { anonInstance.GetType() } );
-            _templateEngine.TemplateBaseType = genericType;
+            _templateEngine.Options.TemplateBaseType = genericType;
 
             AssertRender( "GenericBaseClassAnon" );
         }
@@ -394,7 +394,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void ViewBaseClassGeneric2()
         {
-            _templateEngine.TemplateBaseType = typeof( CustomTemplate4<List<List<int>>> );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate4<List<List<int>>> );
 
             AssertRender( "CustomBaseClass" );
         }

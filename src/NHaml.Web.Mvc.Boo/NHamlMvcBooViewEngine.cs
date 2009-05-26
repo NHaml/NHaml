@@ -14,27 +14,27 @@ namespace NHaml.Web.Mvc.Boo
     {
         public NHamlMvcBooViewEngine()
         {
-            TemplateEngine.TemplateCompiler = new BooTemplateCompiler();
+            TemplateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
 
-            TemplateEngine.AddReference( typeof( NHamlMvcBooViewEngine ).Assembly );
+            TemplateEngine.Options.AddReference( typeof( NHamlMvcBooViewEngine ).Assembly );
 
             // since boo currently only support clr extensions when
             // they are directly imported, we add them here
-            TemplateEngine.AddUsing( typeof( FormExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( InputExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( LinkExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( RenderPartialExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( MvcForm ).FullName );
-            TemplateEngine.AddUsing( typeof( SelectExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( TextAreaExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( ValidationExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( FormExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( InputExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( LinkExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( RenderPartialExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( MvcForm ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( SelectExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( TextAreaExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( ValidationExtensions ).FullName );
 
-            TemplateEngine.AddUsing( typeof( BooFormExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( BooInputExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( BooLinkExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( BooSelectExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( BooTextAreaExtensions ).FullName );
-            TemplateEngine.AddUsing( typeof( BooValidationExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooFormExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooInputExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooLinkExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooSelectExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooTextAreaExtensions ).FullName );
+            TemplateEngine.Options.AddUsing( typeof( BooValidationExtensions ).FullName );
         }
 
         protected override Type ViewGenericBaseType

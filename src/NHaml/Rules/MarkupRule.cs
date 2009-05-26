@@ -4,8 +4,7 @@ namespace NHaml.Rules
     {
         public abstract char Signifier { get; }
 
-
-        public static BlockClosingAction EmptyClosingAction = () => { };
+        public static readonly BlockClosingAction EmptyClosingAction = () => { };
         public abstract BlockClosingAction Render( TemplateParser templateParser );
 
         public virtual void Process( TemplateParser templateParser )

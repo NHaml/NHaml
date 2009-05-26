@@ -76,16 +76,11 @@ namespace NHaml.Web.MonoRail.Tests
 
 
             var loader = new FileAssemblyViewSourceLoader("Views");
-            _monoRailViewEngine = new NHamlMonoRailViewEngine
-            {
-                TemplateEngine =
-                {
-                    TemplateCompiler = new CSharp3TemplateCompiler()
-                }
-            };
+            _monoRailViewEngine = new NHamlMonoRailViewEngine();
+            _monoRailViewEngine.TemplateEngine.Options.TemplateCompiler = new CSharp3TemplateCompiler();
             _monoRailViewEngine.SetViewSourceLoader(loader);
             _templateEngine = _monoRailViewEngine.TemplateEngine;
-            _templateEngine.TemplateBaseType = typeof(NHamlMonoRailView);
+            _templateEngine.Options.TemplateBaseType = typeof( NHamlMonoRailView );
             
             _primaryTemplatesFolder = "CSharp2";
 

@@ -11,7 +11,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateCompiler = new IronRubyTemplateCompiler();
+            _templateEngine.Options.TemplateCompiler = new IronRubyTemplateCompiler();
 
             _primaryTemplatesFolder = "IronRuby";
         }
@@ -19,7 +19,7 @@ namespace NHaml.Tests
         [Test]
         public override void Layout()
         {
-            _templateEngine.AddReference( typeof( string ).Assembly.Location );
+            _templateEngine.Options.AddReference( typeof( string ).Assembly.Location );
 
             AssertRender( "Welcome", "Application" );
         }

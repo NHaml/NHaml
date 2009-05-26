@@ -2,7 +2,7 @@ namespace NHaml.Rules
 {
 	public interface IMarkupExtension
 	{
-		string Signifier { get; }
+		string Name { get; }
 
 		BlockClosingAction Render(TemplateParser templateParser, string normalizedSuffix);
 	}

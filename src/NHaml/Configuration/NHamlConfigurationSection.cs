@@ -2,6 +2,7 @@ using System;
 using System.Configuration;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
+using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
 
@@ -21,6 +22,35 @@ namespace NHaml.Configuration
         public static NHamlConfigurationSection GetSection()
         {
             return (NHamlConfigurationSection)ConfigurationManager.GetSection( "nhaml" );
+        }
+
+        public static void UpdateTemplateOptions( TemplateOptions options )
+        {
+            if( options == null )
+                throw new ArgumentNullException( "options" );
+
+            var section = GetSection();
+
+            if( section == null )
+                return;
+
+            if( section.AutoRecompile.HasValue )
+                options.AutoRecompile = section.AutoRecompile.Value;
+
+            if( section.UseTabs.HasValue )
+                options.UseTabs = section.UseTabs.Value;
+
+            if( section.EncodeHtml.HasValue )
+                options.EncodeHtml = section.EncodeHtml.Value;
+
+            if( !string.IsNullOrEmpty( section.TemplateCompiler ) )
+                options.TemplateCompiler = section.CreateTemplateCompiler();
+
+                foreach( var assemblyConfigurationElement in section.Assemblies )
+                    options.AddReference( Assembly.Load( assemblyConfigurationElement.Name ).Location );
+
+            foreach( var namespaceConfigurationElement in section.Namespaces )
+                options.AddUsing( namespaceConfigurationElement.Name );
         }
 
         private const string AssembliesElement = "assemblies";

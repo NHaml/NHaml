@@ -11,7 +11,7 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            return templateParser.TemplateEngine.TemplateCompiler.RenderSilentEval( templateParser );
+            return templateParser.TemplateEngine.Options.TemplateCompiler.RenderSilentEval( templateParser );
         }
     }
 }

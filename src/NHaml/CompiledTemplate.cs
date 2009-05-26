@@ -56,7 +56,7 @@ namespace NHaml
 
         private void Compile()
         {
-            var templateClassBuilder = _templateEngine.TemplateCompiler.CreateTemplateClassBuilder(
+            var templateClassBuilder = _templateEngine.Options.TemplateCompiler.CreateTemplateClassBuilder(
               Utility.MakeClassName( _templatePath ), _templateBaseType );
 
             var templateParser = new TemplateParser(_templateEngine, templateClassBuilder,
@@ -88,10 +88,10 @@ namespace NHaml
 
                 templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
 
-                _templateEngine.AddReference( modelType.Assembly );
+                _templateEngine.Options.AddReference( modelType.Assembly );
             }
 
-            _templateFactory = _templateEngine.TemplateCompiler.Compile( templateParser );
+            _templateFactory = _templateEngine.Options.TemplateCompiler.Compile( templateParser );
 
             foreach( var inputFile in templateParser.InputFiles )
             {

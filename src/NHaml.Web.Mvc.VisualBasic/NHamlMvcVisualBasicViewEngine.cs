@@ -10,9 +10,9 @@ namespace NHaml.Web.Mvc.VisualBasic
     {
         public NHamlMvcVisualBasicViewEngine()
         {
-            TemplateEngine.TemplateCompiler = new VisualBasicTemplateCompiler();
+            TemplateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
 
-            TemplateEngine.AddReference(typeof(NHamlMvcVisualBasicViewEngine).Assembly);
+            TemplateEngine.Options.AddReference( typeof( NHamlMvcVisualBasicViewEngine ).Assembly );
 
         }
 

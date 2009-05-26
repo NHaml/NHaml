@@ -13,7 +13,7 @@ namespace NHaml.Rules
 
             templateParser.TemplateClassBuilder.AppendCodeLine(
               templateParser.CurrentInputLine.NormalizedText.Trim(),
-              templateParser.TemplateEngine.EncodeHtml );
+              templateParser.TemplateEngine.Options.EncodeHtml );
 
             return EmptyClosingAction;
         }

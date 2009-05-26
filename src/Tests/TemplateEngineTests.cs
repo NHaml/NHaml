@@ -9,9 +9,9 @@ namespace NHaml.Tests
         [Test]
         public void DuplicateUsings()
         {
-            _templateEngine.AddUsing( "System" );
+            _templateEngine.Options.AddUsing( "System" );
 
-            Assert.AreEqual( 7, _templateEngine.Usings.Count() );
+            Assert.AreEqual( 7, _templateEngine.Options.Usings.Count() );
         }
 
         [Test]
