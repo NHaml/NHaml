@@ -12,8 +12,7 @@ namespace NHaml.Tests
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new FSharpTemplateCompiler();
-
-            _primaryTemplatesFolder = "FSharp";
+            _templateEngine.TemplateContentProvider.PathSources.Insert(0, @"Templates\FSharp");
         }
         public override void SwitchEval()
         {

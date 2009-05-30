@@ -11,8 +11,7 @@ namespace NHaml.Tests
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
-
-            _primaryTemplatesFolder = "Boo";
+            _templateEngine.TemplateContentProvider.AddPathSource(@"Templates\Boo");
         }
 
         public override void Empty()

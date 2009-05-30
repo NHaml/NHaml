@@ -1,8 +1,7 @@
 using System.Collections.Generic;
-using System.IO;
-
 using NHaml.Compilers;
 using NHaml.Rules;
+using NHaml.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml
@@ -15,14 +14,14 @@ namespace NHaml
 
         public TemplateParser( 
             TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
-            IList<string> layoutPaths, string templatePath2)
+            IList<IViewSource> layoutPaths, IViewSource templatePath2)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
-            InputFiles = new StringSet();
+            InputFiles = new Set<IViewSource>();
             TemplateEngine = templateEngine;
             TemplateClassBuilder = templateClassBuilder;
             TemplatePath = templatePath2;
-            MergedTemplatePaths = new List<string>();
+            MergedTemplatePaths = new List<IViewSource>();
             MergedTemplatePaths.AddRange(layoutPaths);
             MergedTemplatePaths.Add(templatePath2);
 
@@ -50,11 +49,11 @@ namespace NHaml
 
     	public TemplateClassBuilder TemplateClassBuilder { get; private set; }
 
-    	public string TemplatePath { get; private set; }
+    	public IViewSource TemplatePath { get; private set; }
 
-        public List<string> MergedTemplatePaths { get; private set; }
+        public List<IViewSource> MergedTemplatePaths { get; private set; }
 
-        public StringSet InputFiles { get; private set; }
+        public Set<IViewSource> InputFiles { get; private set; }
 
         private LinkedList<InputLine> InputLines { get; set; }
 
@@ -92,9 +91,9 @@ namespace NHaml
         public void Parse()
         {
             InputLines = new LinkedList<InputLine>();
-            InputLines.AddLast( new InputLine( string.Empty, null, 0, TemplateEngine.Options.IndentSize ) );
+            InputLines.AddLast( new InputLine( string.Empty, 0, TemplateEngine.Options.IndentSize ) );
 
-            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar.ToString(), null, 1, TemplateEngine.Options.IndentSize ) );
+            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar.ToString(), 1, TemplateEngine.Options.IndentSize ) );
 
             CurrentNode = InputLines.First.Next;
             for (CurrentTemplateIndex = 0; CurrentTemplateIndex < MergedTemplatePaths.Count; CurrentTemplateIndex++)
@@ -130,14 +129,14 @@ namespace NHaml
             CurrentNode = CurrentNode.Next;
         }
 
-        public void MergeTemplate( string templatePath, bool replaceCurrentNode )
+        public void MergeTemplate( IViewSource templatePath, bool replaceCurrentNode )
         {
 
             var previous = CurrentNode.Previous;
 
             var lineNumber = 0;
 
-            using( var reader = new StreamReader( templatePath ) )
+            using( var reader = templatePath.GetStreamReader())
             {
                 string line;
 
@@ -147,7 +146,7 @@ namespace NHaml
                     {
                         continue;
                     }
-                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, templatePath, lineNumber++,
+                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, lineNumber++,
                                                   TemplateEngine.Options.IndentSize );
                     InputLines.AddBefore(CurrentNode, inputLine);
                 }

@@ -15,20 +15,15 @@ namespace NHaml
 
         private readonly int _indentSize;
 
+
         public InputLine( string text, int lineNumber )
-            : this( text, null, lineNumber )
+            : this( text,  lineNumber, 2 )
         {
         }
 
-        public InputLine( string text, string source, int lineNumber )
-            : this( text, source, lineNumber, 2 )
-        {
-        }
-
-        public InputLine( string text, string source, int lineNumber, int indentSize )
+        public InputLine( string text, int lineNumber, int indentSize )
         {
             Text = text;
-            Source = source;
             LineNumber = lineNumber;
             _indentSize = indentSize;
 

@@ -12,7 +12,7 @@ namespace NHaml.Tests
 
             _templateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
 
-            _primaryTemplatesFolder = "VisualBasic";
+            _templateEngine.TemplateContentProvider.AddPathSource(@"Templates\VisualBasic");
         }
 
         public override void LambdaEval()

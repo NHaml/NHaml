@@ -5,13 +5,13 @@ using System.Diagnostics.CodeAnalysis;
 namespace NHaml.Utils
 {
     [SuppressMessage( "Microsoft.Naming", "CA1710" )]
-    public sealed class StringSet : Collection<string>
+    public sealed class Set<T> : Collection<T>
     {
-        public StringSet()
+        public Set()
         {
         }
 
-        public StringSet( IEnumerable<string> items )
+        public Set( IEnumerable<T> items )
         {
             var i = 0;
 
@@ -21,7 +21,7 @@ namespace NHaml.Utils
             }
         }
 
-        protected override void InsertItem( int index, string item )
+        protected override void InsertItem( int index, T item )
         {
             if( !Contains( item ) )
             {
@@ -29,7 +29,7 @@ namespace NHaml.Utils
             }
         }
 
-        protected override void SetItem( int index, string item )
+        protected override void SetItem( int index, T item )
         {
         }
     }

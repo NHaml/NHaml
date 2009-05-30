@@ -1,5 +1,3 @@
-using NHaml.Rules;
-
 namespace NHaml.Web.MonoRail
 {
     public class ComponentSectionExtension : IMarkupExtension

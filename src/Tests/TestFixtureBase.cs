@@ -14,8 +14,6 @@ namespace NHaml.Tests
 
         protected TemplateEngine _templateEngine;
 
-        protected string _primaryTemplatesFolder;
-        protected string _secondaryTemplatesFolder;
 
         protected TestFixtureBase()
         {
@@ -26,8 +24,8 @@ namespace NHaml.Tests
         public virtual void SetUp()
         {
             _templateEngine = new TemplateEngine {Options = {TemplateCompiler = new CSharp2TemplateCompiler()}};
+            _templateEngine.TemplateContentProvider.PathSources.Add("Templates");
 
-            _primaryTemplatesFolder = "CSharp2";
         }
 
         protected void AssertRender( string templateName )
@@ -59,26 +57,26 @@ namespace NHaml.Tests
 
         protected Template CreateTemplate( string templateName, string layoutName )
         {
-            var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
+            //var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
 
-            if( !File.Exists( templatePath ) )
-            {
-                templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
-            }
+            //if( !File.Exists( templatePath ) )
+            //{
+            //    templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
+            //}
 
-            if( !File.Exists( templatePath ) )
-            {
-                templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
-            }
+            //if( !File.Exists( templatePath ) )
+            //{
+            //    templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
+            //}
 
-            if( !string.IsNullOrEmpty( layoutName ) )
-            {
-                layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
-            }
+            //if( !string.IsNullOrEmpty( layoutName ) )
+            //{
+            //    layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
+            //}
 
             var stopwatch = Stopwatch.StartNew();
 
-            var compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
+            var compiledTemplate = _templateEngine.Compile(templateName, layoutName);
             stopwatch.Stop();
             Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
             return compiledTemplate.CreateInstance();

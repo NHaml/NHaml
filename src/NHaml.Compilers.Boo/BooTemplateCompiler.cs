@@ -29,7 +29,7 @@ namespace NHaml.Compilers.Boo
             if( templateType == null )
             {
                 TemplateCompilationException.Throw( typeBuilder.CompilerResults,
-                  typeBuilder.Source, templateParser.TemplatePath );
+                  typeBuilder.Source, templateParser.TemplatePath.Path );
             }
 
             return new TemplateFactory( templateType );

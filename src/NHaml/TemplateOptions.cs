@@ -22,14 +22,14 @@ namespace NHaml
 
         public TemplateOptions()
         {
-            Usings = new StringSet( new[] {"System", "System.IO", "System.Web", "NHaml", "NHaml.Utils", "System.Collections.Generic"} );
-            References = new StringSet( new[]
+            Usings = new Set<string>( new[] {"System", "System.IO", "System.Web", "NHaml", "NHaml.Utils", "System.Collections.Generic"} );
+            References = new Set<string>( new[]
             {
                 typeof(TemplateEngine).Assembly.Location, // NHaml
                 typeof(INotifyPropertyChanged).Assembly.Location, // System
                 typeof(HttpUtility).Assembly.Location // System.Web
             } );
-            AutoClosingTags = new StringSet( new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"} );
+            AutoClosingTags = new Set<string>( new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"} );
 
             MarkupRules = new MarkupRule[128];
             _indentSize = 2;
@@ -53,7 +53,7 @@ namespace NHaml
             AddRule( new NamedExtensionRule() );
         }
 
-        public StringSet AutoClosingTags { get; private set; }
+        public Set<string> AutoClosingTags { get; private set; }
 
         public bool AutoRecompile { get; set; }
         public bool EncodeHtml { get; set; }
@@ -75,9 +75,9 @@ namespace NHaml
             set { _indentSize = UseTabs ? 1 : Math.Max( 2, value ); }
         }
 
-        public StringSet Usings { get; private set; }
+        public Set<string> Usings { get; private set; }
 
-        public StringSet References { get; private set; }
+        public Set<string>  References { get; private set; }
 
         public MarkupRule[] MarkupRules { get; private set; }
 

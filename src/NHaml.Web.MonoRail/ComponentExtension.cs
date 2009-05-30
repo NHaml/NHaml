@@ -1,7 +1,6 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using NHaml.Compilers;
-using NHaml.Rules;
 
 namespace NHaml.Web.MonoRail
 {

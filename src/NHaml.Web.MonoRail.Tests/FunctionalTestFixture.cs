@@ -16,7 +16,6 @@ namespace NHaml.Web.MonoRail.Tests
             AssertRender("RenderTextComponent");
         }
         [Test]
-        [Ignore]
         public virtual void SimpleComponent()
         {
             AssertRender("SimpleComponent");

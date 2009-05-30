@@ -333,29 +333,15 @@ namespace NHaml.Tests
         [Test]
         public virtual void MultiLayout()
         {
-
-            var output = new StringWriter();
-            var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, "Welcome");
-
-            if (!File.Exists(templatePath))
+            using (var output = new StringWriter())
             {
-                templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, "Welcome");
+                var compiledTemplate = _templateEngine.Compile("Welcome", new List<string> { "ApplicationPart1", "ApplicationPart2"});
+                var template = compiledTemplate.CreateInstance();
+                template.Render(output);
+                Console.WriteLine(output);
+
+                Assert.AreEqual(File.ReadAllText(ExpectedFolder + "Application.xhtml"), output.ToString());
             }
-
-            if (!File.Exists(templatePath))
-            {
-                templatePath = string.Format("{0}{1}.haml", TemplatesFolder, "Welcome");
-            }
-
-            var layoutName1 = string.Format("{0}{1}.haml", TemplatesFolder, "ApplicationPart1");
-            var layoutName2 = string.Format("{0}{1}.haml", TemplatesFolder, "ApplicationPart2");
-
-            var compiledTemplate = _templateEngine.Compile(templatePath, new List<string> { layoutName1, layoutName2 });
-            var template = compiledTemplate.CreateInstance();
-            template.Render(output);
-            Console.WriteLine(output);
-
-            Assert.AreEqual(File.ReadAllText(ExpectedFolder + "Application.xhtml"), output.ToString());
         }
 
         [Test]

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
 
@@ -20,7 +19,6 @@ namespace NHaml
             // far more readable the a large string and 
             // since there is not dynamic code the compiler
             // can optimize it to one string.
-
             var pattern = string.Concat(
                 @"(?:(?<schema>\w+)\:)?", // schema
 
@@ -72,12 +70,13 @@ namespace NHaml
                     throw new SyntaxException(string.Format("Attribute '{0}' is not valid.", match.Value));
                 }
 
-                var groupSchema = match.Groups["schema"];
-                var groupName = match.Groups["name"];
-                var groupStringDoulbeQuoteValue = match.Groups["sdqvalue"];
-                var groupStringSingleQuoteValue = match.Groups["ssqvalue"];
-                var groupReferenceValue = match.Groups["rvalue"];
-                var groupExpressionValue = match.Groups["dvalue"];
+                var groups = match.Groups;
+                var groupSchema = groups["schema"];
+                var groupName = groups["name"];
+                var groupStringDoulbeQuoteValue = groups["sdqvalue"];
+                var groupStringSingleQuoteValue = groups["ssqvalue"];
+                var groupReferenceValue = groups["rvalue"];
+                var groupExpressionValue = groups["dvalue"];
 
                 string schmea = null;
                 var name = groupName.Value;
@@ -170,12 +169,8 @@ namespace NHaml
 
         private void ThrowErrorAtPosition(string message, int index)
         {
-            var output = new StringBuilder();
-            output.AppendLine(message);
-            output.AppendLine(attributesString);
-            output.Append(new string('-', index));
-            output.Append('^');
-            throw new SyntaxException(output.ToString());
+            var format = string.Format("{0}\r\n{1}\r\n{2}^",message,attributesString,new string('-', index));
+            throw new SyntaxException(format);
         }
     }
 }

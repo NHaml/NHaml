@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Text;
 using NHaml.Configuration;
 using NHaml.Rules;
+using NHaml.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml
@@ -25,12 +26,14 @@ namespace NHaml
             _compiledTemplateCache = new Dictionary<string, CompiledTemplate>();
 
             NHamlConfigurationSection.UpdateTemplateOptions( Options );
-
+            TemplateContentProvider = new FileTemplateContentProvider();
             Options.TemplateBaseTypeChanged += ( s, e ) => ClearCompiledTemplatesCache();
             Options.TemplateCompilerChanged += ( s, e ) => ClearCompiledTemplatesCache();
         }
 
         public TemplateOptions Options { get; private set; }
+
+        public ITemplateContentProvider TemplateContentProvider { get; set; }
 
         private void ClearCompiledTemplatesCache()
         {
@@ -78,18 +81,28 @@ namespace NHaml
             return Compile( templatePath, layoutTemplatePaths, Options.TemplateBaseType );
         }
 
-        public CompiledTemplate Compile( string templatePath, IList<string> layoutTemplatePaths, Type templateBaseType )
+        public CompiledTemplate Compile(string  templatePath, IList<string> layoutTemplatePaths, Type templateBaseType)
         {
-            Invariant.ArgumentNotEmpty( templatePath, "templatePath" );
-            Invariant.FileExists( templatePath );
+            var list = new List<IViewSource>();
+            foreach (var layoutTemplatePath in layoutTemplatePaths)
+            {
+                list.Add(TemplateContentProvider.GetViewSource(layoutTemplatePath));
+            }
+
+            return Compile(TemplateContentProvider.GetViewSource(templatePath), list, templateBaseType);
+        }
+
+
+        public CompiledTemplate Compile( IViewSource templatePath, IList<IViewSource> layoutTemplatePaths, Type templateBaseType )
+        {
+            Invariant.ArgumentNotNull( templatePath, "templatePath" );
             Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
 
-            var templateCacheKey = new StringBuilder( templatePath );
+            var templateCacheKey = new StringBuilder( templatePath.Path );
 
             foreach( var layoutTemplatePath in layoutTemplatePaths )
             {
-                Invariant.FileExists( layoutTemplatePath );
-                templateCacheKey.AppendFormat( "{0}, ", layoutTemplatePath );
+                templateCacheKey.AppendFormat( "{0}, ", layoutTemplatePath.Path );
             }
 
             CompiledTemplate compiledTemplate;
@@ -106,7 +119,9 @@ namespace NHaml
             }
 
             if( Options.AutoRecompile )
+            {
                 compiledTemplate.Recompile();
+            }
 
             return compiledTemplate;
         }

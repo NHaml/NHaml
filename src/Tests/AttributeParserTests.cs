@@ -35,6 +35,17 @@ namespace NHaml.Tests
             AssertAttribute(parser, null, "lang", "en", ParsedAttributeType.String);
             AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.String);
         }
+        
+        [Test]
+        public void CurlyBracesInsideCode()
+        {
+            var parser = new AttributeParser("action = #{Convert.ToString(new { ID=5})}");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "action", "Convert.ToString(new { ID=5}))", ParsedAttributeType.String);
+        }
 
         [Test]
         public void DoubleAndSingleQuotesEncoded()

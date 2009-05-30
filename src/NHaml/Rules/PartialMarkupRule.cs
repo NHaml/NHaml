@@ -1,6 +1,4 @@
 using System;
-using System.IO;
-
 using NHaml.Properties;
 
 namespace NHaml.Rules
@@ -17,38 +15,41 @@ namespace NHaml.Rules
             Render( templateParser );
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(TemplateParser templateParser)
         {
             var partialName = templateParser.CurrentInputLine.NormalizedText.Trim();
 
             if (string.IsNullOrEmpty(partialName))
             {
-                if (templateParser.CurrentTemplateIndex +1 == templateParser.MergedTemplatePaths.Count)
+                if (templateParser.CurrentTemplateIndex + 1 == templateParser.MergedTemplatePaths.Count)
                 {
                     throw new InvalidOperationException(Resources.NoPartialName);
                 }
-                var templatePath = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex+1];
-                if (string.IsNullOrEmpty(templatePath))
+                var templatePath = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex + 1];
+                if (templatePath == null)
                 {
                     throw new InvalidOperationException(Resources.NoPartialName);
                 }
                 templateParser.MergeTemplate(templatePath, true);
-               templateParser. CurrentTemplateIndex++;
+                templateParser.CurrentTemplateIndex++;
             }
             else
             {
-                var templateDirectory = Path.GetDirectoryName( templateParser.TemplatePath);
+                var parentViewSource = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex];
+                partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
+                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, parentViewSource);
+                templateParser.MergeTemplate(source, true);
+                //var templateDirectory = Path.GetDirectoryName( templateParser.TemplatePath);
 
-                partialName = partialName.Insert( partialName.LastIndexOf( @"\", StringComparison.OrdinalIgnoreCase ) + 1, "_" );
 
-                var partialTemplatePath = Path.Combine( templateDirectory, partialName + ".haml" );
+                //var partialTemplatePath = Path.Combine( templateDirectory, partialName + ".haml" );
 
-                if( !File.Exists( partialTemplatePath ) )
-                {
-                    partialTemplatePath = Path.Combine( templateDirectory, @"..\" + partialName + ".haml" );
-                }
+                //if( !File.Exists( partialTemplatePath ) )
+                //{
+                //    partialTemplatePath = Path.Combine( templateDirectory, @"..\" + partialName + ".haml" );
+                //}
 
-                templateParser.MergeTemplate( partialTemplatePath, true );
+                //templateParser.MergeTemplate( partialTemplatePath, true );
             }
 
             return EmptyClosingAction;

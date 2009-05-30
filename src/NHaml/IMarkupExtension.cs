@@ -1,9 +1,9 @@
-namespace NHaml.Rules
+namespace NHaml
 {
-	public interface IMarkupExtension
-	{
-		string Name { get; }
+    public interface IMarkupExtension
+    {
+        string Name { get; }
 
-		BlockClosingAction Render(TemplateParser templateParser, string normalizedSuffix);
-	}
+        BlockClosingAction Render(TemplateParser templateParser, string normalizedSuffix);
+    }
 }
