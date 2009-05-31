@@ -39,12 +39,12 @@ namespace NHaml.Tests
         [Test]
         public void CurlyBracesInsideCode()
         {
-            var parser = new AttributeParser("action = #{Convert.ToString(new { ID=5})}");
+            var parser = new AttributeParser("action = #{Convert.ToString(new { ID=5\\})}");
 
             parser.Parse();
 
             Assert.AreEqual(1, parser.Attributes.Count);
-            AssertAttribute(parser, "action", "Convert.ToString(new { ID=5}))", ParsedAttributeType.String);
+            AssertAttribute(parser, "action", "Convert.ToString(new { ID=5})", ParsedAttributeType.Expression);
         }
 
         [Test]
