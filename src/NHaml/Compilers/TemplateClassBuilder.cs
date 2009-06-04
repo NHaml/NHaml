@@ -79,5 +79,6 @@ namespace NHaml.Compilers
 
         public abstract string Build(IList<string> imports);
         public abstract void AppendAttributeTokens( string schema, string name, IList<ExpressionStringToken> values );
+        public abstract void AppendHamlComment(string text);
     }
 }

@@ -62,9 +62,11 @@ namespace NHaml.Web.MonoRail.Tests
             ViewComponentFactory.Initialize();
 
             StubEngineContext.AddService<IViewComponentFactory>(ViewComponentFactory);
-            ControllerContext = new ControllerContext();
-            ControllerContext.Helpers = Helpers;
-            ControllerContext.PropertyBag = PropertyBag;
+            ControllerContext = new ControllerContext
+                                    {
+                                        Helpers = Helpers, 
+                                        PropertyBag = PropertyBag
+                                    };
             StubEngineContext.CurrentControllerContext = ControllerContext;
 
 

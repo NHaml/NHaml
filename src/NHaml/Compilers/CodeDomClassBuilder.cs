@@ -27,7 +27,10 @@ namespace NHaml.Compilers
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
 
-
+        public override void AppendHamlComment(string text)
+        {
+            RenderMethod.Statements.Add(new CodeCommentStatement("Haml: "+text));  
+        }
         public override void AppendOutput(string value, bool newLine)
         {
             if (value == null)
@@ -210,7 +213,6 @@ namespace NHaml.Compilers
                                             Value = name
                                         });
 
-            var stringType = new CodeTypeReference("System.String");
             if (values.Count == 1)
             {
                 var expressionStringToken = values[0];
@@ -245,7 +247,6 @@ namespace NHaml.Compilers
                                       MethodName = "RenderAttributeIfValueNotNull",
                                       TargetObject = new CodeThisReferenceExpression()
                                   };
-
             RenderMethod.Statements.Add(new CodeExpressionStatement { Expression = _invoke1 });
 
         }

@@ -145,29 +145,31 @@ namespace NHaml.Rules
                 attributesHash = PrependAttribute(attributesHash, Id, id);
             }
 
-            if (!string.IsNullOrEmpty(attributesHash))
+            if (string.IsNullOrEmpty(attributesHash))
             {
-                var attributeParser = new AttributeParser(attributesHash);
-                attributeParser.Parse();
+                return;
+            }
 
-                foreach (var attribute in attributeParser.Attributes)
+            var attributeParser = new AttributeParser(attributesHash);
+            attributeParser.Parse();
+            foreach (var attribute in attributeParser.Attributes)
+            {
+            templateParser.TemplateClassBuilder.AppendHamlComment(string.Format("Schema '{0}', Name '{1}', Value '{2}',", attribute.Schema, attribute.Name, attribute.Value));
+                if (attribute.Type == ParsedAttributeType.String)
                 {
-                    if (attribute.Type == ParsedAttributeType.String)
-                    {
-                        var expressionStringParser = new ExpressionStringParser(attribute.Value);
+                    var expressionStringParser = new ExpressionStringParser(attribute.Value);
 
-                        expressionStringParser.Parse();
+                    expressionStringParser.Parse();
 
-                        templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
-                                                                                  expressionStringParser.Tokens);
-                    }
-                    else
-                    {
-                        var token = new ExpressionStringToken(attribute.Value, true);
+                    templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
+                                                                              expressionStringParser.Tokens);
+                }
+                else
+                {
+                    var token = new ExpressionStringToken(attribute.Value, true);
 
-                        templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
-                                                                                  new[] {token});
-                    }
+                    templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
+                                                                              new[] {token});
                 }
             }
         }

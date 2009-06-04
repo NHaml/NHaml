@@ -115,6 +115,11 @@ namespace NHaml.Compilers.Boo
             AppendSilentCode(format, true);
         }
 
+        public override void AppendHamlComment(string text)
+        {
+            //TODO:
+        }
+
         public override void BeginCodeBlock()
         {
             Depth++;
