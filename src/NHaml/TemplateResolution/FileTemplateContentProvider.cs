@@ -11,7 +11,8 @@ namespace NHaml.TemplateResolution
 
         public FileTemplateContentProvider()
         {
-            PathSources = new List<string> { "Views" };
+            PathSources = new List<string> ();
+            AddPathSource("Views");
         }
         public IViewSource GetViewSource(string templateName)
         {

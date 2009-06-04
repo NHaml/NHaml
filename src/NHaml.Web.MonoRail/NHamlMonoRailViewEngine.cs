@@ -19,8 +19,6 @@ namespace NHaml.Web.MonoRail
         public NHamlMonoRailViewEngine()
         {
             TemplateEngine = new TemplateEngine();
-			TemplateEngine.Options.AddExtension(new ComponentSectionExtension());
-            TemplateEngine.Options.AddExtension( new ComponentExtension() );
 
             InitializeTemplateEngine();
         }
@@ -31,19 +29,27 @@ namespace NHaml.Web.MonoRail
 
         private void InitializeTemplateEngine()
         {
+            
             DefaultMaster = "application";
 
-            TemplateEngine.Options.AddUsing( "System.Web" );
-            TemplateEngine.Options.AddUsing( "NHaml.Web.MonoRail" );
-            TemplateEngine.Options.AddUsing( "Castle.MonoRail.Framework.Helpers" );
+
+            var options = TemplateEngine.Options;
+            options.AddExtension(new ComponentSectionExtension());
+            options.AddExtension( new ComponentExtension() );
+
+            options.AddUsing( "System.Web" );
+            options.AddUsing( "NHaml.Web.MonoRail" );
+            options.AddUsing( "Castle.MonoRail.Framework.Helpers" );
 
 
-            TemplateEngine.Options.AddReference( typeof( HtmlHelper ).Assembly.Location );
-            TemplateEngine.Options.AddReference( typeof( NHamlMonoRailViewEngine ).Assembly.Location );
-            TemplateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
-            TemplateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
-            TemplateEngine.Options.AddReference( typeof( Expression ).Assembly.Location );
-            
+            options.AddReference( typeof( HtmlHelper ).Assembly.Location );
+            options.AddReference( typeof( NHamlMonoRailViewEngine ).Assembly.Location );
+            options.AddReference( typeof( DataContext ).Assembly.Location );
+            options.AddReference( typeof( Action ).Assembly.Location );
+            options.AddReference( typeof( Expression ).Assembly.Location );
+
+            options.TemplateBaseType = typeof (NHamlMonoRailView);
+        //    TemplateEngine.TemplateContentProvider.AddPathSource(@"Views/Components");
         }
 
 
@@ -171,7 +177,8 @@ namespace NHaml.Web.MonoRail
             filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
             Trace.WriteLine(string.Format("Getting compiled instnace of {0}", filename));
 
-            return (NHamlMonoRailView) TemplateEngine.Compile(file).CreateInstance();
+            Template template = TemplateEngine.Compile(file).CreateInstance();
+            return (NHamlMonoRailView) template;
         }
     }
 }

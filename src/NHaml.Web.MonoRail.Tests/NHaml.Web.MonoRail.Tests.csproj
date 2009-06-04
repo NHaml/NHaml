@@ -110,7 +110,7 @@
     <None Include="Templates\SimpleComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Views\Components\SimpleComponentComponent\Default.haml">
+    <None Include="Views\Components\SimpleComponent\Default.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
