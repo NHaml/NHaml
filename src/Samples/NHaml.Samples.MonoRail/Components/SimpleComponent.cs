@@ -2,7 +2,12 @@
 
 namespace NHaml.Samples.MonoRail.Components
 {
-    public class SimpleComponent : ViewComponent
-    {
-    }
+	public class SimpleComponent : ViewComponent
+	{
+		public override void Render()
+		{
+			PropertyBag["value"] = "Foo";
+			base.Render();
+		}
+	}
 }

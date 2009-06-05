@@ -31,7 +31,6 @@ namespace NHaml.Web.MonoRail
 
         public Action<TextWriter> Body { get; set; }
 
-        #region IViewComponentContext Members
 
         public string ComponentName { get; private set; }
 
@@ -106,7 +105,6 @@ namespace NHaml.Web.MonoRail
             }
         }
 
-        #endregion
 
         public void RegisterSection(string name, Action<TextWriter> section)
         {

@@ -70,36 +70,7 @@ namespace NHaml.Web.MonoRail
 
                 if (attribute.Type == ParsedAttributeType.String)
                 {
-                    var expressionStringParser = new ExpressionStringParser(attribute.Value);
-
-                    expressionStringParser.Parse();
-                    var values = expressionStringParser.Tokens;
-                    if (values.Count == 1)
-                    {
-                        var expressionStringToken = values[0];
-                        if (expressionStringToken.IsExpression)
-                        {
-                            newKeyValueExpression.Parameters.Add(new CodeSnippetExpression
-                                                        {
-                                                            Value = expressionStringToken.Value
-
-                                                        });
-                        }
-                        else
-                        {
-
-                            newKeyValueExpression.Parameters.Add(new CodePrimitiveExpression
-                                                        {
-                                                            Value = expressionStringToken.Value
-
-                                                        });
-                        }
-                    }
-                    else
-                    {
-                        var concatExpression = CodeDomClassBuilder.GetConcatExpression(values);
-                        newKeyValueExpression.Parameters.Add(concatExpression);
-                    }
+                    AppendStringDictValue(attribute, newKeyValueExpression);
                 }
                 else
                 {
@@ -108,9 +79,7 @@ namespace NHaml.Web.MonoRail
                                                                  Value = attribute.Value
 
                                                              });
-
                 }
-
 
                 createDictionaryMethod.Parameters.Add(newKeyValueExpression);
             }
@@ -128,17 +97,50 @@ namespace NHaml.Web.MonoRail
                                           };
             createDictionaryMethod.Method = getDictionaryMethod;
 
-            var variableName = "nhamlTempDictionary" + tempDictionaryCount;
+            var variableName = string.Format("nhamlTempDictionary{0}", tempDictionaryCount);
             tempDictionaryCount++;
-            var _decl1 = new CodeVariableDeclarationStatement
+            var dictionaryDecleration = new CodeVariableDeclarationStatement
                              {
                                  InitExpression = createDictionaryMethod,
                                  Name = variableName,
                                  Type = new CodeTypeReference(typeof (IDictionary<string, object>))
                              };
-            builder.RenderMethod.Statements.Add(_decl1);
+            builder.RenderMethod.Statements.Add(dictionaryDecleration);
             return variableName;
         }
 
+    	private static void AppendStringDictValue(ParsedAttribute attribute, CodeObjectCreateExpression newKeyValueExpression)
+    	{
+    		var expressionStringParser = new ExpressionStringParser(attribute.Value);
+
+    		expressionStringParser.Parse();
+    		var values = expressionStringParser.Tokens;
+    		if (values.Count == 1)
+    		{
+    			var expressionStringToken = values[0];
+    			if (expressionStringToken.IsExpression)
+    			{
+    				newKeyValueExpression.Parameters.Add(new CodeSnippetExpression
+    				                                     	{
+    				                                     		Value = expressionStringToken.Value
+
+    				                                     	});
+    			}
+    			else
+    			{
+
+    				newKeyValueExpression.Parameters.Add(new CodePrimitiveExpression
+    				                                     	{
+    				                                     		Value = expressionStringToken.Value
+
+    				                                     	});
+    			}
+    		}
+    		else
+    		{
+    			var concatExpression = CodeDomClassBuilder.GetConcatExpression(values);
+    			newKeyValueExpression.Parameters.Add(concatExpression);
+    		}
+    	}
     }
 }
