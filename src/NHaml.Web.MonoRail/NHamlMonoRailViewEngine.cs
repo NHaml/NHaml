@@ -30,7 +30,7 @@ namespace NHaml.Web.MonoRail
         private void InitializeTemplateEngine()
         {
             
-            DefaultMaster = "application";
+            DefaultMaster = "Application";
 
 
             var options = TemplateEngine.Options;

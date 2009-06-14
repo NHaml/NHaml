@@ -26,7 +26,7 @@ namespace NHaml.Web.Mvc
 
         private void InitializeTemplateEngine()
         {
-            DefaultMaster = "application";
+            DefaultMaster = "Application";
 
             _templateEngine.Options.AddUsing( "System.Web" );
             _templateEngine.Options.AddUsing( "System.Web.Mvc" );
