@@ -1,13 +1,8 @@
-using System.Text.RegularExpressions;
 
 namespace NHaml.Rules
 {
     public sealed class NotEncodedEvalMarkupRule : EvalMarkupRule
     {
-        private static readonly Regex _evalRegex = new Regex(
-          @"^=\s*",
-          RegexOptions.Compiled | RegexOptions.Singleline );
-
         public override string Signifier
         {
             get { return "!="; }
@@ -15,11 +10,11 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            templateParser.TemplateClassBuilder.AppendOutput( templateParser.CurrentInputLine.Indent );
+            var builder = templateParser.TemplateClassBuilder;
+            var inputLine = templateParser.CurrentInputLine;
+            builder.AppendOutput( inputLine.Indent );
 
-            var code = _evalRegex.Replace(templateParser.CurrentInputLine.NormalizedText.Trim(), string.Empty);
-
-            templateParser.TemplateClassBuilder.AppendCodeLine( code, false );
+            builder.AppendCodeLine( inputLine.NormalizedText.Trim(), false );
 
             return EmptyClosingAction;
         }

@@ -1,12 +1,10 @@
-using System.Text.RegularExpressions;
+
+using NHaml.Compilers;
 
 namespace NHaml.Rules
 {
     public sealed class EncodedEvalMarkupRule : EvalMarkupRule
     {
-        private static readonly Regex _evalRegex = new Regex(
-          @"^=\s*",
-          RegexOptions.Compiled | RegexOptions.Singleline );
 
         public override string Signifier
         {
@@ -15,12 +13,10 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            templateParser.TemplateClassBuilder.AppendOutput( templateParser.CurrentInputLine.Indent );
-
-            var code = _evalRegex.Replace( templateParser.CurrentInputLine.NormalizedText.Trim(), string.Empty );
-
-            templateParser.TemplateClassBuilder.AppendCodeLine( code, true );
-
+            var builder = templateParser.TemplateClassBuilder;
+            var inputLine = templateParser.CurrentInputLine;
+            builder.AppendOutput( inputLine.Indent );
+            builder.AppendCodeLine( inputLine.NormalizedText.Trim(), true );
             return EmptyClosingAction;
         }
     }
