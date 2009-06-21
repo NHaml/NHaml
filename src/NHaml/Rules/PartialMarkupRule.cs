@@ -5,9 +5,9 @@ namespace NHaml.Rules
 {
     public class PartialMarkupRule : MarkupRule
     {
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '_'; }
+            get { return "_"; }
         }
 
         public override void Process( TemplateParser templateParser )

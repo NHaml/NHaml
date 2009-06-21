@@ -12,9 +12,9 @@ namespace NHaml.Rules
         {
         }
 
-        public override char Signifier
+        public override string Signifier
         {
-            get { return new char(); }
+            get { return string.Empty; }
         }
 
         public override BlockClosingAction Render( TemplateParser templateParser )

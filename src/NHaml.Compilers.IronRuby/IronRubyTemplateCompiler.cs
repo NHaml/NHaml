@@ -2,11 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
-
 using IronRuby;
-
 using Microsoft.Scripting.Hosting;
-
 using NHaml.Rules;
 
 namespace NHaml.Compilers.IronRuby
@@ -62,7 +59,7 @@ namespace NHaml.Compilers.IronRuby
                 {
                     return () =>
                       {
-                          if( (templateParser.CurrentInputLine.Signifier == SilentEvalMarkupRule.SignifierChar) &&
+                          if( (templateParser.CurrentInputLine.Text.TrimStart().StartsWith(SilentEvalMarkupRule.SignifierChar)) &&
                             MidBlockKeywords.Contains( templateParser.CurrentInputLine.NormalizedText.Trim().Split( ' ' )[0].ToUpperInvariant() ) )
                           {
                               templateParser.TemplateClassBuilder.Unindent();

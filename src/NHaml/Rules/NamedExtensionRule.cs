@@ -2,14 +2,14 @@ namespace NHaml.Rules
 {
 	public class NamedExtensionRule : MarkupRule
 	{
-		public override char Signifier
+		public override string Signifier
 		{
-			get { return '$'; }
+			get { return "$"; }
 		}
 
         public override BlockClosingAction Render(TemplateParser templateParser)
 		{
-			var text = templateParser.CurrentInputLine.NormalizedText;
+            var text = templateParser.CurrentInputLine.NormalizedText;
 			
             var indexOfSpace = text.IndexOf(' ');
 			var extensionName = text.Substring(0, indexOfSpace);

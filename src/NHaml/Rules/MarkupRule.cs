@@ -2,7 +2,7 @@ namespace NHaml.Rules
 {
     public abstract class MarkupRule
     {
-        public abstract char Signifier { get; }
+        public abstract string Signifier { get; }
 
         public static readonly BlockClosingAction EmptyClosingAction = () => { };
         public abstract BlockClosingAction Render( TemplateParser templateParser );

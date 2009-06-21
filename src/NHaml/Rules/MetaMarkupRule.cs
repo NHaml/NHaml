@@ -7,9 +7,9 @@ namespace NHaml.Rules
         private static readonly Regex _pairRegex = new Regex( @"^\s*(\w*)\s*=\s*(.*)\s*$",
             RegexOptions.Compiled | RegexOptions.Singleline );
 
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '@'; }
+            get { return "@"; }
         }
 
         public override BlockClosingAction Render( TemplateParser templateParser )

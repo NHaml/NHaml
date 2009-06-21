@@ -177,7 +177,7 @@ namespace NHaml.Web.MonoRail
             filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
             Trace.WriteLine(string.Format("Getting compiled instnace of {0}", filename));
 
-            Template template = TemplateEngine.Compile(file).CreateInstance();
+            var template = TemplateEngine.Compile(file).CreateInstance();
             return (NHamlMonoRailView) template;
         }
     }

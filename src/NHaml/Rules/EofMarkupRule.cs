@@ -4,9 +4,9 @@ namespace NHaml.Rules
 {
     public class EofMarkupRule : MarkupRule
     {
-        public static readonly char SignifierChar = Convert.ToChar( 26 );
+        public static readonly string SignifierChar = Convert.ToChar( 26 ).ToString();
 
-        public override char Signifier
+        public override string Signifier
         {
             get { return SignifierChar; }
         }

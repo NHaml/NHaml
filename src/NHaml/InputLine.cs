@@ -16,6 +16,7 @@ namespace NHaml
         private readonly int _indentSize;
 
 
+
         public InputLine( string text, int lineNumber )
             : this( text,  lineNumber, 2 )
         {
@@ -36,25 +37,26 @@ namespace NHaml
                 Text = Text.Remove( match.Groups[1].Index );
             }
 
-            NormalizedText = Text.TrimStart();
+            //NormalizedText = Text.TrimStart();
 
-            if( !string.IsNullOrEmpty( NormalizedText ) )
-            {
-                Signifier = NormalizedText[0];
-                NormalizedText = NormalizedText.Remove( 0, 1 );
-            }
+            //if( !string.IsNullOrEmpty( NormalizedText ) )
+            //{
+            //    NormalizedText = NormalizedText.Remove( 0, 1 );
+            //}
 
             Indent = _indentRegex.Match( Text ).Groups[0].Value;
             IndentCount = Indent.Length / _indentSize;
         }
 
-        public char Signifier { get; private set; }
+    //    public char Signifier { get; private set; }
 
         public string Text { get; private set; }
 
-        public string Source { get; private set; }
+       // public string Source { get; private set; }
 
-        public string NormalizedText { get; private set; }
+       public string NormalizedText { get; set; }
+
+
 
         public string Indent { get; private set; }
 
@@ -67,13 +69,11 @@ namespace NHaml
         public void Merge( InputLine nextInputLine )
         {
             Text += nextInputLine.Text.TrimStart();
-            NormalizedText += nextInputLine.Text.TrimStart();
         }
 
         public void TrimEnd()
         {
             Text = Text.TrimEnd();
-            NormalizedText = NormalizedText.TrimEnd();
         }
 
         public void ValidateIndentation()

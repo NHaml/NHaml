@@ -13,8 +13,7 @@ namespace NHaml.Tests
 
             Assert.AreEqual( 0, inputLine.IndentCount );
             Assert.AreEqual( string.Empty, inputLine.Indent );
-            Assert.AreEqual( '!', inputLine.Signifier );
-            Assert.AreEqual( "!!", inputLine.NormalizedText );
+            Assert.AreEqual( "!!!", inputLine.Text );
         }
 
         [Test]
@@ -23,7 +22,6 @@ namespace NHaml.Tests
             var inputLine = new InputLine( "  %head ", 1 );
 
             Assert.AreEqual( "  %head ", inputLine.Text );
-            Assert.AreEqual( "head ", inputLine.NormalizedText );
         }
 
         [Test]
@@ -33,22 +31,19 @@ namespace NHaml.Tests
 
             Assert.AreEqual( 0, inputLine.IndentCount );
             Assert.AreEqual( string.Empty, inputLine.Indent );
-            Assert.AreEqual( '%', inputLine.Signifier );
-            Assert.AreEqual( "head", inputLine.NormalizedText );
+            Assert.AreEqual( "%head", inputLine.Text );
 
             inputLine = new InputLine( "  %head", 1 );
 
             Assert.AreEqual( 1, inputLine.IndentCount );
             Assert.AreEqual( "  ", inputLine.Indent );
-            Assert.AreEqual( '%', inputLine.Signifier );
-            Assert.AreEqual( "head", inputLine.NormalizedText );
+            Assert.AreEqual("  %head", inputLine.Text);
 
             inputLine = new InputLine( "    %body", 1 );
 
             Assert.AreEqual( 2, inputLine.IndentCount );
             Assert.AreEqual( "    ", inputLine.Indent );
-            Assert.AreEqual( '%', inputLine.Signifier );
-            Assert.AreEqual( "body", inputLine.NormalizedText );
+            Assert.AreEqual("    %body", inputLine.Text);
         }
     }
 }

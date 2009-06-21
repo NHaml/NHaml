@@ -12,9 +12,9 @@ namespace NHaml.Rules
           @"^(\[[\w\s\.]*\])?(.*)$",
           RegexOptions.Compiled | RegexOptions.Singleline );
 
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '/'; }
+            get { return "/"; }
         }
 
         public override BlockClosingAction Render( TemplateParser templateParser )

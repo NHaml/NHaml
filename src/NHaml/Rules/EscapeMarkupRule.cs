@@ -2,15 +2,15 @@ namespace NHaml.Rules
 {
     public class EscapeMarkupRule : MarkupRule
     {
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '\\'; }
+            get { return "\\"; }
         }
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
             templateParser.TemplateClassBuilder.AppendOutput( templateParser.CurrentInputLine.Indent );
-            templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.NormalizedText );
+            templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.NormalizedText);
 
             return EmptyClosingAction;
         }

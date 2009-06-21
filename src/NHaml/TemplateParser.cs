@@ -117,11 +117,21 @@ namespace NHaml
                     CurrentInputLine.ValidateIndentation();
 
                     var rule = TemplateEngine.GetRule(CurrentInputLine);
+                    CurrentInputLine.NormalizedText = GetNormalizedText(rule, CurrentInputLine);
                     rule.Process(this);
                 }
 
                 CloseBlocks();
             }
+        }
+
+
+        public string GetNormalizedText(MarkupRule markupRule, InputLine inputLine)
+        {
+            var length = markupRule.Signifier.Length;
+            var text = inputLine.Text;
+            text = text.TrimStart();
+            return text.Substring(length, text.Length - length);
         }
 
         public void MoveNext()

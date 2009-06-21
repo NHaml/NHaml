@@ -2,9 +2,9 @@ namespace NHaml.Rules
 {
     public class IdMarkupRule : TagMarkupRule
     {
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '#'; }
+            get { return "#"; }
         }
 
         protected override string PreprocessLine( InputLine inputLine )

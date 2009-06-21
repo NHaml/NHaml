@@ -21,9 +21,9 @@ namespace NHaml.Rules
         private static readonly List<string> _whitespaceSensitiveTags
             = new List<string> {"textarea", "pre"};
 
-        public override char Signifier
+        public override string Signifier
         {
-            get { return '%'; }
+            get { return "%"; }
         }
 
         protected virtual string PreprocessLine(InputLine inputLine)

@@ -2,9 +2,9 @@ namespace NHaml.Rules
 {
     public class SilentEvalMarkupRule : MarkupRule
     {
-        public const char SignifierChar = '-';
+        public const string SignifierChar = "-";
 
-        public override char Signifier
+        public override string Signifier
         {
             get { return SignifierChar; }
         }

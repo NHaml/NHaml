@@ -47,10 +47,15 @@ namespace NHaml
         {
             Invariant.ArgumentNotNull( inputLine, "line" );
 
-            if( inputLine.Signifier >= 128 )
-                return PlainTextMarkupRule.Instance;
-
-            return Options.MarkupRules[inputLine.Signifier] ?? PlainTextMarkupRule.Instance;
+            var start = inputLine.Text.TrimStart();
+            foreach (var key in Options.MarkupRules.Keys)
+            {
+                if (start.StartsWith(key))
+                {
+                    return Options.MarkupRules[key];
+                }
+            }
+            return PlainTextMarkupRule.Instance;
         }
 
         public CompiledTemplate Compile( string templatePath )

@@ -31,7 +31,7 @@ namespace NHaml
             } );
             AutoClosingTags = new Set<string>( new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"} );
 
-            MarkupRules = new MarkupRule[128];
+            MarkupRules = new SortedDictionary<string, MarkupRule>(new MarkupRuleComparer());
             _indentSize = 2;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharp3TemplateCompiler();
@@ -51,6 +51,7 @@ namespace NHaml
             AddRule( new EscapeMarkupRule() );
             AddRule( new PartialMarkupRule() );
             AddRule( new NamedExtensionRule() );
+            AddRule( new NotEncodedEvalMarkupRule() );
         }
 
         public Set<string> AutoClosingTags { get; private set; }
@@ -79,7 +80,7 @@ namespace NHaml
 
         public Set<string>  References { get; private set; }
 
-        public MarkupRule[] MarkupRules { get; private set; }
+        public SortedDictionary<string, MarkupRule> MarkupRules { get; private set; }
 
         public ITemplateCompiler TemplateCompiler
         {
@@ -137,7 +138,7 @@ namespace NHaml
         {
             Invariant.ArgumentNotNull( markupRule, "markupRule" );
 
-            MarkupRules[markupRule.Signifier] = markupRule;
+            MarkupRules.Add(markupRule.Signifier, markupRule);
         }
 
         public bool IsAutoClosingTag( string tag )
@@ -177,6 +178,14 @@ namespace NHaml
             Invariant.ArgumentNotNull( assembly, "assembly" );
 
             References.Add( assembly.Location );
+        }
+    }
+
+    public class MarkupRuleComparer : IComparer<string>
+    {
+        public int Compare(string x, string y)
+        {
+            return x.CompareTo(y);
         }
     }
 }

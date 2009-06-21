@@ -75,6 +75,7 @@
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />
     <Compile Include="ExpressionStringToken.cs" />
+    <Compile Include="Rules\NotEncodedEvalMarkupRule.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
