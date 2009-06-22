@@ -71,6 +71,9 @@ namespace NHaml.Tests
 
         protected void AssertRender( StringWriter output, string expectedName )
         {
+
+            var x = Directory.GetCurrentDirectory();
+            
             Console.WriteLine( output );
             Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );
         }

@@ -578,6 +578,18 @@
     <None Include="Functional\Templates\_Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Issues\GC50\Mock\Content.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Issues\GC50\Output.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Issues\GC50\Shared\Application.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Issues\GC50\Shared\_Partial.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Functional\BooFunctionalTests.cs">
@@ -588,6 +600,7 @@
     <Compile Include="Functional\FSharpFunctionalTests.cs" />
     <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
     <Compile Include="Functional\ImporterTests.cs" />
+    <Compile Include="Issues\GC50\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
     <Compile Include="TestFixtureMvcBase.cs" />
     <Compile Include="Functional\IronRubyFunctionalTests.cs" />

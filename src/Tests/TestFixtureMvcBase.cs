@@ -108,6 +108,8 @@ namespace NHaml.Tests
 
                 public override bool FileExists(string virtualPath)
                 {
+                    var x = Directory.GetCurrentDirectory();
+
                     return File.Exists(_mvcBase.FakeServerMapPath(virtualPath));
                 }
             }
