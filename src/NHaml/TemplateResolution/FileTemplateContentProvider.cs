@@ -6,19 +6,16 @@ namespace NHaml.TemplateResolution
 {
     public class FileTemplateContentProvider : ITemplateContentProvider
     {
-
-
-
         public FileTemplateContentProvider()
         {
             PathSources = new List<string> ();
             AddPathSource("Views");
         }
+
         public IViewSource GetViewSource(string templateName)
         {
             return GetViewSource(templateName, null);
         }
-
 
         public IViewSource GetViewSource(string templateName, IViewSource parentViewSource)
         {
@@ -74,7 +71,6 @@ namespace NHaml.TemplateResolution
         {
             PathSources.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathSource));
         }
-
    
 //TODO:Not sure if this is useful
         //public bool HasSource(string sourceName)
@@ -90,7 +86,6 @@ namespace NHaml.TemplateResolution
 
         //    return false;
         //}
-
 
         private static FileInfo CreateFileInfo(string viewRoot, string templateName)
         {

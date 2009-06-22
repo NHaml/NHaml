@@ -7,7 +7,7 @@ namespace NHaml.TemplateResolution
     /// </summary>
     public class FileViewSource : IViewSource
     {
-        private FileInfo fileInfo;
+        private readonly FileInfo _fileInfo;
         private long _lastUpdated;
 
         /// <summary>
@@ -16,7 +16,7 @@ namespace NHaml.TemplateResolution
         /// <param name="fileInfo">The file info.</param>
         public FileViewSource(FileInfo fileInfo)
         {
-            this.fileInfo = fileInfo;
+            _fileInfo = fileInfo;
             _lastUpdated = LastModified;
         }
 
@@ -24,26 +24,22 @@ namespace NHaml.TemplateResolution
         {
             _lastUpdated = LastModified;
 
-            return new StreamReader(fileInfo.FullName);
+            return new StreamReader(_fileInfo.FullName);
         }
 
         public string Path
         {
-            get { return fileInfo.FullName; }
+            get { return _fileInfo.FullName; }
         }
-
 
         private long LastModified
         {
-            get { return File.GetLastWriteTime(fileInfo.FullName).Ticks; }
+            get { return File.GetLastWriteTime(_fileInfo.FullName).Ticks; }
         }
 
         public bool IsModified
         {
-            get
-            {
-                return _lastUpdated < LastModified;
-            }
+            get { return _lastUpdated < LastModified; }
         }
     }
 }

@@ -12,6 +12,14 @@ namespace NHaml.TemplateResolution
         IViewSource GetViewSource(string templateName);
 
         /// <summary>
+        /// Builds and returns a representation of a view template
+        /// </summary>
+        /// <param name="templatePath">The template path.</param>
+        /// <param name="parentViewSource">The parent view source.</param>
+        /// <returns></returns>
+        IViewSource GetViewSource( string templatePath, IViewSource parentViewSource );
+
+        /// <summary>
         /// Gets a list of path sources
         /// </summary>
         /// <value></value>
@@ -22,7 +30,5 @@ namespace NHaml.TemplateResolution
         /// </summary>
         /// <param name="pathSource">The path source.</param>
         void AddPathSource(string pathSource);
-
-        IViewSource GetViewSource(string templatePath, IViewSource parentViewSource);
     }
 }
