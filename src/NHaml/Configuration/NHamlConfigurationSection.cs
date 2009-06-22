@@ -34,6 +34,9 @@ namespace NHaml.Configuration
             if( section == null )
                 return;
 
+            if (section.IndentSize.HasValue)
+                options.IndentSize = section.IndentSize.Value;
+
             if( section.AutoRecompile.HasValue )
                 options.AutoRecompile = section.AutoRecompile.Value;
 
