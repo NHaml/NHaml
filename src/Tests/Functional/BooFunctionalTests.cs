@@ -1,7 +1,7 @@
 using NHaml.Compilers.Boo;
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
     [TestFixture]
     public class BooFunctionalTests : FunctionalTestFixture
@@ -11,17 +11,17 @@ namespace NHaml.Tests
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
-            _templateEngine.TemplateContentProvider.AddPathSource(@"Templates\Boo");
+            _templateEngine.TemplateContentProvider.AddPathSource(TemplatesFolder+@"Boo");
         }
 
+        [Ignore( "Boo doesn't handle this" )]
         public override void Empty()
         {
-            // Boo doesn't handle this
         }
 
+        [Ignore("Apparently 'given' is not yet implemented")]
         public override void SwitchEval()
         {
-            // Apparently "given" is not yet implemented
         }
     }
 }

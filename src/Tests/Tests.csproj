@@ -74,526 +74,527 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-    <None Include="Expected\Alligators.xhtml">
+    <None Include="Functional\Expected\Alligators.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Application.xhtml">
+    <None Include="Functional\Expected\Application.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\AttributeEval.xhtml">
+    <None Include="Functional\Expected\AttributeEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\AutoClose.xhtml">
+    <None Include="Functional\Expected\AutoClose.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Comments.xhtml">
+    <None Include="Functional\Expected\Comments.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Conditionals.xhtml">
+    <None Include="Functional\Expected\Conditionals.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\4Spaces.xhtml">
+    <None Include="Functional\Expected\4Spaces.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Class.xhtml">
+    <None Include="Functional\Expected\Class.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\AttributeNamespaceAndDynamic.xhtml">
+    <None Include="Functional\Expected\AttributeNamespaceAndDynamic.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\BlankLine.xhtml">
+    <None Include="Functional\Expected\BlankLine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\SelfClosing.xhtml">
+    <None Include="Functional\Expected\SelfClosing.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\MetaWithoutModel.xhtml">
+    <None Include="Functional\Expected\MetaWithoutModel.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\MetaModel.xhtml">
+    <None Include="Functional\Expected\MetaModel.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\IdAndDynamic.xhtml">
+    <None Include="Functional\Expected\IdAndDynamic.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Id.xhtml">
+    <None Include="Functional\Expected\Id.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Mvc\HelperRendersPartial.xhtml">
+    <None Include="Functional\Expected\Mvc\HelperRendersPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Mvc\RenderOnlyPartialView.xhtml">
+    <None Include="Functional\Expected\Mvc\RenderOnlyPartialView.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Mvc\SimpleWithCustomMaster.xhtml">
+    <None Include="Functional\Expected\Mvc\SimpleWithCustomMaster.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Mvc\SimpleWithApplicationHamlMaster.xhtml">
+    <None Include="Functional\Expected\Mvc\SimpleWithApplicationHamlMaster.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Tabs.xhtml">
+    <None Include="Functional\Expected\Tabs.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\EscapeHtmlOff.xhtml">
+    <None Include="Functional\Expected\EscapeHtmlOff.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\EscapeHtmlOn.xhtml">
+    <None Include="Functional\Expected\EscapeHtmlOn.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\CustomBaseClass.xhtml">
+    <None Include="Functional\Expected\CustomBaseClass.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Doctype.xhtml">
+    <None Include="Functional\Expected\Doctype.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Empty.xhtml">
+    <None Include="Functional\Expected\Empty.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Escape.xhtml">
+    <None Include="Functional\Expected\Escape.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\FormHelper.xhtml">
+    <None Include="Functional\Expected\FormHelper.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Javascript.xhtml">
+    <None Include="Functional\Expected\Javascript.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\LambdaEval.xhtml">
+    <None Include="Functional\Expected\LambdaEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\List.xhtml">
+    <None Include="Functional\Expected\List.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\LoopEval.xhtml">
+    <None Include="Functional\Expected\LoopEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\MultiLine.xhtml">
+    <None Include="Functional\Expected\MultiLine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\NullAttributes.xhtml">
+    <None Include="Functional\Expected\NullAttributes.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\OriginalEngine.xhtml">
+    <None Include="Functional\Expected\OriginalEngine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Partials.xhtml">
+    <None Include="Functional\Expected\Partials.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Partials2.xhtml">
+    <None Include="Functional\Expected\Partials2.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Preamble.xhtml">
+    <None Include="Functional\Expected\Preamble.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\ReferenceExample1.xhtml">
+    <None Include="Functional\Expected\ReferenceExample1.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\ReferenceExample2.xhtml">
+    <None Include="Functional\Expected\ReferenceExample2.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\SharedPartial.xhtml">
+    <None Include="Functional\Expected\SharedPartial.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\SilentEval.xhtml">
+    <None Include="Functional\Expected\SilentEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\SimpleEval.xhtml">
+    <None Include="Functional\Expected\SimpleEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\SwitchEval.xhtml">
+    <None Include="Functional\Expected\SwitchEval.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\TagParsing.xhtml">
+    <None Include="Functional\Expected\TagParsing.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\VeryBasic.xhtml">
+    <None Include="Functional\Expected\VeryBasic.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\Welcome.xhtml">
+    <None Include="Functional\Expected\Welcome.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Expected\WhitespaceSensitive.xhtml">
+    <None Include="Functional\Expected\WhitespaceSensitive.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Alligators.haml">
+    <None Include="Functional\Templates\Alligators.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Application.haml">
+    <None Include="Functional\Templates\Application.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\AutoClose.haml">
+    <None Include="Functional\Templates\AutoClose.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\AttributeEval.haml">
+    <None Include="Functional\Templates\Boo\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\AttributeNamespaceAndDynamic.haml">
+    <None Include="Functional\Templates\Boo\AttributeNamespaceAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\Conditionals.haml">
+    <None Include="Functional\Templates\Boo\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\FormHelper.haml">
+    <None Include="Functional\Templates\Boo\FormHelper.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\IdAndDynamic.haml">
+    <None Include="Functional\Templates\Boo\IdAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\LambdaEval.haml">
+    <None Include="Functional\Templates\Boo\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\LoopEval.haml">
+    <None Include="Functional\Templates\Boo\LoopEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\MultiLine.haml">
+    <None Include="Functional\Templates\Boo\MultiLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\NullAttributes.haml">
+    <None Include="Functional\Templates\Boo\NullAttributes.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\Partials.haml">
+    <None Include="Functional\Templates\Boo\Partials.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\Preamble.haml">
+    <None Include="Functional\Templates\Boo\Preamble.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\SilentEval.haml">
+    <None Include="Functional\Templates\Boo\SilentEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\SimpleEval.haml">
+    <None Include="Functional\Templates\Boo\SimpleEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Boo\Welcome.haml">
+    <None Include="Functional\Templates\Boo\Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Comments.haml">
+    <None Include="Functional\Templates\Comments.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\4Spaces.haml">
+    <None Include="Functional\Templates\4Spaces.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\BadPartial.haml">
+    <None Include="Functional\Templates\BadPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\ApplicationSimple.haml">
+    <None Include="Functional\Templates\ApplicationSimple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Class.haml">
+    <None Include="Functional\Templates\Class.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\ApplicationPart1.haml">
+    <None Include="Functional\Templates\ApplicationPart1.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\ApplicationPart2.haml">
+    <None Include="Functional\Templates\ApplicationPart2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\BlankLine.haml">
+    <None Include="Functional\Templates\BlankLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SelfClosing.haml">
+    <None Include="Functional\Templates\SelfClosing.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\AttributeEval.haml">
+    <None Include="Functional\Templates\FSharp\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\AttributeNamespaceAndDynamic.haml">
+    <None Include="Functional\Templates\FSharp\AttributeNamespaceAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\Conditionals.haml">
+    <None Include="Functional\Templates\FSharp\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\CustomBaseClass.haml">
+    <None Include="Functional\Templates\FSharp\CustomBaseClass.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\IdAndDynamic.haml">
+    <None Include="Functional\Templates\FSharp\IdAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\LambdaEval.haml">
+    <None Include="Functional\Templates\FSharp\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\LoopEval.haml">
+    <None Include="Functional\Templates\FSharp\LoopEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\MetaModel.haml">
+    <None Include="Functional\Templates\FSharp\MetaModel.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\MetaWithoutModel.haml">
+    <None Include="Functional\Templates\FSharp\MetaWithoutModel.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\MultiLine.haml">
+    <None Include="Functional\Templates\FSharp\MultiLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\NullAttributes.haml">
+    <None Include="Functional\Templates\FSharp\NullAttributes.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\Partials.haml">
+    <None Include="Functional\Templates\FSharp\Partials.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\Preamble.haml">
+    <None Include="Functional\Templates\FSharp\Preamble.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\SilentEval.haml">
+    <None Include="Functional\Templates\FSharp\SilentEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\SimpleEval.haml">
+    <None Include="Functional\Templates\FSharp\SimpleEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\SwitchEval.haml">
+    <None Include="Functional\Templates\FSharp\SwitchEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\Welcome.haml">
+    <None Include="Functional\Templates\FSharp\Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\FSharp\_Menu.haml">
+    <None Include="Functional\Templates\FSharp\_Menu.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\MetaWithoutModel.haml">
+    <None Include="Functional\Templates\MetaWithoutModel.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\MetaModel.haml">
+    <None Include="Functional\Templates\MetaModel.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\AttributeNamespaceAndDynamic.haml">
+    <None Include="Functional\Templates\CSharp2\AttributeNamespaceAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\IdAndDynamic.haml">
+    <None Include="Functional\Templates\CSharp2\IdAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\AttributeNamespaceAndDynamic.haml">
+    <None Include="Functional\Templates\IronRuby\AttributeNamespaceAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\IdAndDynamic.haml">
+    <None Include="Functional\Templates\IronRuby\IdAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\AttributeEval.haml">
+    <None Include="Functional\Templates\VisualBasic\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\AttributeNamespaceAndDynamic.haml">
+    <None Include="Functional\Templates\VisualBasic\AttributeNamespaceAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\Conditionals.haml">
+    <None Include="Functional\Templates\VisualBasic\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\IdAndDynamic.haml">
+    <None Include="Functional\Templates\VisualBasic\IdAndDynamic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\LambdaEval.haml">
+    <None Include="Functional\Templates\VisualBasic\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\LoopEval.haml">
+    <None Include="Functional\Templates\VisualBasic\LoopEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\MultiLine.haml">
+    <None Include="Functional\Templates\VisualBasic\MultiLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\NullAttributes.haml">
+    <None Include="Functional\Templates\VisualBasic\NullAttributes.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\Partials.haml">
+    <None Include="Functional\Templates\VisualBasic\Partials.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\Preamble.haml">
+    <None Include="Functional\Templates\VisualBasic\Preamble.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\SilentEval.haml">
+    <None Include="Functional\Templates\VisualBasic\SilentEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\SimpleEval.haml">
+    <None Include="Functional\Templates\VisualBasic\SimpleEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\SwitchEval.haml">
+    <None Include="Functional\Templates\VisualBasic\SwitchEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VisualBasic\Welcome.haml">
+    <None Include="Functional\Templates\VisualBasic\Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Id.haml">
+    <None Include="Functional\Templates\Id.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\GenericBaseClassAnon.haml">
+    <None Include="Functional\Templates\GenericBaseClassAnon.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Custom\Simple.haml">
+    <None Include="Functional\Templates\Mvc\Custom\Simple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Shared\Custom.haml">
+    <None Include="Functional\Templates\Mvc\Shared\Custom.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Shared\SharedSimple.haml">
+    <None Include="Functional\Templates\Mvc\Shared\SharedSimple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Shared\_Button.haml">
+    <None Include="Functional\Templates\Mvc\Shared\_Button.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Mock\Simple.haml">
+    <None Include="Functional\Templates\Mvc\Mock\Simple.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Mock\HelperRendersPartial.haml">
+    <None Include="Functional\Templates\Mvc\Mock\HelperRendersPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Mvc\Shared\Application.haml">
+    <None Include="Functional\Templates\Mvc\Shared\Application.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Tabs.haml">
+    <None Include="Functional\Templates\Tabs.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\EscapeHtml.haml">
+    <None Include="Functional\Templates\EscapeHtml.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\AttributeEval.haml">
+    <None Include="Functional\Templates\CSharp2\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\Conditionals.haml">
+    <None Include="Functional\Templates\CSharp2\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\LambdaEval.haml">
+    <None Include="Functional\Templates\CSharp2\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\LoopEval.haml">
+    <None Include="Functional\Templates\CSharp2\LoopEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\MultiLine.haml">
+    <None Include="Functional\Templates\CSharp2\MultiLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\NullAttributes.haml">
+    <None Include="Functional\Templates\CSharp2\NullAttributes.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\Partials.haml">
+    <None Include="Functional\Templates\CSharp2\Partials.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\Preamble.haml">
+    <None Include="Functional\Templates\CSharp2\Preamble.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\SilentEval.haml">
+    <None Include="Functional\Templates\CSharp2\SilentEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\SimpleEval.haml">
+    <None Include="Functional\Templates\CSharp2\SimpleEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\SwitchEval.haml">
+    <None Include="Functional\Templates\CSharp2\SwitchEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp2\Welcome.haml">
+    <None Include="Functional\Templates\CSharp2\Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp3\FormHelper.haml">
+    <None Include="Functional\Templates\CSharp3\FormHelper.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CSharp3\LambdaEval.haml">
+    <None Include="Functional\Templates\CSharp3\LambdaEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\CustomBaseClass.haml">
+    <None Include="Functional\Templates\CustomBaseClass.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Doctype.haml">
+    <None Include="Functional\Templates\Doctype.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Empty.haml">
+    <None Include="Functional\Templates\Empty.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Escape.haml">
+    <None Include="Functional\Templates\Escape.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\AttributeEval.haml">
+    <None Include="Functional\Templates\IronRuby\AttributeEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\Conditionals.haml">
+    <None Include="Functional\Templates\IronRuby\Conditionals.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\CustomBaseClass.haml">
+    <None Include="Functional\Templates\IronRuby\CustomBaseClass.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\LoopEval.haml">
+    <None Include="Functional\Templates\IronRuby\LoopEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\MultiLine.haml">
+    <None Include="Functional\Templates\IronRuby\MultiLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\NullAttributes.haml">
+    <None Include="Functional\Templates\IronRuby\NullAttributes.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\Partials.haml">
+    <None Include="Functional\Templates\IronRuby\Partials.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\Preamble.haml">
+    <None Include="Functional\Templates\IronRuby\Preamble.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\SilentEval.haml">
+    <None Include="Functional\Templates\IronRuby\SilentEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\SimpleEval.haml">
+    <None Include="Functional\Templates\IronRuby\SimpleEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\SwitchEval.haml">
+    <None Include="Functional\Templates\IronRuby\SwitchEval.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\Welcome.haml">
+    <None Include="Functional\Templates\IronRuby\Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\IronRuby\_Menu.haml">
+    <None Include="Functional\Templates\IronRuby\_Menu.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Javascript.haml">
+    <None Include="Functional\Templates\Javascript.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\List.haml">
+    <None Include="Functional\Templates\List.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\OriginalEngine.haml">
+    <None Include="Functional\Templates\OriginalEngine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Partials2.haml">
+    <None Include="Functional\Templates\Partials2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\ReferenceExample1.haml">
+    <None Include="Functional\Templates\ReferenceExample1.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\ReferenceExample2.haml">
+    <None Include="Functional\Templates\ReferenceExample2.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SharedPartial.haml">
+    <None Include="Functional\Templates\SharedPartial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\Shared\_Partial.haml">
+    <None Include="Functional\Templates\Shared\_Partial.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\TagParsing.haml">
+    <None Include="Functional\Templates\TagParsing.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\VeryBasic.haml">
+    <None Include="Functional\Templates\VeryBasic.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\WhitespaceSensitive.haml">
+    <None Include="Functional\Templates\WhitespaceSensitive.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\_Button.haml">
+    <None Include="Functional\Templates\_Button.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\_List.haml">
+    <None Include="Functional\Templates\_List.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\_Menu.haml">
+    <None Include="Functional\Templates\_Menu.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\_Welcome.haml">
+    <None Include="Functional\Templates\_Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BooFunctionalTests.cs">
+    <Compile Include="Functional\BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="AttributeParserTests.cs" />
     <Compile Include="ExpressionStringParserTests.cs" />
-    <Compile Include="FSharpFunctionalTests.cs" />
-    <Compile Include="VisualBasicFunctionalTests.cs" />
-    <Compile Include="ImporterTests.cs" />
+    <Compile Include="Functional\FSharpFunctionalTests.cs" />
+    <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
+    <Compile Include="Functional\ImporterTests.cs" />
     <Compile Include="MvcTests.cs" />
-    <Compile Include="IronRubyFunctionalTests.cs" />
+    <Compile Include="TestFixtureMvcBase.cs" />
+    <Compile Include="Functional\IronRubyFunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
     <Compile Include="ConfigurationTests.cs" />
-    <Compile Include="CSharp3FunctionalTests.cs" />
-    <Compile Include="CSharp2FunctionalTests.cs">
+    <Compile Include="Functional\CSharp3FunctionalTests.cs" />
+    <Compile Include="Functional\CSharp2FunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="InputLineTests.cs">

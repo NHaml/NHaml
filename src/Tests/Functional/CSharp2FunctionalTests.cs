@@ -1,9 +1,7 @@
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
-
-
     [TestFixture]
     public class CSharp2FunctionalTests : FunctionalTestFixture
     {
@@ -11,8 +9,7 @@ namespace NHaml.Tests
         {
             base.SetUp();
 
-            _templateEngine.TemplateContentProvider.AddPathSource(@"Templates\CSharp2");
+            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
         }
-
     }
 }

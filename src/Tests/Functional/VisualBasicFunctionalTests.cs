@@ -1,7 +1,7 @@
 using NHaml.Compilers.VisualBasic;
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
     [TestFixture]
     public class VisualBasicFunctionalTests : FunctionalTestFixture
@@ -12,9 +12,10 @@ namespace NHaml.Tests
 
             _templateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
 
-            _templateEngine.TemplateContentProvider.AddPathSource(@"Templates\VisualBasic");
+            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"VisualBasic" );
         }
 
+        [Ignore]
         public override void LambdaEval()
         {
         }

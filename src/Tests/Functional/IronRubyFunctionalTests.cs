@@ -2,7 +2,7 @@ using NHaml.Compilers.IronRuby;
 
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
     [TestFixture]
     public class IronRubyFunctionalTests : FunctionalTestFixture
@@ -12,7 +12,7 @@ namespace NHaml.Tests
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new IronRubyTemplateCompiler();
-            _templateEngine.TemplateContentProvider.PathSources.Insert(0,@"Templates\IronRuby");
+            _templateEngine.TemplateContentProvider.PathSources.Insert( 0, TemplatesFolder + @"IronRuby" );
         }
 
         [Test]

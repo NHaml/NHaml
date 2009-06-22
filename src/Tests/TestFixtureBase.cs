@@ -9,14 +9,16 @@ namespace NHaml.Tests
 {
     public abstract class TestFixtureBase
     {
-        public const string TemplatesFolder = @"Templates\";
-        public const string ExpectedFolder = @"Expected\";
+        protected string TemplatesFolder { get; set; }
+        protected string ExpectedFolder { get; set; }
 
         protected TemplateEngine _templateEngine;
 
-
         protected TestFixtureBase()
         {
+            TemplatesFolder = @"Functional\Templates\";
+            ExpectedFolder = @"Functional\Expected\";
+
             Trace.Listeners.Clear();
         }
 
@@ -24,8 +26,7 @@ namespace NHaml.Tests
         public virtual void SetUp()
         {
             _templateEngine = new TemplateEngine {Options = {TemplateCompiler = new CSharp2TemplateCompiler()}};
-            _templateEngine.TemplateContentProvider.PathSources.Add("Templates");
-
+            _templateEngine.TemplateContentProvider.PathSources.Add(TemplatesFolder);
         }
 
         protected void AssertRender( string templateName )
@@ -57,32 +58,18 @@ namespace NHaml.Tests
 
         protected Template CreateTemplate( string templateName, string layoutName )
         {
-            //var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
-
-            //if( !File.Exists( templatePath ) )
-            //{
-            //    templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
-            //}
-
-            //if( !File.Exists( templatePath ) )
-            //{
-            //    templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
-            //}
-
-            //if( !string.IsNullOrEmpty( layoutName ) )
-            //{
-            //    layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
-            //}
-
             var stopwatch = Stopwatch.StartNew();
 
             var compiledTemplate = _templateEngine.Compile(templateName, layoutName);
+            
             stopwatch.Stop();
+            
             Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
+            
             return compiledTemplate.CreateInstance();
         }
 
-        protected static void AssertRender( StringWriter output, string expectedName )
+        protected void AssertRender( StringWriter output, string expectedName )
         {
             Console.WriteLine( output );
             Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );

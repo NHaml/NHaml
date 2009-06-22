@@ -1,9 +1,8 @@
 using NHaml.Compilers.FSharp;
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
-#if (DEBUG)
     [TestFixture]
     public class FSharpFunctionalTests : FunctionalTestFixture
     {
@@ -12,8 +11,10 @@ namespace NHaml.Tests
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new FSharpTemplateCompiler();
-            _templateEngine.TemplateContentProvider.PathSources.Insert(0, @"Templates\FSharp");
+            _templateEngine.TemplateContentProvider.PathSources.Insert( 0, TemplatesFolder + @"FSharp" );
         }
+
+        [Ignore( "SwitchEval is currently not supported" )]
         public override void SwitchEval()
         {
             
@@ -26,5 +27,4 @@ namespace NHaml.Tests
             base.LambdaEval();
         }
     }
-#endif
 }

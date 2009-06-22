@@ -1,7 +1,7 @@
 ﻿using System.IO;
 using NUnit.Framework;
 
-namespace NHaml.Tests
+namespace NHaml.Tests.Functional
 {
     [TestFixture]
     public class ImporterTests
@@ -17,9 +17,9 @@ namespace NHaml.Tests
         public void FourSpacesTest()
         {
             var importer = new Generator.Wpf.Generator
-                               {
-                                   IndentString = "    "
-                               };
+            {
+                IndentString = "    "
+            };
             RunTest(importer, "4Spaces");
         }
 
@@ -34,9 +34,9 @@ namespace NHaml.Tests
         public void ReferenceExample2Test()
         {
             var importer = new Generator.Wpf.Generator
-                               {
-                                   IncludeDocType = false,
-                               };
+            {
+                IncludeDocType = false,
+            };
             RunTest(importer, "ReferenceExample2");
         }
      
@@ -44,18 +44,18 @@ namespace NHaml.Tests
         public void ClassTest()
         {
             var importer = new Generator.Wpf.Generator
-                               {
-                                   IncludeDocType = false,
-                               };
+            {
+                IncludeDocType = false,
+            };
             RunTest(importer, "Class");
         }
         [Test]
         public void IdTest()
         {
             var importer = new Generator.Wpf.Generator
-                               {
-                                   IncludeDocType = false,
-                               };
+            {
+                IncludeDocType = false,
+            };
             RunTest(importer, "Id");
         }
      
@@ -63,9 +63,9 @@ namespace NHaml.Tests
         public void TabsTest()
         {
             var importer = new Generator.Wpf.Generator
-                               {
-                                   IndentString = "\t"
-                               };
+            {
+                IndentString = "\t"
+            };
             RunTest(importer, "Tabs");
         }
      
@@ -92,7 +92,7 @@ namespace NHaml.Tests
             {
                 using (var textWriter = new StreamWriter(memoryStream))
                 {
-                    using (var reader = File.OpenText("Expected/" + file + ".xhtml"))
+                    using (var reader = File.OpenText("Functional/Expected/" + file + ".xhtml"))
                     {
                         generator.Import(reader, textWriter);
                     }
@@ -104,7 +104,7 @@ namespace NHaml.Tests
                     } 
                 }
             }
-            var expectedText = File.ReadAllText("Templates/" + file + ".haml");
+            var expectedText = File.ReadAllText("Functional/Templates/" + file + ".haml");
             Assert.AreEqual(expectedText, actual);
         }
     }
