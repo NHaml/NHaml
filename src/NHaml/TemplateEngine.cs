@@ -48,11 +48,11 @@ namespace NHaml
             Invariant.ArgumentNotNull( inputLine, "line" );
 
             var start = inputLine.Text.TrimStart();
-            foreach (var key in Options.MarkupRules.Keys)
+            foreach (var keyValuePair in Options.MarkupRules)
             {
-                if (start.StartsWith(key))
+                if (start.StartsWith(keyValuePair.Key))
                 {
-                    return Options.MarkupRules[key];
+                    return keyValuePair.Value;
                 }
             }
             return PlainTextMarkupRule.Instance;
