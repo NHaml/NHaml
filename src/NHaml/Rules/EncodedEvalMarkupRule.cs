@@ -1,6 +1,4 @@
 
-using NHaml.Compilers;
-
 namespace NHaml.Rules
 {
     public sealed class EncodedEvalMarkupRule : EvalMarkupRule

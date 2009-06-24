@@ -34,8 +34,8 @@ namespace NHaml.Web.MonoRail
 
 
             var options = TemplateEngine.Options;
-            options.AddExtension(new ComponentSectionExtension());
-            options.AddExtension( new ComponentExtension() );
+            options.AddRule(new ComponentSectionMarkupRule());
+            options.AddRule(new ComponentMarkupRule());
 
             options.AddUsing( "System.Web" );
             options.AddUsing( "NHaml.Web.MonoRail" );
@@ -78,7 +78,6 @@ namespace NHaml.Web.MonoRail
         //Taken from boo view engine
         private string GetTemplateFileName(string templateName)
         {
-
             var file = templateName + ViewFileExtension;
             var filename = file.Replace('/', Path.DirectorySeparatorChar).Replace('\\', Path.DirectorySeparatorChar);
             filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);

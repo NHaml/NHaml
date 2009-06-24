@@ -1,24 +1,23 @@
 using System.CodeDom;
 using System.Collections.Generic;
 using NHaml.Compilers;
+using NHaml.Rules;
 
 namespace NHaml.Web.MonoRail
 {
-    public class ComponentExtension : IMarkupExtension
+    public class ComponentMarkupRule : MarkupRule
     {
         private static int tempDictionaryCount;
 
-        public string Name
-        {
-            get { return "Component"; }
-        }
-
-
-		public BlockClosingAction Render(TemplateParser templateParser, string normalizedSuffix)
+		public override BlockClosingAction Render(TemplateParser templateParser)
         {
 
             var dictionary = string.Empty;
             string componentName;
+
+            var text = templateParser.CurrentInputLine.NormalizedText.TrimStart();
+            var indexOfSpace = text.IndexOf(' ');
+            var normalizedSuffix = text.Substring(indexOfSpace + 1, text.Length - indexOfSpace - 1);
 			if (normalizedSuffix.Contains("{"))
             {
 				var indexOf = normalizedSuffix.IndexOf(' ');
@@ -142,5 +141,12 @@ namespace NHaml.Web.MonoRail
     			newKeyValueExpression.Parameters.Add(concatExpression);
     		}
     	}
+
+        public override string Signifier
+        {
+            get { return "$Component"; }
+        }
+
+     
     }
 }

@@ -79,11 +79,9 @@
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
-    <Compile Include="Rules\NamedExtensionRule.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="ParsedAttributeType.cs" />
     <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
-    <Compile Include="IMarkupExtension.cs" />
     <Compile Include="Rules\MetaMarkupRule.cs" />
     <Compile Include="TemplateOptions.cs" />
     <Compile Include="TemplateParser.cs" />

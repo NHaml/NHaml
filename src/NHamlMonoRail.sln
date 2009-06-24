@@ -1,0 +1,51 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 10.00
+# Visual Studio 2008
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml", "NHaml\NHaml.csproj", "{9B885FC4-45C0-4526-9253-A799238EDD66}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB-34CF-4A08-B70B-6582290AA010}"
+	ProjectSection(SolutionItems) = preProject
+		CodingStandards.txt = CodingStandards.txt
+		License.txt = License.txt
+		NHaml.snk = NHaml.snk
+		SharedAssemblyInfo.cs = SharedAssemblyInfo.cs
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3A6FD686-BE88-44A8-8511-AB2E3EB54C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail", "NHaml.Web.MonoRail\NHaml.Web.MonoRail.csproj", "{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.MonoRail", "Samples\NHaml.Samples.MonoRail\NHaml.Samples.MonoRail.csproj", "{F461BA12-81DF-4027-97B0-432473217259}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail.Tests", "NHaml.Web.MonoRail.Tests\NHaml.Web.MonoRail.Tests.csproj", "{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9B885FC4-45C0-4526-9253-A799238EDD66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9B885FC4-45C0-4526-9253-A799238EDD66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9B885FC4-45C0-4526-9253-A799238EDD66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9B885FC4-45C0-4526-9253-A799238EDD66}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F461BA12-81DF-4027-97B0-432473217259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F461BA12-81DF-4027-97B0-432473217259}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F461BA12-81DF-4027-97B0-432473217259} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
+	EndGlobalSection
+EndGlobal

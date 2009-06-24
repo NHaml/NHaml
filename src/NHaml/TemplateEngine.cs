@@ -50,9 +50,9 @@ namespace NHaml
             var start = inputLine.Text.TrimStart();
             foreach (var keyValuePair in Options.MarkupRules)
             {
-                if (start.StartsWith(keyValuePair.Key))
+                if (start.StartsWith(keyValuePair.Signifier))
                 {
-                    return keyValuePair.Value;
+                    return keyValuePair;
                 }
             }
             return PlainTextMarkupRule.Instance;

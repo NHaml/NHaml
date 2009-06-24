@@ -13,7 +13,6 @@ namespace NHaml
 {
     public class TemplateOptions
     {
-        private readonly IDictionary<string, IMarkupExtension> _markupExtensions;
         private int _indentSize;
 
         private Type _templateBaseType;
@@ -31,11 +30,10 @@ namespace NHaml
             } );
             AutoClosingTags = new Set<string>( new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"} );
 
-            MarkupRules = new SortedDictionary<string, MarkupRule>(new MarkupRuleComparer());
+            MarkupRules = new List<MarkupRule>();
             _indentSize = 2;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharp3TemplateCompiler();
-            _markupExtensions = new Dictionary<string, IMarkupExtension>();
 
             AddRule( new EofMarkupRule() );
             AddRule( new MetaMarkupRule() );
@@ -50,7 +48,6 @@ namespace NHaml
             AddRule( new CommentMarkupRule() );
             AddRule( new EscapeMarkupRule() );
             AddRule( new PartialMarkupRule() );
-            AddRule( new NamedExtensionRule() );
             AddRule( new NotEncodedEvalMarkupRule() );
         }
 
@@ -80,7 +77,12 @@ namespace NHaml
 
         public Set<string>  References { get; private set; }
 
-        public SortedDictionary<string, MarkupRule> MarkupRules { get; private set; }
+        /// <summary>
+        /// </summary>
+        /// <remarks>
+        /// Use <see cref="AddRule"/> to add new rules
+        /// </remarks>
+        public List<MarkupRule> MarkupRules { get; private set; }
 
         public ITemplateCompiler TemplateCompiler
         {
@@ -117,19 +119,6 @@ namespace NHaml
             }
         }
 
-        public void AddExtension( IMarkupExtension markupExtension )
-        {
-            Invariant.ArgumentNotNull( markupExtension, "markupExtension" );
-
-            _markupExtensions.Add( markupExtension.Name, markupExtension );
-        }
-
-        public IMarkupExtension GetExtension( string name )
-        {
-            Invariant.ArgumentNotNull( name, "name" );
-
-            return _markupExtensions[name];
-        }
 
         public event EventHandler TemplateCompilerChanged;
         public event EventHandler TemplateBaseTypeChanged;
@@ -137,8 +126,12 @@ namespace NHaml
         public void AddRule( MarkupRule markupRule )
         {
             Invariant.ArgumentNotNull( markupRule, "markupRule" );
-
-            MarkupRules.Add(markupRule.Signifier, markupRule);
+            if (MarkupRules.Find(x => x.Signifier == markupRule.Signifier) != null)
+            {
+                throw new ArgumentException(string.Format("A MarkupRule with the signifier '{0}' has already been added.", markupRule.Signifier));
+            }
+            MarkupRules.Add(markupRule);
+            MarkupRules.Sort((x,y) => x.Signifier.Length.CompareTo(y.Signifier.Length));
         }
 
         public bool IsAutoClosingTag( string tag )
@@ -181,11 +174,5 @@ namespace NHaml
         }
     }
 
-    public class MarkupRuleComparer : IComparer<string>
-    {
-        public int Compare(string x, string y)
-        {
-            return x.CompareTo(y);
-        }
-    }
+
 }

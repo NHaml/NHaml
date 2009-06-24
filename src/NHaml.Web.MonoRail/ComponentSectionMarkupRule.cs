@@ -1,15 +1,15 @@
+using NHaml.Rules;
+
 namespace NHaml.Web.MonoRail
 {
-    public class ComponentSectionExtension : IMarkupExtension
+    public class ComponentSectionMarkupRule : MarkupRule
     {
-        public string Name
-        {
-            get { return "Section"; }
-        }
 
-		public BlockClosingAction Render(TemplateParser templateParser, string normalizedSuffix)
+		public override BlockClosingAction Render(TemplateParser templateParser)
         {
-			var sectionName = normalizedSuffix;
+            var text = templateParser.CurrentInputLine.NormalizedText.TrimStart();
+		    var indexOfSpace = text.IndexOf(' ');
+            var sectionName = text.Substring(indexOfSpace + 1, text.Length - indexOfSpace - 1);
             var code = string.Format("{0}).AddSection(\"{1}\", x =>", templateParser.CurrentInputLine.Indent, sectionName);
 
             templateParser.TemplateClassBuilder.EndCodeBlock();
@@ -22,5 +22,11 @@ namespace NHaml.Web.MonoRail
             return templateParser.TemplateClassBuilder.Unindent;
         }
 
+        public override string Signifier
+        {
+            get { return "$Section"; }
+        }
+
+    
     }
 }

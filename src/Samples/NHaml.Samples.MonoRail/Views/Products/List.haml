@@ -1,4 +1,5 @@
 - Category category = (Category)ViewData["category"]
+$Component SimpleComponent
 %h2= category.CategoryName
 %ul
   - foreach (var product in category.Products)

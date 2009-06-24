@@ -63,8 +63,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ComponentExtension.cs" />
-    <Compile Include="ComponentSectionExtension.cs" />
+    <Compile Include="ComponentMarkupRule.cs" />
+    <Compile Include="ComponentSectionMarkupRule.cs" />
     <Compile Include="NHamlMonoRailView.cs" />
     <Compile Include="NHamlMonoRailViewEngine.cs" />
     <Compile Include="NHamlViewComponentContext.cs">
