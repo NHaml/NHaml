@@ -35,21 +35,10 @@ namespace NHaml.Rules
             }
             else
             {
-                var parentViewSource = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex];
+                var parentViewSource = templateParser.MergedTemplatePaths[0];
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
                 var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, parentViewSource);
                 templateParser.MergeTemplate(source, true);
-                //var templateDirectory = Path.GetDirectoryName( templateParser.TemplatePath);
-
-
-                //var partialTemplatePath = Path.Combine( templateDirectory, partialName + ".haml" );
-
-                //if( !File.Exists( partialTemplatePath ) )
-                //{
-                //    partialTemplatePath = Path.Combine( templateDirectory, @"..\" + partialName + ".haml" );
-                //}
-
-                //templateParser.MergeTemplate( partialTemplatePath, true );
             }
 
             return EmptyClosingAction;
