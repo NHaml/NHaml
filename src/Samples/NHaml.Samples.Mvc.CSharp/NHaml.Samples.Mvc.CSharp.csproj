@@ -137,7 +137,8 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
+    <PreBuildEvent>del /q/f $(TargetDir)*.*
+copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
 copy $(ProjectDir)Web.net35.config $(ProjectDir)Web.config</PreBuildEvent>
   </PropertyGroup>
 </Project>

@@ -93,7 +93,7 @@ namespace NHaml
             InputLines = new LinkedList<InputLine>();
             InputLines.AddLast( new InputLine( string.Empty, 0, TemplateEngine.Options.IndentSize ) );
 
-            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar.ToString(), 1, TemplateEngine.Options.IndentSize ) );
+            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar, 1, TemplateEngine.Options.IndentSize ) );
 
             CurrentNode = InputLines.First.Next;
             for (CurrentTemplateIndex = 0; CurrentTemplateIndex < MergedTemplatePaths.Count; CurrentTemplateIndex++)
