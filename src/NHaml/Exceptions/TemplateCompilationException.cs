@@ -6,7 +6,6 @@ using System.Runtime.Serialization;
 using System.Security.Permissions;
 using System.Text;
 
-using NHaml.Properties;
 using NHaml.Utils;
 
 namespace NHaml.Exceptions
@@ -20,7 +19,7 @@ namespace NHaml.Exceptions
             var message = new StringBuilder();
             var lines = templateSource.Replace( "\r", "" ).Split( '\n' );
 
-            message.AppendLine( Utility.FormatCurrentCulture( Resources.CompilationError, templatePath ) );
+            message.AppendLine(Utility.FormatCurrentCulture("An error occurred when compiling the file: {0}", templatePath));
             message.AppendLine();
 
             foreach( CompilerError error in compilerResults.Errors )

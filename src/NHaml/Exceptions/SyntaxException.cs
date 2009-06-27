@@ -3,7 +3,6 @@ using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Security.Permissions;
 
-using NHaml.Properties;
 using NHaml.Utils;
 
 namespace NHaml.Exceptions
@@ -46,7 +45,7 @@ namespace NHaml.Exceptions
 
         public static void Throw( InputLine inputLine, string errorFormat, params object[] values )
         {
-            var message = Utility.FormatCurrentCulture( Resources.SyntaxError, inputLine.LineNumber,
+            var message = Utility.FormatCurrentCulture( "Syntax error on line {0}: {1}: '{2}'", inputLine.LineNumber,
               Utility.FormatCurrentCulture( errorFormat, values ),
               inputLine.Text );
 

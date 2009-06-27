@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
-using NHaml.Properties;
 
 namespace NHaml
 {
@@ -80,7 +79,7 @@ namespace NHaml
         {
             if( (Indent.Length % _indentSize) != 0 )
             {
-                SyntaxException.Throw( this, Resources.IllegalIndentationSpaces, _indentSize );
+                SyntaxException.Throw(this, "Illegal Indentation: Only {0} space character(s) allowed as indentation", _indentSize);
             }
         }
 

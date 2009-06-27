@@ -1,10 +1,11 @@
 using System;
-using NHaml.Properties;
 
 namespace NHaml.Rules
 {
     public class PartialMarkupRule : MarkupRule
     {
+        private const string NoPartialName = "No partial name specified and template is not a layout";
+
         public override string Signifier
         {
             get { return "_"; }
@@ -23,12 +24,12 @@ namespace NHaml.Rules
             {
                 if (templateParser.CurrentTemplateIndex + 1 == templateParser.MergedTemplatePaths.Count)
                 {
-                    throw new InvalidOperationException(Resources.NoPartialName);
+                    throw new InvalidOperationException(NoPartialName);
                 }
                 var templatePath = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex + 1];
                 if (templatePath == null)
                 {
-                    throw new InvalidOperationException(Resources.NoPartialName);
+                    throw new InvalidOperationException(NoPartialName);
                 }
                 templateParser.MergeTemplate(templatePath, true);
                 templateParser.CurrentTemplateIndex++;

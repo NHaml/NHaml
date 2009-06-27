@@ -1,7 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 
 using NHaml.Exceptions;
-using NHaml.Properties;
 using NHaml.Utils;
 
 namespace NHaml.Rules
@@ -72,7 +71,7 @@ namespace NHaml.Rules
                 }
                 else
                 {
-                    SyntaxException.Throw(templateParser.CurrentInputLine, Resources.ErrorParsingTag,
+                    SyntaxException.Throw(templateParser.CurrentInputLine, ErrorParsingTag,
                                           templateParser.CurrentInputLine);
                 }
             }

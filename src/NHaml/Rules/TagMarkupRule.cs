@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
-using NHaml.Properties;
 
 namespace NHaml.Rules
 {
@@ -37,7 +36,7 @@ namespace NHaml.Rules
 
             if (!match.Success)
             {
-                SyntaxException.Throw(templateParser.CurrentInputLine, Resources.ErrorParsingTag,
+                SyntaxException.Throw(templateParser.CurrentInputLine, ErrorParsingTag,
                                       templateParser.CurrentInputLine);
             }
 

@@ -1,20 +1,13 @@
 using System;
 using System.IO;
 
-using NHaml.Properties;
 
 namespace NHaml.Utils
 {
     [System.Diagnostics.DebuggerStepThrough]
     public static class Invariant
     {
-        public static void IsNotNull( object maybeNull )
-        {
-            if( maybeNull == null )
-            {
-                throw new InvalidOperationException( Resources.ObjectNull );
-            }
-        }
+    
 
         public static void ArgumentNotNull( object argument, string argumentName )
         {
@@ -34,7 +27,7 @@ namespace NHaml.Utils
             if( argument.Length == 0 )
             {
                 throw new ArgumentOutOfRangeException(
-                  Utility.FormatCurrentCulture( Resources.StringCannotBeEmpty, argumentName ) );
+                  Utility.FormatCurrentCulture( "The provided string argument '{0}' cannot be empty", argumentName ) );
             }
         }
 

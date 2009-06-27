@@ -2,6 +2,7 @@ namespace NHaml.Rules
 {
     public abstract class MarkupRule
     {
+        public const string ErrorParsingTag = "Error parsing tag";
         public abstract string Signifier { get; }
 
         public static readonly BlockClosingAction EmptyClosingAction = () => { };

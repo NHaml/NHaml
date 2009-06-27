@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Web;
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp3;
-using NHaml.Properties;
 using NHaml.Rules;
 using NHaml.Utils;
 
@@ -106,7 +105,7 @@ namespace NHaml
                 Invariant.ArgumentNotNull( value, "value" );
 
                 if( !typeof(Template).IsAssignableFrom( value ) )
-                    throw new InvalidOperationException( Resources.InvalidTemplateBaseType );
+                    throw new InvalidOperationException("TemplateBaseType must inherit from CompiledTemplate");
 
                 _templateBaseType = value;
 

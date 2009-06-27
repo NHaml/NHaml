@@ -101,11 +101,6 @@
     </Compile>
     <Compile Include="OutputWriter.cs" />
     <Compile Include="Rules\MarkupRule.cs" />
-    <Compile Include="Properties\Resources.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>Resources.resx</DependentUpon>
-    </Compile>
     <Compile Include="Rules\ClassMarkupRule.cs" />
     <Compile Include="Rules\CommentMarkupRule.cs" />
     <Compile Include="Rules\PreambleMarkupRule.cs" />
@@ -125,13 +120,6 @@
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Properties\Resources.resx">
-      <Generator>ResXFileCodeGenerator</Generator>
-      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">

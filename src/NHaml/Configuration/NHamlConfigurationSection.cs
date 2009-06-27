@@ -9,7 +9,6 @@ using System.Web;
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
-using NHaml.Properties;
 using NHaml.Utils;
 
 namespace NHaml.Configuration
@@ -141,13 +140,13 @@ namespace NHaml.Configuration
             if( Type == null )
             {
                 throw new ConfigurationErrorsException(
-                  Utility.FormatCurrentCulture( Resources.TemplateCompilerTypeNotFound, templateCompiler ) );
+                  Utility.FormatCurrentCulture("TemplateCompiler type '{0}' not found", templateCompiler));
             }
 
             if( !typeof( ITemplateCompiler ).IsAssignableFrom( Type ) )
             {
                 throw new ConfigurationErrorsException(
-                  Utility.FormatCurrentCulture( Resources.NotAssignableToITemplateCompiler, templateCompiler ) );
+                  Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler));
             }
 
             return (ITemplateCompiler)Activator.CreateInstance( Type );

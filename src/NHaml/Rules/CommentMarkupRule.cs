@@ -2,7 +2,6 @@ using System.Text;
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
-using NHaml.Properties;
 
 namespace NHaml.Rules
 {
@@ -24,7 +23,7 @@ namespace NHaml.Rules
             if( !match.Success )
             {
                 SyntaxException.Throw( templateParser.CurrentInputLine,
-                  Resources.ErrorParsingTag, templateParser.CurrentInputLine );
+                  ErrorParsingTag, templateParser.CurrentInputLine);
             }
 
             var ieBlock = match.Groups[1].Value;
