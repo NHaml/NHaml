@@ -1,14 +1,14 @@
 ﻿using System.Configuration;
 using System.Web.Mvc;
-
+using NHaml.Samples.Mvc.CSharp.Models;
 using NHaml.Samples.Mvc.Models;
 
-namespace NHaml.Samples.Mvc.Controllers
+namespace NHaml.Samples.Mvc.CSharp.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly NorthwindDataContext northwind = new NorthwindDataContext(
-          ConfigurationManager.ConnectionStrings["NorthwindConnectionString"].ConnectionString );
+            ConfigurationManager.ConnectionStrings["NorthwindConnectionString"].ConnectionString );
 
         //
         // Products/Category/1
@@ -26,10 +26,10 @@ namespace NHaml.Samples.Mvc.Controllers
         public ActionResult New()
         {
             var viewData = new ProductsNewViewData
-                             {
-                                 Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName" ),
-                                 Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName" )
-                             };
+                               {
+                                   Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName" ),
+                                   Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName" )
+                               };
 
             return View( "New", viewData );
         }

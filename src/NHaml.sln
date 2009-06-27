@@ -21,7 +21,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.IronRuby", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc", "NHaml.Web.Mvc\NHaml.Web.Mvc.csproj", "{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc", "Samples\NHaml.Samples.Mvc\NHaml.Samples.Mvc.csproj", "{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp", "Samples\NHaml.Samples.Mvc.CSharp\NHaml.Samples.Mvc.CSharp.csproj", "{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.IronRuby", "Samples\NHaml.Samples.Mvc.IronRuby\NHaml.Samples.Mvc.IronRuby.csproj", "{87E05CD0-D7D0-4073-BE09-D8AB9934FFB4}"
 EndProject
