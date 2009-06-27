@@ -1,6 +1,11 @@
 using System;
 using System.Data.Linq;
 using System.Linq.Expressions;
+
+#if (NET4)
+using System.Reflection;
+using System.Security;
+#endif
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
@@ -16,14 +21,23 @@ namespace NHaml.Web.Mvc
     {
         private readonly TemplateEngine _templateEngine = new TemplateEngine();
 
-        public virtual string DefaultMaster { get; set; }
 
+        public string DefaultMaster { get; set; }
+
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         public NHamlMvcViewEngine()
         {
             InitializeTemplateEngine();
             InitializeViewLocations();
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         private void InitializeTemplateEngine()
         {
             DefaultMaster = "Application";
@@ -35,6 +49,9 @@ namespace NHaml.Web.Mvc
 
             _templateEngine.Options.AddUsing( "NHaml.Web.Mvc" );
 
+#if NET4
+            _templateEngine.Options.AddReference( Assembly.Load("System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35").Location );
+#endif
             _templateEngine.Options.AddReference( typeof( UserControl ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( RouteValueDictionary ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
@@ -66,6 +83,10 @@ namespace NHaml.Web.Mvc
             PartialViewLocationFormats = ViewLocationFormats;
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             if (string.IsNullOrEmpty(masterName))
@@ -91,6 +112,10 @@ namespace NHaml.Web.Mvc
                 GetViewBaseType(controllerContext)).CreateInstance();
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
             return (IView)_templateEngine.Compile(
@@ -104,6 +129,10 @@ namespace NHaml.Web.Mvc
             get { return typeof(NHamlMvcView<>); }
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         protected virtual Type GetViewBaseType(ControllerContext controllerContext)
         {
             var modelType = typeof(object);

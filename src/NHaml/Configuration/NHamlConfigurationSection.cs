@@ -9,6 +9,7 @@ using System.Web;
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
+using NHaml.Compilers.CSharp4;
 using NHaml.Utils;
 
 namespace NHaml.Configuration
@@ -111,45 +112,52 @@ namespace NHaml.Configuration
 
             var csharp2Type = typeof( CSharp2TemplateCompiler );
             var csharp3Type = typeof( CSharp3TemplateCompiler );
+            var csharp4Type = typeof( CSharp4TemplateCompiler );
 
-            Type Type;
+            Type type;
 
             if( templateCompiler.IndexOf( Type.Delimiter ) == -1 )
             {
-                if( !templateCompiler.EndsWith( "TemplateCompiler", StringComparison.OrdinalIgnoreCase ) )
+                if (!templateCompiler.EndsWith("TemplateCompiler", StringComparison.OrdinalIgnoreCase))
                 {
                     templateCompiler += "TemplateCompiler";
                 }
 
-                if( templateCompiler.Equals( csharp2Type.Name, StringComparison.OrdinalIgnoreCase ) )
+                if (templateCompiler.Equals(csharp2Type.Name, StringComparison.OrdinalIgnoreCase))
                 {
-                    Type = csharp2Type;
+                    type = csharp2Type;
+                }
+                else if (templateCompiler.Equals(csharp3Type.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    type = csharp3Type;
+                }
+                else if (templateCompiler.Equals(csharp4Type.Name, StringComparison.OrdinalIgnoreCase))
+                {
+                    type = csharp4Type;
                 }
                 else
                 {
-                    Type = templateCompiler.Equals( csharp3Type.Name, StringComparison.OrdinalIgnoreCase )
-                      ? csharp3Type
-                      : Type.GetType( templateCompiler, false );
+                    type = Type.GetType(templateCompiler, false);
                 }
             }
             else
             {
-                Type = Type.GetType( templateCompiler, false );
+                type = Type.GetType( templateCompiler, false );
             }
 
-            if( Type == null )
+            if( type == null )
             {
                 throw new ConfigurationErrorsException(
                   Utility.FormatCurrentCulture("TemplateCompiler type '{0}' not found", templateCompiler));
             }
 
-            if( !typeof( ITemplateCompiler ).IsAssignableFrom( Type ) )
+            if( !typeof( ITemplateCompiler ).IsAssignableFrom( type ) )
             {
                 throw new ConfigurationErrorsException(
                   Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler));
             }
 
-            return (ITemplateCompiler)Activator.CreateInstance( Type );
+            return (ITemplateCompiler)Activator.CreateInstance( type );
         }
     }
 }

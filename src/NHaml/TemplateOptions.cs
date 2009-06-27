@@ -20,34 +20,34 @@ namespace NHaml
 
         public TemplateOptions()
         {
-            Usings = new Set<string>( new[] {"System", "System.IO", "System.Web", "NHaml", "NHaml.Utils", "System.Collections.Generic"} );
-            References = new Set<string>( new[]
+            Usings = new Set<string>(new[] { "System", "System.IO", "System.Web", "NHaml", "NHaml.Utils", "System.Collections.Generic" });
+            References = new Set<string>(new[]
             {
                 typeof(TemplateEngine).Assembly.Location, // NHaml
                 typeof(INotifyPropertyChanged).Assembly.Location, // System
                 typeof(HttpUtility).Assembly.Location // System.Web
-            } );
-            AutoClosingTags = new Set<string>( new[] {"META", "IMG", "LINK", "BR", "HR", "INPUT"} );
+            });
+            AutoClosingTags = new Set<string>(new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" });
 
             MarkupRules = new List<MarkupRule>();
             _indentSize = 2;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharp3TemplateCompiler();
 
-            AddRule( new EofMarkupRule() );
-            AddRule( new MetaMarkupRule() );
-            AddRule( new DocTypeMarkupRule() );
-            AddRule( new TagMarkupRule() );
-            AddRule( new ClassMarkupRule() );
-            AddRule( new IdMarkupRule() );
-            AddRule( new EvalMarkupRule() );
-            AddRule( new EncodedEvalMarkupRule() );
-            AddRule( new SilentEvalMarkupRule() );
-            AddRule( new PreambleMarkupRule() );
-            AddRule( new CommentMarkupRule() );
-            AddRule( new EscapeMarkupRule() );
-            AddRule( new PartialMarkupRule() );
-            AddRule( new NotEncodedEvalMarkupRule() );
+            AddRule(new EofMarkupRule());
+            AddRule(new MetaMarkupRule());
+            AddRule(new DocTypeMarkupRule());
+            AddRule(new TagMarkupRule());
+            AddRule(new ClassMarkupRule());
+            AddRule(new IdMarkupRule());
+            AddRule(new EvalMarkupRule());
+            AddRule(new EncodedEvalMarkupRule());
+            AddRule(new SilentEvalMarkupRule());
+            AddRule(new PreambleMarkupRule());
+            AddRule(new CommentMarkupRule());
+            AddRule(new EscapeMarkupRule());
+            AddRule(new PartialMarkupRule());
+            AddRule(new NotEncodedEvalMarkupRule());
         }
 
         public Set<string> AutoClosingTags { get; private set; }
@@ -69,12 +69,12 @@ namespace NHaml
         public int IndentSize
         {
             get { return _indentSize; }
-            set { _indentSize = UseTabs ? 1 : Math.Max( 2, value ); }
+            set { _indentSize = UseTabs ? 1 : Math.Max(2, value); }
         }
 
         public Set<string> Usings { get; private set; }
 
-        public Set<string>  References { get; private set; }
+        public Set<string> References { get; private set; }
 
         /// <summary>
         /// </summary>
@@ -88,12 +88,12 @@ namespace NHaml
             get { return _templateCompiler; }
             set
             {
-                Invariant.ArgumentNotNull( value, "value" );
+                Invariant.ArgumentNotNull(value, "value");
 
                 _templateCompiler = value;
 
-                if( TemplateCompilerChanged != null )
-                    TemplateCompilerChanged( this, EventArgs.Empty );
+                if (TemplateCompilerChanged != null)
+                    TemplateCompilerChanged(this, EventArgs.Empty);
             }
         }
 
@@ -102,19 +102,19 @@ namespace NHaml
             get { return _templateBaseType; }
             set
             {
-                Invariant.ArgumentNotNull( value, "value" );
+                Invariant.ArgumentNotNull(value, "value");
 
-                if( !typeof(Template).IsAssignableFrom( value ) )
+                if (!typeof(Template).IsAssignableFrom(value))
                     throw new InvalidOperationException("TemplateBaseType must inherit from CompiledTemplate");
 
                 _templateBaseType = value;
 
-                AddReferences( _templateBaseType );
+                AddReferences(_templateBaseType);
 
-                Usings.Add( _templateBaseType.Namespace );
+                Usings.Add(_templateBaseType.Namespace);
 
-                if( TemplateBaseTypeChanged != null )
-                    TemplateBaseTypeChanged( this, EventArgs.Empty );
+                if (TemplateBaseTypeChanged != null)
+                    TemplateBaseTypeChanged(this, EventArgs.Empty);
             }
         }
 
@@ -122,54 +122,64 @@ namespace NHaml
         public event EventHandler TemplateCompilerChanged;
         public event EventHandler TemplateBaseTypeChanged;
 
-        public void AddRule( MarkupRule markupRule )
+        public void AddRule(MarkupRule markupRule)
         {
-            Invariant.ArgumentNotNull( markupRule, "markupRule" );
+            Invariant.ArgumentNotNull(markupRule, "markupRule");
             if (MarkupRules.Find(x => x.Signifier == markupRule.Signifier) != null)
             {
                 throw new ArgumentException(string.Format("A MarkupRule with the signifier '{0}' has already been added.", markupRule.Signifier));
             }
             MarkupRules.Add(markupRule);
-            MarkupRules.Sort((x,y) => x.Signifier.Length.CompareTo(y.Signifier.Length));
+            MarkupRules.Sort((x, y) => x.Signifier.Length.CompareTo(y.Signifier.Length));
         }
 
-        public bool IsAutoClosingTag( string tag )
+        public bool IsAutoClosingTag(string tag)
         {
-            Invariant.ArgumentNotEmpty( tag, "tag" );
+            Invariant.ArgumentNotEmpty(tag, "tag");
 
-            return AutoClosingTags.Contains( tag.ToUpperInvariant() );
+            return AutoClosingTags.Contains(tag.ToUpperInvariant());
         }
 
-        public void AddUsing( string @namespace )
+        public void AddUsing(string @namespace)
         {
-            Invariant.ArgumentNotEmpty( @namespace, "namespace" );
+            Invariant.ArgumentNotEmpty(@namespace, "namespace");
 
-            Usings.Add( @namespace );
+            Usings.Add(@namespace);
         }
 
-        public void AddReferences( Type type )
+        public void AddReferences(Type type)
         {
-            AddReference( type.Assembly.Location );
+            AddReference(type.Assembly.Location);
 
-            if( !type.IsGenericType )
+            if (!type.IsGenericType)
+            {
                 return;
+            }
 
-            foreach( var t in type.GetGenericArguments() )
-                AddReferences( t );
+            foreach (var t in type.GetGenericArguments())
+            {
+                AddReferences(t);
+            }
         }
 
-        public void AddReference( string assemblyLocation )
+        public void AddReference(string assemblyLocation)
         {
-            Invariant.ArgumentNotEmpty( assemblyLocation, "assemblyLocation" );
-
-            References.Add( assemblyLocation );
+            Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
+            //TODO: sort this with iron ruby
+#if NET4
+            if (assemblyLocation.ToLower().EndsWith("mscorlib.dll"))
+            {
+                return;
+            }
+#endif
+            References.Add(assemblyLocation);
         }
 
-        public void AddReference( Assembly assembly )
+        public void AddReference(Assembly assembly)
         {
-            Invariant.ArgumentNotNull( assembly, "assembly" );
+            Invariant.ArgumentNotNull(assembly, "assembly");
 
-            References.Add( assembly.Location );
+            AddReference(assembly.Location);
         }
     }
 

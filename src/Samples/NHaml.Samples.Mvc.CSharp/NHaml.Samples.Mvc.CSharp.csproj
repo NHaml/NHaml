@@ -58,7 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Global.asax" />
-    <Content Include="Web.config" />
+    <Content Include="Web.net35.config" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\HomeController.cs" />
@@ -83,6 +83,7 @@
     <Service Include="{3259AA49-8AA1-44D3-9025-A0B520596A8C}" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Web.config" />
     <None Include="Views\Home\About.haml" />
     <None Include="Views\Home\Index.haml" />
     <None Include="Views\Products\List.haml" />
@@ -136,6 +137,7 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" </PreBuildEvent>
+    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
+copy $(ProjectDir)Web.net35.config $(ProjectDir)Web.config</PreBuildEvent>
   </PropertyGroup>
 </Project>

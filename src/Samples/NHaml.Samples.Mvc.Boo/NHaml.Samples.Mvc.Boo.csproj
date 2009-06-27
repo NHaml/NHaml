@@ -94,6 +94,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="web.net35.config" />
     <None Include="Views\Home\About.haml" />
     <None Include="Views\Home\Index.haml" />
     <None Include="Views\Products\Edit.haml" />
@@ -136,7 +137,8 @@
     </VisualStudio>
   </ProjectExtensions>
   <PropertyGroup>
-    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" </PreBuildEvent>
+    <PreBuildEvent>copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
+copy $(ProjectDir)Web.net35.config $(ProjectDir)Web.config</PreBuildEvent>
     <PostBuildEvent>del $(TargetDir)Microsoft.Scripting.ExtensionAttribute.*</PostBuildEvent>
   </PropertyGroup>
 </Project>

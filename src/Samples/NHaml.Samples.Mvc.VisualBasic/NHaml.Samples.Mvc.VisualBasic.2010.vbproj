@@ -1,21 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.30729</ProductVersion>
+    <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}</ProjectGuid>
     <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{F184B08F-C81C-45F6-A57F-5ABD9991F28F}</ProjectTypeGuids>
     <OutputType>Library</OutputType>
     <RootNamespace>NHaml.Samples.Mvc.VisualBasic</RootNamespace>
     <AssemblyName>NHaml.Samples.Mvc.VisualBasic</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <MyType>Custom</MyType>
     <OptionExplicit>On</OptionExplicit>
     <OptionCompare>Text</OptionCompare>
     <OptionStrict>Off</OptionStrict>
     <OptionInfer>On</OptionInfer>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
+    <OldToolsVersion>3.5</OldToolsVersion>
+    <UpgradeBackupLocation />
+    <TargetFrameworkProfile />
+    <LangVersion />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -119,7 +125,6 @@
     <Compile Include="Models\ProductsEditViewData.vb" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Web.net35.config" />
     <None Include="Views\Home\About.haml" />
     <None Include="Views\Home\Index.haml" />
     <None Include="Views\Products\Edit.haml" />
@@ -129,6 +134,7 @@
     <None Include="Views\Shared\Application.haml" />
     <None Include="Views\Shared\Products.haml" />
     <None Include="Views\Shared\_Button.haml" />
+    <Content Include="Web.net4.config" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\NHaml.Web.Mvc.VisualBasic\NHaml.Web.Mvc.VisualBasic.csproj">
@@ -144,7 +150,7 @@
     <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v9.0\WebApplications\Microsoft.WebApplication.targets" />
+  <Import Project="$(MSBuildExtensionsPath)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -158,7 +164,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>16761</DevelopmentServerPort>
+          <DevelopmentServerPort>1600</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>
           </IISUrl>
@@ -173,6 +179,6 @@
   </ProjectExtensions>
   <PropertyGroup>
     <PostBuildEvent>del $(TargetDir)Microsoft.Scripting.ExtensionAttribute.*</PostBuildEvent>
-    <PreBuildEvent>copy $(ProjectDir)Web.net35.config $(ProjectDir)Web.config</PreBuildEvent>
+    <PreBuildEvent>copy $(ProjectDir)Web.net4.config $(ProjectDir)Web.config</PreBuildEvent>
   </PropertyGroup>
 </Project>
