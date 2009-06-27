@@ -162,6 +162,6 @@
   <PropertyGroup>
     <PostBuildEvent>
     </PostBuildEvent>
-    <PreBuildEvent>copy $(ProjectDir)Web.net35.config $(ProjectDir)Web.config</PreBuildEvent>
+    <PreBuildEvent>copy "$(ProjectDir)Web.net35.config" "$(ProjectDir)Web.config"</PreBuildEvent>
   </PropertyGroup>
 </Project>
