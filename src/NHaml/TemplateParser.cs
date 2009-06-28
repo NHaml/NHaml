@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using NHaml.Compilers;
 using NHaml.Rules;
 using NHaml.TemplateResolution;
-using NHaml.Utils;
 
 namespace NHaml
 {
@@ -17,7 +16,6 @@ namespace NHaml
             IList<IViewSource> layoutPaths, IViewSource templatePath2)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
-            InputFiles = new Set<IViewSource>();
             TemplateEngine = templateEngine;
             TemplateClassBuilder = templateClassBuilder;
             TemplatePath = templatePath2;
@@ -26,12 +24,6 @@ namespace NHaml
             MergedTemplatePaths.Add(templatePath2);
 
             Meta = new Dictionary<string, string>();
-
-            foreach (var layoutPath in layoutPaths)
-            {
-                InputFiles.Add(layoutPath);
-            }
-            InputFiles.Add(templatePath2);
 
             if( TemplateEngine.Options.UseTabs )
             {
@@ -52,8 +44,6 @@ namespace NHaml
     	public IViewSource TemplatePath { get; private set; }
 
         public List<IViewSource> MergedTemplatePaths { get; private set; }
-
-        public Set<IViewSource> InputFiles { get; private set; }
 
         private LinkedList<InputLine> InputLines { get; set; }
 
@@ -168,7 +158,6 @@ namespace NHaml
             }
                 CurrentNode = previous.Next;
 
-            InputFiles.Add( templatePath );
         }
 
         public void CloseBlocks()
