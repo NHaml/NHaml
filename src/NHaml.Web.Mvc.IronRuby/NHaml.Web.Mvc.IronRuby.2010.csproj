@@ -93,7 +93,8 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web.Mvc, Version=1.1.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <SpecificVersion>True</SpecificVersion>
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\MVC1.1\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
@@ -104,9 +105,9 @@
       <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
       <Name>NHaml.Compilers.IronRuby</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
+    <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.2010.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
-      <Name>NHaml.Web.Mvc</Name>
+      <Name>NHaml.Web.Mvc.2010</Name>
     </ProjectReference>
     <ProjectReference Include="..\NHaml\NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
