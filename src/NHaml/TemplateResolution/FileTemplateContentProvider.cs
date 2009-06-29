@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using NHaml.Utils;
 
 namespace NHaml.TemplateResolution
 {
@@ -14,21 +15,24 @@ namespace NHaml.TemplateResolution
 
         public IViewSource GetViewSource(string templateName)
         {
-            return GetViewSource(templateName, null);
+            return GetViewSource(templateName, new List<IViewSource>());
         }
 
-        public IViewSource GetViewSource(string templateName, IViewSource parentViewSource)
+        public IViewSource GetViewSource(string templateName, IList<IViewSource> parentViewSourceList)
         {
+            Invariant.ArgumentNotEmpty(templateName, "templateName");
+            Invariant.ArgumentNotNull(parentViewSourceList, "parentViewSourceList");
             templateName = SuffixWithHaml(templateName);
             var fileInfo = CreateFileInfo(templateName);
             if (fileInfo != null && fileInfo.Exists)
             {
                 return new FileViewSource(fileInfo);
             }
-            if (parentViewSource != null)
+            for (var index = 0; index < parentViewSourceList.Count; index++)
             {
+                var source = parentViewSourceList[index];
                 //search where the current parent template exists
-                var parentDirectory = Path.GetDirectoryName(parentViewSource.Path);
+                var parentDirectory = Path.GetDirectoryName(source.Path);
                 var combine = Path.Combine(parentDirectory, templateName);
                 if (File.Exists(combine))
                 {

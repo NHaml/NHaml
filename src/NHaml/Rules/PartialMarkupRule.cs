@@ -36,9 +36,8 @@ namespace NHaml.Rules
             }
             else
             {
-                var parentViewSource = templateParser.MergedTemplatePaths[0];
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
-                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, parentViewSource);
+                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, templateParser.MergedTemplatePaths);
                 templateParser.MergeTemplate(source, true);
             }
 
