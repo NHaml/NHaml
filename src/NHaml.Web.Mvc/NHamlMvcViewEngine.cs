@@ -105,6 +105,10 @@ namespace NHaml.Web.Mvc
             return base.FindView(controllerContext, viewName, masterName, useCache);
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
             return (IView)_templateEngine.Compile(
@@ -124,6 +128,10 @@ namespace NHaml.Web.Mvc
                 GetViewBaseType(controllerContext)).CreateInstance();
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         protected virtual Type ViewGenericBaseType
         {
             get { return typeof(NHamlMvcView<>); }
@@ -154,6 +162,10 @@ namespace NHaml.Web.Mvc
             return ViewGenericBaseType.MakeGenericType(modelType);
         }
 
+#if NET4
+        [SecuritySafeCritical]
+        [SecurityCritical]
+#endif
         protected virtual string VirtualPathToPhysicalPath(RequestContext context, string path)
         {
             return context.HttpContext.Request.MapPath(path);
