@@ -7,6 +7,7 @@ using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
 using NHaml.Compilers.FSharp;
 using NHaml.Compilers.IronRuby;
+using NHaml.Compilers.VisualBasic;
 using NHaml.Configuration;
 
 using NUnit.Framework;
@@ -33,6 +34,13 @@ namespace NHaml.Tests
         {
             CreateAndAssertTemplateCompiler( "NHaml.Compilers.IronRuby.IronRubyTemplateCompiler, NHaml.Compilers.IronRuby",
               typeof( IronRubyTemplateCompiler ) );
+        }
+
+        [Test]
+        public void CanCreateVisualBasiTemplateCompilerFromFullName()
+        {
+            CreateAndAssertTemplateCompiler("NHaml.Compilers.VisualBasic.VisualBasicTemplateCompiler, NHaml.Compilers.VisualBasic",
+              typeof(VisualBasicTemplateCompiler));
         }
 
         [Test]
