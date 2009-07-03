@@ -38,7 +38,7 @@ namespace NHaml.Web.MonoRail
 
             ViewContext = engineContext;
 
-            ViewData = controllerContext.PropertyBag;
+            PropertyBag = controllerContext.PropertyBag;
 
             CreateHelpers(engineContext);
 
@@ -69,7 +69,7 @@ namespace NHaml.Web.MonoRail
 
         public IEngineContext ViewContext { get; private set; }
 
-        public IDictionary ViewData { get; private set; }
+        public IDictionary PropertyBag { get; private set; }
 
         public NHamlMonoRailViewEngine ViewEngine { get; set; }
 
@@ -110,7 +110,9 @@ namespace NHaml.Web.MonoRail
         public void AddViewComponentProperties(IDictionary newProperties)
         {
             if (viewComponentsParameters == null)
+            {
                 viewComponentsParameters = new ArrayList();
+            }
             viewComponentsParameters.Insert(0, newProperties);
         }
 
@@ -121,7 +123,9 @@ namespace NHaml.Web.MonoRail
         public void RemoveViewComponentProperties(IDictionary propertiesToRemove)
         {
             if (viewComponentsParameters == null)
+            {
                 return;
+            }
             viewComponentsParameters.Remove(propertiesToRemove);
         }
         /// <summary>
@@ -152,9 +156,9 @@ namespace NHaml.Web.MonoRail
         /// actually relative to ViewDirRoot
         /// </summary>
         /// <param name="subviewName"></param>
-        public string OutputSubView(string subviewName)
+        public void OutputSubView(string subviewName)
         {
-            return OutputSubView(subviewName, new Hashtable());
+             OutputSubView(subviewName, new Hashtable());
         }
 
         /// <summary>
@@ -162,11 +166,10 @@ namespace NHaml.Web.MonoRail
         /// just for this subview. This parameters are /not/ inheritable.
         /// </summary>
         /// <returns>An empty string, just to make it possible to use inline ${OutputSubView("foo")}</returns>
-        public string OutputSubView(string subviewName, IDictionary parameters)
+        public void OutputSubView(string subviewName, IDictionary parameters)
         {
             OutputSubView(subviewName, Output.TextWriter, parameters);
-            return string.Empty;
-        }
+      }
 
         /// <summary>
         /// Outputs the sub view to the writer
@@ -181,17 +184,17 @@ namespace NHaml.Web.MonoRail
             subView.SetParent(this);
             foreach (DictionaryEntry entry in parameters)
             {
-                subView.ViewData[entry.Key] = entry.Value;
+                subView.PropertyBag[entry.Key] = entry.Value;
             }
             subView.Render(ViewContext, writer, ViewContext.CurrentControllerContext);
-            foreach (DictionaryEntry entry in subView.ViewData)
+            foreach (DictionaryEntry entry in subView.PropertyBag)
             {
-                if (subView.ViewData.Contains(entry.Key + ".@bubbleUp") == false)
+                if (!subView.PropertyBag.Contains(entry.Key + ".@bubbleUp"))
                 {
                     continue;
                 }
-                ViewData[entry.Key] = entry.Value;
-                ViewData[entry.Key + ".@bubbleUp"] = true;
+                PropertyBag[entry.Key] = entry.Value;
+                PropertyBag[entry.Key + ".@bubbleUp"] = true;
             }
         }
 

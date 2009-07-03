@@ -11,15 +11,14 @@ namespace NHaml.Web.MonoRail
         private IDictionary sections;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="BrailViewComponentContext"/> class.
+        /// Initializes a new instance of the <see cref="NHamlViewComponentContext"/> class.
         /// </summary>
         /// <param name="parent">The parent.</param>
         /// <param name="body">The body.</param>
         /// <param name="name">The name.</param>
         /// <param name="text">The text.</param>
         /// <param name="parameters">The parameters.</param>
-        public NHamlViewComponentContext(NHamlMonoRailView parent, Action<TextWriter> body,
-                                         string name, TextWriter text, IDictionary parameters)
+        public NHamlViewComponentContext(NHamlMonoRailView parent, Action<TextWriter> body, string name, TextWriter text, IDictionary parameters)
         {
             this.parent = parent;
             Body = body;
@@ -36,7 +35,7 @@ namespace NHaml.Web.MonoRail
 
         public IDictionary ContextVars
         {
-            get { return parent.ViewData; }
+            get { return parent.PropertyBag; }
         }
 
         public IDictionary ComponentParameters { get; private set; }

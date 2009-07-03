@@ -59,6 +59,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Components\PropertyBagSimpleComponent.cs" />
     <Compile Include="Components\SimpleComponent.cs" />
     <Compile Include="CSharp2FunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
@@ -80,6 +81,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Expected\PropertyBagComponent.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Expected\SimpleComponent.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -95,6 +99,9 @@
     <None Include="Expected\RenderBodyComponent.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Templates\PropertyBagComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Templates\RenderParametersComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -108,6 +115,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Templates\SimpleComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\Components\PropertyBagComponent\Default.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Components\SimpleComponent\Default.haml">

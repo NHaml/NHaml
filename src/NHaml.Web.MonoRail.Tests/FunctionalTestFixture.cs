@@ -31,6 +31,11 @@ namespace NHaml.Web.MonoRail.Tests
         {
             AssertRender("RenderSectionComponent");
         }
+        [Test]
+        public virtual void RenderPropertyBagComponent()
+        {
+            AssertRender("PropertyBagComponent");
+        }
 
     }
 }
