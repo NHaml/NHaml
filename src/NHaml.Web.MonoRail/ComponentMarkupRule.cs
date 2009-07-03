@@ -1,5 +1,6 @@
 using System.CodeDom;
 using System.Collections.Generic;
+using System.Diagnostics;
 using NHaml.Compilers;
 using NHaml.Rules;
 
@@ -13,24 +14,26 @@ namespace NHaml.Web.MonoRail
         {
 
             var dictionary = string.Empty;
-            string componentName;
 
-            var text = templateParser.CurrentInputLine.NormalizedText.TrimStart();
+            var text = templateParser.CurrentInputLine.NormalizedText.Trim();
             var indexOfSpace = text.IndexOf(' ');
-            var normalizedSuffix = text.Substring(indexOfSpace + 1, text.Length - indexOfSpace - 1);
-			if (normalizedSuffix.Contains("{"))
+            string componentName ;
+            if (indexOfSpace == -1)
             {
-				var indexOf = normalizedSuffix.IndexOf(' ');
-				dictionary = normalizedSuffix.Substring(indexOf + 2, normalizedSuffix.Length - indexOf - 3);
-				componentName = normalizedSuffix.Substring(0, indexOf);
+                componentName = text.Trim();
             }
             else
             {
-				componentName = normalizedSuffix;
+                dictionary = text.Substring(indexOfSpace, text.Length - indexOfSpace);
+                dictionary = dictionary.Trim();
+                Debug.Assert(dictionary.StartsWith("{"), "dictionary must start with '{'");
+                Debug.Assert(dictionary.EndsWith("}"), "dictionary must start with '}'");
+                dictionary = dictionary.Substring(1, dictionary.Length - 2);
+                componentName = text.Substring(0, indexOfSpace);
             }
 
 
-            var builder = (CodeDomClassBuilder)templateParser.TemplateClassBuilder;
+		    var builder = (CodeDomClassBuilder)templateParser.TemplateClassBuilder;
 
             var dictionaryLocalVariable = AppendCreateDictionaryLocalVariable(dictionary, builder);
 
