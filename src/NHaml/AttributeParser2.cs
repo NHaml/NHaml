@@ -29,8 +29,9 @@ namespace NHaml
         private string currentKey;
         private string currentValue;
         private bool escaped;
-        private bool isLastChar; 
+        private bool isLastChar;
         char currentChar;
+        char endSignifier;
 
 
         public List<ParsedAttribute> Attributes { get; private set; }
@@ -75,23 +76,28 @@ namespace NHaml
                         }
                     case (Mode.SingleQuoteValue):
                         {
-                            ProcessValue( '\'', ParsedAttributeType.String);
+                            endSignifier = '\'';
+                            ProcessValue(  ParsedAttributeType.String);
                             break;
                         }
                     case (Mode.DoubleQuoteValue):
                         {
-                            ProcessValue( '"', ParsedAttributeType.String);
+                            
+                            endSignifier = '"';
+                            ProcessValue(ParsedAttributeType.String);
                             break;
                         }
                     case (Mode.UnQuoteValue):
                         {
                             //TODO any whitespace
-                            ProcessValue( ' ', ParsedAttributeType.Reference);
+                            endSignifier = ' ';
+                            ProcessValue(ParsedAttributeType.Reference);
                             break;
                         }
                     case (Mode.CodeValue):
                         {
-                            ProcessValue( '}', ParsedAttributeType.Expression);
+                            endSignifier = '}';
+                            ProcessValue( ParsedAttributeType.Expression);
                             break;
                         }
                     default:
@@ -110,7 +116,7 @@ namespace NHaml
         }
 
 
-        private void ProcessValue( char endSignifier, ParsedAttributeType type)
+        private void ProcessValue(ParsedAttributeType type)
         {
             if (isLastChar && currentChar != endSignifier)
             {
