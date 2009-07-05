@@ -48,8 +48,11 @@ namespace NHaml.Web.MonoRail
             options.AddReference( typeof( Action ).Assembly.Location );
             options.AddReference( typeof( Expression ).Assembly.Location );
 
-            options.TemplateBaseType = typeof (NHamlMonoRailView);
-        //    TemplateEngine.TemplateContentProvider.AddPathSource(@"Views/Components");
+            if (options.TemplateBaseType == null)
+            {
+                options.TemplateBaseType = typeof (NHamlMonoRailView);
+            }
+            //    TemplateEngine.TemplateContentProvider.AddPathSource(@"Views/Components");
         }
 
 
@@ -69,7 +72,8 @@ namespace NHaml.Web.MonoRail
         {
             var templateFileName = GetTemplateFileName(templateName);
             var layoutTemplatePath = GetLayoutFile(controllerContext);
-            var compiledTemplate = TemplateEngine.Compile(templateFileName, layoutTemplatePath, typeof(NHamlMonoRailView));
+
+            var compiledTemplate = TemplateEngine.Compile(templateFileName, layoutTemplatePath,TemplateEngine.Options.TemplateBaseType);
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
             template.ViewEngine = this;
             template.Render(context, output, controllerContext);

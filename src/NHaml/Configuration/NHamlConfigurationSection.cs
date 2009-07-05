@@ -43,6 +43,9 @@ namespace NHaml.Configuration
             if( section.UseTabs.HasValue )
                 options.UseTabs = section.UseTabs.Value;
 
+            if(!string.IsNullOrEmpty( section.TemplateBaseType ))
+                options.TemplateBaseType = Type.GetType(section.TemplateBaseType, true, false);
+
             if( section.EncodeHtml.HasValue )
                 options.EncodeHtml = section.EncodeHtml.Value;
 
@@ -61,6 +64,8 @@ namespace NHaml.Configuration
         private const string AutoRecompileAttribute = "autoRecompile";
         private const string EncodeHtmlAttribute = "encodeHtml";
         private const string TemplateCompilerAttribute = "templateCompiler";
+        private const string TemplateBaseTypeAttribute = "templateBaseType";
+        
         private const string UseTabsAttribute = "useTabs";
         private const string IndentSizeAttribute = "indentSize";
 
@@ -92,6 +97,11 @@ namespace NHaml.Configuration
         public virtual string TemplateCompiler
         {
             get { return Convert.ToString( this[TemplateCompilerAttribute], CultureInfo.CurrentCulture ); }
+        }
+        [ConfigurationProperty(TemplateBaseTypeAttribute)]
+        public virtual string TemplateBaseType
+        {
+            get { return Convert.ToString(this[TemplateBaseTypeAttribute], CultureInfo.CurrentCulture); }
         }
 
         [ConfigurationProperty( AssembliesElement )]

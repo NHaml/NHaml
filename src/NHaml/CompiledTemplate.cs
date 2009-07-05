@@ -24,7 +24,7 @@ namespace NHaml
         {
             _templateEngine = templateEngine;
             _templatePath = templatePath;
-            _layoutTemplatePaths =  layoutTemplatePaths;
+            _layoutTemplatePaths = layoutTemplatePaths;
             _templateBaseType = templateBaseType;
 
             Compile();

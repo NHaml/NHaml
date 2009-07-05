@@ -10,7 +10,6 @@ namespace NHaml.Compilers
 		public const string DefaultTextWriterVariableName = "textWriter";
         protected TemplateClassBuilder(string className, Type baseType)
         {
-
 			CurrentTextWriterVariableName = DefaultTextWriterVariableName; 
             Output = new StringBuilder();
             Preamble = new StringBuilder();
