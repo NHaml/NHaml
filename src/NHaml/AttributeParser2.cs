@@ -105,7 +105,7 @@ namespace NHaml
             foreach (var attribute in Attributes)
             {
                 var parsedAttribute = attribute;
-                if (Attributes.Find((x)=> 
+                if (Attributes.Find((x)=> parsedAttribute != x &&
                     string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
                     string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
                 {
