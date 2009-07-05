@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using NHaml.Exceptions;
 
 namespace NHaml
@@ -12,10 +11,7 @@ namespace NHaml
             Key,
             PreEquals,
             PostEquals,
-            SingleQuoteValue,
-            DoubleQuoteValue,
-            UnQuoteValue,
-            CodeValue
+            Value
         }
         private readonly string attributesString;
 
@@ -29,9 +25,10 @@ namespace NHaml
         private string currentKey;
         private string currentValue;
         private bool escaped;
-        private bool isLastChar;
         char currentChar;
-        char endSignifier;
+        Func<bool> endSignifier;
+        private ParsedAttributeType attributeType;
+        private int index;
 
 
         public List<ParsedAttribute> Attributes { get; private set; }
@@ -45,13 +42,17 @@ namespace NHaml
         {
             Attributes.Clear();
 
-            
-            for (var index = 0; index < attributesString.Length; index++)
+
+            for (index = 0; index < attributesString.Length; index++)
             {
-                isLastChar = index == (attributesString.Length - 1);
-                Debug.WriteLine(isLastChar);
                 
+
                 currentChar = attributesString[index];
+
+                if (ProcessValue())
+                {
+                    continue;
+                }
                 switch (currentMode)
                 {
                     case (null):
@@ -71,33 +72,11 @@ namespace NHaml
                         }
                     case (Mode.PostEquals):
                         {
-                            ProcessPostEquals(ref index);
+                            ProcessPostEquals();
                             break;
                         }
-                    case (Mode.SingleQuoteValue):
+                    case (Mode.Value):
                         {
-                            endSignifier = '\'';
-                            ProcessValue(  ParsedAttributeType.String);
-                            break;
-                        }
-                    case (Mode.DoubleQuoteValue):
-                        {
-                            
-                            endSignifier = '"';
-                            ProcessValue(ParsedAttributeType.String);
-                            break;
-                        }
-                    case (Mode.UnQuoteValue):
-                        {
-                            //TODO any whitespace
-                            endSignifier = ' ';
-                            ProcessValue(ParsedAttributeType.Reference);
-                            break;
-                        }
-                    case (Mode.CodeValue):
-                        {
-                            endSignifier = '}';
-                            ProcessValue( ParsedAttributeType.Expression);
                             break;
                         }
                     default:
@@ -107,39 +86,65 @@ namespace NHaml
 
                 }
             }
+            ProcessValue();
+            //if (isLastChar && !isEndOfValue)
+            //{
+            //    throw new SyntaxException(string.Format("Exprected '{0}' but found '{1}'.", endSignifier, currentChar));
+            //}
+            if ((currentMode == Mode.Key) || (currentMode == Mode.PreEquals))
+            {
+                attributeType = ParsedAttributeType.String;
+                AddCurrent();
+                return;
+            }
             if (currentMode != null)
             {
                 throw new SyntaxException();
             }
-           
 
+            foreach (var attribute in Attributes)
+            {
+                var parsedAttribute = attribute;
+                if (Attributes.Find((x)=> 
+                    string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
+                    string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
+                {
+                    
+                    throw new SyntaxException(string.Format("The attribute '{0}' is occurs twice.", attribute.Name));
+                }
+            }
         }
 
+   
 
-        private void ProcessValue(ParsedAttributeType type)
+        private bool ProcessValue()
         {
-            if (isLastChar && currentChar != endSignifier)
+            if (currentMode != Mode.Value)
             {
-                throw new SyntaxException(string.Format("Exprected '{0}' but found '{1}'.", endSignifier,currentChar ));
+                return false;
             }
+            
+            var isEndOfValue = endSignifier();
+         
             if (!escaped && currentChar == '\\')
             {
                 escaped = true;
-                return;
+                return false;
             }
-            if (!escaped && currentChar == endSignifier)
+            if (!escaped && isEndOfValue)
             {
-                AddCurrent(type);
+                AddCurrent();
                 currentMode = null;
                 currentKey = null;
                 currentValue = null;
-                return;
+                return true;
             }
             escaped = false;
             currentValue += currentChar;
+            return false;
         }
 
-        private void AddCurrent(ParsedAttributeType type)
+        private void AddCurrent()
         {
             var strings = currentKey.Split(':');
             string schema;
@@ -153,18 +158,22 @@ namespace NHaml
                 case 2:
                     schema = strings[0];
                     name = strings[1];
+                    if (name == String.Empty)
+                    {
+                        throw new SyntaxException("Schema with no name.");
+                    }
                     break;
                 default:
-                    throw new SystemException("only 1 ':' allowed in key");
+                    throw new SyntaxException("only 1 ':' allowed in key");
             }
 
             if (currentValue == null)
             {
-                Attributes.Add(new ParsedAttribute(schema, name, name, type));
+                Attributes.Add(new ParsedAttribute(schema, name, name, attributeType));
             }
             else
             {
-                Attributes.Add(new ParsedAttribute(schema, name, currentValue, type));
+                Attributes.Add(new ParsedAttribute(schema, name, currentValue, attributeType));
             }
         }
 
@@ -179,7 +188,7 @@ namespace NHaml
                 currentMode = Mode.PostEquals;
                 return;
             }
-            AddCurrent(ParsedAttributeType.String);
+            AddCurrent();
             currentMode = Mode.Key;
             currentKey = currentChar.ToString();
 
@@ -198,21 +207,24 @@ namespace NHaml
             }
         }
 
-        private void ProcessPostEquals(ref int index)
+        private void ProcessPostEquals()
         {
             if (Char.IsWhiteSpace(currentChar))
             {
                 return;
             }
             currentValue = string.Empty;
+            currentMode = Mode.Value;
             if (currentChar == '\'')
             {
-                currentMode = Mode.SingleQuoteValue;
+                endSignifier = () => currentChar=='\'';
+                attributeType = ParsedAttributeType.String;
                 return;
             } 
             if (currentChar == '"')
             {
-                currentMode = Mode.DoubleQuoteValue;
+                endSignifier = () => currentChar== '"';
+                attributeType = ParsedAttributeType.String;
                 return;
             } 
             if (currentChar == '#')
@@ -221,11 +233,14 @@ namespace NHaml
                 if (attributesString.Length > nextIndex && attributesString[nextIndex] == '{')
                 {
                     index = nextIndex;
-                    currentMode = Mode.CodeValue;
+                    endSignifier = () => currentChar == '}';
+                    attributeType = ParsedAttributeType.Expression;
                 }
                 return;
             }
-            currentMode = Mode.UnQuoteValue;
+
+            endSignifier = () => Char.IsWhiteSpace(currentChar) || index == (attributesString.Length);
+            attributeType = ParsedAttributeType.Reference;
 
             if (currentChar == '\\')
             {
