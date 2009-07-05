@@ -29,7 +29,8 @@ namespace NHaml
         private string currentKey;
         private string currentValue;
         private bool escaped;
-        private bool isLastChar;
+        private bool isLastChar; 
+        char currentChar;
 
 
         public List<ParsedAttribute> Attributes { get; private set; }
@@ -48,48 +49,49 @@ namespace NHaml
             {
                 isLastChar = index == (attributesString.Length - 1);
                 Debug.WriteLine(isLastChar);
-                var ch = attributesString[index];
+                
+                currentChar = attributesString[index];
                 switch (currentMode)
                 {
                     case (null):
                         {
-                            ProcessNull(ch);
+                            ProcessNull();
                             break;
                         }
                     case (Mode.Key):
                         {
-                            ProcessKey(ch);
+                            ProcessKey();
                             break;
                         }
                     case (Mode.PreEquals):
                         {
-                            ProcessPreEquals(ch);
+                            ProcessPreEquals();
                             break;
                         }
                     case (Mode.PostEquals):
                         {
-                            ProcessPostEquals(ref index, ch);
+                            ProcessPostEquals(ref index);
                             break;
                         }
                     case (Mode.SingleQuoteValue):
                         {
-                            ProcessValue(ch, '\'', ParsedAttributeType.String);
+                            ProcessValue( '\'', ParsedAttributeType.String);
                             break;
                         }
                     case (Mode.DoubleQuoteValue):
                         {
-                            ProcessValue(ch, '"', ParsedAttributeType.String);
+                            ProcessValue( '"', ParsedAttributeType.String);
                             break;
                         }
                     case (Mode.UnQuoteValue):
                         {
                             //TODO any whitespace
-                            ProcessValue(ch, ' ', ParsedAttributeType.Reference);
+                            ProcessValue( ' ', ParsedAttributeType.Reference);
                             break;
                         }
                     case (Mode.CodeValue):
                         {
-                            ProcessValue(ch, '}', ParsedAttributeType.Expression);
+                            ProcessValue( '}', ParsedAttributeType.Expression);
                             break;
                         }
                     default:
@@ -108,18 +110,18 @@ namespace NHaml
         }
 
 
-        private void ProcessValue(char ch, char endSignifier, ParsedAttributeType type)
+        private void ProcessValue( char endSignifier, ParsedAttributeType type)
         {
-            if (isLastChar && ch != endSignifier)
+            if (isLastChar && currentChar != endSignifier)
             {
-                throw new SyntaxException(string.Format("Exprected '{0}' but found '{1}'.", endSignifier,ch ));
+                throw new SyntaxException(string.Format("Exprected '{0}' but found '{1}'.", endSignifier,currentChar ));
             }
-            if (!escaped && ch == '\\')
+            if (!escaped && currentChar == '\\')
             {
                 escaped = true;
                 return;
             }
-            if (!escaped && ch == endSignifier)
+            if (!escaped && currentChar == endSignifier)
             {
                 AddCurrent(type);
                 currentMode = null;
@@ -128,7 +130,7 @@ namespace NHaml
                 return;
             }
             escaped = false;
-            currentValue += ch;
+            currentValue += currentChar;
         }
 
         private void AddCurrent(ParsedAttributeType type)
@@ -160,54 +162,54 @@ namespace NHaml
             }
         }
 
-        private void ProcessPreEquals(char ch)
+        private void ProcessPreEquals()
         {
-            if (Char.IsWhiteSpace(ch))
+            if (Char.IsWhiteSpace(currentChar))
             {
                 return;
             }
-            if (ch == '=')
+            if (currentChar == '=')
             {
                 currentMode = Mode.PostEquals;
                 return;
             }
             AddCurrent(ParsedAttributeType.String);
             currentMode = Mode.Key;
-            currentKey = ch.ToString();
+            currentKey = currentChar.ToString();
 
         }
 
-        private void ProcessNull(char ch)
+        private void ProcessNull()
         {
-            if (ch == '\\' || ch == '=' || ch == '"' || ch == '\'' )
+            if (currentChar == '\\' || currentChar == '=' || currentChar == '"' || currentChar == '\'' )
             {
-                throw new SystemException(string.Format("Unexpected character found. '{0}'", ch));
+                throw new SystemException(string.Format("Unexpected character found. '{0}'", currentChar));
             }
-            if (!Char.IsWhiteSpace(ch))
+            if (!Char.IsWhiteSpace(currentChar))
             {
                 currentMode = Mode.Key;
-                currentKey = ch.ToString();
+                currentKey = currentChar.ToString();
             }
         }
 
-        private void ProcessPostEquals(ref int index, char ch)
+        private void ProcessPostEquals(ref int index)
         {
-            if (Char.IsWhiteSpace(ch))
+            if (Char.IsWhiteSpace(currentChar))
             {
                 return;
             }
             currentValue = string.Empty;
-            if (ch == '\'')
+            if (currentChar == '\'')
             {
                 currentMode = Mode.SingleQuoteValue;
                 return;
             } 
-            if (ch == '"')
+            if (currentChar == '"')
             {
                 currentMode = Mode.DoubleQuoteValue;
                 return;
             } 
-            if (ch == '#')
+            if (currentChar == '#')
             {
                 var nextIndex = index + 1;
                 if (attributesString.Length > nextIndex && attributesString[nextIndex] == '{')
@@ -219,33 +221,33 @@ namespace NHaml
             }
             currentMode = Mode.UnQuoteValue;
 
-            if (ch == '\\')
+            if (currentChar == '\\')
             {
                 escaped = true;
             }
             else
             {
-                currentValue += ch;
+                currentValue += currentChar;
             }
         }
 
-        private void ProcessKey(char ch)
+        private void ProcessKey()
         {
-            if (ch == '\\' || ch == '"' || ch == '\'')
+            if (currentChar == '\\' || currentChar == '"' || currentChar == '\'')
             {
-                throw new SystemException(string.Format("Unexpected character found. '{0}'", ch));
+                throw new SystemException(string.Format("Unexpected character found. '{0}'", currentChar));
             }
-            if (Char.IsWhiteSpace(ch))
+            if (Char.IsWhiteSpace(currentChar))
             {
                 currentMode = Mode.PreEquals;
                 return;
             }
-            if (ch == '=')
+            if (currentChar == '=')
             {
                 currentMode = Mode.PostEquals;
                 return;
             }
-            currentKey += ch;
+            currentKey += currentChar;
         }
     }
 }
