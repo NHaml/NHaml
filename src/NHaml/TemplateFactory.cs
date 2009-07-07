@@ -3,11 +3,15 @@ using System.Reflection.Emit;
 
 namespace NHaml
 {
+
+    public delegate T Func<T>();
+
+    public delegate TResult Func<T, TResult>(T arg);
+
     public class TemplateFactory
     {
-        private delegate Template FastActivator();
 
-        private readonly FastActivator _fastActivator;
+        private readonly Func<Template> _fastActivator;
 
         protected TemplateFactory()
         {
@@ -23,7 +27,7 @@ namespace NHaml
             return _fastActivator();
         }
 
-        private static FastActivator CreateFastActivator( Type type )
+        private static Func<Template> CreateFastActivator(Type type)
         {
             var dynamicMethod = new DynamicMethod( "activatefast__", type, null, type );
 
@@ -38,7 +42,7 @@ namespace NHaml
             ilGenerator.Emit( OpCodes.Newobj, constructor );
             ilGenerator.Emit( OpCodes.Ret );
 
-            return (FastActivator)dynamicMethod.CreateDelegate( typeof( FastActivator ) );
+            return (Func<Template>)dynamicMethod.CreateDelegate(typeof(Func<Template>));
         }
     }
 }

@@ -153,22 +153,21 @@ namespace NHaml.Rules
             attributeParser.Parse();
             foreach (var attribute in attributeParser.Attributes)
             {
-            templateParser.TemplateClassBuilder.AppendHamlComment(string.Format("Schema '{0}', Name '{1}', Value '{2}',", attribute.Schema, attribute.Name, attribute.Value));
+                var classBuilder = templateParser.TemplateClassBuilder;
+                classBuilder.AppendHamlComment(string.Format("Schema '{0}', Name '{1}', Value '{2}',", attribute.Schema, attribute.Name, attribute.Value));
                 if (attribute.Type == ParsedAttributeType.String)
                 {
                     var expressionStringParser = new ExpressionStringParser(attribute.Value);
 
                     expressionStringParser.Parse();
 
-                    templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
-                                                                              expressionStringParser.Tokens);
+                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,expressionStringParser.Tokens);
                 }
                 else
                 {
                     var token = new ExpressionStringToken(attribute.Value, true);
 
-                    templateParser.TemplateClassBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,
-                                                                              new[] {token});
+                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, new[] {token});
                 }
             }
         }

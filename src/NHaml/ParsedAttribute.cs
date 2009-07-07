@@ -2,6 +2,10 @@ namespace NHaml
 {
     public class ParsedAttribute
     {
+        public ParsedAttribute()
+        {
+        }
+
         public ParsedAttribute(string schema, string name, string value, ParsedAttributeType type)
         {
             Schema = schema;
@@ -10,9 +14,9 @@ namespace NHaml
             Type = type;
         }
 
-        public string Schema { get; protected set; }
-        public string Name { get; protected set; }
-        public string Value { get; protected set; }
-        public ParsedAttributeType Type { get; protected set; }
+        public string Schema { get; set; }
+        public string Name { get; set; }
+        public string Value { get; set; }
+        public ParsedAttributeType Type { get; set; }
     }
 }
