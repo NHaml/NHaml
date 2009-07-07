@@ -286,6 +286,9 @@
     <None Include="Functional\Templates\BlankLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Functional\Templates\IronRuby\EscapeHtml.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Functional\Templates\SelfClosing.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
