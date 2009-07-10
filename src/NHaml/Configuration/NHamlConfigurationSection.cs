@@ -49,6 +49,9 @@ namespace NHaml.Configuration
             if( section.EncodeHtml.HasValue )
                 options.EncodeHtml = section.EncodeHtml.Value;
 
+            if (section.OutputDebugFiles.HasValue)
+                options.OutputDebugFiles = section.OutputDebugFiles.Value;
+
             if( !string.IsNullOrEmpty( section.TemplateCompiler ) )
                 options.TemplateCompiler = section.CreateTemplateCompiler();
 
@@ -63,6 +66,7 @@ namespace NHaml.Configuration
         private const string NamespacesElement = "namespaces";
         private const string AutoRecompileAttribute = "autoRecompile";
         private const string EncodeHtmlAttribute = "encodeHtml";
+        private const string OutputDebugFilesAttribute = "outputDebugFiles";
         private const string TemplateCompilerAttribute = "templateCompiler";
         private const string TemplateBaseTypeAttribute = "templateBaseType";
         
@@ -79,6 +83,11 @@ namespace NHaml.Configuration
         public virtual bool? EncodeHtml
         {
             get { return this[EncodeHtmlAttribute] as bool?; }
+        }
+        [ConfigurationProperty(OutputDebugFilesAttribute)]
+        public virtual bool? OutputDebugFiles
+        {
+            get { return this[OutputDebugFilesAttribute] as bool?; }
         }
 
         [ConfigurationProperty( UseTabsAttribute )]
@@ -157,14 +166,14 @@ namespace NHaml.Configuration
 
             if( type == null )
             {
-                throw new ConfigurationErrorsException(
-                  Utility.FormatCurrentCulture("TemplateCompiler type '{0}' not found", templateCompiler));
+                var message = Utility.FormatCurrentCulture("TemplateCompiler type '{0}' not found", templateCompiler);
+                throw new ConfigurationErrorsException(message);
             }
 
             if( !typeof( ITemplateCompiler ).IsAssignableFrom( type ) )
             {
-                throw new ConfigurationErrorsException(
-                  Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler));
+                var message = Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler);
+                throw new ConfigurationErrorsException(message);
             }
 
             return (ITemplateCompiler)Activator.CreateInstance( type );

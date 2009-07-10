@@ -54,6 +54,7 @@ namespace NHaml
 
         public bool AutoRecompile { get; set; }
         public bool EncodeHtml { get; set; }
+        public bool OutputDebugFiles { get; set; }
 
         public bool UseTabs
         {

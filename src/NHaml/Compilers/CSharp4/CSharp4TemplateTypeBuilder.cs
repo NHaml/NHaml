@@ -8,6 +8,10 @@ namespace NHaml.Compilers.CSharp4
             ProviderOptions.Add("CompilerVersion", "v4");
         }
 
-      
+
+        protected override bool SupportsDebug()
+        {
+            return true;
+        }
     }
 }

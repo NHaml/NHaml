@@ -138,6 +138,15 @@ namespace NHaml.Tests
             Assert.IsTrue( section.IndentSize.HasValue );
             Assert.AreEqual( 2, section.IndentSize.Value );
         }
+        [Test]
+        public void CanReadOutputDebugFilesSettingFromAppSettings()
+        {
+            var section = NHamlConfigurationSection.GetSection();
+
+            Assert.IsNotNull( section );
+            Assert.IsTrue( section.OutputDebugFiles.HasValue );
+            Assert.AreEqual(true, section.OutputDebugFiles.Value);
+        }
 
         [Test]
         public void CanReadEscapeHtmlFromAppSettings()

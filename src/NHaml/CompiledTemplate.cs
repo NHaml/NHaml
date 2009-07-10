@@ -81,8 +81,10 @@ namespace NHaml
                     }
 
                     if( modelType == null )
-                        throw new TemplateCompilationException( string.Format(
-                                                                   "The given model type '{0}' was not found.", model ) );
+                    {
+                        var message = string.Format("The given model type '{0}' was not found.", model );
+                        throw new TemplateCompilationException( message );
+                    }
                 }
                 else
                 {

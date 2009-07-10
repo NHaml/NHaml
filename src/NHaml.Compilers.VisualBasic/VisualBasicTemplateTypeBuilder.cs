@@ -12,7 +12,9 @@ namespace NHaml.Compilers.VisualBasic
         }
 
 
-
-       
+        protected override bool SupportsDebug()
+        {
+            return true;
+        }
     }
 }

@@ -194,12 +194,12 @@ namespace NHaml.Generator.Wpf
                 textWriter.Write("%{0}", navigator.LocalName);
                 CheckForAndAppendClass(navigator);
             }
-            else
-            {
+            //else
+            //{
                 //TODO:
                 //Console.Write(" <{0}:{1}>",oNavigator.Prefix,oNavigator.LocalName);
                 //Console.WriteLine("\t" + oNavigator.NamespaceURI);
-            }
+            //}
 
             var attributeNavigator = navigator.CreateNavigator();
             ProcessAttributes(attributeNavigator);
@@ -207,7 +207,7 @@ namespace NHaml.Generator.Wpf
             indent++;
         }
 
-        private void CheckForAndAppendClass(XPathNavigator navigator)
+        private void CheckForAndAppendClass(IXPathNavigable navigator)
         {
             var temp = navigator.CreateNavigator();
             if (temp.MoveToAttribute("class", null))

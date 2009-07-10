@@ -12,6 +12,10 @@ namespace NHaml.Compilers.CSharp2
         }
 
 
+        protected override bool SupportsDebug()
+        {
+            return true;
+        }
     }
 }
 

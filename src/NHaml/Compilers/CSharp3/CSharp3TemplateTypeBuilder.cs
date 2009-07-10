@@ -8,6 +8,10 @@ namespace NHaml.Compilers.CSharp3
             ProviderOptions.Add("CompilerVersion", "v3.5");
         }
 
-      
+
+        protected override bool SupportsDebug()
+        {
+            return true;
+        }
     }
 }

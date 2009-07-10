@@ -349,6 +349,7 @@ namespace NHaml.Compilers
 
                 // Declares a namespace named TestNamespace.
                 var testNamespace = new CodeNamespace();
+                //testNamespace.Name = "TempNHamlNamespace";
                 // Adds the namespace to the namespace collection of the compile unit.
                 compileUnit.Namespaces.Add(testNamespace);
 
