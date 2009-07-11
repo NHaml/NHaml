@@ -44,12 +44,14 @@ namespace NHaml.Compilers
             {
                 compilerParams.GenerateInMemory = false;
                 compilerParams.IncludeDebugInformation = true;
-                var directoryInfo = new DirectoryInfo("nhamlTemp");
+                var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0,8);
+                var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
+                var directoryInfo = new DirectoryInfo(nhamlTempPath);
                 if (!directoryInfo.Exists)
                 {
                     directoryInfo.Create();
                 }
-                var fileInfo = new FileInfo(string.Format("nhamltemp\\{0}.{1}", typeName, CodeDomProvider.FileExtension));
+                var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
                 if (fileInfo.Exists)
                 {
                     fileInfo.Delete();
