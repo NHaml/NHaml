@@ -21,6 +21,11 @@ namespace NHaml.Tests.Functional
             
         }
 
+        [Ignore("Until debugging with fsharp works")]
+        public override void WithRunTimeException()
+        {
+            base.WithRunTimeException();
+        }
         [Ignore("Until i work out how to do multilevel lambdas")]
         [Test]
         public override void LambdaEval()

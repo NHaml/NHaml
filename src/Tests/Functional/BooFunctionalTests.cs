@@ -14,6 +14,12 @@ namespace NHaml.Tests.Functional
             _templateEngine.TemplateContentProvider.AddPathSource(TemplatesFolder+@"Boo");
         }
 
+        [Ignore("Until debugging with Boo works")]
+        public override void WithRunTimeException()
+        {
+            base.WithRunTimeException();
+        }
+
         [Ignore( "Boo doesn't handle this" )]
         public override void Empty()
         {

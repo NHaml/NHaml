@@ -286,6 +286,9 @@
     <None Include="Functional\Templates\BlankLine.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Functional\Templates\CSharp2\WithRunTimeException.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Functional\Templates\IronRuby\EscapeHtml.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -560,6 +563,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\VeryBasic.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Functional\Templates\VisualBasic\WithRunTimeException.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\WhitespaceSensitive.haml">

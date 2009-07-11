@@ -15,6 +15,11 @@ namespace NHaml.Tests.Functional
             _templateEngine.TemplateContentProvider.PathSources.Insert( 0, TemplatesFolder + @"IronRuby" );
         }
 
+        [Ignore("Until debugging with IR works")]
+        public override void WithRunTimeException()
+        {
+            base.WithRunTimeException();
+        }
         [Test]
         public override void Layout()
         {

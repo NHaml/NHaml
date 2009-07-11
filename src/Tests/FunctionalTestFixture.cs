@@ -268,6 +268,13 @@ namespace NHaml.Tests
         {
             AssertRender("SimpleEval");
         }
+        [Test]
+        [ExpectedException(typeof(NullReferenceException))]
+        public virtual void WithRunTimeException()
+        {
+            
+            AssertRender("WithRunTimeException");
+        }
 
         [Test]
         public virtual void SilentEval()
