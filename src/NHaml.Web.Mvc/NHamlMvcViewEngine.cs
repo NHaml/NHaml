@@ -128,10 +128,10 @@ namespace NHaml.Web.Mvc
                 GetViewBaseType(controllerContext)).CreateInstance();
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
+//#if NET4
+//        [SecuritySafeCritical]
+//        [SecurityCritical]
+//#endif
         protected virtual Type ViewGenericBaseType
         {
             get { return typeof(NHamlMvcView<>); }
