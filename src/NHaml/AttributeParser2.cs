@@ -102,12 +102,17 @@ namespace NHaml
                 throw new SyntaxException();
             }
 
+            CheckForDuplicates();
+        }
+
+        private void CheckForDuplicates()
+        {
             foreach (var attribute in Attributes)
             {
                 var parsedAttribute = attribute;
                 if (Attributes.Find((x)=> parsedAttribute != x &&
-                    string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
-                    string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
+                                          string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
+                                          string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
                 {
                     
                     throw new SyntaxException(string.Format("The attribute '{0}' is occurs twice.", attribute.Name));
@@ -115,7 +120,6 @@ namespace NHaml
             }
         }
 
-   
 
         private bool ProcessValue()
         {
