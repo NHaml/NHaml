@@ -127,7 +127,8 @@ namespace NHaml
                     }
                 }
 
-                Attributes.Add(new ParsedAttribute(schmea, name, value, type));
+                var parsedAttribute = new ParsedAttribute{Name = name, Schema = schmea,Value = value, Type = type};
+                Attributes.Add(parsedAttribute);
             }
         }
 

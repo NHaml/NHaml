@@ -639,6 +639,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="TokenTests.cs" />
     <Compile Include="UtilityTests.cs">
       <SubType>Code</SubType>
     </Compile>

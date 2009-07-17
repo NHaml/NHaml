@@ -6,14 +6,12 @@ namespace NHaml
 {
     public class AttributeParser2
     {
-        enum Mode
-        {
-            Key,
-            PreEquals,
-            PostEquals,
-            Value
-        }
         private readonly string attributesString;
+        private string currentKey;
+        private string currentValue;
+        private ParsedAttributeType attributeType;
+        LinkedList<Token> tokens;
+        public List<ParsedAttribute> Attributes { get; private set; }
 
         public AttributeParser2(string attributesString)
         {
@@ -21,96 +19,185 @@ namespace NHaml
             this.attributesString = attributesString;
         }
 
-        private Mode? currentMode;
-        private string currentKey;
-        private string currentValue;
-        private bool escaped;
-        char currentChar;
-        Func<bool> endSignifier;
-        private ParsedAttributeType attributeType;
-        private int index;
 
-
-        public List<ParsedAttribute> Attributes { get; private set; }
-
-        //modes 
-        //none
-        //value startvaluematch
-        //key 
-        //equals
         public void Parse()
         {
             Attributes.Clear();
-
-
-            for (index = 0; index < attributesString.Length; index++)
+            tokens = Token.ReadAllTokens(attributesString);
+            Token next;
+            while (!(next=tokens.First.Value).IsEnd)
             {
-                
-
-                currentChar = attributesString[index];
-
-                if (ProcessValue())
+                if (next.IsWhiteSpace)
                 {
+                    tokens.RemoveFirst();
                     continue;
                 }
-                switch (currentMode)
+                if ((next.Character) == '\'' || (next.IsEscaped) || (next.Character) == '"' || (next.Character) == ':'  || (next.Character) == '}' || (next.Character) == '=')
                 {
-                    case (null):
-                        {
-                            ProcessNull();
-                            break;
-                        }
-                    case (Mode.Key):
-                        {
-                            ProcessKey();
-                            break;
-                        }
-                    case (Mode.PreEquals):
-                        {
-                            ProcessPreEquals();
-                            break;
-                        }
-                    case (Mode.PostEquals):
-                        {
-                            ProcessPostEquals();
-                            break;
-                        }
-                    case (Mode.Value):
-                        {
-                            break;
-                        }
-                    default:
-                        {
-                            throw new NotImplementedException();
-                        }
-
+                    throw new SyntaxException();
                 }
-            }
-            ProcessValue();
-            //if (isLastChar && !isEndOfValue)
-            //{
-            //    throw new SyntaxException(string.Format("Exprected '{0}' but found '{1}'.", endSignifier, currentChar));
-            //}
-            if ((currentMode == Mode.Key) || (currentMode == Mode.PreEquals))
-            {
-                attributeType = ParsedAttributeType.String;
+                ProcessKey();
                 AddCurrent();
-                return;
-            }
-            if (currentMode != null)
-            {
-                throw new SyntaxException();
+                currentValue = null;
+                currentKey = null;
             }
 
             CheckForDuplicates();
         }
+
+        private void EatWhiteSpace()
+        {
+            while (tokens.First.Value.IsWhiteSpace)
+            {
+                tokens.RemoveFirst();
+            }
+        }
+        private void ProcessKey()
+        {
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                currentKey += token.Character;
+
+                var next = tokens.First.Value;
+                if (next.IsEscaped)
+                {
+                    throw new Exception();
+                }
+                if (next.IsWhiteSpace)
+                {
+                    ProcessPreEquals();
+                    break;
+                }
+                if (next.Character == '=')
+                {
+                    ProcessEquals();
+                    break;
+                }
+                if (next.IsEnd)
+                {
+                    break;
+                }
+            }
+        }
+
+        private void ProcessPreEquals()
+        {
+            EatWhiteSpace();
+
+            var next = tokens.First.Value;
+            if (next.IsEscaped)
+            {
+                throw new Exception();
+            }
+            if ((next.Character == '\'') || (next.Character == '"') || (next.Character == '\\'))
+            {
+                throw new Exception();
+            }
+            if (next.Character == '=')
+            {
+                ProcessEquals();
+            }
+        }
+
+        private void ProcessEquals()
+        {
+            tokens.RemoveFirst();
+            EatWhiteSpace();
+            var next = tokens.First;
+            var character = next.Value.Character;
+
+            if ((character == '\\') || (next.Value.IsEnd))
+            {
+                throw new Exception();
+            }
+            if ((character == '\'') || (character == '"') )
+            {
+                ProcessQuotedValue(character);
+                return;
+            }
+            if (character == '#' && next.Next.Value.Character == '{')
+            {
+                ProcessHashedCode();
+                return;
+            }
+
+            ProcessUnQuotedCode();
+
+        }
+
+        private void ProcessUnQuotedCode()
+        {
+            attributeType = ParsedAttributeType.Reference;
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                currentValue += token.Character;
+
+                var next = tokens.First.Value;
+                if ((next.Character == ' ') || next.IsEnd)
+                {
+                    return;
+                }
+            }
+        }
+
+        private void ProcessHashedCode()
+        {
+            attributeType = ParsedAttributeType.Expression;
+            tokens.RemoveFirst();
+            tokens.RemoveFirst();
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                currentValue += token.Character;
+
+                var next = tokens.First.Value;
+                if (next.IsEnd)
+                {
+                    throw new SyntaxException();
+                }
+                if (!next.IsEscaped && (next.Character == '}'))
+                {
+                    tokens.RemoveFirst();
+                    return;
+                }
+            }
+        }
+
+        private void ProcessQuotedValue(char character)
+        {
+            attributeType = ParsedAttributeType.String;
+            tokens.RemoveFirst();
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                currentValue += token.Character;
+
+                var next = tokens.First.Value;
+                if (next.IsEnd)
+                {
+                    throw new SyntaxException();
+                }
+                if (!next.IsEscaped && (next.Character == character))
+                {
+                    tokens.RemoveFirst();
+                    break;
+                }
+            }
+        }
+
 
         private void CheckForDuplicates()
         {
             foreach (var attribute in Attributes)
             {
                 var parsedAttribute = attribute;
-                if (Attributes.Find((x)=> parsedAttribute != x &&
+                if (Attributes.Find(x=> parsedAttribute != x &&
                                           string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
                                           string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
                 {
@@ -120,33 +207,6 @@ namespace NHaml
             }
         }
 
-
-        private bool ProcessValue()
-        {
-            if (currentMode != Mode.Value)
-            {
-                return false;
-            }
-            
-            var isEndOfValue = endSignifier();
-         
-            if (!escaped && currentChar == '\\')
-            {
-                escaped = true;
-                return false;
-            }
-            if (!escaped && isEndOfValue)
-            {
-                AddCurrent();
-                currentMode = null;
-                currentKey = null;
-                currentValue = null;
-                return true;
-            }
-            escaped = false;
-            currentValue += currentChar;
-            return false;
-        }
 
         private void AddCurrent()
         {
@@ -173,106 +233,12 @@ namespace NHaml
 
             if (currentValue == null)
             {
-                Attributes.Add(new ParsedAttribute(schema, name, name, attributeType));
+                currentValue = name;
             }
-            else
-            {
-                Attributes.Add(new ParsedAttribute(schema, name, currentValue, attributeType));
-            }
+            Attributes.Add(new ParsedAttribute {Name = name, Schema = schema, Type = attributeType, Value = currentValue});
         }
 
-        private void ProcessPreEquals()
-        {
-            if (Char.IsWhiteSpace(currentChar))
-            {
-                return;
-            }
-            if (currentChar == '=')
-            {
-                currentMode = Mode.PostEquals;
-                return;
-            }
-            AddCurrent();
-            currentMode = Mode.Key;
-            currentKey = currentChar.ToString();
 
-        }
 
-        private void ProcessNull()
-        {
-            if (currentChar == '\\' || currentChar == '=' || currentChar == '"' || currentChar == '\'' )
-            {
-                throw new SystemException(string.Format("Unexpected character found. '{0}'", currentChar));
-            }
-            if (!Char.IsWhiteSpace(currentChar))
-            {
-                currentMode = Mode.Key;
-                currentKey = currentChar.ToString();
-            }
-        }
-
-        private void ProcessPostEquals()
-        {
-            if (Char.IsWhiteSpace(currentChar))
-            {
-                return;
-            }
-            currentValue = string.Empty;
-            currentMode = Mode.Value;
-            if (currentChar == '\'')
-            {
-                endSignifier = () => currentChar=='\'';
-                attributeType = ParsedAttributeType.String;
-                return;
-            } 
-            if (currentChar == '"')
-            {
-                endSignifier = () => currentChar== '"';
-                attributeType = ParsedAttributeType.String;
-                return;
-            } 
-            if (currentChar == '#')
-            {
-                var nextIndex = index + 1;
-                if (attributesString.Length > nextIndex && attributesString[nextIndex] == '{')
-                {
-                    index = nextIndex;
-                    endSignifier = () => currentChar == '}';
-                    attributeType = ParsedAttributeType.Expression;
-                }
-                return;
-            }
-
-            endSignifier = () => Char.IsWhiteSpace(currentChar) || index == (attributesString.Length);
-            attributeType = ParsedAttributeType.Reference;
-
-            if (currentChar == '\\')
-            {
-                escaped = true;
-            }
-            else
-            {
-                currentValue += currentChar;
-            }
-        }
-
-        private void ProcessKey()
-        {
-            if (currentChar == '\\' || currentChar == '"' || currentChar == '\'')
-            {
-                throw new SystemException(string.Format("Unexpected character found. '{0}'", currentChar));
-            }
-            if (Char.IsWhiteSpace(currentChar))
-            {
-                currentMode = Mode.PreEquals;
-                return;
-            }
-            if (currentChar == '=')
-            {
-                currentMode = Mode.PostEquals;
-                return;
-            }
-            currentKey += currentChar;
-        }
     }
 }

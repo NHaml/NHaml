@@ -7,6 +7,27 @@ namespace NHaml.Tests
     [TestFixture]
     public class AttributeParser2Tests
     {
+
+
+        [Test]
+        public void ReadAllTokens()
+        {
+            var queue = Token.ReadAllTokens("abc\\d");
+            Assert.AreEqual(5, queue.Count);
+            Assert.AreEqual('a', queue.First.Value.Character);
+            queue.RemoveFirst();
+            Assert.AreEqual('b', queue.First.Value.Character);
+            queue.RemoveFirst();
+            Assert.AreEqual('c', queue.First.Value.Character);
+            queue.RemoveFirst();
+            var dequeue = queue.First.Value;
+            queue.RemoveFirst();
+            Assert.AreEqual('d', dequeue.Character);
+            Assert.IsTrue(dequeue.IsEscaped);
+            Assert.IsTrue(queue.First.Value.IsEnd);
+        }
+
+
         private static void AssertAttribute(AttributeParser2 parser, string name, string value, ParsedAttributeType type)
         {
             AssertAttribute(parser, null, name, value, type);
@@ -83,6 +104,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "eee", "f", ParsedAttributeType.String);
         }
 
+
         [Test]
         public void Empty()
         {
@@ -103,6 +125,17 @@ namespace NHaml.Tests
             Assert.AreEqual(3, parser.Attributes.Count);
             AssertAttribute(parser, "a", @"abc\", ParsedAttributeType.String);
             AssertAttribute(parser, "b", @"abc\", ParsedAttributeType.String);
+            AssertAttribute(parser, "c", @"abc\", ParsedAttributeType.Expression);
+        }
+
+        [Test]
+        public void SimpleEncodingIsIgnoredIfItIsUsedAsStopper()
+        {
+            var parser = new AttributeParser2(@"c=#{abc\\} ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
             AssertAttribute(parser, "c", @"abc\", ParsedAttributeType.Expression);
         }
 
@@ -187,7 +220,7 @@ namespace NHaml.Tests
         [Test]
         public void SimpleReference()
         {
-            var parser = new AttributeParser2("a=bb");
+            var parser = new AttributeParser2(" a=bb ");
 
             parser.Parse();
 
@@ -206,6 +239,36 @@ namespace NHaml.Tests
             AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.String);
             AssertAttribute(parser, "b", "ccc", "eee", ParsedAttributeType.String);
             AssertAttribute(parser, "eee", "c", "e", ParsedAttributeType.Reference);
+        }
+        [Test]
+        public void SimpleSchema()
+        {
+            var parser = new AttributeParser2(" xml:lang='en:us' ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.String);
+        }
+        [Test]
+        public void SchemaOnly()
+        {
+            var parser = new AttributeParser2(" a:b ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.String);
+        }
+        [Test]
+        public void SimpleSchemaReference()
+        {
+            var parser = new AttributeParser2(" xml:lang=en:us ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.Reference);
         }
 
 
