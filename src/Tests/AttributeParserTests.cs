@@ -7,6 +7,27 @@ namespace NHaml.Tests
     [TestFixture]
     public class AttributeParserTests
     {
+
+
+        [Test]
+        public void ReadAllTokens()
+        {
+            var queue = Token.ReadAllTokens("abc\\d");
+            Assert.AreEqual(5, queue.Count);
+            Assert.AreEqual('a', queue.First.Value.Character);
+            queue.RemoveFirst();
+            Assert.AreEqual('b', queue.First.Value.Character);
+            queue.RemoveFirst();
+            Assert.AreEqual('c', queue.First.Value.Character);
+            queue.RemoveFirst();
+            var dequeue = queue.First.Value;
+            queue.RemoveFirst();
+            Assert.AreEqual('d', dequeue.Character);
+            Assert.IsTrue(dequeue.IsEscaped);
+            Assert.IsTrue(queue.First.Value.IsEnd);
+        }
+
+
         private static void AssertAttribute(AttributeParser parser, string name, string value, ParsedAttributeType type)
         {
             AssertAttribute(parser, null, name, value, type);
@@ -35,16 +56,27 @@ namespace NHaml.Tests
             AssertAttribute(parser, null, "lang", "en", ParsedAttributeType.String);
             AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.String);
         }
-        
+
         [Test]
         public void CurlyBracesInsideCode()
         {
-            var parser = new AttributeParser("action = #{Convert.ToString(new { ID=5\\})}");
+            var parser = new AttributeParser(@"action = #{Convert.ToString(new { ID=5\})}");
 
             parser.Parse();
 
             Assert.AreEqual(1, parser.Attributes.Count);
-            AssertAttribute(parser, "action", "Convert.ToString(new { ID=5})", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "action", "Convert.ToString(new { ID=5\\})", ParsedAttributeType.Expression);
+        }
+
+        [Test]
+        public void ExpressionWithoutHash()
+        {
+            var parser = new AttributeParser(@"src = Html.Content().AppRoot() ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "src", "Html.Content().AppRoot()", ParsedAttributeType.Reference);
         }
 
         [Test]
@@ -55,8 +87,8 @@ namespace NHaml.Tests
             parser.Parse();
 
             Assert.AreEqual(2, parser.Attributes.Count);
-            AssertAttribute(parser, "b", "a'b'", ParsedAttributeType.String);
-            AssertAttribute(parser, "dd", "\"d\"e", ParsedAttributeType.String);
+            AssertAttribute(parser, "b", @"a\'b\'", ParsedAttributeType.String);
+            AssertAttribute(parser, "dd", @"\""d\""e", ParsedAttributeType.String);
         }
 
         [Test]
@@ -72,6 +104,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "eee", "f", ParsedAttributeType.String);
         }
 
+
         [Test]
         public void Empty()
         {
@@ -81,18 +114,39 @@ namespace NHaml.Tests
 
             Assert.AreEqual(0, parser.Attributes.Count);
         }
+        [Test]
+        public void EmptyValue()
+        {
+            var parser = new AttributeParser(@"a=""""");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "", ParsedAttributeType.String);
+        }
 
         [Test]
         public void EncodingIsIgnoredIfItIsUsedAsStopper()
         {
-            var parser = new AttributeParser(@" a=""abc\"" b='abc\' c=#{abc\} ");
+            var parser = new AttributeParser(@" a=""abc\\"" b='abc\\' c=#{abc\\} ");
 
             parser.Parse();
 
             Assert.AreEqual(3, parser.Attributes.Count);
-            AssertAttribute(parser, "a", @"abc\", ParsedAttributeType.String);
-            AssertAttribute(parser, "b", @"abc\", ParsedAttributeType.String);
-            AssertAttribute(parser, "c", @"abc\", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "a", @"abc\\", ParsedAttributeType.String);
+            AssertAttribute(parser, "b", @"abc\\", ParsedAttributeType.String);
+            AssertAttribute(parser, "c", @"abc\\", ParsedAttributeType.Expression);
+        }
+
+        [Test]
+        public void SimpleEncodingIsIgnoredIfItIsUsedAsStopper()
+        {
+            var parser = new AttributeParser(@"c=#{abc\\} ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "c", @"abc\\", ParsedAttributeType.Expression);
         }
 
         [Test]
@@ -118,7 +172,7 @@ namespace NHaml.Tests
             AssertAttribute(parser, "aaa", "1+1", ParsedAttributeType.Expression);
             AssertAttribute(parser, "bb", "\"t\"", ParsedAttributeType.Expression);
             AssertAttribute(parser, "c", "f.ToString()", ParsedAttributeType.Expression);
-            AssertAttribute(parser, "d", @"f=>{return 1}", ParsedAttributeType.Expression);
+            AssertAttribute(parser, "d", @"f=>\{return 1\}", ParsedAttributeType.Expression);
         }
 
         [Test]
@@ -132,6 +186,29 @@ namespace NHaml.Tests
             AssertAttribute(parser, "a", "a", ParsedAttributeType.String);
             AssertAttribute(parser, "cc", "cc", ParsedAttributeType.String);
             AssertAttribute(parser, "e", "e", ParsedAttributeType.String);
+        }
+
+        [Test]
+        public void SimpleOnlyReference()
+        {
+            var parser = new AttributeParser("a");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "a", ParsedAttributeType.String);
+        }
+
+
+        [Test]
+        public void SimpleOnlyReferenceWithSpace()
+        {
+            var parser = new AttributeParser("a ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "a", ParsedAttributeType.String);
         }
 
         [Test]
@@ -149,6 +226,18 @@ namespace NHaml.Tests
             AssertAttribute(parser, "ggg", "ggg.bb.aa", ParsedAttributeType.Reference);
         }
 
+
+        [Test]
+        public void SimpleReference()
+        {
+            var parser = new AttributeParser(" a=bb ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "bb", ParsedAttributeType.Reference);
+        }
+
         [Test]
         public void Schema()
         {
@@ -160,6 +249,36 @@ namespace NHaml.Tests
             AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.String);
             AssertAttribute(parser, "b", "ccc", "eee", ParsedAttributeType.String);
             AssertAttribute(parser, "eee", "c", "e", ParsedAttributeType.Reference);
+        }
+        [Test]
+        public void SimpleSchema()
+        {
+            var parser = new AttributeParser(" xml:lang='en:us' ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.String);
+        }
+        [Test]
+        public void SchemaOnly()
+        {
+            var parser = new AttributeParser(" a:b ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "b", "b", ParsedAttributeType.String);
+        }
+        [Test]
+        public void SimpleSchemaReference()
+        {
+            var parser = new AttributeParser(" xml:lang=en:us ");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "xml", "lang", "en:us", ParsedAttributeType.Reference);
         }
 
 
@@ -177,6 +296,17 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public void SimpleSingleQuotes()
+        {
+            var parser = new AttributeParser("a='b'");
+
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "b", ParsedAttributeType.String);
+        }
+
+        [Test]
         public void SpacesBettwenKeyAndValue()
         {
             var parser = new AttributeParser("a =a bbb= b c = 'c'  dd  =  #{d} ");
@@ -190,61 +320,74 @@ namespace NHaml.Tests
             AssertAttribute(parser, "dd", "d", ParsedAttributeType.Expression);
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnDoubleAttribute()
         {
             new AttributeParser(@" abc=a abc=b ").Parse();
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnDoubleAttributeWithDifferentCase()
         {
             new AttributeParser(@" abc=a AbC=b aBc=c ").Parse();
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnEmtpyAfterEqual()
         {
             new AttributeParser(@" a= ").Parse();
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnForgottenDoubleSingleQuoteClose()
         {
             new AttributeParser(@" a=""text ").Parse();
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
-        public void ThrowExceptionOnForgottenDoubleSingleQuoteOpen()
+        [Test]
+        public void DoubleQuoteOpen()
         {
-            new AttributeParser(@" a=text"" ").Parse();
+            var parser = new AttributeParser(@" a=text"" ");
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "text\"", ParsedAttributeType.Reference);
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test]
+        public void SingleQuoteOpen()
+        {
+            var parser = new AttributeParser(@" a=text' ");
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "text'", ParsedAttributeType.Reference);
+        }
+
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnForgottenExpressionClose()
         {
             new AttributeParser(@" a=#{text ").Parse();
         }
-
-        [Test, ExpectedException(typeof (SyntaxException))]
-        public void ThrowExceptionOnForgottenExpressionOpen()
+        [Test]
+        public void ValueEndsWithCurly()
         {
-            new AttributeParser(@" a=text} ").Parse();
+            var parser = new AttributeParser(@" a=text} ");
+            parser.Parse();
+
+            Assert.AreEqual(1, parser.Attributes.Count);
+            AssertAttribute(parser, "a", "text}", ParsedAttributeType.Reference);
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnForgottenSingleQuoteClose()
         {
             new AttributeParser(@" a='text ").Parse();
         }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
-        public void ThrowExceptionOnForgottenSingleQuoteOpen()
-        {
-            new AttributeParser(@" a=text' ").Parse();
-        }
 
-        [Test, ExpectedException(typeof (SyntaxException))]
+
+        [Test, ExpectedException(typeof(SyntaxException))]
         public void ThrowExceptionOnOnlyShema()
         {
             new AttributeParser(@" a: ").Parse();

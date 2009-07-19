@@ -609,8 +609,6 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeParser2Tests.cs" />
-    <Compile Include="ExpressionStringParserTests2.cs" />
     <Compile Include="Functional\BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>

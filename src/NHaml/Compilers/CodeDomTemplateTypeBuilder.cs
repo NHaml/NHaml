@@ -40,60 +40,60 @@ namespace NHaml.Compilers
 
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams);
-            if (TemplateEngine.Options.OutputDebugFiles && SupportsDebug())
-            {
-                compilerParams.GenerateInMemory = false;
-                compilerParams.IncludeDebugInformation = true;
-                var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0,8);
-                var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
-                var directoryInfo = new DirectoryInfo(nhamlTempPath);
-                if (!directoryInfo.Exists)
-                {
-                    directoryInfo.Create();
-                }
-                var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
-                if (fileInfo.Exists)
-                {
-                    fileInfo.Delete();
-                }
-                using (var writer = fileInfo.CreateText())
-                {
-                    writer.Write(Source);
-                }
+            //if (TemplateEngine.Options.OutputDebugFiles && SupportsDebug())
+            //{
+            //    compilerParams.GenerateInMemory = false;
+            //    compilerParams.IncludeDebugInformation = true;
+            //    var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0,8);
+            //    var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
+            //    var directoryInfo = new DirectoryInfo(nhamlTempPath);
+            //    if (!directoryInfo.Exists)
+            //    {
+            //        directoryInfo.Create();
+            //    }
+            //    var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
+            //    if (fileInfo.Exists)
+            //    {
+            //        fileInfo.Delete();
+            //    }
+            //    using (var writer = fileInfo.CreateText())
+            //    {
+            //        writer.Write(Source);
+            //    }
 
-            //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for a  in memory assembly.
-                var tempFileName = Path.GetTempFileName();
+            ////TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for a  in memory assembly.
+            //    var tempFileName = Path.GetTempFileName();
 
-                var tempAssemblyName = Path.Combine(directoryInfo.FullName, tempFileName + ".dll");
-                var tempSymbolsName = Path.Combine(directoryInfo.FullName, tempFileName + ".pdb");
-                try
-                {
-                    compilerParams.OutputAssembly = tempAssemblyName;
-                    CompilerResults = CodeDomProvider.CompileAssemblyFromFile(compilerParams, fileInfo.FullName);
-                    if (ContainsErrors())
-                    {
-                        return null;
-                    }
+            //    var tempAssemblyName = Path.Combine(directoryInfo.FullName, tempFileName + ".dll");
+            //    var tempSymbolsName = Path.Combine(directoryInfo.FullName, tempFileName + ".pdb");
+            //    try
+            //    {
+            //        compilerParams.OutputAssembly = tempAssemblyName;
+            //        CompilerResults = CodeDomProvider.CompileAssemblyFromFile(compilerParams, fileInfo.FullName);
+            //        if (ContainsErrors())
+            //        {
+            //            return null;
+            //        }
 
-                    var file = Path.GetFullPath(tempAssemblyName);
-                    var evidence = Path.GetFullPath(tempSymbolsName);
-                    var assembly = Assembly.Load(File.ReadAllBytes(file), File.ReadAllBytes(evidence));
-                    return assembly.GetType(typeName);
-                }
-                finally 
-                {
-                    if (File.Exists(tempAssemblyName))
-                    {
-                        File.Delete(tempAssemblyName);
-                    }
-                    if (File.Exists(tempSymbolsName))
-                    {
-                        File.Delete(tempSymbolsName);
-                    }
-                }
-            }
-            else
-            {
+            //        var file = Path.GetFullPath(tempAssemblyName);
+            //        var evidence = Path.GetFullPath(tempSymbolsName);
+            //        var assembly = Assembly.Load(File.ReadAllBytes(file), File.ReadAllBytes(evidence));
+            //        return assembly.GetType(typeName);
+            //    }
+            //    finally 
+            //    {
+            //        if (File.Exists(tempAssemblyName))
+            //        {
+            //            File.Delete(tempAssemblyName);
+            //        }
+            //        if (File.Exists(tempSymbolsName))
+            //        {
+            //            File.Delete(tempSymbolsName);
+            //        }
+            //    }
+            //}
+            //else
+            //{
                 compilerParams.GenerateInMemory = true;
                 compilerParams.IncludeDebugInformation = false;
                 CompilerResults = CodeDomProvider.CompileAssemblyFromSource(compilerParams, Source);
@@ -103,7 +103,7 @@ namespace NHaml.Compilers
                 }
                 var assembly = CompilerResults.CompiledAssembly;
                 return ExtractType(typeName, assembly);
-            }
+           // }
 
         }
 

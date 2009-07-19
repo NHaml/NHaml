@@ -1,50 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
 using NHaml.Exceptions;
 
 namespace NHaml
 {
     public class AttributeParser
     {
-        private static readonly Regex _escapedDoubleQuotesRegex;
-        private static readonly Regex _escapedExpressionBeginQuotesRegex;
-        private static readonly Regex _escapedExpressionEndQuotesRegex;
-        private static readonly Regex _escapedSingleQuotesRegex;
-        private static readonly Regex _parser;
         private readonly string attributesString;
-
-        static AttributeParser()
-        {
-            // far more readable the a large string and 
-            // since there is not dynamic code the compiler
-            // can optimize it to one string.
-            var pattern = string.Concat(
-                @"(?:(?<schema>\w+)\:)?", // schema
-
-                @"(?<name>[\w-]+)", // attribute name
-
-                @"(", // start optional value for only reference
-
-                @"\s*=\s*", // equal
-
-                @"(?:(?<rvalue>(\.|\w)+)", // reference as value
-                "|",
-                @"(?:""(?<sdqvalue>((?:\\"")|[^""])*)"")", // double quotes
-                "|",
-                @"(?:'(?<ssqvalue>((?:\\')|[^'])*)')", // single quotes
-                "|",
-                @"(?:#\{(?<dvalue>((?:\\\})|[^}])*)}))", // expression
-                @")?", // end optional value for only reference
-                @"\s*"); // whitespace for next
-
-            _parser = new Regex(pattern, RegexOptions.Compiled);
-
-            _escapedDoubleQuotesRegex = new Regex(@"\\""", RegexOptions.Compiled);
-            _escapedSingleQuotesRegex = new Regex(@"\\'", RegexOptions.Compiled);
-            _escapedExpressionBeginQuotesRegex = new Regex(@"\\{", RegexOptions.Compiled);
-            _escapedExpressionEndQuotesRegex = new Regex(@"\\}", RegexOptions.Compiled);
-        }
+        private string currentKey;
+        private string currentValue;
+        private ParsedAttributeType attributeType;
+        LinkedList<Token> tokens;
+        public List<ParsedAttribute> Attributes { get; private set; }
 
         public AttributeParser(string attributesString)
         {
@@ -52,126 +19,237 @@ namespace NHaml
             this.attributesString = attributesString;
         }
 
-        public List<ParsedAttribute> Attributes { get; private set; }
 
         public void Parse()
         {
             Attributes.Clear();
-
-            var matches = _parser.Matches(attributesString);
-
-            CheckMatches(matches);
-
-            foreach (Match match in matches)
+            tokens = Token.ReadAllTokens(attributesString);
+            Token next;
+            while (!(next = tokens.First.Value).IsEnd)
             {
-                if (!match.Success)
+                if (next.IsWhiteSpace)
                 {
-                    //Todo: put message in resource
-                    throw new SyntaxException(string.Format("Attribute '{0}' is not valid.", match.Value));
+                    tokens.RemoveFirst();
+                    continue;
                 }
+                if ((next.Character) == '\'' || (next.IsEscaped) || (next.Character) == '"' || (next.Character) == ':' || (next.Character) == '}' || (next.Character) == '=')
+                {
+                    throw new SyntaxException();
+                }
+                ProcessKey();
+                AddCurrent();
+                currentValue = null;
+                currentKey = null;
+            }
 
-                var groups = match.Groups;
-                var groupSchema = groups["schema"];
-                var groupName = groups["name"];
-                var groupStringDoulbeQuoteValue = groups["sdqvalue"];
-                var groupStringSingleQuoteValue = groups["ssqvalue"];
-                var groupReferenceValue = groups["rvalue"];
-                var groupExpressionValue = groups["dvalue"];
+            CheckForDuplicates();
+        }
 
-                string schmea = null;
-                var name = groupName.Value;
-                string value;
-                ParsedAttributeType type;
+        private void EatWhiteSpace()
+        {
+            while (tokens.First.Value.IsWhiteSpace)
+            {
+                tokens.RemoveFirst();
+            }
+        }
+        private void ProcessKey()
+        {
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                currentKey += token.Character;
 
-                if (groupSchema.Success)
+                var next = tokens.First.Value;
+                if (next.IsEscaped)
                 {
-                    schmea = groupSchema.Value;
+                    throw new Exception();
                 }
+                if (next.IsWhiteSpace)
+                {
+                    ProcessPreEquals();
+                    break;
+                }
+                if (next.Character == '=')
+                {
+                    ProcessEquals();
+                    break;
+                }
+                if (next.IsEnd)
+                {
+                    break;
+                }
+            }
+        }
 
-                if (groupStringDoulbeQuoteValue.Success)
-                {
-                    type = ParsedAttributeType.String;
-                    value = _escapedDoubleQuotesRegex.Replace(groupStringDoulbeQuoteValue.Value, "\"");
-                }
-                else if (groupStringSingleQuoteValue.Success)
-                {
-                    type = ParsedAttributeType.String;
-                    value = _escapedSingleQuotesRegex.Replace(groupStringSingleQuoteValue.Value, "'");
-                }
-                else if (groupReferenceValue.Success)
-                {
-                    type = ParsedAttributeType.Reference;
-                    value = groupReferenceValue.Value;
-                }
-                else if (groupExpressionValue.Success)
-                {
-                    type = ParsedAttributeType.Expression;
-                    value = _escapedExpressionBeginQuotesRegex.Replace(groupExpressionValue.Value, "{");
-                    value = _escapedExpressionEndQuotesRegex.Replace(value, "}");
-                }
-                else
-                {
-                    value = name;
-                    type = ParsedAttributeType.String;
-                }
+        private void ProcessPreEquals()
+        {
+            EatWhiteSpace();
 
-                foreach (var attribute in Attributes)
+            var next = tokens.First.Value;
+            if (next.IsEscaped)
+            {
+                throw new Exception();
+            }
+            if ((next.Character == '\'') || (next.Character == '"') || (next.Character == '\\'))
+            {
+                throw new Exception();
+            }
+            if (next.Character == '=')
+            {
+                ProcessEquals();
+            }
+        }
+
+        private void ProcessEquals()
+        {
+            tokens.RemoveFirst();
+            EatWhiteSpace();
+            var next = tokens.First;
+            var character = next.Value.Character;
+
+            if ((character == '\\') || (next.Value.IsEnd))
+            {
+                throw new SyntaxException();
+            }
+            if ((character == '\'') || (character == '"'))
+            {
+                ProcessQuotedValue(character);
+                return;
+            }
+            if (character == '#' && next.Next.Value.Character == '{')
+            {
+                ProcessHashedCode();
+                return;
+            }
+
+            ProcessUnQuotedCode();
+
+        }
+
+        private void ProcessUnQuotedCode()
+        {
+            attributeType = ParsedAttributeType.Reference;
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                AddCurrentValue(token);
+
+                var next = tokens.First.Value;
+                if ((next.Character == ' ') || next.IsEnd)
                 {
-                    //Todo: put message in resource
-                    if (string.Equals(attribute.Schema, schmea, StringComparison.InvariantCultureIgnoreCase) &&
-                        string.Equals(attribute.Name, name, StringComparison.InvariantCultureIgnoreCase))
+                    return;
+                }
+            }
+        }
+
+        private void ProcessHashedCode()
+        {
+            attributeType = ParsedAttributeType.Expression;
+            tokens.RemoveFirst();
+            tokens.RemoveFirst();
+            while (true)
+            {
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                
+                AddCurrentValue(token);
+
+                var next = tokens.First.Value;
+                if (next.IsEnd)
+                {
+                    throw new SyntaxException();
+                }
+                if (!next.IsEscaped && (next.Character == '}'))
+                {
+                    tokens.RemoveFirst();
+                    return;
+                }
+            }
+        }
+
+        private void AddCurrentValue(Token token)
+        {
+            if (token.IsEscaped)
+            {
+                currentValue += @"\";
+            }
+            currentValue += token.Character;
+        }
+
+        private void ProcessQuotedValue(char character)
+        {
+            attributeType = ParsedAttributeType.String;
+            currentValue = string.Empty;
+            tokens.RemoveFirst();
+            while (true)
+            {
+                var next = tokens.First.Value;
+                if (next.IsEnd)
+                {
+                    throw new SyntaxException();
+                }
+                if (!next.IsEscaped && (next.Character == character))
+                {
+                    tokens.RemoveFirst();
+                    break;
+                }
+                var token = tokens.First.Value;
+                tokens.RemoveFirst();
+                AddCurrentValue(token);
+
+            }
+        }
+
+
+        private void CheckForDuplicates()
+        {
+            foreach (var attribute in Attributes)
+            {
+                var parsedAttribute = attribute;
+                if (Attributes.Find(x => parsedAttribute != x &&
+                                          string.Equals(parsedAttribute.Schema, x.Schema, StringComparison.InvariantCultureIgnoreCase) &&
+                                          string.Equals(parsedAttribute.Name, x.Name, StringComparison.InvariantCultureIgnoreCase)) != null)
+                {
+
+                    throw new SyntaxException(string.Format("The attribute '{0}' is occurs twice.", attribute.Name));
+                }
+            }
+        }
+
+
+        private void AddCurrent()
+        {
+            var strings = currentKey.Split(':');
+            string schema;
+            string name;
+            switch (strings.Length)
+            {
+                case 1:
+                    schema = null;
+                    name = currentKey;
+                    break;
+                case 2:
+                    schema = strings[0];
+                    name = strings[1];
+                    if (name == String.Empty)
                     {
-                        var attributeName = (schmea != null ? string.Format("{0}:{1}", schmea, name) : name);
-                        ThrowErrorAtPosition(string.Format("The attribute '{0}' is already defined.",attributeName),
-                            groupName.Index);
+                        throw new SyntaxException("Schema with no name.");
                     }
-                }
-
-                var parsedAttribute = new ParsedAttribute{Name = name, Schema = schmea,Value = value, Type = type};
-                Attributes.Add(parsedAttribute);
+                    break;
+                default:
+                    throw new SyntaxException("only 1 ':' allowed in key");
             }
+
+            if (currentValue == null)
+            {
+                currentValue = name;
+            }
+            Attributes.Add(new ParsedAttribute { Name = name, Schema = schema, Type = attributeType, Value = currentValue });
         }
 
-        private void CheckMatches(MatchCollection matches)
-        {
-            var currentIndex = 0;
 
-            foreach (Match match in matches)
-            {
-                CheckMatch(match.Index, currentIndex);
 
-                currentIndex = match.Index + match.Length;
-            }
-
-            if (currentIndex != attributesString.Length)
-            {
-                CheckMatch(attributesString.Length, currentIndex);
-            }
-        }
-
-        private void CheckMatch(int matchIndex, int currentIndex)
-        {
-            if (matchIndex == currentIndex)
-            {
-                return;
-            }
-
-            var length = matchIndex - currentIndex;
-            var result = attributesString.Substring(currentIndex, length).Trim();
-
-            if (result.Length == 0)
-            {
-                return;
-            }
-
-            //Todo: put massage into resource
-            ThrowErrorAtPosition("Invalid attribute found.", currentIndex);
-        }
-
-        private void ThrowErrorAtPosition(string message, int index)
-        {
-            var format = string.Format("{0}\r\n{1}\r\n{2}^",message,attributesString,new string('-', index));
-            throw new SyntaxException(format);
-        }
     }
 }

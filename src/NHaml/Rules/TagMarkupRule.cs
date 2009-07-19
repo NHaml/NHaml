@@ -161,7 +161,7 @@ namespace NHaml.Rules
 
                     expressionStringParser.Parse();
 
-                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name,expressionStringParser.Tokens);
+                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, expressionStringParser.ExpressionStringTokens);
                 }
                 else
                 {

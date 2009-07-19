@@ -1,63 +1,100 @@
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
+using NHaml.Exceptions;
 
 namespace NHaml
 {
     public class ExpressionStringParser
     {
-        private readonly string _expressionString;
-        private static readonly Regex _parser;
-        private static readonly Regex _escapedExpressionBeginQuotesRegex;
-        private static readonly Regex _escapedExpressionEndQuotesRegex;
+        private readonly LinkedList<Token> Tokens;
 
-        public List<ExpressionStringToken> Tokens { get; protected set; }
+        private string current;
+        private bool? isExpression;
 
-        static ExpressionStringParser()
-        {
-            _parser = new Regex(@"#{(?<value>((?:\\\})|[^}])*)}", RegexOptions.Compiled);
+        public List<ExpressionStringToken> ExpressionStringTokens { get; protected set; }
 
-            _escapedExpressionBeginQuotesRegex = new Regex( @"\\{", RegexOptions.Compiled );
-            _escapedExpressionEndQuotesRegex = new Regex( @"\\}", RegexOptions.Compiled );
-        }
 
         public ExpressionStringParser(string expressionString)
         {
-            _expressionString = expressionString;
-            Tokens = new List<ExpressionStringToken>(); 
+            Tokens = Token.ReadAllTokens(expressionString);
+            ExpressionStringTokens = new List<ExpressionStringToken>();
         }
 
         public void Parse()
         {
-            Tokens.Clear();
-
-            var matches = _parser.Matches(_expressionString);
-
-            var index = 0;
-            foreach (Match match in matches)
+            ExpressionStringTokens.Clear();
+            //HACK:
+            if (Tokens.Count == 1)
             {
-                if( index != match.Index )
+                ExpressionStringTokens.Add(new ExpressionStringToken(string.Empty, false));
+                return;
+            }
+            Token next;
+            while (!(next = Tokens.First.Value).IsEnd)
+            {
+                var character = next.Character;
+                if (character == '#' && Tokens.First.Next.Value.Character == '{')
                 {
-                    var token = _expressionString.Substring(index, match.Index - index);
-                    Tokens.Add(new ExpressionStringToken(token, false));
+                    ProcessHashedCode();
+                }
+                else
+                {
+                    ProcessString();
+                }
+                ExpressionStringTokens.Add(new ExpressionStringToken(current, isExpression.Value));
+                current = null;
+                isExpression = null;
+            }
+
+        }
+
+        private void ProcessString()
+        {
+            isExpression = false;
+            current = string.Empty;
+            while (true)
+            {
+                var next = Tokens.First;
+                var nextValue = next.Value;
+                if (nextValue.IsEnd)
+                {
+                    return;
                 }
 
-                var expressionToken = match.Groups["value"].Value;
-                expressionToken = _escapedExpressionBeginQuotesRegex.Replace( expressionToken, "{" );
-                expressionToken = _escapedExpressionEndQuotesRegex.Replace( expressionToken, "}" );
+                if (nextValue.Character == '#' && next.Next.Value.Character == '{')
+                {
+                    return;
+                }
+                var token = Tokens.First.Value;
+                Tokens.RemoveFirst();
+                var character = token.Character;
 
-                Tokens.Add( new ExpressionStringToken( expressionToken, true ) );
-
-                index = match.Index + match.Length;
+                current += character;
             }
-
-            if( index != _expressionString.Length )
-            {
-                var token = _expressionString.Substring( index, _expressionString.Length-index );
-                Tokens.Add( new ExpressionStringToken( token, false ) );
-            }
-
-            if( Tokens.Count == 0 )
-                Tokens.Add(new ExpressionStringToken(string.Empty, false));
         }
+
+        private void ProcessHashedCode()
+        {
+            isExpression = true;
+            Tokens.RemoveFirst();
+            Tokens.RemoveFirst();
+            while (true)
+            {
+                var token = Tokens.First.Value;
+                Tokens.RemoveFirst();
+                current += token.Character;
+
+                var next = Tokens.First.Value;
+                if (next.IsEnd)
+                {
+                    throw new SyntaxException();
+                }
+                if (!next.IsEscaped && (next.Character == '}'))
+                {
+                    Tokens.RemoveFirst();
+                    return;
+                }
+            }
+        }
+
     }
 }

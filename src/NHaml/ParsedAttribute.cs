@@ -1,5 +1,3 @@
-using System.Collections.Generic;
-
 namespace NHaml
 {
     public class ParsedAttribute

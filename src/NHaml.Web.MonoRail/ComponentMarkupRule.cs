@@ -116,7 +116,7 @@ namespace NHaml.Web.MonoRail
     		var expressionStringParser = new ExpressionStringParser(attribute.Value);
 
     		expressionStringParser.Parse();
-    		var values = expressionStringParser.Tokens;
+            var values = expressionStringParser.ExpressionStringTokens;
     		if (values.Count == 1)
     		{
     			var expressionStringToken = values[0];
