@@ -583,6 +583,15 @@
     <None Include="Functional\Templates\_Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Issues\GC57\Mock\Content.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Issues\GC57\Output.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Issues\GC57\Shared\Application.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Issues\GC50\Mock\Content.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -617,6 +626,7 @@
     <Compile Include="Functional\FSharpFunctionalTests.cs" />
     <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
     <Compile Include="Functional\ImporterTests.cs" />
+    <Compile Include="Issues\GC57\Fixture.cs" />
     <Compile Include="Issues\GC50\Fixture.cs" />
     <Compile Include="Issues\GC51\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
