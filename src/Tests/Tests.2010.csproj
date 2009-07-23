@@ -615,6 +615,9 @@
     <None Include="Issues\GC57\Mock\Content.haml" />
     <None Include="Issues\GC57\Output.xhtml" />
     <None Include="Issues\GC57\Shared\Application.haml" />
+    <None Include="Issues\GC58\Mock\Content.haml" />
+    <None Include="Issues\GC58\Output.xhtml" />
+    <None Include="Issues\GC58\Shared\Application.haml" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AttributeParser2Tests.cs" />
@@ -629,6 +632,7 @@
     <Compile Include="Issues\GC50\Fixture.cs" />
     <Compile Include="Issues\GC51\Fixture.cs" />
     <Compile Include="Issues\GC57\Fixture.cs" />
+    <Compile Include="Issues\GC58\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
     <Compile Include="TestFixtureMvcBase.cs" />
     <Compile Include="Functional\IronRubyFunctionalTests.cs" />
