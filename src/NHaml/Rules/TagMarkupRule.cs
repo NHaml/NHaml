@@ -14,7 +14,7 @@ namespace NHaml.Rules
             RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static readonly Regex _tagRegex = new Regex(
-            @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?(\/|=|&=|!=)?(.*)$",
+            @"^((?:[-:\w]|\\\.)+)([-\w\.\#]*)\s*(\{(.*)\})?(<)?\s*(\/|=|&=|!=)?(.*)$$",
             RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static readonly List<string> _whitespaceSensitiveTags
@@ -33,7 +33,8 @@ namespace NHaml.Rules
         public override BlockClosingAction Render(TemplateParser templateParser)
         {
             var currentInputLine = templateParser.CurrentInputLine;
-            var match = _tagRegex.Match(PreprocessLine(currentInputLine));
+            var input = PreprocessLine(currentInputLine);
+            var match = _tagRegex.Match(input);
 
             if (!match.Success)
             {
@@ -52,7 +53,7 @@ namespace NHaml.Rules
 
             ParseAndRenderAttributes(templateParser, match);
 
-            var action = groups[6].Value;
+            var action = groups[6].Value.Trim();
 
             var options = templateParser.TemplateEngine.Options;
             if (string.Equals("/", action) || options.IsAutoClosingTag(tagName))
