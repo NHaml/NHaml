@@ -272,7 +272,6 @@ namespace NHaml.Tests
         [ExpectedException(typeof(NullReferenceException))]
         public virtual void WithRunTimeException()
         {
-            
             AssertRender("WithRunTimeException");
         }
 

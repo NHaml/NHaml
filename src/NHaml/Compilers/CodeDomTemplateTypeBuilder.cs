@@ -12,6 +12,10 @@ namespace NHaml.Compilers
     {
 
         public TemplateEngine TemplateEngine { get; private set; }
+        public CodeDomProvider CodeDomProvider { get; set; }
+        public string Source { get; protected set; }
+        public CompilerResults CompilerResults { get; private set; }
+        public Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         public CodeDomTemplateTypeBuilder( TemplateEngine templateEngine )
@@ -23,12 +27,6 @@ namespace NHaml.Compilers
         }
 
 
-        public string Source { get; protected set; }
-
-        public CompilerResults CompilerResults { get; private set; }
-
-        public Dictionary<string, string> ProviderOptions { get; private set; }
-
         [SuppressMessage("Microsoft.Security", "CA2122")]
         [SuppressMessage("Microsoft.Portability", "CA1903")]
         public Type Build(string source, string typeName)
@@ -37,63 +35,49 @@ namespace NHaml.Compilers
 
             Trace.WriteLine(Source);
 
-
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams);
-            //if (TemplateEngine.Options.OutputDebugFiles && SupportsDebug())
-            //{
-            //    compilerParams.GenerateInMemory = false;
-            //    compilerParams.IncludeDebugInformation = true;
-            //    var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0,8);
-            //    var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
-            //    var directoryInfo = new DirectoryInfo(nhamlTempPath);
-            //    if (!directoryInfo.Exists)
-            //    {
-            //        directoryInfo.Create();
-            //    }
-            //    var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
-            //    if (fileInfo.Exists)
-            //    {
-            //        fileInfo.Delete();
-            //    }
-            //    using (var writer = fileInfo.CreateText())
-            //    {
-            //        writer.Write(Source);
-            //    }
+            if (TemplateEngine.Options.OutputDebugFiles && SupportsDebug())
+            {
+                compilerParams.GenerateInMemory = false;
+                compilerParams.IncludeDebugInformation = true;
+                var directoryInfo = GetNHamlTempDirectoryInfo();
+                var classFileInfo = GetClassFileInfo(directoryInfo, typeName);
+                using (var writer = classFileInfo.CreateText())
+                {
+                    writer.Write(Source);
+                }
 
-            ////TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for a  in memory assembly.
-            //    var tempFileName = Path.GetTempFileName();
+                //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for a  in memory assembly.
+                var tempFileName = Path.GetTempFileName();
+                var tempAssemblyName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".dll"));
+                var tempSymbolsName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".pdb"));
+                try
+                {
+                    compilerParams.OutputAssembly = tempAssemblyName.FullName;
+                    CompilerResults = CodeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
+                    if (ContainsErrors())
+                    {
+                        return null;
+                    }
 
-            //    var tempAssemblyName = Path.Combine(directoryInfo.FullName, tempFileName + ".dll");
-            //    var tempSymbolsName = Path.Combine(directoryInfo.FullName, tempFileName + ".pdb");
-            //    try
-            //    {
-            //        compilerParams.OutputAssembly = tempAssemblyName;
-            //        CompilerResults = CodeDomProvider.CompileAssemblyFromFile(compilerParams, fileInfo.FullName);
-            //        if (ContainsErrors())
-            //        {
-            //            return null;
-            //        }
-
-            //        var file = Path.GetFullPath(tempAssemblyName);
-            //        var evidence = Path.GetFullPath(tempSymbolsName);
-            //        var assembly = Assembly.Load(File.ReadAllBytes(file), File.ReadAllBytes(evidence));
-            //        return assembly.GetType(typeName);
-            //    }
-            //    finally 
-            //    {
-            //        if (File.Exists(tempAssemblyName))
-            //        {
-            //            File.Delete(tempAssemblyName);
-            //        }
-            //        if (File.Exists(tempSymbolsName))
-            //        {
-            //            File.Delete(tempSymbolsName);
-            //        }
-            //    }
-            //}
-            //else
-            //{
+                    var assembly = Assembly.Load(File.ReadAllBytes(tempAssemblyName.FullName), File.ReadAllBytes(tempSymbolsName.FullName));
+                    return assembly.GetType(typeName);
+                }
+                finally
+                {
+                    if (tempAssemblyName.Exists)
+                    {
+                        tempAssemblyName.Delete();
+                    }
+                    if (tempSymbolsName.Exists)
+                    {
+                        tempSymbolsName.Delete();
+                    }
+                }
+            }
+            else
+            {
                 compilerParams.GenerateInMemory = true;
                 compilerParams.IncludeDebugInformation = false;
                 CompilerResults = CodeDomProvider.CompileAssemblyFromSource(compilerParams, Source);
@@ -103,8 +87,30 @@ namespace NHaml.Compilers
                 }
                 var assembly = CompilerResults.CompiledAssembly;
                 return ExtractType(typeName, assembly);
-           // }
+            }
 
+        }
+
+        private FileInfo GetClassFileInfo(DirectoryInfo directoryInfo, string typeName)
+        {
+            var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
+            if (fileInfo.Exists)
+            {
+                fileInfo.Delete();
+            }
+            return fileInfo;
+        }
+
+        private static DirectoryInfo GetNHamlTempDirectoryInfo()
+        {
+            var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0, 8);
+            var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
+            var directoryInfo = new DirectoryInfo(nhamlTempPath);
+            if (!directoryInfo.Exists)
+            {
+                directoryInfo.Create();
+            }
+            return directoryInfo;
         }
 
         protected abstract bool SupportsDebug();
@@ -126,7 +132,6 @@ namespace NHaml.Compilers
             return false;
         }
 
-        public CodeDomProvider CodeDomProvider { get; set; }
 
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
