@@ -59,7 +59,8 @@ namespace NHaml
             get { return CurrentNode.Value; }
         }
 
-        private InputLine NextInputLine
+
+        public InputLine NextInputLine
         {
             get { return CurrentNode.Next.Value; }
         }

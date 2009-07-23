@@ -18,18 +18,18 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            var match = _commentRegex.Match( templateParser.CurrentInputLine.NormalizedText );
+            var currentInputLine = templateParser.CurrentInputLine;
+            var match = _commentRegex.Match( currentInputLine.NormalizedText );
 
             if( !match.Success )
             {
-                SyntaxException.Throw( templateParser.CurrentInputLine,
-                  ErrorParsingTag, templateParser.CurrentInputLine);
+                SyntaxException.Throw( currentInputLine, ErrorParsingTag, currentInputLine);
             }
 
             var ieBlock = match.Groups[1].Value;
             var content = match.Groups[2].Value;
 
-            var openingTag = new StringBuilder(templateParser.CurrentInputLine.Indent);
+            var openingTag = new StringBuilder(currentInputLine.Indent);
             openingTag.Append("<!--");
             var closingTag = new StringBuilder("-->");
 
@@ -39,27 +39,28 @@ namespace NHaml.Rules
                 closingTag.Insert(0,"<![endif]");
             }
 
+            var builder = templateParser.TemplateClassBuilder;
             if( string.IsNullOrEmpty( content ) )
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine( openingTag.ToString() );
-                closingTag.Insert(0, templateParser.CurrentInputLine.Indent);
+                builder.AppendOutputLine( openingTag.ToString() );
+                closingTag.Insert(0, currentInputLine.Indent);
             }
             else
             {
                 if( content.Length > 50 )
                 {
-                    templateParser.TemplateClassBuilder.AppendOutputLine( openingTag.ToString() );
-                    templateParser.TemplateClassBuilder.AppendOutput( templateParser.NextIndent );
-                    templateParser.TemplateClassBuilder.AppendOutputLine( content );
+                    builder.AppendOutputLine( openingTag.ToString() );
+                    builder.AppendOutput( templateParser.NextIndent );
+                    builder.AppendOutputLine( content );
                 }
                 else
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput( openingTag + content );
+                    builder.AppendOutput( openingTag + content );
                     closingTag.Insert(0, ' ');
                 }
             }
 
-            return () => templateParser.TemplateClassBuilder.AppendOutputLine( closingTag.ToString() );
+            return () => builder.AppendOutputLine( closingTag.ToString() );
         }
     }
 }

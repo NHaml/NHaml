@@ -32,40 +32,41 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render(TemplateParser templateParser)
         {
-            var match = _tagRegex.Match(PreprocessLine(templateParser.CurrentInputLine));
+            var currentInputLine = templateParser.CurrentInputLine;
+            var match = _tagRegex.Match(PreprocessLine(currentInputLine));
 
             if (!match.Success)
             {
-                SyntaxException.Throw(templateParser.CurrentInputLine, ErrorParsingTag,
-                                      templateParser.CurrentInputLine);
+                SyntaxException.Throw(currentInputLine, ErrorParsingTag, currentInputLine);
             }
 
-            var tagName = match.Groups[1].Value.Replace("\\", string.Empty);
+            var groups = match.Groups;
+            var tagName = groups[1].Value.Replace("\\", string.Empty);
 
             var isWhitespaceSensitive = _whitespaceSensitiveTags.Contains(tagName);
-            var openingTag = templateParser.CurrentInputLine.Indent + '<' + tagName;
+            var openingTag = string.Format("{0}<{1}", currentInputLine.Indent, tagName);
             var closingTag = string.Format("</{0}>", tagName);
 
-            templateParser.TemplateClassBuilder.AppendOutput(openingTag);
+            var builder = templateParser.TemplateClassBuilder;
+            builder.AppendOutput(openingTag);
 
             ParseAndRenderAttributes(templateParser, match);
 
-            var action = match.Groups[6].Value;
+            var action = groups[6].Value;
 
-            if (string.Equals("/", action)
-                || templateParser.TemplateEngine.Options.IsAutoClosingTag(tagName))
+            var options = templateParser.TemplateEngine.Options;
+            if (string.Equals("/", action) || options.IsAutoClosingTag(tagName))
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine(" />");
-
+                builder.AppendOutputLine(" />");
                 return EmptyClosingAction;
             }
 
-            var content = match.Groups[7].Value.Trim();
+            var content = groups[7].Value.Trim();
 
             if (string.IsNullOrEmpty(content))
             {
-                templateParser.TemplateClassBuilder.AppendOutputLine(">");
-                closingTag = templateParser.CurrentInputLine.Indent + closingTag;
+                builder.AppendOutputLine(">");
+                closingTag = currentInputLine.Indent + closingTag;
             }
             else
             {
@@ -74,43 +75,46 @@ namespace NHaml.Rules
                     || string.Equals("&=", action)
                     || string.Equals("!=", action))
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput(">", !isWhitespaceSensitive);
+                    builder.AppendOutput(">", !isWhitespaceSensitive);
 
                     if (!isWhitespaceSensitive)
                     {
-                        templateParser.TemplateClassBuilder.AppendOutput(templateParser.NextIndent);
+                        builder.AppendOutput(templateParser.NextIndent);
                     }
 
                     if (string.Equals("=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive,
-                                                                       templateParser.TemplateEngine.Options.EncodeHtml );
+                        builder.AppendCode(content, !isWhitespaceSensitive, options.EncodeHtml );
                     }
                     else if (string.Equals("&=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, true);
+                        builder.AppendCode(content, !isWhitespaceSensitive, true);
                     }
                     else if (string.Equals("!=", action))
                     {
-                        templateParser.TemplateClassBuilder.AppendCode(content, !isWhitespaceSensitive, false);
+                        builder.AppendCode(content, !isWhitespaceSensitive, false);
                     }
                     else
                     {
-                        templateParser.TemplateClassBuilder.AppendOutput(content, !isWhitespaceSensitive);
+                        builder.AppendOutput(content, !isWhitespaceSensitive);
                     }
 
                     if (!isWhitespaceSensitive)
                     {
-                        closingTag = templateParser.CurrentInputLine.Indent + closingTag;
+                        closingTag = currentInputLine.Indent + closingTag;
                     }
                 }
                 else
                 {
-                    templateParser.TemplateClassBuilder.AppendOutput(">" + content);
+                    builder.AppendOutput(">" + content);
+                    if ((currentInputLine.IndentCount +1) == templateParser.NextInputLine.IndentCount)
+                    {
+                        builder.AppendOutputLine(string.Empty);
+                    }
                 }
             }
 
-            return () => templateParser.TemplateClassBuilder.AppendOutputLine(closingTag);
+            return () => builder.AppendOutputLine(closingTag);
         }
 
         private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)
@@ -133,10 +137,10 @@ namespace NHaml.Rules
             }
 
             string id = null;
-
             foreach (Capture capture in match.Groups[1].Captures)
             {
                 id = capture.Value;
+                break;
             }
 
             if (!string.IsNullOrEmpty(id))
@@ -174,9 +178,14 @@ namespace NHaml.Rules
 
         private static string PrependAttribute(string attributesHash, string name, string value)
         {
-            var attribute = string.Format("{0}=\"{1}\"", name, value);
-
-            return string.IsNullOrEmpty(attributesHash) ? attribute : string.Format("{0} {1}", attribute, attributesHash);
+            if (string.IsNullOrEmpty(attributesHash))
+            {
+                return string.Format("{0}=\"{1}\"", name, value);
+            }
+            else
+            {
+                return string.Format("{0}=\"{1}\" {2}", name, value, attributesHash);
+            }
         }
     }
 }

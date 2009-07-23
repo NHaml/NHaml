@@ -15,8 +15,8 @@ namespace NHaml.Rules
         [SuppressMessage( "Microsoft.Globalization", "CA1308" )]
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-
-            var content = templateParser.CurrentInputLine.NormalizedText.Trim().ToLowerInvariant();
+            var currentInputLine = templateParser.CurrentInputLine;
+            var content = currentInputLine.NormalizedText.Trim().ToLowerInvariant();
 
             if (string.IsNullOrEmpty(content))
             {
@@ -71,8 +71,7 @@ namespace NHaml.Rules
                 }
                 else
                 {
-                    SyntaxException.Throw(templateParser.CurrentInputLine, ErrorParsingTag,
-                                          templateParser.CurrentInputLine);
+                    SyntaxException.Throw(currentInputLine, ErrorParsingTag,currentInputLine);
                 }
             }
 
