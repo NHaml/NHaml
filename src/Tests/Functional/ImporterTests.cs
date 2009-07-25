@@ -92,7 +92,7 @@ namespace NHaml.Tests.Functional
             {
                 using (var textWriter = new StreamWriter(memoryStream))
                 {
-                    using (var reader = File.OpenText("Functional/Expected/" + file + ".xhtml"))
+                    using (var reader = File.OpenText(string.Format("Functional/Expected/{0}.xhtml", file)))
                     {
                         generator.Import(reader, textWriter);
                     }
@@ -104,7 +104,7 @@ namespace NHaml.Tests.Functional
                     } 
                 }
             }
-            var expectedText = File.ReadAllText("Functional/Templates/" + file + ".haml");
+            var expectedText = File.ReadAllText(string.Format("Functional/Templates/{0}.haml", file));
             Assert.AreEqual(expectedText, actual);
         }
     }

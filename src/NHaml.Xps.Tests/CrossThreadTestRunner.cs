@@ -60,9 +60,7 @@ namespace NHaml.Xps.Tests
         [ReflectionPermission(SecurityAction.Demand)]
         private static void ThrowExceptionPreservingStack(Exception exception)
         {
-            var remoteStackTraceString = typeof(Exception).GetField(
-                "_remoteStackTraceString",
-                BindingFlags.Instance | BindingFlags.NonPublic);
+            var remoteStackTraceString = typeof(Exception).GetField("_remoteStackTraceString",BindingFlags.Instance | BindingFlags.NonPublic);
             remoteStackTraceString.SetValue(exception, exception.StackTrace + Environment.NewLine);
             throw exception;
         }

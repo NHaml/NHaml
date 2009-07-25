@@ -19,7 +19,7 @@ namespace NHaml.Xps.Tests
                                 File.Delete(tempTarget);
                             }
                             var xpsHelper = new XpsEngine();
-                            xpsHelper.Generate("XpsWithData.haml", context, tempTarget);
+                            xpsHelper.Generate(viewPath, context, tempTarget);
                             Process.Start(tempTarget);
                         }
                         finally
