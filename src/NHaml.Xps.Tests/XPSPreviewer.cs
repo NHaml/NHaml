@@ -12,23 +12,13 @@ namespace NHaml.Xps.Tests
                 delegate
                     {
                         const string tempTarget = "temp.xps";
-                        try
+                        if (File.Exists(tempTarget))
                         {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
-                            var xpsHelper = new XpsEngine();
-                            xpsHelper.Generate(viewPath, context, tempTarget);
-                            Process.Start(tempTarget);
+                            File.Delete(tempTarget);
                         }
-                        finally
-                        {
-                            if (File.Exists(tempTarget))
-                            {
-                                File.Delete(tempTarget);
-                            }
-                        }
+                        var xpsHelper = new XpsEngine();
+                        xpsHelper.Generate(viewPath, context, tempTarget);
+                        Process.Start(tempTarget);
                     });
         }
     }
