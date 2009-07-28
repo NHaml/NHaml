@@ -1,7 +1,8 @@
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-
+using Castle.DynamicProxy;
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -384,6 +385,19 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public virtual void ViewBaseClassGenericProxy()
+        {
+            var generator = new ProxyGenerator();
+
+            var classProxy = generator.CreateClassProxy<Hashtable>();
+
+            var genericType = typeof(GenericTemplateView<>).MakeGenericType(new[] { classProxy.GetType() });
+            _templateEngine.Options.TemplateBaseType = genericType;
+            
+            AssertRender("GenericBaseClassProxy");
+        }
+
+        [Test]
         public virtual void ViewBaseClassGeneric2()
         {
             _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate4<List<List<int>>> );
@@ -409,10 +423,12 @@ namespace NHaml.Tests
             get { return 9; }
         }
     }
-    public abstract class GenericTemplateView<TViewData> : Template
+    public abstract class GenericTemplateView<TViewData> : Template where TViewData : new()
     {
-        public TViewData ViewData { get; set; }
-
+        public TViewData ViewData
+        {
+            get { return new TViewData(); }
+        }
     }
     public abstract class CustomTemplate3<T> : Template
       where T : new()
