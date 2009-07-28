@@ -182,7 +182,7 @@ namespace NHaml
                 var location = type.Assembly.Location;
                 return false;
             }
-            catch (Exception exception)
+            catch (NotSupportedException)
             {
                 return true;
             }
