@@ -4423,12 +4423,6 @@
             </summary>
             <value>The ajax proxy generator.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.IMonoRailServices.DictionaryAdapterFactory">
-            <summary>
-            Gets or sets the dictionary adapter factory.
-            </summary>
-            <value>The dictionary adapter factory.</value>
-        </member>
         <member name="M:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.#ctor(System.IServiceProvider)">
             <summary>
             Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer"/> class.
@@ -4617,12 +4611,6 @@
             </summary>
             <value>The ajax proxy generator.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.DictionaryAdapterFactory">
-            <summary>
-            Gets or sets the dictionary adapter factory.
-            </summary>
-            <value>The dictionary adapter factory.</value>
-        </member>
         <member name="P:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ExtensionManager">
             <summary>
             Gets or sets the extension manager.
@@ -4787,11 +4775,6 @@
         <member name="F:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ServiceIdentification.DynamicActionProviderDescriptorProvider">
             <summary>
             The <see cref="T:Castle.MonoRail.Framework.Providers.IDynamicActionProviderDescriptorProvider"/> service.
-            </summary>
-        </member>
-        <member name="F:Castle.MonoRail.Framework.Container.DefaultMonoRailContainer.ServiceIdentification.DictionaryAdapterFactory">
-            <summary>
-            The <see cref="T:Castle.Components.DictionaryAdapter.IDictionaryAdapterFactory"/> service.
             </summary>
         </member>
         <member name="T:Castle.MonoRail.Framework.Descriptors.ActionMetaDescriptor">
@@ -8383,20 +8366,6 @@
             <param name="jsOptions">Options that will be used on the js side</param>
             <param name="options">Options passed to the helper method</param>
             <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.AjaxHelper.ProcessWith(System.Object)">
-            <summary>
-            Process With
-            </summary>
-            <param name="with"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.AjaxHelper.BuildCallbacks(System.Collections.IDictionary,System.Collections.IDictionary)">
-            <summary>
-            Build Call Backs
-            </summary>
-            <param name="jsOptions"></param>
-            <param name="options"></param>
         </member>
         <member name="M:Castle.MonoRail.Framework.Helpers.AjaxHelper.BuildCallbackFunction(Castle.MonoRail.Framework.Helpers.CallbackEnum,System.String,System.String@)">
             <summary>
@@ -12053,75 +12022,6 @@
             </code>
             </example>
         </member>
-        <member name="T:Castle.MonoRail.Framework.Helpers.JQueryHelper">
-             <summary>
-             JQuery Helper, a helper class that builds Html elements (i.e links) that contain Javascript that make Ajax calls using JQuery syntax
-             </summary>
-            <remarks>
-               Examples, you can make use of the DictHelper.CreateDict() to create an IDictionary of arguments that get passed to jQuery.Ajax(). 
-               
-            </remarks>
-            <para/>
-            <para/>
-            $JQuery.LinkToRemote("FAQ",$UrlHelper.For($DictHelper.CreateDict("controller=faq", "action=list")),$DictHelper.CreateDict("type='POST'","update=#bodycontent"))  
-            <para/>
-            <para/>
-            Results in html of : <a onclick="jQuery.ajax({url:'/faq/list.rails', success: function(data){ jQuery('#bodycontent').html(data);}, type:'POST'}); return false;" href="javascript:void(0);">FAQ</a>
-            <para/>
-            $JQuery.LinkToRemote("Mileage ",$UrlHelper.For($DictHelper.CreateDict("controller=Report", "action=DetailMileageByDateRange")),$DictHelper.CreateDict("with='id=$RunWorkOutTypeId'","type='GET'","dataType='script'"))
-            <para/>
-            <para/>
-            Results in html of : <a onclick="jQuery.ajax({url:'/Report/DetailMileageByDateRange.rails', type:'GET', dataType:'script', data:'id=a9d72871-e691-45a1-8955-2a22bdbbb10b'}); return false;" href="javascript:void(0);">Mileage </a>
-            <para/>
-            $JQuery.LinkToRemote("FAQ",$UrlHelper.For($DictHelper.CreateDict("controller=faq", "action=list")),$DictHelper.CreateDict("type='POST'","success='function(d2){ processData(d2); }'"))  
-            <para/>
-            <para/>
-            Results in html of : <a onclick="jQuery.ajax({url:'/faq/list.rails', success: function(d2){ processData(d2);}, type:'POST'}); return false;" href="javascript:void(0);">FAQ</a>
-            <para/>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.#ctor(Castle.MonoRail.Framework.IEngineContext)">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.Helpers.AjaxHelper"/> class.
-            setting the Controller, Context and ControllerContext.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.BuildAjaxOptions(System.Collections.IDictionary,System.Collections.IDictionary)">
-            <summary>
-            Build Ajax Options
-            </summary>
-            <param name="jsOptions"></param>
-            <param name="options"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.RemoteFunction(System.Collections.IDictionary)">
-            <summary>
-            Remote Function
-            </summary>
-            <param name="options"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.InstallScripts">
-            <summary>
-            Renders a Javascript library inside a single script tag.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.GetUrlOptionNoQuotes(System.Collections.IDictionary)">
-            <summary>
-            Get Url Option
-            </summary>
-            <param name="options">Dictionary of options</param>
-            <returns>string</returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.Helpers.JQueryHelper.JQueryJavascriptOptions(System.Collections.IDictionary)">
-            <summary>
-            Builds a JS associative array based on the specified dictionary instance.
-            <para>
-            For example: <c>name: value, other: 'another'</c>
-            </para>
-            </summary>
-            <param name="jsOptions">The js options.</param>
-            <returns>An associative array in javascript</returns>
-        </member>
         <member name="T:Castle.MonoRail.Framework.Helpers.JSONHelper">
             <summary>
             Provides utilities methods to work with JSON.
@@ -13399,11 +13299,6 @@
             <param name="id">Object to use for the action ID argument.</param>
             <param name="attributes">Additional attributes for the <b>a</b> tag.</param>
             <returns></returns>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.Helpers.WizardHelper.WizardController">
-            <summary>
-            Gets/Sets the <see cref="T:Castle.MonoRail.Framework.IWizardController"/>.
-            </summary>
         </member>
         <member name="P:Castle.MonoRail.Framework.Helpers.WizardHelper.CurrentStepIndex">
             <summary>
@@ -20110,12 +20005,6 @@
             </summary>
             <value>The ajax proxy generator.</value>
         </member>
-        <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.DictionaryAdapterFactory">
-            <summary>
-            Gets or sets the dictionary adapter factory.
-            </summary>
-            <value>The dictionary adapter factory.</value>
-        </member>
         <member name="P:Castle.MonoRail.Framework.Test.StubMonoRailServices.ControllerDescriptorProvider">
             <summary>
             Gets or sets the controller descriptor provider.
@@ -25084,57 +24973,6 @@
             </summary>
             <value>The cache policy configurer.</value>
         </member>
-        <member name="T:Castle.MonoRail.Framework.EngineContextLocator">
-            <summary>
-            Abstracts the strategy for getting the current <see cref="T:Castle.MonoRail.Framework.IEngineContext"/>.
-            The default strategy uses <see cref="P:Castle.MonoRail.Framework.MonoRailHttpHandlerFactory.CurrentEngineContext"/>
-            </summary>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.IEngineContextLocator">
-            <summary>
-            Pendent
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.IEngineContextLocator.LocateCurrentContext">
-            <summary>
-            Pendent
-            </summary>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.EngineContextLocator.#ctor">
-            <summary>
-            Initializes a new instance of the <see cref="T:Castle.MonoRail.Framework.ServiceProviderLocator"/> class.
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.EngineContextLocator.LocateCurrentContext">
-            <summary>
-            Locates the engine context using the registered strategies.
-            </summary>
-            <returns>The current <see cref="T:Castle.MonoRail.Framework.IEngineContext"/>, or <c>null</c> if none could be found.</returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.EngineContextLocator.AddLocatorStrategy(Castle.MonoRail.Framework.IEngineContextLocator)">
-            <summary>
-            Adds a locator strategy.
-            </summary>
-            <param name="strategy">The strategy.</param>
-        </member>
-        <member name="P:Castle.MonoRail.Framework.EngineContextLocator.Instance">
-            <summary>
-            Gets the instance.
-            </summary>
-            <value>The instance.</value>
-        </member>
-        <member name="T:Castle.MonoRail.Framework.EngineContextLocator.DefaultEngineContextLocatorStrategy">
-            <summary>
-            Default strategy to access a service provider
-            </summary>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.EngineContextLocator.DefaultEngineContextLocatorStrategy.LocateCurrentContext">
-            <summary>
-            Locates the provider using <see cref="P:Castle.MonoRail.Framework.MonoRailHttpHandlerFactory.CurrentEngineContext"/>
-            </summary>
-            <returns></returns>
-        </member>
         <member name="T:Castle.MonoRail.Framework.FailedToExecuteBeginActionAsyncResult">
             <summary>
             This is used to mark that an operation has failed during the begin phase
@@ -25581,48 +25419,43 @@
             <value>The element extensions.</value>
         </member>
         <member name="T:Castle.MonoRail.Framework.IWizardController">
-             <summary>
-             Depicts the contract for wizard controllers. 
-             </summary>
-             
-             <seealso xref="WizardActionProvider"/>
-             <seealso xref="WizardStepPage"/>
-             
-             <example>
-             The following code shows how to create a simple wizard with two pages.
-             <code>
-             [DynamicActionProvider(typeof(WizardActionProvider))]
-             public class MyWizardController : Controller, IWizardController
-             {
-            		public void OnWizardStart()
-            		{ }
-             
-            		public bool OnBeforeStep(String wizardName, String stepName, WizardStepPage step)
-            		{
-            			returtn true; 
-            		}
-            	
-            		public void OnAfterStep(String wizardName, String stepName, WizardStepPage step)
-            		{ }
-            		
-            		public WizardStepPage[] GetSteps(IHandlerContext context)
-            		{
-            			return new WizardStepPage[] { new MyPage1(), new MyPage2() }; 
-            		}
+            <summary>
+            Depicts the contract for wizard controllers. 
+            </summary>
             
-            		public bool UseCurrentRouteForRedirects
-            		{
-            			get { return true; }
-            		}
-             }
-             </code>
-             </example>
-             
-             <remarks>
-             The interface members allow you to perform some logic on important
-             events from a wizard lifecycle. The <see cref="M:Castle.MonoRail.Framework.IWizardController.GetSteps(Castle.MonoRail.Framework.IEngineContext)"/> must be used
-             to return the steps the wizard has.
-             </remarks>
+            <seealso xref="WizardActionProvider"/>
+            <seealso xref="WizardStepPage"/>
+            
+            <example>
+            The following code shows how to create a simple wizard with two pages.
+            <code>
+            [DynamicActionProvider(typeof(WizardActionProvider))]
+            public class MyWizardController : Controller, IWizardController
+            {
+            	public void OnWizardStart()
+            	{ }
+            
+            	public bool OnBeforeStep(String wizardName, String stepName, WizardStepPage step)
+            	{
+            		returtn true; 
+            	}
+            
+            	public void OnAfterStep(String wizardName, String stepName, WizardStepPage step)
+            	{ }
+            	
+            	public WizardStepPage[] GetSteps(IHandlerContext context)
+            	{
+            		return new WizardStepPage[] { new MyPage1(), new MyPage2() }; 
+            	}
+            }
+            </code>
+            </example>
+            
+            <remarks>
+            The interface members allow you to perform some logic on important
+            events from a wizard lifecycle. The <see cref="M:Castle.MonoRail.Framework.IWizardController.GetSteps(Castle.MonoRail.Framework.IEngineContext)"/> must be used
+            to return the steps the wizard has.
+            </remarks>
         </member>
         <member name="M:Castle.MonoRail.Framework.IWizardController.OnWizardStart">
             <summary>
@@ -25662,11 +25495,6 @@
             <param name="context">The web request context.</param>
             <returns>An array of steps</returns>
         </member>
-        <member name="P:Castle.MonoRail.Framework.IWizardController.UseCurrentRouteForRedirects">
-            <summary>
-            True if the implementer want to use the current routing to navigate between wizard steps.
-            </summary>
-        </member>
         <member name="T:Castle.MonoRail.Framework.IWizardStepPage">
             <summary>
             Pendent
@@ -25684,11 +25512,10 @@
             	<c>true</c> if [is pre condition satisfied] [the specified context]; otherwise, <c>false</c>.
             </returns>
         </member>
-        <member name="M:Castle.MonoRail.Framework.IWizardStepPage.Reset(Castle.MonoRail.Framework.IEngineContext)">
+        <member name="M:Castle.MonoRail.Framework.IWizardStepPage.Reset">
             <summary>
             Resets this instance.
             </summary>
-            <param name="context">The context.</param>
         </member>
         <member name="P:Castle.MonoRail.Framework.IWizardStepPage.ActionName">
             <summary>
@@ -26420,12 +26247,6 @@
             </para>
             </remarks>
         </member>
-        <member name="M:Castle.MonoRail.Framework.WizardActionProvider.Execute(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
-            <summary>
-            Invoked as "start" action
-            </summary>
-            <returns></returns>
-        </member>
         <member name="M:Castle.MonoRail.Framework.WizardActionProvider.IncludeActions(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
             <summary>
             Implementation of IDynamicActionProvider.
@@ -26437,6 +26258,12 @@
             <param name="engineContext">The engine context.</param>
             <param name="controller">Wizard controller (must implement <see cref="T:Castle.MonoRail.Framework.IWizardController"/></param>
             <param name="controllerContext">The controller context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.WizardActionProvider.Execute(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
+            <summary>
+            Invoked as "start" action
+            </summary>
+            <returns></returns>
         </member>
         <member name="M:Castle.MonoRail.Framework.WizardActionProvider.OnStepActionRequested(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController,Castle.MonoRail.Framework.IControllerContext)">
             <summary>
@@ -26479,7 +26306,7 @@
         </member>
         <member name="M:Castle.MonoRail.Framework.WizardActionProvider.ResetSteps(Castle.MonoRail.Framework.IEngineContext,Castle.MonoRail.Framework.IController)">
             <summary>
-            Resets the steps by invoking <see cref="M:Castle.MonoRail.Framework.IWizardStepPage.Reset(Castle.MonoRail.Framework.IEngineContext)"/>
+            Resets the steps by invoking <see cref="M:Castle.MonoRail.Framework.IWizardStepPage.Reset"/>
             on all steps instances.
             </summary>
             <param name="engineContext">The engine context.</param>
@@ -26538,13 +26365,17 @@
             </summary>
             <param name="binder">The binder.</param>
         </member>
-        <member name="M:Castle.MonoRail.Framework.WizardStepPage.Reset(Castle.MonoRail.Framework.IEngineContext)">
+        <member name="M:Castle.MonoRail.Framework.WizardStepPage.Reset">
             <summary>
             Invoked when the wizard is being access from the start 
             action. Implementors should perform session clean up (if 
             they actually use the session) to avoid stale data on forms.
             </summary>
-            <param name="context">The context.</param>
+        </member>
+        <member name="M:Castle.MonoRail.Framework.WizardStepPage.RenderWizardView">
+            <summary>
+            Used to decide on which view to render.
+            </summary>
         </member>
         <member name="M:Castle.MonoRail.Framework.WizardStepPage.IsPreConditionSatisfied(Castle.MonoRail.Framework.IEngineContext)">
             <summary>
@@ -26554,11 +26385,6 @@
             before doing that you must send a redirect.
             </summary>
             <returns></returns>
-        </member>
-        <member name="M:Castle.MonoRail.Framework.WizardStepPage.RenderWizardView">
-            <summary>
-            Used to decide on which view to render.
-            </summary>
         </member>
         <member name="M:Castle.MonoRail.Framework.WizardStepPage.SelectMethod(System.String,System.Collections.IDictionary,Castle.MonoRail.Framework.IRequest,System.Collections.Generic.IDictionary{System.String,System.Object},Castle.MonoRail.Framework.ActionType)">
             <summary>
