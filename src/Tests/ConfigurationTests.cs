@@ -113,7 +113,7 @@ namespace NHaml.Tests
 
             Assert.IsNotNull( section );
             Assert.IsTrue( section.AutoRecompile.HasValue );
-            Assert.IsFalse( section.AutoRecompile.Value );
+            Assert.IsTrue( section.AutoRecompile.Value );
         }
 
         [Test]

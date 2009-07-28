@@ -15,13 +15,14 @@ namespace NHaml.Tests
     {
         protected StubViewEngine _viewEngine;
         protected ControllerContext _controllerContext;
-        protected StringWriter _output;
 
         protected TestFixtureMvcBase()
         {
             TemplatesFolder = TemplatesFolder + @"Mvc\";
             ExpectedFolder = ExpectedFolder + @"Mvc\";
         }
+
+        public StringWriter Output { get; set; }
 
         public override void SetUp()
         {
@@ -33,13 +34,13 @@ namespace NHaml.Tests
             var mockHttpRequest = new Mock<HttpRequestBase>();
             var mockHttpResponse = new Mock<HttpResponseBase>();
 
-            _output = new StringWriter();
+            Output = new StringWriter();
 
             ViewEngines.Engines.Add(_viewEngine);
 
             mockHttpRequest.Expect(req => req.MapPath(It.IsAny<string>()))
                 .Returns<string>(FakeServerMapPath);
-            mockHttpResponse.Expect(rsp => rsp.Output).Returns(_output);
+            mockHttpResponse.Expect(rsp => rsp.Output).Returns(Output);
             mockContext.Expect(ctx => ctx.Response).Returns(mockHttpResponse.Object);
             mockContext.Expect(ctx => ctx.Request).Returns(mockHttpRequest.Object);
 
@@ -73,9 +74,9 @@ namespace NHaml.Tests
             mockViewContext.ExpectGet(x => x.ViewData).Returns(new ViewDataDictionary());
             mockViewContext.ExpectGet(x => x.TempData).Returns(new TempDataDictionary());
             mockViewContext.ExpectGet(x => x.RouteData).Returns(_controllerContext.RouteData);
-            view.Render(mockViewContext.Object, _output);
+            view.Render(mockViewContext.Object, Output);
 
-            AssertRender(_output, expectedName);
+            AssertRender(Output, expectedName);
         }
 
         private string FakeServerMapPath(string path)
