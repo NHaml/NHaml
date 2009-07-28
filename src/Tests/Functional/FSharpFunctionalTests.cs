@@ -18,7 +18,16 @@ namespace NHaml.Tests.Functional
         [Ignore( "SwitchEval is currently not supported" )]
         public override void SwitchEval()
         {
-            
+
+        }
+        [Test, Ignore]
+        public override void ViewBaseClassGenericProxy()
+        {
+        }
+
+        [Test, Ignore]
+        public override void ViewBaseInterfaceGenericProxy()
+        {
         }
 
         [Ignore("Until debugging with fsharp works")]

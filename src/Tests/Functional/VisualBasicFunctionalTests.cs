@@ -19,5 +19,14 @@ namespace NHaml.Tests.Functional
         public override void LambdaEval()
         {
         }
+        [Test, Ignore]
+        public override void ViewBaseClassGenericProxy()
+        {
+        }
+
+        [Test, Ignore]
+        public override void ViewBaseInterfaceGenericProxy()
+        {
+        }
     }
 }

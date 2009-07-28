@@ -396,6 +396,18 @@ namespace NHaml.Tests
             
             AssertRender("GenericBaseClassProxy");
         }
+        [Test]
+        public virtual void ViewBaseInterfaceGenericProxy()
+        {
+            var generator = new ProxyGenerator();
+
+            var classProxy = generator.CreateInterfaceProxyWithoutTarget<ICollection>();
+
+            var genericType = typeof(GenericTemplateView<>).MakeGenericType(new[] { classProxy.GetType() });
+            _templateEngine.Options.TemplateBaseType = genericType;
+            
+            AssertRender("GenericBaseInterfaceProxy");
+        }
 
         [Test]
         public virtual void ViewBaseClassGeneric2()
@@ -423,11 +435,11 @@ namespace NHaml.Tests
             get { return 9; }
         }
     }
-    public abstract class GenericTemplateView<TViewData> : Template where TViewData : new()
+    public abstract class GenericTemplateView<TViewData> : Template 
     {
         public TViewData ViewData
         {
-            get { return new TViewData(); }
+            get { return default(TViewData); }
         }
     }
     public abstract class CustomTemplate3<T> : Template

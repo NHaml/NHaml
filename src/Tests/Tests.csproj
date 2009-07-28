@@ -108,6 +108,9 @@
     <None Include="Functional\Expected\BlankLine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Functional\Expected\GenericBaseInterfaceProxy.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Functional\Expected\GenericBaseClassProxy.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -295,6 +298,9 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\BlankLine.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Functional\Templates\GenericBaseInterfaceProxy.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\GenericBaseClassProxy.haml">

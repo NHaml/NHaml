@@ -150,16 +150,22 @@ namespace NHaml
 
         public void AddReferences(Type type)
         {
-            AddReference(type.Assembly.Location);
-
-            if (!type.IsGenericType)
+            try
             {
-                return;
+
+                AddReference(type.Assembly.Location);
+            }
+            catch (NotSupportedException)
+            {
+                //swallow for dynamic types
             }
 
-            foreach (var t in type.GetGenericArguments())
+            if (type.IsGenericType)
             {
-                AddReferences(t);
+                foreach (var genericArgument in type.GetGenericArguments())
+                {
+                    AddReferences(genericArgument);
+                }
             }
         }
 

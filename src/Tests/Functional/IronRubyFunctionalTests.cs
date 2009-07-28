@@ -35,6 +35,16 @@ namespace NHaml.Tests.Functional
         }
 
         [Test, Ignore]
+        public override void ViewBaseClassGenericProxy()
+        {
+        }
+
+         [Test, Ignore]
+         public override void ViewBaseInterfaceGenericProxy()
+         {
+         }
+
+        [Test, Ignore]
         public override void MultiLayout()
         {
             base.MultiLayout();
