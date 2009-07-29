@@ -103,7 +103,7 @@ namespace NHaml
             Invariant.ArgumentNotNull( templatePath, "templatePath" );
             Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
 
-            templateBaseType = GetNonProxiedBaseType(templateBaseType);
+            templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
             var templateCacheKey = new StringBuilder( templatePath.Path );
 
             foreach( var layoutTemplatePath in layoutTemplatePaths )
@@ -130,62 +130,6 @@ namespace NHaml
             }
 
             return compiledTemplate;
-        }
-
-        /// <summary>
-        /// Do a best guess on getting a non dynamic <see cref="Type"/>.
-        /// </summary>
-        /// <remarks>
-        /// This is necessary for libraries like nhibernate that use proxied types.
-        /// </remarks>
-        private static Type GetNonProxiedBaseType(Type type)
-        {
-            if (type.IsGenericType && !type.IsGenericTypeDefinition)
-            {
-                var genericArguments = new List<Type>();
-                foreach (var genericArgument in type.GetGenericArguments())
-                {
-                    genericArguments.Add(GetNonProxiedBaseType(genericArgument));
-                }
-                type = GetNonProxiedBaseType(type.GetGenericTypeDefinition());
-                return type.MakeGenericType(genericArguments.ToArray());
-            }
-
-            if (IsDynamic(type))
-            {
-                var baseType = type.BaseType;
-                if (baseType == typeof(object))
-                {
-                    var interfaces = type.GetInterfaces();
-                    if (interfaces.Length > 1)
-                    {
-                        return GetNonProxiedBaseType(interfaces[0]);
-                    }
-                    else
-                    {
-                        throw new Exception(string.Format("Could not create non dynamic type for '{0}'.", type.FullName));
-                    }
-                }
-                else
-                {
-                    return GetNonProxiedBaseType(baseType);
-                }
-            }
-            return type;
-        }
-
-        //HACK: must be a better way of working this out
-        private static bool IsDynamic(Type type)
-        {
-            try
-            {
-                var location = type.Assembly.Location;
-                return false;
-            }
-            catch (NotSupportedException)
-            {
-                return true;
-            }
         }
     }
 }

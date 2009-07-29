@@ -1,8 +1,6 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.IO;
-using Castle.DynamicProxy;
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -384,30 +382,7 @@ namespace NHaml.Tests
             AssertRender( "GenericBaseClassAnon" );
         }
 
-        [Test]
-        public virtual void ViewBaseClassGenericProxy()
-        {
-            var generator = new ProxyGenerator();
-
-            var classProxy = generator.CreateClassProxy<Hashtable>();
-
-            var genericType = typeof(GenericTemplateView<>).MakeGenericType(new[] { classProxy.GetType() });
-            _templateEngine.Options.TemplateBaseType = genericType;
-            
-            AssertRender("GenericBaseClassProxy");
-        }
-        [Test]
-        public virtual void ViewBaseInterfaceGenericProxy()
-        {
-            var generator = new ProxyGenerator();
-
-            var classProxy = generator.CreateInterfaceProxyWithoutTarget<ICollection>();
-
-            var genericType = typeof(GenericTemplateView<>).MakeGenericType(new[] { classProxy.GetType() });
-            _templateEngine.Options.TemplateBaseType = genericType;
-            
-            AssertRender("GenericBaseInterfaceProxy");
-        }
+    
 
         [Test]
         public virtual void ViewBaseClassGeneric2()

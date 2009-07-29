@@ -20,15 +20,7 @@ namespace NHaml.Tests.Functional
         {
 
         }
-        [Test, Ignore]
-        public override void ViewBaseClassGenericProxy()
-        {
-        }
-
-        [Test, Ignore]
-        public override void ViewBaseInterfaceGenericProxy()
-        {
-        }
+  
 
         [Ignore("Until debugging with fsharp works")]
         public override void WithRunTimeException()

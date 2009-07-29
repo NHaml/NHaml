@@ -108,12 +108,6 @@
     <None Include="Functional\Expected\BlankLine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Functional\Expected\GenericBaseInterfaceProxy.xhtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Functional\Expected\GenericBaseClassProxy.xhtml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Functional\Expected\SelfClosing.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -298,12 +292,6 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\BlankLine.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Functional\Templates\GenericBaseInterfaceProxy.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Functional\Templates\GenericBaseClassProxy.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Templates\CSharp2\WithRunTimeException.haml">
@@ -676,6 +664,7 @@
     <Compile Include="Issues\GC50\Fixture.cs" />
     <Compile Include="Issues\GC51\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
+    <Compile Include="ProxyExtracterTests.cs" />
     <Compile Include="TestFixtureMvcBase.cs" />
     <Compile Include="Functional\IronRubyFunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
