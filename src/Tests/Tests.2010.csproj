@@ -57,6 +57,14 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Castle.Core, Version=1.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\Castle.DynamicProxy2.dll</HintPath>
+    </Reference>
     <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\IronRuby.Libraries.dll</HintPath>
@@ -620,7 +628,6 @@
     <None Include="Issues\GC58\Shared\Application.haml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AttributeParser2Tests.cs" />
     <Compile Include="Functional\BooFunctionalTests.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -634,6 +641,7 @@
     <Compile Include="Issues\GC57\Fixture.cs" />
     <Compile Include="Issues\GC58\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
+    <Compile Include="ProxyExtracterTests.cs" />
     <Compile Include="TestFixtureMvcBase.cs" />
     <Compile Include="Functional\IronRubyFunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
@@ -652,6 +660,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="TokenTests.cs" />
     <Compile Include="UtilityTests.cs">
       <SubType>Code</SubType>
     </Compile>
