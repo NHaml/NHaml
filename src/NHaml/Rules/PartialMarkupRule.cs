@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using NHaml.TemplateResolution;
 
 namespace NHaml.Rules
 {
@@ -22,22 +24,19 @@ namespace NHaml.Rules
 
             if (string.IsNullOrEmpty(partialName))
             {
-                if (templateParser.CurrentTemplateIndex + 1 == templateParser.MergedTemplatePaths.Count)
+                if (templateParser.ViewSourceQueue.Count == 0)
                 {
                     throw new InvalidOperationException(NoPartialName);
                 }
-                var templatePath = templateParser.MergedTemplatePaths[templateParser.CurrentTemplateIndex + 1];
-                if (templatePath == null)
-                {
-                    throw new InvalidOperationException(NoPartialName);
-                }
+                var templatePath = templateParser.ViewSourceQueue.Dequeue();
                 templateParser.MergeTemplate(templatePath, true);
-                templateParser.CurrentTemplateIndex++;
             }
             else
             {
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
-                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, templateParser.MergedTemplatePaths);
+                var list = new List<IViewSource> {templateParser.TemplateViewSource};
+                list.AddRange(templateParser.LayoutViewSources);
+                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, list);
                 templateParser.MergeTemplate(source, true);
             }
 

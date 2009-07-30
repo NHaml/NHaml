@@ -11,39 +11,45 @@ namespace NHaml
     {
         private readonly string _singleIndent;
 
-        public TemplateParser( 
-            TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
-            IList<IViewSource> layoutPaths, IViewSource templatePath2)
+        public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
+            IList<IViewSource> layoutViewSources, IViewSource templatevViewSource)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
             TemplateEngine = templateEngine;
             TemplateClassBuilder = templateClassBuilder;
-            TemplatePath = templatePath2;
-            MergedTemplatePaths = new List<IViewSource>();
-            MergedTemplatePaths.AddRange(layoutPaths);
-            MergedTemplatePaths.Add(templatePath2);
+            TemplateViewSource = templatevViewSource;
+            LayoutViewSources = layoutViewSources;
+            ViewSourceQueue = new Queue<IViewSource>();
+            foreach (var layoutPath in layoutViewSources)
+            {
+                ViewSourceQueue.Enqueue(layoutPath);
+            }
+            ViewSourceQueue.Enqueue(templatevViewSource);
 
             Meta = new Dictionary<string, string>();
 
-            if( TemplateEngine.Options.UseTabs )
+            if (TemplateEngine.Options.UseTabs)
             {
                 _singleIndent = "\t";
             }
             else
             {
-                _singleIndent = string.Empty.PadLeft( TemplateEngine.Options.IndentSize );
+                _singleIndent = string.Empty.PadLeft(TemplateEngine.Options.IndentSize);
             }
         }
+
+        public IList<IViewSource> LayoutViewSources { get; set; }
+
+        public Queue<IViewSource> ViewSourceQueue { get; set; }
 
         public Dictionary<string, string> Meta { get; private set; }
 
         public TemplateEngine TemplateEngine { get; private set; }
 
-    	public TemplateClassBuilder TemplateClassBuilder { get; private set; }
+        public TemplateClassBuilder TemplateClassBuilder { get; private set; }
 
-    	public IViewSource TemplatePath { get; private set; }
+        public IViewSource TemplateViewSource { get; private set; }
 
-        public List<IViewSource> MergedTemplatePaths { get; private set; }
 
         private LinkedList<InputLine> InputLines { get; set; }
 
@@ -77,47 +83,45 @@ namespace NHaml
             get { return CurrentInputLine.Indent + _singleIndent; }
         }
 
-        public int CurrentTemplateIndex { get; set; }
 
         public void Parse()
         {
             InputLines = new LinkedList<InputLine>();
-            InputLines.AddLast( new InputLine( string.Empty, 0, TemplateEngine.Options.IndentSize ) );
-
-            InputLines.AddLast( new InputLine( EofMarkupRule.SignifierChar, 1, TemplateEngine.Options.IndentSize ) );
-
+            InputLines.AddLast(new InputLine(string.Empty, 0, TemplateEngine.Options.IndentSize));
+            InputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar, 1, TemplateEngine.Options.IndentSize));
             CurrentNode = InputLines.First.Next;
-            for (CurrentTemplateIndex = 0; CurrentTemplateIndex < MergedTemplatePaths.Count; CurrentTemplateIndex++)
+            ProcessViewSource(ViewSourceQueue.Dequeue());
+        }
+
+        private void ProcessViewSource(IViewSource viewSource)
+        {
+            MergeTemplate(viewSource, false);
+
+            while (CurrentNode.Next != null)
             {
-                var templatePath = MergedTemplatePaths[CurrentTemplateIndex];
-                MergeTemplate(templatePath, false);
-
-                while (CurrentNode.Next != null)
+                while (CurrentInputLine.IsMultiline && NextInputLine.IsMultiline)
                 {
-                    while (CurrentInputLine.IsMultiline && NextInputLine.IsMultiline)
-                    {
-                        CurrentInputLine.Merge(NextInputLine);
-                        InputLines.Remove(NextNode);
-                    }
-
-                    if (CurrentInputLine.IsMultiline)
-                    {
-                        CurrentInputLine.TrimEnd();
-                    }
-
-                    CurrentInputLine.ValidateIndentation();
-
-                    var rule = TemplateEngine.GetRule(CurrentInputLine);
-                    CurrentInputLine.NormalizedText = GetNormalizedText(rule, CurrentInputLine);
-                    rule.Process(this);
+                    CurrentInputLine.Merge(NextInputLine);
+                    InputLines.Remove(NextNode);
                 }
 
-                CloseBlocks();
+                if (CurrentInputLine.IsMultiline)
+                {
+                    CurrentInputLine.TrimEnd();
+                }
+
+                CurrentInputLine.ValidateIndentation();
+
+                var rule = TemplateEngine.GetRule(CurrentInputLine);
+                CurrentInputLine.NormalizedText = GetNormalizedText(rule, CurrentInputLine);
+                rule.Process(this);
             }
+
+            CloseBlocks();
         }
 
 
-        public string GetNormalizedText(MarkupRule markupRule, InputLine inputLine)
+        private static string GetNormalizedText(MarkupRule markupRule, InputLine inputLine)
         {
             var length = markupRule.Signifier.Length;
             var text = inputLine.Text;
@@ -130,14 +134,14 @@ namespace NHaml
             CurrentNode = CurrentNode.Next;
         }
 
-        public void MergeTemplate( IViewSource templatePath, bool replaceCurrentNode )
+        public void MergeTemplate(IViewSource templatePath, bool replaceCurrentNode)
         {
 
             var previous = CurrentNode.Previous;
 
             var lineNumber = 0;
 
-            using( var reader = templatePath.GetStreamReader())
+            using (var reader = templatePath.GetStreamReader())
             {
                 string line;
 
@@ -147,8 +151,7 @@ namespace NHaml
                     {
                         continue;
                     }
-                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, lineNumber++,
-                                                  TemplateEngine.Options.IndentSize );
+                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, lineNumber++, TemplateEngine.Options.IndentSize);
                     InputLines.AddBefore(CurrentNode, inputLine);
                 }
             }
@@ -157,20 +160,19 @@ namespace NHaml
                 InputLines.Remove(CurrentNode);
 
             }
-                CurrentNode = previous.Next;
+            CurrentNode = previous.Next;
 
         }
 
         public void CloseBlocks()
         {
-            for( var j = 0;
-                 ((j <= CurrentNode.Previous.Value.IndentCount - CurrentInputLine.IndentCount) && (BlockClosingActions.Count > 0));
-                 j++ )
+            var currentIndentCount = CurrentInputLine.IndentCount;
+            var previousIndentCount = CurrentNode.Previous.Value.IndentCount;
+            for (var index = 0; (index <= previousIndentCount - currentIndentCount) && (BlockClosingActions.Count > 0); index++)
             {
                 var blockClosingAction = BlockClosingActions.Pop();
                 blockClosingAction();
             }
         }
-
     }
 }
