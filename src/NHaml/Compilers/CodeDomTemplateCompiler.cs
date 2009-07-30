@@ -34,8 +34,8 @@ namespace NHaml.Compilers
 
             if( templateType == null )
             {
-                TemplateCompilationException.Throw( typeBuilder.CompilerResults,
-                                                    typeBuilder.Source, templateParser.TemplateViewSource.Path);
+                var viewSources = templateParser.ViewSources;
+                TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
             }
 
             return new TemplateFactory( templateType );
@@ -51,8 +51,7 @@ namespace NHaml.Compilers
 
             if( !lambdaMatch.Success )
             {
-                templateParser.TemplateClassBuilder
-                    .AppendSilentCode( code, !templateParser.IsBlock );
+                templateParser.TemplateClassBuilder.AppendSilentCode( code, !templateParser.IsBlock );
 
                 if( templateParser.IsBlock )
                 {

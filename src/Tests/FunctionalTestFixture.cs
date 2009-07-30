@@ -88,7 +88,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void EscapeHtmlOffByDefault()
         {
-            AssertRender("EscapeHtml", null, "EscapeHtmlOff");
+            AssertRender("EscapeHtmlOff", "EscapeHtml");
         }
 
         [Test]
@@ -96,7 +96,7 @@ namespace NHaml.Tests
         {
             _templateEngine.Options.EncodeHtml = true;
 
-            AssertRender("EscapeHtml", null, "EscapeHtmlOn");
+            AssertRender("EscapeHtmlOn", "EscapeHtml");
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace NHaml.Tests
             _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
-            var template = CreateTemplate( "MetaModel", null );
+            var template = CreateTemplate("MetaModel");
 
             Assert.IsInstanceOfType( typeof( CustomGenericTemplate<string> ), template );
 
@@ -172,7 +172,7 @@ namespace NHaml.Tests
             _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
-            var template = CreateTemplate( "MetaWithoutModel", null );
+            var template = CreateTemplate("MetaWithoutModel");
 
             Assert.IsInstanceOfType( typeof( CustomGenericTemplate<object> ), template );
 
@@ -331,7 +331,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void Layout()
         {
-            AssertRender("Welcome", "Application");
+            AssertRender(new[] {"Application", "Welcome"});
         }
 
 
@@ -340,7 +340,7 @@ namespace NHaml.Tests
         {
             using (var output = new StringWriter())
             {
-                var compiledTemplate = _templateEngine.Compile("Welcome", new List<string> { "ApplicationPart1", "ApplicationPart2"});
+                var compiledTemplate = _templateEngine.Compile(new List<string> { "ApplicationPart1", "ApplicationPart2", "Welcome"});
                 var template = compiledTemplate.CreateInstance();
                 template.Render(output);
                 Console.WriteLine(output);

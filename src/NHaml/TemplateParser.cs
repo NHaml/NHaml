@@ -11,21 +11,20 @@ namespace NHaml
     {
         private readonly string _singleIndent;
 
-        public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder,
-            IList<IViewSource> layoutViewSources, IViewSource templatevViewSource)
+        public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder, IList<IViewSource> viewSources)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
             TemplateEngine = templateEngine;
             TemplateClassBuilder = templateClassBuilder;
-            TemplateViewSource = templatevViewSource;
-            LayoutViewSources = layoutViewSources;
+            ViewSources = viewSources;
             ViewSourceQueue = new Queue<IViewSource>();
-            foreach (var layoutPath in layoutViewSources)
+            foreach (var viewSource in viewSources)
             {
-                ViewSourceQueue.Enqueue(layoutPath);
+                ViewSourceQueue.Enqueue(viewSource);
             }
-            ViewSourceQueue.Enqueue(templatevViewSource);
 
+            MergedViewSources = new List<IViewSource>();
+            MergedViewSources.AddRange(viewSources);
             Meta = new Dictionary<string, string>();
 
             if (TemplateEngine.Options.UseTabs)
@@ -38,7 +37,9 @@ namespace NHaml
             }
         }
 
-        public IList<IViewSource> LayoutViewSources { get; set; }
+        public List<IViewSource> MergedViewSources { get; set; }
+
+        public IList<IViewSource> ViewSources { get; set; }
 
         public Queue<IViewSource> ViewSourceQueue { get; set; }
 
@@ -47,9 +48,6 @@ namespace NHaml
         public TemplateEngine TemplateEngine { get; private set; }
 
         public TemplateClassBuilder TemplateClassBuilder { get; private set; }
-
-        public IViewSource TemplateViewSource { get; private set; }
-
 
         private LinkedList<InputLine> InputLines { get; set; }
 
@@ -134,14 +132,14 @@ namespace NHaml
             CurrentNode = CurrentNode.Next;
         }
 
-        public void MergeTemplate(IViewSource templatePath, bool replaceCurrentNode)
+        public void MergeTemplate(IViewSource viewSource, bool replaceCurrentNode)
         {
 
             var previous = CurrentNode.Previous;
 
             var lineNumber = 0;
 
-            using (var reader = templatePath.GetStreamReader())
+            using (var reader = viewSource.GetStreamReader())
             {
                 string line;
 

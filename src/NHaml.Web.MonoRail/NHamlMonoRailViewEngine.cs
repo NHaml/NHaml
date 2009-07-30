@@ -70,10 +70,10 @@ namespace NHaml.Web.MonoRail
         }
         public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller, IControllerContext controllerContext)
         {
+            var sources = GetLayoutFile(controllerContext);
             var templateFileName = GetTemplateFileName(templateName);
-            var layoutTemplatePath = GetLayoutFile(controllerContext);
-
-            var compiledTemplate = TemplateEngine.Compile(templateFileName, layoutTemplatePath,TemplateEngine.Options.TemplateBaseType);
+            sources.Add(templateFileName);
+            var compiledTemplate = TemplateEngine.Compile(sources,TemplateEngine.Options.TemplateBaseType);
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
             template.ViewEngine = this;
             template.Render(context, output, controllerContext);

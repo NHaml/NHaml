@@ -58,55 +58,46 @@ namespace NHaml
             return PlainTextMarkupRule.Instance;
         }
 
+        public CompiledTemplate Compile(params string[] templatePath )
+        {
+            return Compile( templatePath, Options.TemplateBaseType );
+        }
         public CompiledTemplate Compile( string templatePath )
         {
-            return Compile( templatePath, (string)null, Options.TemplateBaseType );
+            return Compile( templatePath, Options.TemplateBaseType );
         }
 
         public CompiledTemplate Compile( string templatePath, Type templateBaseType )
         {
-            return Compile( templatePath, (string)null, templateBaseType );
+            return Compile(new List<string>{templatePath}, templateBaseType );
         }
 
-        public CompiledTemplate Compile( string templatePath, string layoutTemplatePath )
+
+        public CompiledTemplate Compile(List<string> templatePaths )
         {
-            return Compile( templatePath, layoutTemplatePath, Options.TemplateBaseType );
+            return Compile(templatePaths, Options.TemplateBaseType );
         }
 
-        public CompiledTemplate Compile( string templatePath, string layoutTemplatePath, Type templateBaseType )
-        {
-            if( string.IsNullOrEmpty( layoutTemplatePath ) )
-                return Compile( templatePath, new List<string>(), templateBaseType );
-
-            return Compile( templatePath, new List<string> {layoutTemplatePath}, templateBaseType );
-        }
-
-        public CompiledTemplate Compile( string templatePath, List<string> layoutTemplatePaths )
-        {
-            return Compile( templatePath, layoutTemplatePaths, Options.TemplateBaseType );
-        }
-
-        public CompiledTemplate Compile(string  templatePath, IList<string> layoutTemplatePaths, Type templateBaseType)
+        public CompiledTemplate Compile(IList<string> templatePaths, Type templateBaseType)
         {
             var list = new List<IViewSource>();
-            foreach (var layoutTemplatePath in layoutTemplatePaths)
+            foreach (var layoutTemplatePath in templatePaths)
             {
                 list.Add(TemplateContentProvider.GetViewSource(layoutTemplatePath));
             }
 
-            return Compile(TemplateContentProvider.GetViewSource(templatePath), list, templateBaseType);
+            return Compile(list, templateBaseType);
         }
 
 
-        public CompiledTemplate Compile( IViewSource templatePath, IList<IViewSource> layoutTemplatePaths, Type templateBaseType )
+        public CompiledTemplate Compile(IList<IViewSource> templateViewSources, Type templateBaseType )
         {
-            Invariant.ArgumentNotNull( templatePath, "templatePath" );
             Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
 
             templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
-            var templateCacheKey = new StringBuilder( templatePath.Path );
+            var templateCacheKey = new StringBuilder();
 
-            foreach( var layoutTemplatePath in layoutTemplatePaths )
+            foreach( var layoutTemplatePath in templateViewSources )
             {
                 templateCacheKey.AppendFormat( "{0}, ", layoutTemplatePath.Path );
             }
@@ -118,7 +109,7 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate( this, templatePath, layoutTemplatePaths, templateBaseType );
+                    compiledTemplate = new CompiledTemplate( this, templateViewSources, templateBaseType );
 
                     _compiledTemplateCache.Add( key, compiledTemplate );
                 }

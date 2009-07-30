@@ -28,8 +28,8 @@ namespace NHaml.Compilers.Boo
 
             if( templateType == null )
             {
-                TemplateCompilationException.Throw( typeBuilder.CompilerResults,
-                  typeBuilder.Source, templateParser.TemplateViewSource.Path );
+                var path = ListExtensions.Last(templateParser.ViewSources).Path;
+                TemplateCompilationException.Throw( typeBuilder.CompilerResults,typeBuilder.Source, path );
             }
 
             return new TemplateFactory( templateType );

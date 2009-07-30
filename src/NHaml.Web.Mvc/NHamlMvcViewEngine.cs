@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq.Expressions;
 
@@ -122,10 +123,9 @@ namespace NHaml.Web.Mvc
 #endif
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
-            return (IView)_templateEngine.Compile(
-                VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath),
-                VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath),
-                GetViewBaseType(controllerContext)).CreateInstance();
+            viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
+            masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
+            return (IView)_templateEngine.Compile(new List<string>{ masterPath, viewPath}, GetViewBaseType(controllerContext)).CreateInstance();
         }
 
 //#if NET4

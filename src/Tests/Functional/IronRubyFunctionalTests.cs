@@ -25,7 +25,7 @@ namespace NHaml.Tests.Functional
         {
             _templateEngine.Options.AddReference( typeof( string ).Assembly.Location );
 
-            AssertRender( "Welcome", "Application" );
+            AssertRender(new[]{"Application", "Welcome"});
         }
 
         [Test,Ignore]

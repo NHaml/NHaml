@@ -31,36 +31,33 @@ namespace NHaml.Tests
 
         protected void AssertRender( string templateName )
         {
-            AssertRender( templateName, null );
+            AssertRender(templateName,  new[]{templateName});
         }
 
-        protected void AssertRender( string templateName, string layoutName )
+        protected void AssertRender(params string[] templates)
         {
-            var expectedName = templateName;
-
-            if( !string.IsNullOrEmpty( layoutName ) )
-            {
-                expectedName = layoutName;
-            }
-
-            AssertRender( templateName, layoutName, expectedName );
+            AssertRender(templates[0], templates);
+        }
+        protected void AssertRender(string expectedName, string templateName)
+        {
+            AssertRender(expectedName, new[] { templateName });
         }
 
-        protected void AssertRender( string templateName, string layoutName, string expectedName )
+        protected void AssertRender(string expectedName, string[] templates)
         {
             var output = new StringWriter();
-            var template = CreateTemplate( templateName, layoutName );
+            var template = CreateTemplate(templates);
 
             template.Render( output );
 
             AssertRender( output, expectedName );
         }
 
-        protected Template CreateTemplate( string templateName, string layoutName )
+        protected Template CreateTemplate(params string[] templates)
         {
             var stopwatch = Stopwatch.StartNew();
 
-            var compiledTemplate = _templateEngine.Compile(templateName, layoutName);
+            var compiledTemplate = _templateEngine.Compile(templates);
             
             stopwatch.Stop();
             

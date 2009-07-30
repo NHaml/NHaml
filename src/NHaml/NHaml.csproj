@@ -73,6 +73,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
+    <Compile Include="Compilers\ListExtensions.cs" />
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />

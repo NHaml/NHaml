@@ -1,6 +1,4 @@
 using System;
-using System.Collections.Generic;
-using NHaml.TemplateResolution;
 
 namespace NHaml.Rules
 {
@@ -34,10 +32,9 @@ namespace NHaml.Rules
             else
             {
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
-                var list = new List<IViewSource> {templateParser.TemplateViewSource};
-                list.AddRange(templateParser.LayoutViewSources);
-                var source = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, list);
-                templateParser.MergeTemplate(source, true);
+                var viewSource = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, templateParser.ViewSources);
+                templateParser.MergedViewSources.Add(viewSource);
+                templateParser.MergeTemplate(viewSource, true);
             }
 
             return EmptyClosingAction;

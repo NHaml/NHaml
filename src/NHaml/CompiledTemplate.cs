@@ -10,21 +10,19 @@ namespace NHaml
     {
         private readonly TemplateEngine _templateEngine;
 
-        private readonly IViewSource _templatePath;
-        private readonly IList<IViewSource> _layoutTemplatePaths;
+        private readonly IList<IViewSource> _layoutViewSources;
 
         private readonly Type _templateBaseType;
 
         private TemplateFactory _templateFactory;
 
         private readonly object _sync = new object();
+        private List<IViewSource> mergedViewSources;
 
-        internal CompiledTemplate( TemplateEngine templateEngine, IViewSource templatePath,
-          IList<IViewSource> layoutTemplatePaths, Type templateBaseType )
+        internal CompiledTemplate( TemplateEngine templateEngine, IList<IViewSource> layoutViewSources, Type templateBaseType )
         {
             _templateEngine = templateEngine;
-            _templatePath = templatePath;
-            _layoutTemplatePaths = layoutTemplatePaths;
+            _layoutViewSources = layoutViewSources;
             _templateBaseType = templateBaseType;
 
             Compile();
@@ -39,12 +37,7 @@ namespace NHaml
         {
             lock (_sync)
             {
-                if (_templatePath.IsModified)
-                {
-                    Compile();
-                    return;
-                }
-                foreach (var inputFile in _layoutTemplatePaths)
+                foreach (var inputFile in mergedViewSources)
                 {
                     if (inputFile.IsModified)
                     {
@@ -57,13 +50,13 @@ namespace NHaml
 
         private void Compile()
         {
-            var templateClassBuilder = _templateEngine.Options.TemplateCompiler.CreateTemplateClassBuilder(
-              Utility.MakeClassName( _templatePath.Path ), _templateBaseType );
+            var className = Utility.MakeClassName( _layoutViewSources[_layoutViewSources.Count-1].Path );
+            var templateClassBuilder = _templateEngine.Options.TemplateCompiler.CreateTemplateClassBuilder(className, _templateBaseType );
 
-            var templateParser = new TemplateParser(_templateEngine, templateClassBuilder,
-                                                               _layoutTemplatePaths, _templatePath);
+            var templateParser = new TemplateParser(_templateEngine, templateClassBuilder, _layoutViewSources);
 
             templateParser.Parse();
+            mergedViewSources = templateParser.MergedViewSources;
 
             if( _templateBaseType.IsGenericTypeDefinition )
             {
