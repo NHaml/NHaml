@@ -18,7 +18,7 @@ namespace NHaml.Rules
             RegexOptions.Compiled | RegexOptions.Singleline);
 
         private static readonly List<string> _whitespaceSensitiveTags
-            = new List<string> {"textarea", "pre"};
+            = new List<string> { "textarea", "pre" };
 
         public override string Signifier
         {
@@ -85,7 +85,7 @@ namespace NHaml.Rules
 
                     if (string.Equals("=", action))
                     {
-                        builder.AppendCode(content, !isWhitespaceSensitive, options.EncodeHtml );
+                        builder.AppendCode(content, !isWhitespaceSensitive, options.EncodeHtml);
                     }
                     else if (string.Equals("&=", action))
                     {
@@ -108,9 +108,10 @@ namespace NHaml.Rules
                 else
                 {
                     builder.AppendOutput(">" + content);
-                    if ((currentInputLine.IndentCount +1) == templateParser.NextInputLine.IndentCount)
+                    if ((currentInputLine.IndentCount + 1) == templateParser.NextInputLine.IndentCount)
                     {
                         builder.AppendOutputLine(string.Empty);
+                        closingTag = currentInputLine.Indent + closingTag;
                     }
                 }
             }
@@ -172,7 +173,7 @@ namespace NHaml.Rules
                 {
                     var token = new ExpressionStringToken(attribute.Value, true);
 
-                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, new[] {token});
+                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, new[] { token });
                 }
             }
         }
