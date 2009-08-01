@@ -27,10 +27,6 @@ namespace NHaml.Compilers
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
 
-        public override void AppendHamlComment(string text)
-        {
-            RenderMethod.Statements.Add(new CodeCommentStatement("Haml: "+text));  
-        }
         public override void AppendOutput(string value, bool newLine)
         {
             if (value == null)

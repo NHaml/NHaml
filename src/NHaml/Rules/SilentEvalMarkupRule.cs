@@ -11,7 +11,6 @@ namespace NHaml.Rules
 
         public override BlockClosingAction Render( TemplateParser templateParser )
         {
-            templateParser.TemplateClassBuilder.AppendHamlComment(templateParser.CurrentInputLine.Text);
             return templateParser.TemplateEngine.Options.TemplateCompiler.RenderSilentEval( templateParser );
         }
     }

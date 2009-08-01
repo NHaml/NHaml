@@ -38,10 +38,6 @@ namespace NHaml.Compilers.IronRuby
             AppendSilentCode(format, true);
         }
 
-        public override void AppendHamlComment(string text)
-        {
-            //TODO:
-        }
 
         public override void AppendPreambleCode(string code)
         {

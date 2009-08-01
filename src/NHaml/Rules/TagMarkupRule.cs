@@ -160,7 +160,6 @@ namespace NHaml.Rules
             foreach (var attribute in attributeParser.Attributes)
             {
                 var classBuilder = templateParser.TemplateClassBuilder;
-                classBuilder.AppendHamlComment(string.Format("Schema '{0}', Name '{1}', Value '{2}',", attribute.Schema, attribute.Name, attribute.Value));
                 if (attribute.Type == ParsedAttributeType.String)
                 {
                     var expressionStringParser = new ExpressionStringParser(attribute.Value);
