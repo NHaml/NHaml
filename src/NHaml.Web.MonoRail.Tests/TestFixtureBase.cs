@@ -123,24 +123,32 @@ namespace NHaml.Web.MonoRail.Tests
         {
             var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
 
-            if( !File.Exists( templatePath ) )
+            if (!File.Exists(templatePath))
             {
                 templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
             }
 
-            if( !File.Exists( templatePath ) )
+            if (!File.Exists(templatePath))
             {
                 templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
             }
 
-            if( !string.IsNullOrEmpty( layoutName ) )
+            if (!string.IsNullOrEmpty(layoutName))
             {
                 layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
             }
 
             var stopwatch = Stopwatch.StartNew();
 
-            var compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
+            CompiledTemplate compiledTemplate;
+            if (layoutName == null)
+            {
+                compiledTemplate = _templateEngine.Compile(templatePath);
+            }
+            else
+            {
+                compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
+            }
             stopwatch.Stop();
             Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
