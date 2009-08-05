@@ -4,7 +4,7 @@ NHAML C# CODING STANDARDS
 
 Indentation for files:
 
-Tab Size:      2
+Tab Size:      2 
 Indent Size:   2
 Insert Spaces: true 
  
