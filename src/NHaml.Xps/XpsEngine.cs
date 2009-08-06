@@ -1,12 +1,13 @@
 ﻿using System;
+using System.ComponentModel;
 using System.IO;
 using System.Printing;
 using System.Text;
 using System.Threading;
 using System.Windows.Documents;
-using System.Windows.Documents.Serialization;
 using System.Windows.Markup;
 using System.Windows.Media;
+using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
 using System.Xml;
 
@@ -17,7 +18,7 @@ namespace NHaml.Xps
         public XpsEngine()
         {
             TemplateEngine = new TemplateEngine();
-            TemplateEngine.Options.AddReferences( typeof( DataView<> ) );
+            TemplateEngine.Options.AddReferences(typeof(DataView<>));
         }
 
         static XpsEngine()
@@ -30,7 +31,8 @@ namespace NHaml.Xps
         public TemplateEngine TemplateEngine { get; private set; }
 
 
-        public void Generate<TData>(string viewPath, TData context, string targetPath) where TData : class
+
+        public void Generate<TData>(string viewPath, TData context, string targetPath)
         {
             var load = GetLoad(viewPath, context);
             using (var document = new XpsDocument(targetPath, FileAccess.Write))
@@ -41,13 +43,8 @@ namespace NHaml.Xps
             }
         }
 
-        public void GenerateAsync<TData>(string viewPath, TData context, string targetPath, AsyncCallback asyncCallback) where TData : class
-        {
-            ThreadStart thread = () => Generate(viewPath, context, targetPath);
-            thread.BeginInvoke(asyncCallback, targetPath);
-        }
 
-        private object GetLoad<TData>(string viewPath, TData data) where TData : class
+        public object GetLoad<TData>(string viewPath, TData data)
         {
             var view = (DataView<TData>)TemplateEngine.Compile(viewPath, typeof(DataView<TData>)).CreateInstance();
             view.ViewData = data;
@@ -58,81 +55,27 @@ namespace NHaml.Xps
             }
             var render = stringBuilder.ToString();
             using (var stringReader = new StringReader(render))
+            using (var reader = new XmlTextReader(stringReader))
             {
-                using (var reader = new XmlTextReader(stringReader))
+                try
                 {
-                    try
-                    {
-                        return XamlReader.Load(reader);
-                    }
-                    catch (Exception exception)
-                    {
-                        throw new Exception(string.Format("Could not parse XML. {0}{1}", Environment.NewLine, render), exception);
-                    }
+                    return XamlReader.Load(reader);
+                }
+                catch (Exception exception)
+                {
+                    throw new Exception(string.Format("Could not parse XML. {0}{1}", Environment.NewLine, render), exception);
                 }
             }
         }
 
-        public void Print<TData>(string viewPath, TData context) where TData : class
-        {
-            using (var queue = LocalPrintServer.GetDefaultPrintQueue())
-            {
-                Print(viewPath, context, queue);
-            }
-        }
 
-        public void Print<TData>(string viewPath, TData context, PrintQueue queue) where TData : class
+        public void Print<TData>(string viewPath, TData context, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
         {
             var load = GetLoad(viewPath, context);
-            var xpsDocumentWriter = PrintQueue.CreateXpsDocumentWriter(queue);
-            WriteLoadToXpsDocumentWriter(load, xpsDocumentWriter);
+            WriteLoadToXpsDocumentWriter(load, getPrintQueue, callback);
         }
 
-        public void PrintAsync<TData>(string viewPath, TData context) where TData : class
-        {
-            var thread = new Thread(
-                () => Print(viewPath, context));
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-        }
-
-        public void PrintAsync<TData>(string viewPath, TData context, Func<PrintQueue> getQueue, Action callback) where TData : class
-        {
-         
-            var thread = new Thread(delegate(object obj)
-                                                   {
-                                                       using (var printQueue = getQueue())
-                                                       {
-                                                           Print(viewPath, context, printQueue);
-                                                       }
-                                                       if (callback != null)
-                                                       {
-                                                           callback();
-                                                       }
-                                                   });
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-        }
-        public void PrintAsync<TData>(string viewPath, TData context, string printQueueName, Action callback) where TData : class
-        {
-            var thread = new Thread(delegate(object obj)
-                                      {
-                                          var printServer = new LocalPrintServer();
-                                          using (var printQueue = printServer.GetPrintQueue(printQueueName))
-                                          {
-                                              Print(viewPath, context, printQueue);
-                                          }
-                                          if (callback != null)
-                                          {
-                                              callback();
-                                          }
-                                      });
-
-            thread.SetApartmentState(ApartmentState.STA);
-            thread.Start();
-        }
-
-        public void PrintPreview<TData>(string viewPath, TData context) where TData : class
+        public void PrintPreview<TData>(string viewPath, TData context)
         {
             var load = GetLoad(viewPath, context);
             var documentViewHostDialog = new DocumentDialog();
@@ -140,21 +83,49 @@ namespace NHaml.Xps
             documentViewHostDialog.ShowDialog();
         }
 
-        private static void WriteLoadToXpsDocumentWriter(object load, SerializerWriter xpsDocumentWriter)
+        private void WriteLoadToXpsDocumentWriter(object load, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
+        {
+
+            var thread = new Thread(delegate(object obj)
+                                        {
+                                            AsyncCompletedEventArgs eventArgs;
+                                            try
+                                            {
+                                                using (var printQueue = getPrintQueue())
+                                                {
+                                                    var xpsDocumentWriter = PrintQueue.CreateXpsDocumentWriter(printQueue);
+
+                                                    WriteLoadToXpsDocumentWriter(load, xpsDocumentWriter);
+                                                }
+                                                eventArgs = new AsyncCompletedEventArgs(null, false, null);
+                                            }
+                                            catch (Exception exception)
+                                            {
+                                                eventArgs = new AsyncCompletedEventArgs(exception, false, null);
+                                            }
+                                            if (callback != null)
+                                            {
+                                                callback(this, eventArgs);
+                                            }
+                                        });
+
+            thread.SetApartmentState(ApartmentState.STA);
+            thread.Start();
+        }
+
+        private static void WriteLoadToXpsDocumentWriter(object load, XpsDocumentWriter xpsDocumentWriter)
         {
             var documentPaginatorSource = load as IDocumentPaginatorSource;
             if (documentPaginatorSource != null)
             {
                 xpsDocumentWriter.Write(documentPaginatorSource.DocumentPaginator);
+                return;
             }
-            else
+            var visual = load as Visual;
+            if (visual == null)
             {
-                var visual = load as Visual;
-                if (visual == null)
-                {
-                    throw new NotImplementedException();
-                }
-                xpsDocumentWriter.Write(visual);
+                xpsDocumentWriter.Write(visual, new PrintTicket());
+                return;
             }
         }
     }

@@ -16,7 +16,6 @@ namespace NHaml.Xps.Tests
             runner.RunInSTA(
                 () =>
                 {
-
                     var xpsHelper = new XpsEngine();
                     xpsHelper.PrintPreview("XpsWithData.haml", "Hello");
                 });
@@ -27,44 +26,11 @@ namespace NHaml.Xps.Tests
         public void Print()
         {
             var xpsHelper = new XpsEngine();
-            xpsHelper.Print("XpsWithData.haml", "Hello2");
-        }
-        [Test]
-        [Ignore]
-        public void PrintAsync()
-        {
-            var xpsHelper = new XpsEngine();
-            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2");
-
-            Thread.Sleep(50000);
-        }
-        [Test]
-        [Ignore]
-        public void PrintAsyncWithPrinter()
-        {
-            var xpsHelper = new XpsEngine();
-            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, null);
-            Thread.Sleep(5000);
-        }
-
-        [Test]
-        [Ignore]
-        public void PrintAsyncWithPrinterAndImage()
-        {
-            var fullPath = Path.GetFullPath("TestImage.gif");
-            var xpsHelper = new XpsEngine();
-            xpsHelper.PrintAsync("XpsWithImage.haml", fullPath);
-            Thread.Sleep(10000);
-        }
-
-
-        [Test]
-        [Ignore]
-        public void PrintAsyncWithPrinterName()
-        {
-            var xpsHelper = new XpsEngine();
-            xpsHelper.PrintAsync("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue().Name, null);
-            Thread.Sleep(50000);
+            using (var autoResetEvent = new AutoResetEvent(false))
+            {
+                xpsHelper.Print("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, (sender, e) => autoResetEvent.Set());
+                autoResetEvent.WaitOne();
+            }
         }
 
         [Test]
@@ -83,63 +49,6 @@ namespace NHaml.Xps.Tests
                         }
                         var xpsHelper = new XpsEngine();
                         xpsHelper.Generate("XpsWithData.haml", "Hello", tempTarget);
-                        Assert.IsTrue(File.Exists(tempTarget));
-                    }
-                    finally
-                    {
-                        if (File.Exists(tempTarget))
-                        {
-                            File.Delete(tempTarget);
-                        }
-                    }
-                });
-        }
-        [Test]
-        public void WriteToFileAsync()
-        {
-            var runner = new CrossThreadTestRunner();
-            runner.RunInSTA(
-                () =>
-                {
-                    const string tempTarget = "temp.xps";
-                    try
-                    {
-                        if (File.Exists(tempTarget))
-                        {
-                            File.Delete(tempTarget);
-                        }
-                        var xpsHelper = new XpsEngine();
-                        xpsHelper.GenerateAsync("XpsWithData.haml", "Hello", tempTarget, null);
-                        Thread.Sleep(5000);
-                        Assert.IsTrue(File.Exists(tempTarget));
-                    }
-                    finally
-                    {
-                        if (File.Exists(tempTarget))
-                        {
-                            File.Delete(tempTarget);
-                        }
-                    }
-                });
-        }
-        [Test]
-        [Ignore("Some threading issues with this one. Run in debug and break on all exceptions to see the issue.")]
-        public void WriteToFileAsyncAndImage()
-        {
-            var runner = new CrossThreadTestRunner();
-            runner.RunInSTA(
-                () =>
-                {
-                    const string tempTarget = "temp.xps";
-                    try
-                    {
-                        if (File.Exists(tempTarget))
-                        {
-                            File.Delete(tempTarget);
-                        }
-                        var xpsHelper = new XpsEngine();
-                        xpsHelper.GenerateAsync("XpsWithImage.haml", "TestImage.gif", tempTarget, null);
-                        Thread.Sleep(10000);
                         Assert.IsTrue(File.Exists(tempTarget));
                     }
                     finally
