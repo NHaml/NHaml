@@ -32,9 +32,10 @@ namespace NHaml.Xps
 
 
 
-        public void Generate<TData>(string viewPath, TData context, string targetPath)
+        public void Generate<TData>(string viewPath, TData data, string targetPath)
         {
-            var load = GetLoad(viewPath, context);
+            var render = GetRender(viewPath, data);
+            var load = GetLoad(render);
             using (var document = new XpsDocument(targetPath, FileAccess.Write))
             {
                 var xpsDocumentWriter = XpsDocument.CreateXpsDocumentWriter(document);
@@ -44,16 +45,8 @@ namespace NHaml.Xps
         }
 
 
-        public object GetLoad<TData>(string viewPath, TData data)
+        public static object GetLoad(string render)
         {
-            var view = (DataView<TData>)TemplateEngine.Compile(viewPath, typeof(DataView<TData>)).CreateInstance();
-            view.ViewData = data;
-            var stringBuilder = new StringBuilder();
-            using (TextWriter textWriter = new StringWriter(stringBuilder))
-            {
-                view.Render(textWriter);
-            }
-            var render = stringBuilder.ToString();
             using (var stringReader = new StringReader(render))
             using (var reader = new XmlTextReader(stringReader))
             {
@@ -68,22 +61,35 @@ namespace NHaml.Xps
             }
         }
 
-
-        public void Print<TData>(string viewPath, TData context, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
+        private string GetRender<TData>(string viewPath, TData data)
         {
-            var load = GetLoad(viewPath, context);
-            WriteLoadToXpsDocumentWriter(load, getPrintQueue, callback);
+            var view = (DataView<TData>)TemplateEngine.Compile(viewPath, typeof(DataView<TData>)).CreateInstance();
+            view.ViewData = data;
+            var stringBuilder = new StringBuilder();
+            using (TextWriter textWriter = new StringWriter(stringBuilder))
+            {
+                view.Render(textWriter);
+            }
+            return stringBuilder.ToString();
         }
 
-        public void PrintPreview<TData>(string viewPath, TData context)
+
+        public void Print<TData>(string viewPath, TData data, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
         {
-            var load = GetLoad(viewPath, context);
+            var render = GetRender(viewPath, data);
+            WriteLoadToXpsDocumentWriter(render, getPrintQueue, callback);
+        }
+
+        public void PrintPreview<TData>(string viewPath, TData data)
+        {
+            var render = GetRender(viewPath, data);
+            var load = GetLoad(render);
             var documentViewHostDialog = new DocumentDialog();
             documentViewHostDialog.LoadDocument(load);
             documentViewHostDialog.ShowDialog();
         }
 
-        private void WriteLoadToXpsDocumentWriter(object load, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
+        private void WriteLoadToXpsDocumentWriter(string render, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
         {
 
             var thread = new Thread(delegate(object obj)
@@ -91,6 +97,7 @@ namespace NHaml.Xps
                                             AsyncCompletedEventArgs eventArgs;
                                             try
                                             {
+                                                var load = GetLoad(render);
                                                 using (var printQueue = getPrintQueue())
                                                 {
                                                     var xpsDocumentWriter = PrintQueue.CreateXpsDocumentWriter(printQueue);
