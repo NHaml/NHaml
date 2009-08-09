@@ -3,7 +3,8 @@ using System.Collections.Generic;
 
 namespace NHaml
 {
-    public static class ProxyExtracter{
+    public static class ProxyExtracter
+    {
         /// <summary>
         /// Do a best guess on getting a non dynamic <see cref="Type"/>.
         /// </summary>
@@ -33,15 +34,9 @@ namespace NHaml
                     {
                         return GetNonProxiedType(interfaces[0]);
                     }
-                    else
-                    {
-                        throw new Exception(string.Format("Could not create non dynamic type for '{0}'.", type.FullName));
-                    }
+                    throw new Exception(string.Format("Could not create non dynamic type for '{0}'.", type.FullName));
                 }
-                else
-                {
-                    return GetNonProxiedType(baseType);
-                }
+                return GetNonProxiedType(baseType);
             }
             return type;
         }

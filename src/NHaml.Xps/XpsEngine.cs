@@ -74,6 +74,21 @@ namespace NHaml.Xps
         }
 
 
+        public void Print<TData>(string viewPath, TData data, string localPrintQueueName, AsyncCompletedEventHandler callback)
+        {
+
+            Print(viewPath, data, () => GetNamedLocalPrintQueue(localPrintQueueName), callback);
+                                                                 
+        }
+
+        private static PrintQueue GetNamedLocalPrintQueue(string localPrintQueueName)
+        {
+            using (var printServer = new LocalPrintServer())
+            {
+                return printServer.GetPrintQueue(localPrintQueueName);
+            }
+        }
+
         public void Print<TData>(string viewPath, TData data, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
         {
             var render = GetRender(viewPath, data);

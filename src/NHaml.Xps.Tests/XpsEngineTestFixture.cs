@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System.Diagnostics;
+using System.IO;
 using System.Printing;
 using System.Threading;
 using NUnit.Framework;
@@ -19,6 +20,28 @@ namespace NHaml.Xps.Tests
                     var xpsHelper = new XpsEngine();
                     xpsHelper.PrintPreview("XpsWithData.haml", "Hello");
                 });
+        }
+        [Test]
+        [Ignore]
+        public void GetQueTimeTest()
+        {
+            using (var printServer = new LocalPrintServer())
+            {
+                using (var queue = printServer.GetPrintQueue("Microsoft XPS Document Writer"))
+                {
+                    Debug.WriteLine(queue.Name);
+                }
+            }
+            var stopwatch = Stopwatch.StartNew();
+            using (var printServer2 = new LocalPrintServer())
+            {
+                using (var queue2 = printServer2.GetPrintQueue("Microsoft XPS Document Writer"))
+                {
+                    Debug.WriteLine(queue2.Name);
+                }
+            }
+            stopwatch.Start();
+            Debug.WriteLine(stopwatch.ElapsedMilliseconds);
         }
 
         [Test]
