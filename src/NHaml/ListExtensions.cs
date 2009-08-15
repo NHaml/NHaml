@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace NHaml.Compilers
+namespace NHaml
 {
 
     //TODO: remove when move to 3.5

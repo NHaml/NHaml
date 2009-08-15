@@ -50,7 +50,7 @@ namespace NHaml
 
         private void Compile()
         {
-            var className = Utility.MakeClassName( _layoutViewSources[_layoutViewSources.Count-1].Path );
+            var className = Utility.MakeClassName( ListExtensions.Last(_layoutViewSources).Path );
             var templateClassBuilder = _templateEngine.Options.TemplateCompiler.CreateTemplateClassBuilder(className, _templateBaseType );
 
             var templateParser = new TemplateParser(_templateEngine, templateClassBuilder, _layoutViewSources);
