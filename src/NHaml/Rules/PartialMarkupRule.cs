@@ -33,7 +33,7 @@ namespace NHaml.Rules
             {
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
                 var viewSource = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, templateParser.ViewSources);
-                templateParser.MergedViewSources.Add(viewSource);
+                templateParser.ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
                 templateParser.MergeTemplate(viewSource, true);
             }
 

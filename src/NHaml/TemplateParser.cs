@@ -18,13 +18,14 @@ namespace NHaml
             TemplateClassBuilder = templateClassBuilder;
             ViewSources = viewSources;
             ViewSourceQueue = new Queue<IViewSource>();
-            foreach (var viewSource in viewSources)
+            ViewSourceModifiedChecks = new List<Func<bool>>();
+            for (var i = 0; i < viewSources.Count; i++)
             {
+                var viewSource = viewSources[i];
+                ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
                 ViewSourceQueue.Enqueue(viewSource);
             }
 
-            MergedViewSources = new List<IViewSource>();
-            MergedViewSources.AddRange(viewSources);
             Meta = new Dictionary<string, string>();
 
             if (TemplateEngine.Options.UseTabs)
@@ -37,7 +38,7 @@ namespace NHaml
             }
         }
 
-        public List<IViewSource> MergedViewSources { get; set; }
+        public IList<Func<bool>> ViewSourceModifiedChecks { get; set; }
 
         public IList<IViewSource> ViewSources { get; set; }
 
@@ -53,11 +54,7 @@ namespace NHaml
 
         private LinkedListNode<InputLine> CurrentNode { get; set; }
 
-        private LinkedListNode<InputLine> NextNode
-        {
-            get { return CurrentNode.Next; }
-        }
-
+   
         public InputLine CurrentInputLine
         {
             get { return CurrentNode.Value; }
@@ -100,7 +97,7 @@ namespace NHaml
                 while (CurrentInputLine.IsMultiline && NextInputLine.IsMultiline)
                 {
                     CurrentInputLine.Merge(NextInputLine);
-                    InputLines.Remove(NextNode);
+                    InputLines.Remove(CurrentNode.Next);
                 }
 
                 if (CurrentInputLine.IsMultiline)

@@ -17,7 +17,7 @@ namespace NHaml
         private TemplateFactory _templateFactory;
 
         private readonly object _sync = new object();
-        private List<IViewSource> mergedViewSources;
+        private IList<Func<bool>> viewSourceModifiedChecks;
 
         internal CompiledTemplate( TemplateEngine templateEngine, IList<IViewSource> layoutViewSources, Type templateBaseType )
         {
@@ -37,9 +37,9 @@ namespace NHaml
         {
             lock (_sync)
             {
-                foreach (var inputFile in mergedViewSources)
+                foreach (var inputFile in viewSourceModifiedChecks)
                 {
-                    if (inputFile.IsModified)
+                    if (inputFile())
                     {
                         Compile();
                         break;
@@ -56,7 +56,7 @@ namespace NHaml
             var templateParser = new TemplateParser(_templateEngine, templateClassBuilder, _layoutViewSources);
 
             templateParser.Parse();
-            mergedViewSources = templateParser.MergedViewSources;
+            viewSourceModifiedChecks = templateParser.ViewSourceModifiedChecks;
 
             if( _templateBaseType.IsGenericTypeDefinition )
             {
