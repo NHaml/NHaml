@@ -43,7 +43,7 @@
     </Reference>
     <Reference Include="Castle.DynamicProxy2, Version=2.1.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\Samples\NHaml.Samples.MonoRail\Bin\Castle.DynamicProxy2.dll</HintPath>
+      <HintPath>..\..\lib\Castle.DynamicProxy2.dll</HintPath>
     </Reference>
     <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>

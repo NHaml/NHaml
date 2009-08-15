@@ -121,6 +121,7 @@
     <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="TokenReader.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />

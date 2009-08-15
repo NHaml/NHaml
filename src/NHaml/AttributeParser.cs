@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using NHaml.Exceptions;
 
 namespace NHaml
@@ -10,7 +11,7 @@ namespace NHaml
         private string currentKey;
         private string currentValue;
         private ParsedAttributeType attributeType;
-        LinkedList<Token> tokens;
+        TokenReader tokenReader;
         public List<ParsedAttribute> Attributes { get; private set; }
 
         public AttributeParser(string attributesString)
@@ -23,44 +24,47 @@ namespace NHaml
         public void Parse()
         {
             Attributes.Clear();
-            tokens = Token.ReadAllTokens(attributesString);
-            Token next;
-            while (!(next = tokens.First.Value).IsEnd)
+            using (var stringReader = new StringReader(attributesString))
             {
-                if (next.IsWhiteSpace)
-                {
-                    tokens.RemoveFirst();
-                    continue;
-                }
-                if ((next.Character) == '\'' || (next.IsEscaped) || (next.Character) == '"' || (next.Character) == ':' || (next.Character) == '}' || (next.Character) == '=')
-                {
-                    throw new SyntaxException();
-                }
-                ProcessKey();
-                AddCurrent();
-                currentValue = null;
-                currentKey = null;
-            }
+                tokenReader = new TokenReader(stringReader);
 
-            CheckForDuplicates();
+                Token next;
+                while (!(next = tokenReader.Peek()).IsEnd)
+                {
+                    if (next.IsWhiteSpace)
+                    {
+                        tokenReader.Read();
+                        continue;
+                    }
+                    if ((next.Character) == '\'' || (next.IsEscaped) || (next.Character) == '"' || (next.Character) == ':' || (next.Character) == '}' || (next.Character) == '=')
+                    {
+                        throw new SyntaxException();
+                    }
+                    ProcessKey();
+                    AddCurrent();
+                    currentValue = null;
+                    currentKey = null;
+                }
+
+                CheckForDuplicates();
+            }
         }
 
         private void EatWhiteSpace()
         {
-            while (tokens.First.Value.IsWhiteSpace)
+            while (tokenReader.Peek().IsWhiteSpace)
             {
-                tokens.RemoveFirst();
+                tokenReader.Read();
             }
         }
         private void ProcessKey()
         {
             while (true)
             {
-                var token = tokens.First.Value;
-                tokens.RemoveFirst();
+                var token = tokenReader.Read();
                 currentKey += token.Character;
 
-                var next = tokens.First.Value;
+                var next = tokenReader.Peek();
                 if (next.IsEscaped)
                 {
                     throw new Exception();
@@ -86,7 +90,7 @@ namespace NHaml
         {
             EatWhiteSpace();
 
-            var next = tokens.First.Value;
+            var next = tokenReader.Peek();
             if (next.IsEscaped)
             {
                 throw new Exception();
@@ -103,12 +107,12 @@ namespace NHaml
 
         private void ProcessEquals()
         {
-            tokens.RemoveFirst();
+            tokenReader.Read();
             EatWhiteSpace();
-            var next = tokens.First;
-            var character = next.Value.Character;
+            var next = tokenReader.Peek();
+            var character = next.Character;
 
-            if ((character == '\\') || (next.Value.IsEnd))
+            if ((character == '\\') || (next.IsEnd))
             {
                 throw new SyntaxException();
             }
@@ -117,7 +121,7 @@ namespace NHaml
                 ProcessQuotedValue(character);
                 return;
             }
-            if (character == '#' && next.Next.Value.Character == '{')
+            if (character == '#' && tokenReader.Peek2().Character == '{')
             {
                 ProcessHashedCode();
                 return;
@@ -132,11 +136,10 @@ namespace NHaml
             attributeType = ParsedAttributeType.Reference;
             while (true)
             {
-                var token = tokens.First.Value;
-                tokens.RemoveFirst();
+                var token = tokenReader.Read();
                 AddCurrentValue(token);
 
-                var next = tokens.First.Value;
+                var next = tokenReader.Peek();
                 if ((next.Character == ' ') || next.IsEnd)
                 {
                     return;
@@ -147,23 +150,21 @@ namespace NHaml
         private void ProcessHashedCode()
         {
             attributeType = ParsedAttributeType.Expression;
-            tokens.RemoveFirst();
-            tokens.RemoveFirst();
+            tokenReader.Read();
+            tokenReader.Read();
             while (true)
             {
-                var token = tokens.First.Value;
-                tokens.RemoveFirst();
-                
+                var token = tokenReader.Read();
                 AddCurrentValue(token);
 
-                var next = tokens.First.Value;
+                var next = tokenReader.Peek();
                 if (next.IsEnd)
                 {
                     throw new SyntaxException();
                 }
                 if (!next.IsEscaped && (next.Character == '}'))
                 {
-                    tokens.RemoveFirst();
+                    tokenReader.Read();
                     return;
                 }
             }
@@ -182,21 +183,20 @@ namespace NHaml
         {
             attributeType = ParsedAttributeType.String;
             currentValue = string.Empty;
-            tokens.RemoveFirst();
+            tokenReader.Read();
             while (true)
             {
-                var next = tokens.First.Value;
+                var next = tokenReader.Peek();
                 if (next.IsEnd)
                 {
                     throw new SyntaxException();
                 }
                 if (!next.IsEscaped && (next.Character == character))
                 {
-                    tokens.RemoveFirst();
+                    tokenReader.Read();
                     break;
                 }
-                var token = tokens.First.Value;
-                tokens.RemoveFirst();
+                var token = tokenReader.Read();
                 AddCurrentValue(token);
 
             }

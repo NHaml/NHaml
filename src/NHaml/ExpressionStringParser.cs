@@ -1,21 +1,25 @@
+using System;
 using System.Collections.Generic;
+using System.IO;
 using NHaml.Exceptions;
 
 namespace NHaml
 {
-    public class ExpressionStringParser
+    public class ExpressionStringParser : IDisposable
     {
-        private readonly LinkedList<Token> Tokens;
+        private TokenReader tokenReader;
 
         private string current;
         private bool? isExpression;
 
+        StringReader stringReader;
         public List<ExpressionStringToken> ExpressionStringTokens { get; protected set; }
 
 
         public ExpressionStringParser(string expressionString)
         {
-            Tokens = Token.ReadAllTokens(expressionString);
+            stringReader = new StringReader(expressionString);
+            tokenReader = new TokenReader(stringReader);
             ExpressionStringTokens = new List<ExpressionStringToken>();
         }
 
@@ -23,16 +27,16 @@ namespace NHaml
         {
             ExpressionStringTokens.Clear();
             //HACK:
-            if (Tokens.Count == 1)
+            if (tokenReader.Peek().IsEnd)
             {
                 ExpressionStringTokens.Add(new ExpressionStringToken(string.Empty, false));
                 return;
             }
             Token next;
-            while (!(next = Tokens.First.Value).IsEnd)
+            while (!(next = tokenReader.Peek()).IsEnd)
             {
                 var character = next.Character;
-                if (character == '#' && Tokens.First.Next.Value.Character == '{')
+                if (character == '#' && tokenReader.Peek2().Character == '{')
                 {
                     ProcessHashedCode();
                 }
@@ -53,19 +57,17 @@ namespace NHaml
             current = string.Empty;
             while (true)
             {
-                var next = Tokens.First;
-                var nextValue = next.Value;
+                var nextValue = tokenReader.Peek();
                 if (nextValue.IsEnd)
                 {
                     return;
                 }
 
-                if (nextValue.Character == '#' && next.Next.Value.Character == '{')
+                if (nextValue.Character == '#' && tokenReader.Peek2().Character == '{')
                 {
                     return;
                 }
-                var token = Tokens.First.Value;
-                Tokens.RemoveFirst();
+                var token = tokenReader.Read();
                 var character = token.Character;
 
                 current += character;
@@ -75,26 +77,32 @@ namespace NHaml
         private void ProcessHashedCode()
         {
             isExpression = true;
-            Tokens.RemoveFirst();
-            Tokens.RemoveFirst();
+            tokenReader.Read();
+            tokenReader.Read();
             while (true)
             {
-                var token = Tokens.First.Value;
-                Tokens.RemoveFirst();
+                var token = tokenReader.Read();
                 current += token.Character;
 
-                var next = Tokens.First.Value;
+                var next = tokenReader.Peek();
                 if (next.IsEnd)
                 {
                     throw new SyntaxException();
                 }
                 if (!next.IsEscaped && (next.Character == '}'))
                 {
-                    Tokens.RemoveFirst();
+                    tokenReader.Read();
                     return;
                 }
             }
         }
 
+        public void Dispose()
+        {
+            if (stringReader != null)
+            {
+                stringReader.Dispose();
+            }
+        }
     }
 }

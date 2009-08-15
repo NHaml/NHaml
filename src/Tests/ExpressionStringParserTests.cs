@@ -86,13 +86,20 @@ namespace NHaml.Tests
 
             Assert.AreEqual(3, parser.ExpressionStringTokens.Count);
 
-            Assert.AreEqual(" a ", parser.ExpressionStringTokens[0].Value);
-            Assert.IsFalse(parser.ExpressionStringTokens[0].IsExpression);
-            Assert.AreEqual("b ", parser.ExpressionStringTokens[1].Value);
-            Assert.IsTrue(parser.ExpressionStringTokens[1].IsExpression);
-            Assert.AreEqual(" ", parser.ExpressionStringTokens[2].Value);
-            Assert.IsFalse(parser.ExpressionStringTokens[2].IsExpression);
+            var token = parser.ExpressionStringTokens[0];
+            Assert.AreEqual(" a ", token.Value);
+            Assert.IsFalse(token.IsExpression);
+
+            token = parser.ExpressionStringTokens[1];
+            Assert.AreEqual("b ", token.Value);
+            Assert.IsTrue(token.IsExpression);
+
+            token = parser.ExpressionStringTokens[2];
+            Assert.AreEqual(" ", token.Value);
+            Assert.IsFalse(token.IsExpression);
         }
+
+
         [Test]
         [ExpectedException(typeof(SyntaxException))]
         public void MissingTrailingCurly()

@@ -1,3 +1,4 @@
+using System.IO;
 using NUnit.Framework;
 
 namespace NHaml.Tests
@@ -6,23 +7,80 @@ namespace NHaml.Tests
     public class TokenTests
     {
 
+        [Test]
+        public void MultipleReads()
+        {
+            
+            var queue = new TokenReader(new StringReader("abcd"));
+            queue.Read();
+            queue.Read();
+
+            var token = queue.Peek();
+            Assert.AreEqual('c', token.Character);
+
+        }
 
         [Test]
-        public void ReadAllTokens()
+        public void ReadAndPeekTokens()
         {
-            var queue = Token.ReadAllTokens("abc\\d");
-            Assert.AreEqual(5, queue.Count);
-            Assert.AreEqual('a', queue.First.Value.Character);
-            queue.RemoveFirst();
-            Assert.AreEqual('b', queue.First.Value.Character);
-            queue.RemoveFirst();
-            Assert.AreEqual('c', queue.First.Value.Character);
-            queue.RemoveFirst();
-            var dequeue = queue.First.Value;
-            queue.RemoveFirst();
-            Assert.AreEqual('d', dequeue.Character);
-            Assert.IsTrue(dequeue.IsEscaped);
-            Assert.IsTrue(queue.First.Value.IsEnd);
+            var queue = new TokenReader(new StringReader("abc\\d"));
+
+
+            var token = queue.Peek();
+            Assert.AreEqual('a', token.Character);
+
+            token = queue.Peek2();
+            Assert.AreEqual('b', token.Character);
+
+            token = queue.Read();
+            Assert.AreEqual('a', token.Character);
+
+            token = queue.Peek();
+            Assert.AreEqual('b', token.Character);
+
+            token = queue.Read();
+            Assert.AreEqual('b', token.Character);
+
+            token = queue.Peek();
+            Assert.AreEqual('c', token.Character);
+            
+            token = queue.Read();
+            Assert.AreEqual('c', token.Character);
+
+            token = queue.Peek();
+            Assert.AreEqual('d', token.Character);
+            Assert.IsTrue(token.IsEscaped);
+            
+            token = queue.Read();
+            Assert.AreEqual('d', token.Character);
+            Assert.IsTrue(token.IsEscaped);
+
+            
+            token = queue.Read();
+            Assert.IsTrue(token.IsEnd);
+        }
+
+        [Test]
+        public void ReadTokens()
+        {
+            var queue = new TokenReader(new StringReader("abc\\d"));
+
+            var token = queue.Read();
+            Assert.AreEqual('a', token.Character);
+
+            token = queue.Read();
+            Assert.AreEqual('b', token.Character);
+
+            token = queue.Read();
+            Assert.AreEqual('c', token.Character);
+
+            token = queue.Read();
+            Assert.AreEqual('d', token.Character);
+            Assert.IsTrue(token.IsEscaped);
+
+            
+            token = queue.Read();
+            Assert.IsTrue(token.IsEnd);
         }
     }
 }
