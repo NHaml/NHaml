@@ -20,11 +20,11 @@ namespace NHaml.Compilers
 
         public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType);
 
-        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
+        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var typeBuilder = CreateTemplateTypeBuilder(options);
             //TODO: leaky abstraction 
-            var classBuilder = (CodeDomClassBuilder) templateParser.Builder;
+            var classBuilder = (CodeDomClassBuilder) builder;
             var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
             classBuilder.CodeDomProvider = provider;
             typeBuilder.CodeDomProvider = provider;
@@ -34,7 +34,7 @@ namespace NHaml.Compilers
 
             if( templateType == null )
             {
-                var viewSources = templateParser.ViewSources;
+                var viewSources = viewSourceReader.ViewSources;
                 TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
             }
 

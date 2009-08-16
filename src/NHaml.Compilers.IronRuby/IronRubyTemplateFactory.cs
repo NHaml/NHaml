@@ -6,56 +6,41 @@ namespace NHaml.Compilers.IronRuby
 {
     public class IronRubyTemplateFactory : TemplateFactory
     {
-        private readonly ScriptEngine _scriptEngine;
-        private readonly object _renderAction;
 
         public IronRubyTemplateFactory( ScriptEngine scriptEngine, string className )
         {
-            _scriptEngine = scriptEngine;
+            ScriptEngine = scriptEngine;
 
-            _renderAction = _scriptEngine.CreateScriptSourceFromString(
-              string.Format("{0}.new.method(:render)", className) ).Execute();
+            var format = string.Format("{0}.new.method(:render)", className);
+            var scriptSource = scriptEngine.CreateScriptSourceFromString(format);
+            RenderAction = scriptSource.Execute();
         }
 
-        public ScriptEngine ScriptEngine
-        {
-            get { return _scriptEngine; }
-        }
+        public ScriptEngine ScriptEngine{get; private set;}
 
-        public object RenderAction
-        {
-            get { return _renderAction; }
-        }
+        public object RenderAction{ get;private set;}
 
         public override Template CreateTemplate()
         {
-            return new DlrShimTemplate( _scriptEngine, _renderAction );
+            return new DlrShimTemplate( ScriptEngine, RenderAction );
         }
 
         protected class DlrShimTemplate : Template
         {
-            private readonly ScriptEngine _scriptEngine;
-            private readonly object _renderAction;
 
             public DlrShimTemplate( ScriptEngine scriptEngine, object renderAction )
             {
-                _scriptEngine = scriptEngine;
-                _renderAction = renderAction;
+                ScriptEngine = scriptEngine;
+                RenderAction = renderAction;
             }
 
-            public ScriptEngine ScriptEngine
-            {
-                get { return _scriptEngine; }
-            }
+            public ScriptEngine ScriptEngine{get; private set;}
 
-            public object RenderAction
-            {
-                get { return _renderAction; }
-            }
+            public object RenderAction {get;private set;}
 
             protected override void CoreRender( TextWriter textWriter )
             {
-                _scriptEngine.Operations.Call( _renderAction, textWriter );
+                ScriptEngine.Operations.Call( RenderAction, textWriter );
             }
         }
     }

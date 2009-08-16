@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.IO;
+﻿using System.IO;
 using System.Threading;
 using NUnit.Framework;
 
@@ -17,7 +16,7 @@ namespace NHaml.Tests.Issues.GC53
         public void NotRecompilingWhenPartialChanged()
         {
             AssertView( "Content", "Application", "Output" );
-            Debug.WriteLine(Path.GetFullPath(@"Issues\GC53\Shared\_Partial.haml"));
+            //Sleep so file has a different write time
             Thread.Sleep(5);
             using (var message = File.AppendText(@"Issues\GC53\Shared\_Partial.haml"))
             {

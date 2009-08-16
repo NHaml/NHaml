@@ -3,7 +3,7 @@ using System.IO;
 
 namespace NHaml
 {
-    public sealed class OutputWriter
+    public class OutputWriter
     {
         private bool _indentComing = true;
 

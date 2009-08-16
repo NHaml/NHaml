@@ -7,7 +7,7 @@ using NHaml.Utils;
 
 namespace NHaml
 {
-    public sealed class TemplateEngine
+    public  class TemplateEngine
     {
         private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache;
 

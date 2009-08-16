@@ -33,9 +33,9 @@ namespace NHaml
         {
             lock (_sync)
             {
-                foreach (var inputFile in viewSourceModifiedChecks)
+                foreach (var fileModifiedCheck in viewSourceModifiedChecks)
                 {
-                    if (inputFile())
+                    if (fileModifiedCheck())
                     {
                         Compile();
                         break;
@@ -52,22 +52,22 @@ namespace NHaml
 
             var templateParser = new TemplateParser(options, templateClassBuilder, _layoutViewSources);
 
-            templateParser.Parse();
-            viewSourceModifiedChecks = templateParser.ViewSourceModifiedChecks;
+            var viewSourceReader = templateParser.Parse();
+            viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
 
             if( _templateBaseType.IsGenericTypeDefinition )
             {
-                var modelType = GetModelType(templateParser.Builder.Meta);
+                var modelType = GetModelType(templateClassBuilder.Meta);
                 templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
                 options.AddReference( modelType.Assembly );
             }
 
-            _templateFactory = compiler.Compile(templateParser, templateParser.Options);
+            _templateFactory = compiler.Compile(viewSourceReader, templateParser.Options, templateClassBuilder);
 
          
         }
 
-        private Type GetModelType(IDictionary<string, string> meta)
+        private static Type GetModelType(IDictionary<string, string> meta)
         {
             string model;
             if (meta.TryGetValue("model", out model))

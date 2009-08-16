@@ -3,7 +3,7 @@ using NHaml.Compilers;
 
 namespace NHaml.Rules
 {
-    public sealed class EncodedEvalMarkupRule : EvalMarkupRule
+    public  class EncodedEvalMarkupRule : EvalMarkupRule
     {
 
         public override string Signifier

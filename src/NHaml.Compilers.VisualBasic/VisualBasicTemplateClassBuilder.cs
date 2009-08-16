@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NHaml.Compilers.VisualBasic
 {
-    internal sealed class VisualBasicTemplateClassBuilder : CodeDomClassBuilder
+    internal  class VisualBasicTemplateClassBuilder : CodeDomClassBuilder
     {
         public VisualBasicTemplateClassBuilder(string className, Type baseType)
             : base(className, baseType)

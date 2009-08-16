@@ -127,6 +127,7 @@
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
+    <Compile Include="ViewSourceReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">

@@ -12,7 +12,7 @@ namespace NHaml.Exceptions
 {
     [Serializable]
     [DebuggerStepThrough]
-    public sealed class TemplateCompilationException : Exception
+    public class TemplateCompilationException : Exception
     {
         public static void Throw( CompilerResults compilerResults, string templateSource, string templatePath )
         {

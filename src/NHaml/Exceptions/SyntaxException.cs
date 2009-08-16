@@ -9,7 +9,7 @@ namespace NHaml.Exceptions
 {
     [Serializable]
     [DebuggerStepThrough]
-    public sealed class SyntaxException : Exception
+    public  class SyntaxException : Exception
     {
         private readonly InputLine _inputLine;
 

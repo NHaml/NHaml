@@ -4,7 +4,7 @@ using NHaml.Exceptions;
 
 namespace NHaml
 {
-    public sealed class InputLine
+    public class InputLine
     {
         private static readonly Regex _indentRegex
           = new Regex( @"^(\s*|\t*)", RegexOptions.Compiled | RegexOptions.Singleline );
@@ -14,8 +14,7 @@ namespace NHaml
 
         private readonly int _indentSize;
 
-
-
+        
         public InputLine( string text, int lineNumber )
             : this( text,  lineNumber, 2 )
         {

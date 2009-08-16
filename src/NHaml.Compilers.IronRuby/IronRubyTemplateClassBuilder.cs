@@ -5,7 +5,7 @@ using NHaml.Utils;
 
 namespace NHaml.Compilers.IronRuby
 {
-    internal sealed class IronRubyTemplateClassBuilder : TemplateClassBuilder
+    internal  class IronRubyTemplateClassBuilder : TemplateClassBuilder
     {
         public IronRubyTemplateClassBuilder(string className, Type templateBaseType)
             : base(className, templateBaseType)

@@ -1,6 +1,6 @@
 namespace NHaml.Compilers.CSharp3
 {
-    internal sealed class CSharp3TemplateTypeBuilder : CodeDomTemplateTypeBuilder
+    internal class CSharp3TemplateTypeBuilder : CodeDomTemplateTypeBuilder
     {
         public CSharp3TemplateTypeBuilder(TemplateOptions options)
             : base( options )

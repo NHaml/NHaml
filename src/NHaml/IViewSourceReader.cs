@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using NHaml.Rules;
 using NHaml.TemplateResolution;
 
 namespace NHaml
@@ -12,6 +13,9 @@ namespace NHaml
         IList<Func<bool>> ViewSourceModifiedChecks { get; }
         bool IsBlock { get; }
         InputLine NextInputLine { get; }
+        LinkedListNode<InputLine> CurrentNode { get;  }
         void MergeTemplate(IViewSource source, bool replace);
+        MarkupRule GetRule();
+        void MoveNext();
     }
 }

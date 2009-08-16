@@ -20,7 +20,7 @@ namespace NHaml.Compilers.IronRuby
             return new IronRubyTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
+        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var ruby = new StringBuilder();
 
@@ -29,7 +29,7 @@ namespace NHaml.Compilers.IronRuby
                 ruby.AppendLine( string.Format("require '{0}'", reference) );
             }
 
-            ruby.Append(templateParser.Builder.Build(options.Usings));
+            ruby.Append(builder.Build(options.Usings));
 
             var templateSource = ruby.ToString();
 
@@ -37,7 +37,7 @@ namespace NHaml.Compilers.IronRuby
 
             _scriptEngine.Execute( templateSource );
 
-            return CreateTemplateFactory( _scriptEngine, templateParser.Builder.ClassName );
+            return CreateTemplateFactory( _scriptEngine, builder.ClassName );
         }
 
         protected virtual IronRubyTemplateFactory CreateTemplateFactory( ScriptEngine scriptEngine, string className )
@@ -75,9 +75,5 @@ namespace NHaml.Compilers.IronRuby
             return MarkupRule.EmptyClosingAction;
         }
 
-        public void RenderAttributes( TemplateParser templateParser, string attributes )
-        {
-            templateParser.Builder.AppendCode( string.Format("__a({0})", attributes) );
-        }
     }
 }

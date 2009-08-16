@@ -5,7 +5,7 @@ using NHaml.Utils;
 
 namespace NHaml.Compilers.Boo
 {
-    internal sealed class BooTemplateClassBuilder : TemplateClassBuilder
+    internal  class BooTemplateClassBuilder : TemplateClassBuilder
     {
         private bool _disableOutputIndentationShrink;
 

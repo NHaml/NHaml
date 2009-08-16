@@ -45,6 +45,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="DlrTextWriterShim.cs" />
     <Compile Include="Helpers\NHamlMvcIronRubyUrlHelper.cs" />
     <Compile Include="Helpers\NHamlMvcIronRubyHtmlHelper.cs" />
     <Compile Include="Helpers\RouteValueDictionaryHelper.cs" />

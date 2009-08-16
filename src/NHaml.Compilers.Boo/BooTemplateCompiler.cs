@@ -6,7 +6,7 @@ using NHaml.Rules;
 
 namespace NHaml.Compilers.Boo
 {
-    public sealed class BooTemplateCompiler : ITemplateCompiler
+    public  class BooTemplateCompiler : ITemplateCompiler
     {
         public static readonly Regex LambdaRegex = new Regex(
           @"^(.+)(def\(.*\))\s*$",
@@ -17,18 +17,19 @@ namespace NHaml.Compilers.Boo
             return new BooTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
+
+        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var templateSource = templateParser.Builder.Build(options.Usings);
+            var templateSource = builder.Build(options.Usings);
 
             var typeBuilder = new BooTemplateTypeBuilder(options);
 
            // Debug.WriteLine(templateSource);
-            var templateType = typeBuilder.Build( templateSource, templateParser.Builder.ClassName );
+            var templateType = typeBuilder.Build(templateSource, builder.ClassName);
 
             if( templateType == null )
             {
-                var path = ListExtensions.Last(templateParser.ViewSources).Path;
+                var path = ListExtensions.Last(viewSourceReader.ViewSources).Path;
                 TemplateCompilationException.Throw( typeBuilder.CompilerResults,typeBuilder.Source, path );
             }
 

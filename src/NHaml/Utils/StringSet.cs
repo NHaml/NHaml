@@ -5,7 +5,7 @@ using System.Diagnostics.CodeAnalysis;
 namespace NHaml.Utils
 {
     [SuppressMessage( "Microsoft.Naming", "CA1710" )]
-    public sealed class Set<T> : Collection<T>
+    public  class Set<T> : Collection<T>
     {
         public Set()
         {

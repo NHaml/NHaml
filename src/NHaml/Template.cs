@@ -36,8 +36,7 @@ namespace NHaml
         {
         }
 
-        protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName,
-                                                     object attributeValue)
+        protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName, object attributeValue)
         {
             if (attributeValue == null)
             {

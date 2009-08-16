@@ -10,7 +10,7 @@ using Boo.Lang.Parser;
 
 namespace NHaml.Compilers.Boo
 {
-    internal sealed class BooTemplateTypeBuilder
+    internal  class BooTemplateTypeBuilder
     {
         private readonly BooCompiler _booCompiler;
 

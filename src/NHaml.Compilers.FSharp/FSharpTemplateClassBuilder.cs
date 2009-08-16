@@ -3,7 +3,7 @@ using System.CodeDom;
 
 namespace NHaml.Compilers.FSharp
 {
-    internal sealed class FSharpTemplateClassBuilder : CodeDomClassBuilder
+    internal  class FSharpTemplateClassBuilder : CodeDomClassBuilder
     {
 
         public FSharpTemplateClassBuilder(string className, Type baseType)

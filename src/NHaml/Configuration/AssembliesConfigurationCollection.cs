@@ -5,7 +5,7 @@ namespace NHaml.Configuration
 {
     [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
     [AspNetHostingPermission( SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal )]
-    public sealed class AssembliesConfigurationCollection : ConfigurationCollection<AssemblyConfigurationElement>
+    public  class AssembliesConfigurationCollection : ConfigurationCollection<AssemblyConfigurationElement>
     {
     }
 }

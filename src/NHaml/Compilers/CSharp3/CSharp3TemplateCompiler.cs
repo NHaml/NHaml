@@ -1,11 +1,10 @@
 using System;
 using System.Text.RegularExpressions;
-
 using NHaml.Compilers.CSharp2;
 
 namespace NHaml.Compilers.CSharp3
 {
-    public sealed class CSharp3TemplateCompiler : CSharp2TemplateCompiler
+    public  class CSharp3TemplateCompiler : CSharp2TemplateCompiler
     {
         public override string TranslateLambda( string codeLine, Match lambdaMatch )
         {
