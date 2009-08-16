@@ -5,12 +5,10 @@ using System.Globalization;
 using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
-
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
 using NHaml.Compilers.CSharp4;
-using NHaml.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml.Configuration
