@@ -155,7 +155,7 @@ namespace NHaml.Tests
 
             var template = CreateTemplate("MetaModel");
 
-            Assert.IsInstanceOfType( typeof( CustomGenericTemplate<string> ), template );
+            Assert.IsAssignableFrom(typeof(CustomGenericTemplate<string>), template);
 
             ((CustomGenericTemplate<string>) template).Model = "NHaml";
 
@@ -174,7 +174,7 @@ namespace NHaml.Tests
 
             var template = CreateTemplate("MetaWithoutModel");
 
-            Assert.IsInstanceOfType( typeof( CustomGenericTemplate<object> ), template );
+            Assert.IsAssignableFrom(typeof(CustomGenericTemplate<object>), template);
 
             var output = new StringWriter();
 

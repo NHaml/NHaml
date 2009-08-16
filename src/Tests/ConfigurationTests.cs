@@ -23,7 +23,7 @@ namespace NHaml.Tests
             var templateCompiler = sectionMock.Object.CreateTemplateCompiler();
 
             Assert.IsNotNull( templateCompiler );
-            Assert.IsInstanceOfType( templateCompilerType, templateCompiler );
+            Assert.IsAssignableFrom(templateCompilerType, templateCompiler );
         }
 
         [Test]
