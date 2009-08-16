@@ -12,7 +12,7 @@ namespace NHaml.Tests.Functional
 
             _templateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
 
-            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"VisualBasic" );
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"VisualBasic");
         }
 
         [Ignore]

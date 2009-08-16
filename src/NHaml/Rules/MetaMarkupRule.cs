@@ -1,4 +1,6 @@
 
+using NHaml.Compilers;
+
 namespace NHaml.Rules
 {
     public class MetaMarkupRule : MarkupRule
@@ -9,15 +11,15 @@ namespace NHaml.Rules
             get { return "@"; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var content = templateParser.CurrentInputLine.NormalizedText.Trim().Replace( "\"", "\"\"" );
+            var content = viewSourceReader.CurrentInputLine.NormalizedText.Trim().Replace( "\"", "\"\"" );
 
             var indexOfEquals = content.IndexOf('=');
             var key = content.Substring(0, indexOfEquals).Trim();
-            var value = content.Substring(indexOfEquals+1, content.Length -indexOfEquals- 1).Trim();
+            var value = content.Substring(indexOfEquals+1, content.Length - indexOfEquals - 1).Trim();
 
-            templateParser.Meta[key] = value;
+            builder.Meta[key] = value;
 
             return EmptyClosingAction;
         }

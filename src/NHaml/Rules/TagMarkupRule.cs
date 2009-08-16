@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
+using NHaml.Compilers;
 using NHaml.Exceptions;
 
 namespace NHaml.Rules
@@ -30,9 +31,9 @@ namespace NHaml.Rules
             return inputLine.NormalizedText;
         }
 
-        public override BlockClosingAction Render(TemplateParser templateParser)
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var currentInputLine = templateParser.CurrentInputLine;
+            var currentInputLine = viewSourceReader.CurrentInputLine;
             var input = PreprocessLine(currentInputLine);
             var match = _tagRegex.Match(input);
 
@@ -48,14 +49,12 @@ namespace NHaml.Rules
             var openingTag = string.Format("{0}<{1}", currentInputLine.Indent, tagName);
             var closingTag = string.Format("</{0}>", tagName);
 
-            var builder = templateParser.TemplateClassBuilder;
             builder.AppendOutput(openingTag);
 
-            ParseAndRenderAttributes(templateParser, match);
+            ParseAndRenderAttributes(builder, match);
 
             var action = groups[6].Value.Trim();
 
-            var options = templateParser.TemplateEngine.Options;
             if (string.Equals("/", action) || options.IsAutoClosingTag(tagName))
             {
                 builder.AppendOutputLine(" />");
@@ -80,7 +79,7 @@ namespace NHaml.Rules
 
                     if (!isWhitespaceSensitive)
                     {
-                        builder.AppendOutput(templateParser.NextIndent);
+                        builder.AppendOutput(viewSourceReader.NextIndent);
                     }
 
                     if (string.Equals("=", action))
@@ -108,7 +107,7 @@ namespace NHaml.Rules
                 else
                 {
                     builder.AppendOutput(">" + content);
-                    if ((currentInputLine.IndentCount + 1) == templateParser.NextInputLine.IndentCount)
+                    if ((currentInputLine.IndentCount + 1) == viewSourceReader.NextInputLine.IndentCount)
                     {
                         builder.AppendOutputLine(string.Empty);
                         closingTag = currentInputLine.Indent + closingTag;
@@ -119,7 +118,7 @@ namespace NHaml.Rules
             return () => builder.AppendOutputLine(closingTag);
         }
 
-        private static void ParseAndRenderAttributes(TemplateParser templateParser, Match tagMatch)
+        private static void ParseAndRenderAttributes(TemplateClassBuilder builder, Match tagMatch)
         {
             var idAndClasses = tagMatch.Groups[2].Value;
             var attributesHash = tagMatch.Groups[4].Value.Trim();
@@ -159,20 +158,19 @@ namespace NHaml.Rules
             attributeParser.Parse();
             foreach (var attribute in attributeParser.Attributes)
             {
-                var classBuilder = templateParser.TemplateClassBuilder;
                 if (attribute.Type == ParsedAttributeType.String)
                 {
                     var expressionStringParser = new ExpressionStringParser(attribute.Value);
 
                     expressionStringParser.Parse();
 
-                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, expressionStringParser.ExpressionStringTokens);
+                    builder.AppendAttributeTokens(attribute.Schema, attribute.Name, expressionStringParser.ExpressionStringTokens);
                 }
                 else
                 {
                     var token = new ExpressionStringToken(attribute.Value, true);
 
-                    classBuilder.AppendAttributeTokens(attribute.Schema, attribute.Name, new[] { token });
+                    builder.AppendAttributeTokens(attribute.Schema, attribute.Name, new[] { token });
                 }
             }
         }

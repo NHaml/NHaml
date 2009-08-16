@@ -1,3 +1,5 @@
+using NHaml.Compilers;
+
 namespace NHaml.Rules
 {
     public class PreambleMarkupRule : SilentEvalMarkupRule
@@ -6,14 +8,13 @@ namespace NHaml.Rules
         {
             get { return "^"; }
         }
-
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var code = templateParser.CurrentInputLine.NormalizedText.Trim();
+            var code = viewSourceReader.CurrentInputLine.NormalizedText.Trim();
 
             if( !string.IsNullOrEmpty( code ) )
             {
-                templateParser.TemplateClassBuilder.AppendPreambleCode( code );
+                builder.AppendPreambleCode( code );
             }
 
             return EmptyClosingAction;

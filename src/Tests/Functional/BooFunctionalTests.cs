@@ -11,7 +11,7 @@ namespace NHaml.Tests.Functional
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
-            _templateEngine.TemplateContentProvider.AddPathSource(TemplatesFolder+@"Boo");
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"Boo");
         }
 
         [Ignore("Until debugging with Boo works")]

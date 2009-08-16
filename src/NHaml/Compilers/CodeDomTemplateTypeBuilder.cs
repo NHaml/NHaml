@@ -11,18 +11,18 @@ namespace NHaml.Compilers
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
 
-        public TemplateEngine TemplateEngine { get; private set; }
+        public TemplateOptions Options { get; private set; }
         public CodeDomProvider CodeDomProvider { get; set; }
         public string Source { get; protected set; }
         public CompilerResults CompilerResults { get; private set; }
         public Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public CodeDomTemplateTypeBuilder( TemplateEngine templateEngine )
+        public CodeDomTemplateTypeBuilder( TemplateOptions options )
         {
             ProviderOptions = new Dictionary<string, string>();
-            TemplateEngine = templateEngine;
-            TemplateEngine.Options.AddReference( GetType().Assembly );
+            Options = options;
+            Options.AddReference(GetType().Assembly);
 
         }
 
@@ -37,7 +37,7 @@ namespace NHaml.Compilers
 
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams);
-            if (TemplateEngine.Options.OutputDebugFiles && SupportsDebug())
+            if (Options.OutputDebugFiles && SupportsDebug())
             {
                 compilerParams.GenerateInMemory = false;
                 compilerParams.IncludeDebugInformation = true;
@@ -139,7 +139,7 @@ namespace NHaml.Compilers
         {
             parameters.ReferencedAssemblies.Clear();
 
-            foreach( var assembly in TemplateEngine.Options.References )
+            foreach( var assembly in Options.References )
             {
                 parameters.ReferencedAssemblies.Add( assembly );
             }

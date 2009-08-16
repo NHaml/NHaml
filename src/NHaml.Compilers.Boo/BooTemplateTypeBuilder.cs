@@ -14,14 +14,14 @@ namespace NHaml.Compilers.Boo
     {
         private readonly BooCompiler _booCompiler;
 
-        private readonly TemplateEngine _templateEngine;
+        private readonly TemplateOptions options;
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public BooTemplateTypeBuilder( TemplateEngine templateEngine )
+        public BooTemplateTypeBuilder(TemplateOptions options)
         {
             _booCompiler = new BooCompiler();
             CompilerResults = new CompilerResults( new TempFileCollection() );
-            _templateEngine = templateEngine;
+            this.options = options;
 
             _booCompiler.Parameters.GenerateInMemory = true;
             _booCompiler.Parameters.Debug = true;
@@ -67,7 +67,7 @@ namespace NHaml.Compilers.Boo
         [SuppressMessage( "Microsoft.Reliability", "CA2001:AvoidCallingProblematicMethods" )]
         private void AddReferences()
         {
-            foreach( var assemblyFile in _templateEngine.Options.References )
+            foreach( var assemblyFile in options.References )
             {
                 var assembly = Assembly.LoadFrom( assemblyFile );
 
@@ -79,7 +79,7 @@ namespace NHaml.Compilers.Boo
         {
             var sourceBuilder = new StringBuilder();
 
-            foreach( var usingStatement in _templateEngine.Options.Usings )
+            foreach( var usingStatement in options.Usings )
             {
                 sourceBuilder.AppendLine( "import " + usingStatement );
             }

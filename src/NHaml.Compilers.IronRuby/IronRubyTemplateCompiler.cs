@@ -20,16 +20,16 @@ namespace NHaml.Compilers.IronRuby
             return new IronRubyTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile( TemplateParser templateParser )
+        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
         {
             var ruby = new StringBuilder();
 
-            foreach( var reference in templateParser.TemplateEngine.Options.References )
+            foreach (var reference in options.References)
             {
                 ruby.AppendLine( string.Format("require '{0}'", reference) );
             }
 
-            ruby.Append( templateParser.TemplateClassBuilder.Build( templateParser.TemplateEngine.Options.Usings ) );
+            ruby.Append(templateParser.Builder.Build(options.Usings));
 
             var templateSource = ruby.ToString();
 
@@ -37,7 +37,7 @@ namespace NHaml.Compilers.IronRuby
 
             _scriptEngine.Execute( templateSource );
 
-            return CreateTemplateFactory( _scriptEngine, templateParser.TemplateClassBuilder.ClassName );
+            return CreateTemplateFactory( _scriptEngine, templateParser.Builder.ClassName );
         }
 
         protected virtual IronRubyTemplateFactory CreateTemplateFactory( ScriptEngine scriptEngine, string className )
@@ -45,28 +45,28 @@ namespace NHaml.Compilers.IronRuby
             return new IronRubyTemplateFactory( _scriptEngine, className );
         }
 
-        public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
+        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
-            var code = templateParser.CurrentInputLine.NormalizedText;
+            var code = viewSourceReader.CurrentInputLine.NormalizedText;
 
-            templateParser.TemplateClassBuilder.AppendSilentCode( code, false );
+            builder.AppendSilentCode(code, false);
 
-            if( templateParser.IsBlock )
+            if( viewSourceReader.IsBlock )
             {
-                templateParser.TemplateClassBuilder.BeginCodeBlock();
+                builder.BeginCodeBlock();
 
-                if( !templateParser.CurrentInputLine.NormalizedText.Trim().Split( ' ' )[0].ToUpperInvariant().Equals( "CASE" ) )
+                if( !viewSourceReader.CurrentInputLine.NormalizedText.Trim().Split( ' ' )[0].ToUpperInvariant().Equals( "CASE" ) )
                 {
                     return () =>
                       {
-                          if( (templateParser.CurrentInputLine.Text.TrimStart().StartsWith(SilentEvalMarkupRule.SignifierChar)) &&
-                            MidBlockKeywords.Contains( templateParser.CurrentInputLine.NormalizedText.Trim().Split( ' ' )[0].ToUpperInvariant() ) )
+                          if( (viewSourceReader.CurrentInputLine.Text.TrimStart().StartsWith(SilentEvalMarkupRule.SignifierChar)) &&
+                            MidBlockKeywords.Contains( viewSourceReader.CurrentInputLine.NormalizedText.Trim().Split( ' ' )[0].ToUpperInvariant() ) )
                           {
-                              templateParser.TemplateClassBuilder.Unindent();
+                              builder.Unindent();
                           }
                           else
                           {
-                              templateParser.TemplateClassBuilder.EndCodeBlock();
+                              builder.EndCodeBlock();
                           }
                       };
                 }
@@ -77,7 +77,7 @@ namespace NHaml.Compilers.IronRuby
 
         public void RenderAttributes( TemplateParser templateParser, string attributes )
         {
-            templateParser.TemplateClassBuilder.AppendCode( string.Format("__a({0})", attributes) );
+            templateParser.Builder.AppendCode( string.Format("__a({0})", attributes) );
         }
     }
 }

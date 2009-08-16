@@ -6,6 +6,7 @@ using System.Web;
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp3;
 using NHaml.Rules;
+using NHaml.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml
@@ -33,6 +34,7 @@ namespace NHaml
             _indentSize = 2;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharp3TemplateCompiler();
+            TemplateContentProvider = new FileTemplateContentProvider();
 
             AddRule(new EofMarkupRule());
             AddRule(new MetaMarkupRule());
@@ -66,6 +68,7 @@ namespace NHaml
                 IndentSize = _indentSize;
             }
         }
+        public ITemplateContentProvider TemplateContentProvider { get; set; }
 
         public int IndentSize
         {
@@ -132,6 +135,21 @@ namespace NHaml
             }
             MarkupRules.Add(markupRule);
             MarkupRules.Sort((x, y) => x.Signifier.Length.CompareTo(y.Signifier.Length));
+        }
+
+        internal MarkupRule GetRule(InputLine inputLine)
+        {
+            Invariant.ArgumentNotNull(inputLine, "line");
+
+            var start = inputLine.Text.TrimStart();
+            foreach (var keyValuePair in MarkupRules)
+            {
+                if (start.StartsWith(keyValuePair.Signifier))
+                {
+                    return keyValuePair;
+                }
+            }
+            return PlainTextMarkupRule.Instance;
         }
 
         public bool IsAutoClosingTag(string tag)

@@ -26,7 +26,7 @@ namespace NHaml.Tests
         public virtual void SetUp()
         {
             _templateEngine = new TemplateEngine {Options = {TemplateCompiler = new CSharp2TemplateCompiler()}};
-            _templateEngine.TemplateContentProvider.PathSources.Add(TemplatesFolder);
+            _templateEngine.Options.TemplateContentProvider.PathSources.Add(TemplatesFolder);
         }
 
         protected void AssertRender( string templateName )

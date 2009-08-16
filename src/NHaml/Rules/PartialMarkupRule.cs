@@ -1,4 +1,5 @@
 using System;
+using NHaml.Compilers;
 
 namespace NHaml.Rules
 {
@@ -11,30 +12,27 @@ namespace NHaml.Rules
             get { return "_"; }
         }
 
-        public override void Process( TemplateParser templateParser )
-        {
-            Render( templateParser );
-        }
+        public override  bool PerformCloseActions { get { return false; } }
 
-        public override BlockClosingAction Render(TemplateParser templateParser)
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var partialName = templateParser.CurrentInputLine.NormalizedText.Trim();
+            var partialName = viewSourceReader.CurrentInputLine.NormalizedText.Trim();
 
             if (string.IsNullOrEmpty(partialName))
             {
-                if (templateParser.ViewSourceQueue.Count == 0)
+                if (viewSourceReader.ViewSourceQueue.Count == 0)
                 {
                     throw new InvalidOperationException(NoPartialName);
                 }
-                var templatePath = templateParser.ViewSourceQueue.Dequeue();
-                templateParser.MergeTemplate(templatePath, true);
+                var templatePath = viewSourceReader.ViewSourceQueue.Dequeue();
+                viewSourceReader.MergeTemplate(templatePath, true);
             }
             else
             {
                 partialName = partialName.Insert(partialName.LastIndexOf(@"\", StringComparison.OrdinalIgnoreCase) + 1, "_");
-                var viewSource = templateParser.TemplateEngine.TemplateContentProvider.GetViewSource(partialName, templateParser.ViewSources);
-                templateParser.ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
-                templateParser.MergeTemplate(viewSource, true);
+                var viewSource = options.TemplateContentProvider.GetViewSource(partialName, viewSourceReader.ViewSources);
+                viewSourceReader.ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
+                viewSourceReader.MergeTemplate(viewSource, true);
             }
 
             return EmptyClosingAction;

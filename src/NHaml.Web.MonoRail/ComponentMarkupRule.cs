@@ -10,12 +10,12 @@ namespace NHaml.Web.MonoRail
     {
         private static int tempDictionaryCount;
 
-		public override BlockClosingAction Render(TemplateParser templateParser)
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
 
             var dictionary = string.Empty;
 
-            var text = templateParser.CurrentInputLine.NormalizedText.Trim();
+            var text = viewSourceReader.CurrentInputLine.NormalizedText.Trim();
             var indexOfSpace = text.IndexOf(' ');
             string componentName ;
             if (indexOfSpace == -1)
@@ -33,21 +33,21 @@ namespace NHaml.Web.MonoRail
             }
 
 
-		    var builder = (CodeDomClassBuilder)templateParser.TemplateClassBuilder;
+            var codeDomClassBuilder = (CodeDomClassBuilder)builder;
 
-            var dictionaryLocalVariable = AppendCreateDictionaryLocalVariable(dictionary, builder);
+            var dictionaryLocalVariable = AppendCreateDictionaryLocalVariable(dictionary, codeDomClassBuilder);
 
-        	builder.CurrentTextWriterVariableName = "x";
+        	codeDomClassBuilder.CurrentTextWriterVariableName = "x";
             var code = string.Format("{0}Component(\"{1}\", {2}, (x) =>",
-                                     templateParser.CurrentInputLine.Indent, componentName, dictionaryLocalVariable);
+                                     viewSourceReader.CurrentInputLine.Indent, componentName, dictionaryLocalVariable);
 
-            builder.AppendSilentCode(code, false);
-            builder.BeginCodeBlock();
+            codeDomClassBuilder.AppendSilentCode(code, false);
+            codeDomClassBuilder.BeginCodeBlock();
 			return () =>
 			       	{
-			       		builder.EndCodeBlock();
-			       		builder.AppendSilentCode(").Render();", false);
-			       		builder.CurrentTextWriterVariableName = TemplateClassBuilder.DefaultTextWriterVariableName;
+			       		codeDomClassBuilder.EndCodeBlock();
+			       		codeDomClassBuilder.AppendSilentCode(").Render();", false);
+			       		codeDomClassBuilder.CurrentTextWriterVariableName = TemplateClassBuilder.DefaultTextWriterVariableName;
 			       	};
         }
 

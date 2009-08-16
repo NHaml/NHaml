@@ -1,3 +1,5 @@
+using NHaml.Compilers;
+
 namespace NHaml.Rules
 {
     public class SilentEvalMarkupRule : MarkupRule
@@ -9,9 +11,9 @@ namespace NHaml.Rules
             get { return SignifierChar; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            return templateParser.TemplateEngine.Options.TemplateCompiler.RenderSilentEval( templateParser );
+            return options.TemplateCompiler.RenderSilentEval(viewSourceReader, builder);
         }
     }
 }

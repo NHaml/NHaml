@@ -17,14 +17,14 @@ namespace NHaml.Compilers.Boo
             return new BooTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile( TemplateParser templateParser )
+        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
         {
-            var templateSource = templateParser.TemplateClassBuilder.Build( templateParser.TemplateEngine.Options.Usings );
+            var templateSource = templateParser.Builder.Build(options.Usings);
 
-            var typeBuilder = new BooTemplateTypeBuilder( templateParser.TemplateEngine );
+            var typeBuilder = new BooTemplateTypeBuilder(options);
 
            // Debug.WriteLine(templateSource);
-            var templateType = typeBuilder.Build( templateSource, templateParser.TemplateClassBuilder.ClassName );
+            var templateType = typeBuilder.Build( templateSource, templateParser.Builder.ClassName );
 
             if( templateType == null )
             {
@@ -35,18 +35,18 @@ namespace NHaml.Compilers.Boo
             return new TemplateFactory( templateType );
         }
 
-        public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
+        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
-            var code = templateParser.CurrentInputLine.NormalizedText;
+            var code = viewSourceReader.CurrentInputLine.NormalizedText;
 
             var lambdaMatch = LambdaRegex.Match( code );
 
-            var templateClassBuilder = (BooTemplateClassBuilder)templateParser.TemplateClassBuilder;
+            var templateClassBuilder = (BooTemplateClassBuilder)builder;
             if( !lambdaMatch.Success )
             {
-                templateClassBuilder.AppendSilentCode(code, !templateParser.IsBlock);
+                templateClassBuilder.AppendSilentCode(code, !viewSourceReader.IsBlock);
 
-                if( templateParser.IsBlock )
+                if( viewSourceReader.IsBlock )
                 {
                     templateClassBuilder.BeginCodeBlock();
 
@@ -56,7 +56,7 @@ namespace NHaml.Compilers.Boo
                 return MarkupRule.EmptyClosingAction;
             }
 
-            var depth = templateParser.CurrentInputLine.IndentCount;
+            var depth = viewSourceReader.CurrentInputLine.IndentCount;
 
             templateClassBuilder.AppendChangeOutputDepth( depth, true );
             templateClassBuilder.AppendSilentCode( code, false );

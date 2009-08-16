@@ -32,9 +32,9 @@ namespace NHaml.Compilers.FSharp
             return string.Format("{0}{1}{2} -> ", methodBeingCalled, s, argDefinition);
         }
 
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
         {
-            return new FSharpTemplateTypeBuilder(templateEngine);
+            return new FSharpTemplateTypeBuilder(options);
         }
     }
 }

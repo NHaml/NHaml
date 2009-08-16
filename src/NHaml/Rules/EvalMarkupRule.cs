@@ -1,4 +1,6 @@
 
+using NHaml.Compilers;
+
 namespace NHaml.Rules
 {
     public class EvalMarkupRule : MarkupRule
@@ -8,13 +10,12 @@ namespace NHaml.Rules
             get { return "="; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var builder = templateParser.TemplateClassBuilder;
-            var inputLine = templateParser.CurrentInputLine;
+            var inputLine = viewSourceReader.CurrentInputLine;
 
             builder.AppendOutput( inputLine.Indent );
-            builder.AppendCodeLine(inputLine.NormalizedText.Trim(), templateParser.TemplateEngine.Options.EncodeHtml );
+            builder.AppendCodeLine(inputLine.NormalizedText.Trim(), options.EncodeHtml);
 
             return EmptyClosingAction;
         }

@@ -33,9 +33,9 @@ namespace NHaml.Compilers.VisualBasic
             return string.Format("{0}{1}{2} => {{", part0, part1, part2);
         }
 
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
         {
-            return  new VisualBasicTemplateTypeBuilder(templateEngine);
+            return  new VisualBasicTemplateTypeBuilder(options);
         }
     }
 }

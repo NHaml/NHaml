@@ -17,9 +17,9 @@ namespace NHaml.Compilers.CSharp4
         }
 
 
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder( TemplateEngine templateEngine )
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
         {
-            return new CSharp4TemplateTypeBuilder( templateEngine );
+            return new CSharp4TemplateTypeBuilder( options );
         }
 
     }

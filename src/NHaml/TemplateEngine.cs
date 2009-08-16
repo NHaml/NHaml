@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NHaml.Configuration;
-using NHaml.Rules;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
 
@@ -26,14 +25,12 @@ namespace NHaml
             _compiledTemplateCache = new Dictionary<string, CompiledTemplate>();
 
             NHamlConfigurationSection.UpdateTemplateOptions( Options );
-            TemplateContentProvider = new FileTemplateContentProvider();
-            Options.TemplateBaseTypeChanged += ( s, e ) => ClearCompiledTemplatesCache();
-            Options.TemplateCompilerChanged += ( s, e ) => ClearCompiledTemplatesCache();
+            Options.TemplateBaseTypeChanged += (sender, args) => ClearCompiledTemplatesCache();
+            Options.TemplateCompilerChanged += (sender, args) => ClearCompiledTemplatesCache();
         }
 
         public TemplateOptions Options { get; private set; }
 
-        public ITemplateContentProvider TemplateContentProvider { get; set; }
 
         private void ClearCompiledTemplatesCache()
         {
@@ -43,20 +40,7 @@ namespace NHaml
             }
         }
 
-        internal MarkupRule GetRule( InputLine inputLine )
-        {
-            Invariant.ArgumentNotNull( inputLine, "line" );
-
-            var start = inputLine.Text.TrimStart();
-            foreach (var keyValuePair in Options.MarkupRules)
-            {
-                if (start.StartsWith(keyValuePair.Signifier))
-                {
-                    return keyValuePair;
-                }
-            }
-            return PlainTextMarkupRule.Instance;
-        }
+     
 
         public CompiledTemplate Compile(params string[] templatePath )
         {
@@ -83,7 +67,7 @@ namespace NHaml
             var list = new List<IViewSource>();
             foreach (var layoutTemplatePath in templatePaths)
             {
-                list.Add(TemplateContentProvider.GetViewSource(layoutTemplatePath));
+                list.Add(Options.TemplateContentProvider.GetViewSource(layoutTemplatePath));
             }
 
             return Compile(list, templateBaseType);
@@ -109,7 +93,7 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate( this, templateViewSources, templateBaseType );
+                    compiledTemplate = new CompiledTemplate( Options, templateViewSources, templateBaseType );
 
                     _compiledTemplateCache.Add( key, compiledTemplate );
                 }

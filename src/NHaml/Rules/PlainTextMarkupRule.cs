@@ -1,4 +1,5 @@
 using System.Diagnostics.CodeAnalysis;
+using NHaml.Compilers;
 
 namespace NHaml.Rules
 {
@@ -17,9 +18,9 @@ namespace NHaml.Rules
             get { return string.Empty; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.Text );
+            builder.AppendOutputLine(viewSourceReader.CurrentInputLine.Text);
 
             return EmptyClosingAction;
         }

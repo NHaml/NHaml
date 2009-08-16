@@ -7,15 +7,15 @@ namespace NHaml
 {
     public delegate void BlockClosingAction();
 
-    public sealed class TemplateParser
+    public sealed class TemplateParser : IViewSourceReader
     {
         private readonly string _singleIndent;
 
-        public TemplateParser(TemplateEngine templateEngine, TemplateClassBuilder templateClassBuilder, IList<IViewSource> viewSources)
+        public TemplateParser(TemplateOptions options, TemplateClassBuilder templateClassBuilder, IList<IViewSource> viewSources)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
-            TemplateEngine = templateEngine;
-            TemplateClassBuilder = templateClassBuilder;
+            Options = options;
+            Builder = templateClassBuilder;
             ViewSources = viewSources;
             ViewSourceQueue = new Queue<IViewSource>();
             ViewSourceModifiedChecks = new List<Func<bool>>();
@@ -26,15 +26,14 @@ namespace NHaml
                 ViewSourceQueue.Enqueue(viewSource);
             }
 
-            Meta = new Dictionary<string, string>();
 
-            if (TemplateEngine.Options.UseTabs)
+            if (Options.UseTabs)
             {
                 _singleIndent = "\t";
             }
             else
             {
-                _singleIndent = string.Empty.PadLeft(TemplateEngine.Options.IndentSize);
+                _singleIndent = string.Empty.PadLeft(Options.IndentSize);
             }
         }
 
@@ -44,11 +43,10 @@ namespace NHaml
 
         public Queue<IViewSource> ViewSourceQueue { get; set; }
 
-        public Dictionary<string, string> Meta { get; private set; }
 
-        public TemplateEngine TemplateEngine { get; private set; }
+        public TemplateOptions Options { get; private set; }
 
-        public TemplateClassBuilder TemplateClassBuilder { get; private set; }
+        public TemplateClassBuilder Builder { get; private set; }
 
         private LinkedList<InputLine> InputLines { get; set; }
 
@@ -82,8 +80,8 @@ namespace NHaml
         public void Parse()
         {
             InputLines = new LinkedList<InputLine>();
-            InputLines.AddLast(new InputLine(string.Empty, 0, TemplateEngine.Options.IndentSize));
-            InputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar, 1, TemplateEngine.Options.IndentSize));
+            InputLines.AddLast(new InputLine(string.Empty, 0, Options.IndentSize));
+            InputLines.AddLast(new InputLine(EofMarkupRule.SignifierChar, 1, Options.IndentSize));
             CurrentNode = InputLines.First.Next;
             ProcessViewSource(ViewSourceQueue.Dequeue());
         }
@@ -107,9 +105,19 @@ namespace NHaml
 
                 CurrentInputLine.ValidateIndentation();
 
-                var rule = TemplateEngine.GetRule(CurrentInputLine);
+                var rule = Options.GetRule(CurrentInputLine);
                 CurrentInputLine.NormalizedText = GetNormalizedText(rule, CurrentInputLine);
-                rule.Process(this);
+                if (rule.PerformCloseActions)
+                {
+                    CloseBlocks();
+                    BlockClosingActions.Push(rule.Render(this, Options, Builder));
+                    MoveNext();
+                }
+                else
+                {
+                   rule.Render(this, Options, Builder);
+                }
+
             }
 
             CloseBlocks();
@@ -146,7 +154,7 @@ namespace NHaml
                     {
                         continue;
                     }
-                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, lineNumber++, TemplateEngine.Options.IndentSize);
+                    var inputLine = new InputLine(CurrentNode.Value.Indent + line, lineNumber++, Options.IndentSize);
                     InputLines.AddBefore(CurrentNode, inputLine);
                 }
             }
@@ -170,4 +178,5 @@ namespace NHaml
             }
         }
     }
+
 }

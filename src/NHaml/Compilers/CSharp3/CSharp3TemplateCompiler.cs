@@ -17,9 +17,9 @@ namespace NHaml.Compilers.CSharp3
         }
 
 
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder( TemplateEngine templateEngine )
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
         {
-            return new CSharp3TemplateTypeBuilder( templateEngine );
+            return new CSharp3TemplateTypeBuilder( options );
         }
 
     }

@@ -6,7 +6,8 @@ namespace NHaml.Compilers.CSharp2
     {
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public CSharp2TemplateTypeBuilder( TemplateEngine templateEngine ) : base(templateEngine)
+        public CSharp2TemplateTypeBuilder(TemplateOptions options)
+            : base(options)
         {
             ProviderOptions.Add( "CompilerVersion", "v2.0" );
         }

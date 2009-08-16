@@ -20,15 +20,15 @@ namespace NHaml.Compilers
 
         public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType);
 
-        public TemplateFactory Compile( TemplateParser templateParser )
+        public TemplateFactory Compile(TemplateParser templateParser, TemplateOptions options)
         {
-            var typeBuilder = CreateTemplateTypeBuilder( templateParser.TemplateEngine );
+            var typeBuilder = CreateTemplateTypeBuilder(options);
             //TODO: leaky abstraction 
-            var classBuilder = (CodeDomClassBuilder) templateParser.TemplateClassBuilder;
+            var classBuilder = (CodeDomClassBuilder) templateParser.Builder;
             var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
             classBuilder.CodeDomProvider = provider;
             typeBuilder.CodeDomProvider = provider;
-            var templateSource = classBuilder.Build( templateParser.TemplateEngine.Options.Usings );
+            var templateSource = classBuilder.Build(options.Usings);
             
             var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
 
@@ -43,36 +43,36 @@ namespace NHaml.Compilers
 
         protected abstract CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary);
 
-        public BlockClosingAction RenderSilentEval( TemplateParser templateParser )
+        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
-            var code = templateParser.CurrentInputLine.NormalizedText;
+            var code = viewSourceReader.CurrentInputLine.NormalizedText;
 
             var lambdaMatch = lambdaRegex.Match( code );
 
             if( !lambdaMatch.Success )
             {
-                templateParser.TemplateClassBuilder.AppendSilentCode( code, !templateParser.IsBlock );
+                builder.AppendSilentCode(code, !viewSourceReader.IsBlock);
 
-                if( templateParser.IsBlock )
+                if( viewSourceReader.IsBlock )
                 {
-                    templateParser.TemplateClassBuilder.BeginCodeBlock();
+                    builder.BeginCodeBlock();
 
-                    return templateParser.TemplateClassBuilder.EndCodeBlock;
+                    return builder.EndCodeBlock;
                 }
 
                 return MarkupRule.EmptyClosingAction;
             }
 
-            var depth = templateParser.CurrentInputLine.IndentCount;
+            var depth = viewSourceReader.CurrentInputLine.IndentCount;
             code = TranslateLambda( code, lambdaMatch );
 
-            templateParser.TemplateClassBuilder.AppendChangeOutputDepth( depth );
-            templateParser.TemplateClassBuilder.AppendSilentCode( code, true );
+            builder.AppendChangeOutputDepth(depth);
+            builder.AppendSilentCode(code, true);
 
             return () =>
                        {
-                           templateParser.TemplateClassBuilder.AppendChangeOutputDepth( depth );
-                           templateParser.TemplateClassBuilder.AppendSilentCode( "})", true );
+                           builder.AppendChangeOutputDepth(depth);
+                           builder.AppendSilentCode("})", true);
                        };
         }
 
@@ -80,6 +80,6 @@ namespace NHaml.Compilers
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
 
-        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateEngine templateEngine);
+        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options);
     }
 }

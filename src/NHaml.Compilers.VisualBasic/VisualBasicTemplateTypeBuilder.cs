@@ -6,7 +6,8 @@ namespace NHaml.Compilers.VisualBasic
     {
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public VisualBasicTemplateTypeBuilder( TemplateEngine templateEngine ) : base(templateEngine)
+        public VisualBasicTemplateTypeBuilder(TemplateOptions options)
+            : base(options)
         {
             ProviderOptions.Add("CompilerVersion", "v3.5");
         }

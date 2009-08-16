@@ -1,3 +1,5 @@
+using NHaml.Compilers;
+
 namespace NHaml.Rules
 {
     public class EscapeMarkupRule : MarkupRule
@@ -7,10 +9,10 @@ namespace NHaml.Rules
             get { return "\\"; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            templateParser.TemplateClassBuilder.AppendOutput( templateParser.CurrentInputLine.Indent );
-            templateParser.TemplateClassBuilder.AppendOutputLine( templateParser.CurrentInputLine.NormalizedText);
+            builder.AppendOutput(viewSourceReader.CurrentInputLine.Indent);
+            builder.AppendOutputLine(viewSourceReader.CurrentInputLine.NormalizedText);
 
             return EmptyClosingAction;
         }

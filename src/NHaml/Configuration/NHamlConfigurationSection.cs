@@ -10,6 +10,7 @@ using NHaml.Compilers;
 using NHaml.Compilers.CSharp2;
 using NHaml.Compilers.CSharp3;
 using NHaml.Compilers.CSharp4;
+using NHaml.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml.Configuration
@@ -24,42 +25,64 @@ namespace NHaml.Configuration
             return (NHamlConfigurationSection)ConfigurationManager.GetSection( "nhaml" );
         }
 
-        public static void UpdateTemplateOptions( TemplateOptions options )
+        public static void UpdateTemplateOptions(TemplateOptions options)
         {
-            if( options == null )
-                throw new ArgumentNullException( "options" );
+            if (options == null)
+                throw new ArgumentNullException("options");
 
             var section = GetSection();
 
-            if( section == null )
+            if (section == null)
+            {
                 return;
+            }
 
             if (section.IndentSize.HasValue)
+            {
                 options.IndentSize = section.IndentSize.Value;
+            }
 
-            if( section.AutoRecompile.HasValue )
+            if (section.AutoRecompile.HasValue)
+            {
                 options.AutoRecompile = section.AutoRecompile.Value;
+            }
 
-            if( section.UseTabs.HasValue )
+            if (section.UseTabs.HasValue)
+            {
                 options.UseTabs = section.UseTabs.Value;
+            }
 
-            if(!string.IsNullOrEmpty( section.TemplateBaseType ))
+            if (!string.IsNullOrEmpty(section.TemplateBaseType))
+            {
                 options.TemplateBaseType = Type.GetType(section.TemplateBaseType, true, false);
+            }
 
-            if( section.EncodeHtml.HasValue )
+            if (section.EncodeHtml.HasValue)
+            {
                 options.EncodeHtml = section.EncodeHtml.Value;
+            }
 
             if (section.OutputDebugFiles.HasValue)
+            {
                 options.OutputDebugFiles = section.OutputDebugFiles.Value;
+            }
 
-            if( !string.IsNullOrEmpty( section.TemplateCompiler ) )
+
+
+            if (!string.IsNullOrEmpty(section.TemplateCompiler))
+            {
                 options.TemplateCompiler = section.CreateTemplateCompiler();
+            }
 
-                foreach( var assemblyConfigurationElement in section.Assemblies )
-                    options.AddReference( Assembly.Load( assemblyConfigurationElement.Name ).Location );
+            foreach (var assemblyConfigurationElement in section.Assemblies)
+            {
+                options.AddReference(Assembly.Load(assemblyConfigurationElement.Name).Location);
+            }
 
-            foreach( var namespaceConfigurationElement in section.Namespaces )
-                options.AddUsing( namespaceConfigurationElement.Name );
+            foreach (var namespaceConfigurationElement in section.Namespaces)
+            {
+                options.AddUsing(namespaceConfigurationElement.Name);
+            }
         }
 
         private const string AssembliesElement = "assemblies";

@@ -9,7 +9,7 @@ namespace NHaml.Tests.Functional
         {
             base.SetUp();
 
-            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
+            _templateEngine.Options.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
         }
     }
 }

@@ -1,6 +1,6 @@
 using System.Text;
 using System.Text.RegularExpressions;
-
+using NHaml.Compilers;
 using NHaml.Exceptions;
 
 namespace NHaml.Rules
@@ -16,9 +16,9 @@ namespace NHaml.Rules
             get { return "/"; }
         }
 
-        public override BlockClosingAction Render( TemplateParser templateParser )
+        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var currentInputLine = templateParser.CurrentInputLine;
+            var currentInputLine = viewSourceReader.CurrentInputLine;
             var match = _commentRegex.Match( currentInputLine.NormalizedText );
 
             if( !match.Success )
@@ -39,7 +39,6 @@ namespace NHaml.Rules
                 closingTag.Insert(0,"<![endif]");
             }
 
-            var builder = templateParser.TemplateClassBuilder;
             if( string.IsNullOrEmpty( content ) )
             {
                 builder.AppendOutputLine( openingTag.ToString() );
@@ -50,7 +49,7 @@ namespace NHaml.Rules
                 if( content.Length > 50 )
                 {
                     builder.AppendOutputLine( openingTag.ToString() );
-                    builder.AppendOutput( templateParser.NextIndent );
+                    builder.AppendOutput( viewSourceReader.NextIndent );
                     builder.AppendOutputLine( content );
                 }
                 else

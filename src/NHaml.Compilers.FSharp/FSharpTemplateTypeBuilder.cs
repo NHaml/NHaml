@@ -9,7 +9,8 @@ namespace NHaml.Compilers.FSharp
     {
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public FSharpTemplateTypeBuilder( TemplateEngine templateEngine ) : base(templateEngine)
+        public FSharpTemplateTypeBuilder(TemplateOptions options)
+            : base(options)
         {
             ProviderOptions.Add( "CompilerVersion", "v2.0" );
         }
@@ -33,7 +34,7 @@ namespace NHaml.Compilers.FSharp
 
             sourceBuilder.AppendLine("#light ");
             sourceBuilder.AppendLine("namespace TempNHamlNamespace");
-            foreach( var usingStatement in TemplateEngine.Options.Usings )
+            foreach( var usingStatement in Options.Usings )
             {
                 sourceBuilder.AppendLine( "open " + usingStatement);
             }

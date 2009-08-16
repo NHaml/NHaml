@@ -12,8 +12,8 @@ namespace NHaml.Tests.Functional
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new CSharp3TemplateCompiler();
-            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp3" );
-            _templateEngine.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"CSharp3");
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"CSharp2");
         }
     }
 }

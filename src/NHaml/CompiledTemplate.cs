@@ -8,20 +8,16 @@ namespace NHaml
 {
     public class CompiledTemplate
     {
-        private readonly TemplateEngine _templateEngine;
-
+        private readonly TemplateOptions options;
         private readonly IList<IViewSource> _layoutViewSources;
-
         private readonly Type _templateBaseType;
-
         private TemplateFactory _templateFactory;
-
         private readonly object _sync = new object();
         private IList<Func<bool>> viewSourceModifiedChecks;
 
-        internal CompiledTemplate( TemplateEngine templateEngine, IList<IViewSource> layoutViewSources, Type templateBaseType )
+        internal CompiledTemplate(TemplateOptions options, IList<IViewSource> layoutViewSources, Type templateBaseType)
         {
-            _templateEngine = templateEngine;
+            this.options = options;
             _layoutViewSources = layoutViewSources;
             _templateBaseType = templateBaseType;
 
@@ -51,47 +47,44 @@ namespace NHaml
         private void Compile()
         {
             var className = Utility.MakeClassName( ListExtensions.Last(_layoutViewSources).Path );
-            var templateClassBuilder = _templateEngine.Options.TemplateCompiler.CreateTemplateClassBuilder(className, _templateBaseType );
+            var compiler = options.TemplateCompiler;
+            var templateClassBuilder = compiler.CreateTemplateClassBuilder(className, _templateBaseType );
 
-            var templateParser = new TemplateParser(_templateEngine, templateClassBuilder, _layoutViewSources);
+            var templateParser = new TemplateParser(options, templateClassBuilder, _layoutViewSources);
 
             templateParser.Parse();
             viewSourceModifiedChecks = templateParser.ViewSourceModifiedChecks;
 
             if( _templateBaseType.IsGenericTypeDefinition )
             {
-                string model;
-                Type modelType = null;
-
-                if( templateParser.Meta.TryGetValue( "model", out model ) )
-                {
-                    foreach( var assembly in AppDomain.CurrentDomain.GetAssemblies() )
-                    {
-                        modelType = assembly.GetType( model, false, true );
-
-                        if( modelType != null )
-                            break;
-                    }
-
-                    if( modelType == null )
-                    {
-                        var message = string.Format("The given model type '{0}' was not found.", model );
-                        throw new TemplateCompilationException( message );
-                    }
-                }
-                else
-                {
-                    modelType = typeof (object);
-                }
-
+                var modelType = GetModelType(templateParser.Builder.Meta);
                 templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
-
-                _templateEngine.Options.AddReference( modelType.Assembly );
+                options.AddReference( modelType.Assembly );
             }
 
-            _templateFactory = _templateEngine.Options.TemplateCompiler.Compile( templateParser );
+            _templateFactory = compiler.Compile(templateParser, templateParser.Options);
 
          
+        }
+
+        private Type GetModelType(IDictionary<string, string> meta)
+        {
+            string model;
+            if (meta.TryGetValue("model", out model))
+            {
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                {
+                    var modelType = assembly.GetType(model, false, true);
+                    if (modelType != null)
+                    {
+                        return modelType;
+                    }
+                }
+
+                var message = string.Format("The given model type '{0}' was not found.", model);
+                throw new TemplateCompilationException(message);
+            }
+            return typeof (object);
         }
     }
 }
