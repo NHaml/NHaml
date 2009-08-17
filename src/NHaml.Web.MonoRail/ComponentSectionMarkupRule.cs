@@ -5,7 +5,7 @@ namespace NHaml.Web.MonoRail
 {
     public class ComponentSectionMarkupRule : MarkupRule
     {
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var text = viewSourceReader.CurrentInputLine.NormalizedText.TrimStart();
 		    var indexOfSpace = text.IndexOf(' ');

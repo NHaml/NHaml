@@ -20,7 +20,7 @@ namespace NHaml.Compilers.IronRuby
             return new IronRubyTemplateClassBuilder( className, templateBaseType );
         }
 
-        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var ruby = new StringBuilder();
 
@@ -45,7 +45,7 @@ namespace NHaml.Compilers.IronRuby
             return new IronRubyTemplateFactory( _scriptEngine, className );
         }
 
-        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
+        public BlockClosingAction RenderSilentEval(ViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
             var code = viewSourceReader.CurrentInputLine.NormalizedText;
 

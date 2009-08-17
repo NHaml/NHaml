@@ -18,7 +18,7 @@ namespace NHaml.Compilers.Boo
         }
 
 
-        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var templateSource = builder.Build(options.Usings);
 
@@ -36,7 +36,7 @@ namespace NHaml.Compilers.Boo
             return new TemplateFactory( templateType );
         }
 
-        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
+        public BlockClosingAction RenderSilentEval(ViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
             var code = viewSourceReader.CurrentInputLine.NormalizedText;
 

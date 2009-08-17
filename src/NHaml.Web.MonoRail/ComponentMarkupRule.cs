@@ -10,7 +10,7 @@ namespace NHaml.Web.MonoRail
     {
         private static int tempDictionaryCount;
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
 
             var dictionary = string.Empty;
