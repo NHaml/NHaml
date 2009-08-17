@@ -12,7 +12,7 @@ namespace NHaml.Rules
             get { return SignifierChar; }
         }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             return EmptyClosingAction;
         }

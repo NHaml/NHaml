@@ -16,7 +16,7 @@ namespace NHaml.Rules
             get { return "/"; }
         }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var currentInputLine = viewSourceReader.CurrentInputLine;
             var match = _commentRegex.Match( currentInputLine.NormalizedText );

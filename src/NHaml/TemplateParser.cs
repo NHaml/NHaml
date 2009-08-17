@@ -9,7 +9,7 @@ namespace NHaml
     public class TemplateParser 
     {
         private TemplateClassBuilder builder;
-        private IViewSourceReader viewSourceReader;
+        private ViewSourceReader viewSourceReader;
         public TemplateParser(TemplateOptions options, TemplateClassBuilder templateClassBuilder, IList<IViewSource> viewSources)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
@@ -25,7 +25,7 @@ namespace NHaml
         public Stack<BlockClosingAction> BlockClosingActions { get; private set; }
 
       
-        public IViewSourceReader Parse()
+        public ViewSourceReader Parse()
         {
             ProcessViewSource(viewSourceReader.ViewSourceQueue.Dequeue());
             return viewSourceReader;

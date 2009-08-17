@@ -14,7 +14,7 @@ namespace NHaml.Rules
 
         public override  bool PerformCloseActions { get { return false; } }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var partialName = viewSourceReader.CurrentInputLine.NormalizedText.Trim();
 

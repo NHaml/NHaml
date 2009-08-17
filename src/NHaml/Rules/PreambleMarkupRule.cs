@@ -8,7 +8,7 @@ namespace NHaml.Rules
         {
             get { return "^"; }
         }
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var code = viewSourceReader.CurrentInputLine.NormalizedText.Trim();
 

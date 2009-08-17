@@ -20,7 +20,7 @@ namespace NHaml.Compilers
 
         public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType);
 
-        public TemplateFactory Compile(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var typeBuilder = CreateTemplateTypeBuilder(options);
             //TODO: leaky abstraction 
@@ -43,7 +43,7 @@ namespace NHaml.Compilers
 
         protected abstract CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary);
 
-        public BlockClosingAction RenderSilentEval(IViewSourceReader viewSourceReader, TemplateClassBuilder builder)
+        public BlockClosingAction RenderSilentEval(ViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
             var code = viewSourceReader.CurrentInputLine.NormalizedText;
 

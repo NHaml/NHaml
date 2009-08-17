@@ -13,7 +13,7 @@ namespace NHaml.Rules
         }
 
         [SuppressMessage( "Microsoft.Globalization", "CA1308" )]
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var currentInputLine = viewSourceReader.CurrentInputLine;
             var content = currentInputLine.NormalizedText.Trim().ToLowerInvariant();

@@ -4,7 +4,7 @@ using NHaml.TemplateResolution;
 
 namespace NHaml
 {
-    public class ViewSourceReader : IViewSourceReader
+    public class ViewSourceReader 
     {
         private readonly string _singleIndent;
         private LinkedList<InputLine> inputLines;

@@ -10,7 +10,7 @@ namespace NHaml.Rules
         public virtual bool PerformCloseActions { get { return true; } }
 
         public static readonly BlockClosingAction EmptyClosingAction = () => { };
-        public abstract BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder);
+        public abstract BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder);
 
   
     }

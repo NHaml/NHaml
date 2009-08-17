@@ -31,7 +31,7 @@ namespace NHaml.Rules
             return inputLine.NormalizedText;
         }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var currentInputLine = viewSourceReader.CurrentInputLine;
             var input = PreprocessLine(currentInputLine);

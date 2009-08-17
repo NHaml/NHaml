@@ -11,7 +11,7 @@ namespace NHaml.Rules
             get { return "@"; }
         }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             var content = viewSourceReader.CurrentInputLine.NormalizedText.Trim().Replace( "\"", "\"\"" );
 

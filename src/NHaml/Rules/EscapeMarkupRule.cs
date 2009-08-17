@@ -9,7 +9,7 @@ namespace NHaml.Rules
             get { return "\\"; }
         }
 
-        public override BlockClosingAction Render(IViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             builder.AppendOutput(viewSourceReader.CurrentInputLine.Indent);
             builder.AppendOutputLine(viewSourceReader.CurrentInputLine.NormalizedText);
