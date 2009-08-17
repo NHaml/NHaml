@@ -1,84 +1,69 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.IO;
 using System.Printing;
-using System.Text;
 using System.Threading;
+using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Windows.Media;
 using System.Windows.Xps;
 using System.Windows.Xps.Packaging;
-using System.Xml;
+using NHaml.TemplateResolution;
 
 namespace NHaml.Xps
 {
     public class XpsEngine
     {
-        public XpsEngine()
+        public XpsEngine(TemplateEngine templateEngine)
         {
             TemplateEngine = new TemplateEngine();
             TemplateEngine.Options.AddReferences(typeof(DataView<>));
         }
 
-        static XpsEngine()
+        public XpsEngine():this(new TemplateEngine())
         {
-            Instance = new XpsEngine();
         }
 
-        public static XpsEngine Instance { get; private set; }
 
-        public TemplateEngine TemplateEngine { get; private set; }
+        public TemplateEngine TemplateEngine { get; set; }
 
-
-
-        public void Generate<TData>(string viewPath, TData data, string targetPath)
+        public virtual void Generate<TData>(IList<IViewSource> viewSources, TData data, string targetPath)
         {
-            var render = GetRender(viewPath, data);
-            var load = GetLoad(render);
+            DependencyObject dependencyObject;
+            using (var memoryStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(memoryStream))
+            {
+                Render(viewSources, streamWriter, data);
+                streamWriter.Flush();
+                memoryStream.Position = 0;
+                dependencyObject = Load(memoryStream);
+            }
             using (var document = new XpsDocument(targetPath, FileAccess.Write))
             {
                 var xpsDocumentWriter = XpsDocument.CreateXpsDocumentWriter(document);
-                WriteLoadToXpsDocumentWriter(load, xpsDocumentWriter);
-                document.Close();
+                WriteLoadToXpsDocumentWriter(dependencyObject, xpsDocumentWriter, null);
             }
         }
 
-
-        public static object GetLoad(string render)
+        private static DependencyObject Load(Stream memoryStream)
         {
-            using (var stringReader = new StringReader(render))
-            using (var reader = new XmlTextReader(stringReader))
-            {
-                try
-                {
-                    return XamlReader.Load(reader);
-                }
-                catch (Exception exception)
-                {
-                    throw new Exception(string.Format("Could not parse XML. {0}{1}", Environment.NewLine, render), exception);
-                }
-            }
+            return (DependencyObject)XamlReader.Load(memoryStream);
         }
 
-        private string GetRender<TData>(string viewPath, TData data)
+
+        private void Render<TData>(IList<IViewSource> viewSources, TextWriter textWriter, TData data)
         {
-            var view = (DataView<TData>)TemplateEngine.Compile(viewPath, typeof(DataView<TData>)).CreateInstance();
+            var view = (DataView<TData>)TemplateEngine.Compile(viewSources, typeof(DataView<TData>)).CreateInstance();
             view.ViewData = data;
-            var stringBuilder = new StringBuilder();
-            using (TextWriter textWriter = new StringWriter(stringBuilder))
-            {
-                view.Render(textWriter);
-            }
-            return stringBuilder.ToString();
+            view.Render(textWriter);
         }
 
 
-        public void Print<TData>(string viewPath, TData data, string localPrintQueueName, AsyncCompletedEventHandler callback)
+        public virtual void Print<TData>(IList<IViewSource> viewSources, TData data, string localPrintQueueName, PrintTicket printTicket, AsyncCompletedEventHandler callback)
         {
-
-            Print(viewPath, data, () => GetNamedLocalPrintQueue(localPrintQueueName), callback);
-                                                                 
+            Print(viewSources, data, () => GetNamedLocalPrintQueue(localPrintQueueName), printTicket, callback);
         }
 
         private static PrintQueue GetNamedLocalPrintQueue(string localPrintQueueName)
@@ -89,64 +74,82 @@ namespace NHaml.Xps
             }
         }
 
-        public void Print<TData>(string viewPath, TData data, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
+        public virtual void Print<TData>(IList<IViewSource> viewSources, TData data, System.Func<PrintQueue> getPrintQueue, PrintTicket printTicket, AsyncCompletedEventHandler callback)
         {
-            var render = GetRender(viewPath, data);
-            WriteLoadToXpsDocumentWriter(render, getPrintQueue, callback);
+            var memoryStream = new MemoryStream();
+            var streamWriter = new StreamWriter(memoryStream);
+            Render(viewSources, streamWriter, data);
+            streamWriter.Flush();
+            memoryStream.Position = 0;
+            WriteLoadToXpsDocumentWriter(memoryStream, getPrintQueue, printTicket, callback);
         }
 
-        public void PrintPreview<TData>(string viewPath, TData data)
+        public virtual void PrintPreview<TData>(IList<IViewSource> viewSources, TData data)
         {
-            var render = GetRender(viewPath, data);
-            var load = GetLoad(render);
+            DependencyObject dependencyObject;
+            using (var memoryStream = new MemoryStream())
+            using (var streamWriter = new StreamWriter(memoryStream))
+            {
+                Render(viewSources, streamWriter, data);
+                streamWriter.Flush();
+                memoryStream.Position = 0;
+                dependencyObject = Load(memoryStream);
+            }
             var documentViewHostDialog = new DocumentDialog();
-            documentViewHostDialog.LoadDocument(load);
+            documentViewHostDialog.LoadDocument(dependencyObject);
             documentViewHostDialog.ShowDialog();
         }
 
-        private void WriteLoadToXpsDocumentWriter(string render, System.Func<PrintQueue> getPrintQueue, AsyncCompletedEventHandler callback)
+        private void WriteLoadToXpsDocumentWriter(Stream render, System.Func<PrintQueue> getPrintQueue, PrintTicket printTicket, AsyncCompletedEventHandler callback)
         {
-
             var thread = new Thread(delegate(object obj)
+                                    {
+                                        AsyncCompletedEventArgs eventArgs;
+                                        try
                                         {
-                                            AsyncCompletedEventArgs eventArgs;
-                                            try
-                                            {
-                                                var load = GetLoad(render);
-                                                using (var printQueue = getPrintQueue())
-                                                {
-                                                    var xpsDocumentWriter = PrintQueue.CreateXpsDocumentWriter(printQueue);
-
-                                                    WriteLoadToXpsDocumentWriter(load, xpsDocumentWriter);
-                                                }
-                                                eventArgs = new AsyncCompletedEventArgs(null, false, null);
-                                            }
-                                            catch (Exception exception)
-                                            {
-                                                eventArgs = new AsyncCompletedEventArgs(exception, false, null);
-                                            }
-                                            if (callback != null)
-                                            {
-                                                callback(this, eventArgs);
-                                            }
-                                        });
-
+                                            var load = Load(render);
+                                            GetQueueAndPrint(getPrintQueue, load, printTicket);
+                                           
+                                            eventArgs = new AsyncCompletedEventArgs(null, false, null);
+                                        }
+                                        catch (Exception exception)
+                                        {
+                                            eventArgs = new AsyncCompletedEventArgs(exception, false, null);
+                                        }
+                                        finally
+                                        {
+                                            render.Close();
+                                        }
+                                        if (callback != null)
+                                        {
+                                            callback(this, eventArgs);
+                                        }
+                                    });
             thread.SetApartmentState(ApartmentState.STA);
             thread.Start();
         }
 
-        private static void WriteLoadToXpsDocumentWriter(object load, XpsDocumentWriter xpsDocumentWriter)
+        protected virtual void GetQueueAndPrint(System.Func<PrintQueue> getPrintQueue, DependencyObject load, PrintTicket printTicket)
         {
-            var documentPaginatorSource = load as IDocumentPaginatorSource;
+            using (var printQueue = getPrintQueue())
+            {
+                var xpsDocumentWriter = PrintQueue.CreateXpsDocumentWriter(printQueue);
+                WriteLoadToXpsDocumentWriter(load, xpsDocumentWriter, printTicket);
+            }
+        }
+
+        protected virtual void WriteLoadToXpsDocumentWriter(DependencyObject dependencyObject, XpsDocumentWriter xpsDocumentWriter, PrintTicket printTicket)
+        {
+            var documentPaginatorSource = dependencyObject as IDocumentPaginatorSource;
             if (documentPaginatorSource != null)
             {
-                xpsDocumentWriter.Write(documentPaginatorSource.DocumentPaginator);
+                xpsDocumentWriter.Write(documentPaginatorSource.DocumentPaginator, printTicket);
                 return;
             }
-            var visual = load as Visual;
+            var visual = dependencyObject as Visual;
             if (visual == null)
             {
-                xpsDocumentWriter.Write(visual, new PrintTicket());
+                xpsDocumentWriter.Write(visual, printTicket);
                 return;
             }
         }

@@ -6,19 +6,21 @@ namespace NHaml
 {
     public class ViewSourceReader 
     {
-        private readonly string _singleIndent;
+        private string _singleIndent;
         private LinkedList<InputLine> inputLines;
-
         private TemplateOptions options;
+
         public ViewSourceReader(TemplateOptions options, IList<IViewSource> viewSources)
         {
             this.options = options;
             ViewSources = viewSources;
             ViewSourceQueue = new Queue<IViewSource>();
             ViewSourceModifiedChecks = new List<Func<bool>>();
-            for (var i = 0; i < viewSources.Count; i++)
+
+            //do a for here to avoid a modified closure
+            for (var index = 0; index < viewSources.Count; index++)
             {
-                var viewSource = viewSources[i];
+                var viewSource = viewSources[index];
                 ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
                 ViewSourceQueue.Enqueue(viewSource);
             }

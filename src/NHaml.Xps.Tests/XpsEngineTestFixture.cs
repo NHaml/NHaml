@@ -1,7 +1,8 @@
-﻿using System.Diagnostics;
+﻿using System.Collections.Generic;
 using System.IO;
 using System.Printing;
 using System.Threading;
+using NHaml.TemplateResolution;
 using NUnit.Framework;
 
 namespace NHaml.Xps.Tests
@@ -18,30 +19,9 @@ namespace NHaml.Xps.Tests
                 () =>
                 {
                     var xpsHelper = new XpsEngine();
-                    xpsHelper.PrintPreview("XpsWithData.haml", "Hello");
+                    var sources = new List<IViewSource>{new FileViewSource(new FileInfo("XpsWithData.haml"))};
+                    xpsHelper.PrintPreview(sources, "Hello");
                 });
-        }
-        [Test]
-        [Ignore]
-        public void GetQueTimeTest()
-        {
-            using (var printServer = new LocalPrintServer())
-            {
-                using (var queue = printServer.GetPrintQueue("Microsoft XPS Document Writer"))
-                {
-                    Debug.WriteLine(queue.Name);
-                }
-            }
-            var stopwatch = Stopwatch.StartNew();
-            using (var printServer2 = new LocalPrintServer())
-            {
-                using (var queue2 = printServer2.GetPrintQueue("Microsoft XPS Document Writer"))
-                {
-                    Debug.WriteLine(queue2.Name);
-                }
-            }
-            stopwatch.Start();
-            Debug.WriteLine(stopwatch.ElapsedMilliseconds);
         }
 
         [Test]
@@ -51,9 +31,11 @@ namespace NHaml.Xps.Tests
             var xpsHelper = new XpsEngine();
             using (var autoResetEvent = new AutoResetEvent(false))
             {
-                xpsHelper.Print("XpsWithData.haml", "Hello2", LocalPrintServer.GetDefaultPrintQueue, (sender, e) => autoResetEvent.Set());
+                var sources = new List<IViewSource> { new FileViewSource(new FileInfo("XpsWithData.haml")) };
+                xpsHelper.Print(sources, "Hello2", LocalPrintServer.GetDefaultPrintQueue, null, (sender, e) => autoResetEvent.Set());
                 autoResetEvent.WaitOne();
             }
+            Thread.Sleep(10000);
         }
 
         [Test]
@@ -71,7 +53,8 @@ namespace NHaml.Xps.Tests
                             File.Delete(tempTarget);
                         }
                         var xpsHelper = new XpsEngine();
-                        xpsHelper.Generate("XpsWithData.haml", "Hello", tempTarget);
+                        var sources = new List<IViewSource> { new FileViewSource(new FileInfo("XpsWithData.haml")) };
+                                xpsHelper.Generate(sources, "Hello", tempTarget);
                         Assert.IsTrue(File.Exists(tempTarget));
                     }
                     finally
