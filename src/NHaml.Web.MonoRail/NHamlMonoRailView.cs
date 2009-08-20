@@ -94,6 +94,7 @@ namespace NHaml.Web.MonoRail
             AddViewComponentProperties(componentContext.ComponentParameters);
 			var componentFactory = (IViewComponentFactory) ViewContext.GetService(typeof(IViewComponentFactory));
 			var component = componentFactory.Create(componentData.Name);
+            
 			component.Init(ViewContext, componentContext);
 			component.Render();
 			if (componentContext.ViewToRender != null)
@@ -202,6 +203,7 @@ namespace NHaml.Web.MonoRail
 
         private void SetParent(NHamlMonoRailView view)
         {
+            ViewEngine = view.ViewEngine;
             parent = view;
         }
 

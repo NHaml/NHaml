@@ -4,5 +4,7 @@ namespace NHaml.Web.MonoRail.Tests.Components
 {
 	public class InnerComponent : ViewComponent
 	{
+
+        
 	}
 }
