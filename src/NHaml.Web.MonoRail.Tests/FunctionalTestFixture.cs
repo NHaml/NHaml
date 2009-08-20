@@ -26,6 +26,11 @@ namespace NHaml.Web.MonoRail.Tests
             AssertRender("RenderParametersComponent");
         }
         [Test]
+        public virtual void InnerComponent()
+        {
+            AssertRender("InnerComponent");
+        }
+        [Test]
         public virtual void RenderSectionComponent()
         {
             AssertRender("RenderSectionComponent");
