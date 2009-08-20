@@ -4,6 +4,7 @@ using System.Data.Linq;
 using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
+using Castle.Core;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
 
@@ -39,9 +40,11 @@ namespace NHaml.Web.MonoRail
 
             options.AddUsing( "System.Web" );
             options.AddUsing( "NHaml.Web.MonoRail" );
+            options.AddUsing( "Castle.Core" );
             options.AddUsing( "Castle.MonoRail.Framework.Helpers" );
 
 
+            options.AddReference(typeof(IServiceEnabledComponent).Assembly.Location);
             options.AddReference( typeof( HtmlHelper ).Assembly.Location );
             options.AddReference( typeof( NHamlMonoRailViewEngine ).Assembly.Location );
             options.AddReference( typeof( DataContext ).Assembly.Location );

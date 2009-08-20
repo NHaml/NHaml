@@ -61,11 +61,13 @@ namespace NHaml.Web.MonoRail
             Ajax = new AjaxHelper(engineContext);
             Html = new HtmlHelper(engineContext);
             Url = new UrlHelper(engineContext);
+            Form = new FormHelper(engineContext);
         }
 
         public AjaxHelper Ajax { get; protected set; }
         public HtmlHelper Html { get; protected set; }
         public UrlHelper Url { get; protected set; }
+        public FormHelper Form { get; protected set; }
 
         public IEngineContext ViewContext { get; private set; }
 
