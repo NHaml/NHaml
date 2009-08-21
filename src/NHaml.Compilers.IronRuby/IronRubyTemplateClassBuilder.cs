@@ -7,8 +7,8 @@ namespace NHaml.Compilers.IronRuby
 {
     internal  class IronRubyTemplateClassBuilder : TemplateClassBuilder
     {
-        public IronRubyTemplateClassBuilder(string className, Type templateBaseType)
-            : base(className, templateBaseType)
+        public IronRubyTemplateClassBuilder(string className)
+            : base(className)
         {
         }
 

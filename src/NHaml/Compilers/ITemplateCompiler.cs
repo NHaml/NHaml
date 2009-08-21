@@ -1,4 +1,3 @@
-using System;
 
 namespace NHaml.Compilers
 {
@@ -6,7 +5,7 @@ namespace NHaml.Compilers
     {
         TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder);
         BlockClosingAction RenderSilentEval(ViewSourceReader viewSourceReader, TemplateClassBuilder builder);
-        TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType );
+        TemplateClassBuilder CreateTemplateClassBuilder( string className );
 
     }
 }

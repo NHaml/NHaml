@@ -1,4 +1,3 @@
-using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
@@ -18,7 +17,7 @@ namespace NHaml.Compilers
                 RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
-        public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType);
+        public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className);
 
         public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {

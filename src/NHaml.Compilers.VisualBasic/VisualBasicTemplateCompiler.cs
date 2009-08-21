@@ -15,9 +15,9 @@ namespace NHaml.Compilers.VisualBasic
         }
 
 
-        public override TemplateClassBuilder CreateTemplateClassBuilder(string className, Type templateBaseType)
+        public override TemplateClassBuilder CreateTemplateClassBuilder(string className)
         {
-            return new VisualBasicTemplateClassBuilder(className, templateBaseType);
+            return new VisualBasicTemplateClassBuilder(className);
         }
 
         protected override CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary)

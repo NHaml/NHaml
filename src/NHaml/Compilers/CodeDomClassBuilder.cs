@@ -15,8 +15,8 @@ namespace NHaml.Compilers
 
         private int preambleCount;
 
-    	public CodeDomClassBuilder(string className, Type baseType)
-            : base(className, baseType)
+    	public CodeDomClassBuilder(string className)
+            : base(className)
         {
             RenderMethod = new CodeMemberMethod
                                {

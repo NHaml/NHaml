@@ -14,9 +14,9 @@ namespace NHaml.Compilers.FSharp
         {
         }
 
-        public override TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
+        public override TemplateClassBuilder CreateTemplateClassBuilder( string className )
         {
-            return new FSharpTemplateClassBuilder( className, templateBaseType );
+            return new FSharpTemplateClassBuilder( className);
         }
 
         protected override CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary)

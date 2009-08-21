@@ -9,8 +9,8 @@ namespace NHaml.Compilers.Boo
     {
         private bool _disableOutputIndentationShrink;
 
-        public BooTemplateClassBuilder(string className, Type baseType)
-            : base(className, baseType)
+        public BooTemplateClassBuilder(string className)
+            : base(className)
         {
         }
 

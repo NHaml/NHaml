@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -6,8 +5,8 @@ namespace NHaml.Compilers.VisualBasic
 {
     internal  class VisualBasicTemplateClassBuilder : CodeDomClassBuilder
     {
-        public VisualBasicTemplateClassBuilder(string className, Type baseType)
-            : base(className, baseType)
+        public VisualBasicTemplateClassBuilder(string className)
+            : base(className)
         {
         }
 

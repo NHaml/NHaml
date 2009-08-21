@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
@@ -15,9 +14,9 @@ namespace NHaml.Compilers.IronRuby
 
         private readonly ScriptEngine _scriptEngine = Ruby.CreateEngine();
 
-        public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
+        public TemplateClassBuilder CreateTemplateClassBuilder( string className)
         {
-            return new IronRubyTemplateClassBuilder( className, templateBaseType );
+            return new IronRubyTemplateClassBuilder( className );
         }
 
         public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)

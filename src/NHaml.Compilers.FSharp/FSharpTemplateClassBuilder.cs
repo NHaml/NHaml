@@ -1,4 +1,3 @@
-using System;
 using System.CodeDom;
 
 namespace NHaml.Compilers.FSharp
@@ -6,8 +5,8 @@ namespace NHaml.Compilers.FSharp
     internal  class FSharpTemplateClassBuilder : CodeDomClassBuilder
     {
 
-        public FSharpTemplateClassBuilder(string className, Type baseType)
-            : base(className, baseType)
+        public FSharpTemplateClassBuilder(string className)
+            : base(className)
         {
         }
 

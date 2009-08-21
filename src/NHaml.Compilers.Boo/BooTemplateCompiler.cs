@@ -1,4 +1,3 @@
-using System;
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
@@ -12,9 +11,9 @@ namespace NHaml.Compilers.Boo
           @"^(.+)(def\(.*\))\s*$",
           RegexOptions.Compiled | RegexOptions.Singleline );
 
-        public TemplateClassBuilder CreateTemplateClassBuilder( string className, Type templateBaseType )
+        public TemplateClassBuilder CreateTemplateClassBuilder( string className )
         {
-            return new BooTemplateClassBuilder( className, templateBaseType );
+            return new BooTemplateClassBuilder( className);
         }
 
 

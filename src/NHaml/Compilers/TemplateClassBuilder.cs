@@ -8,13 +8,12 @@ namespace NHaml.Compilers
     {
 
 		public const string DefaultTextWriterVariableName = "textWriter";
-        protected TemplateClassBuilder(string className, Type baseType)
+        protected TemplateClassBuilder(string className)
         {
 			CurrentTextWriterVariableName = DefaultTextWriterVariableName; 
             Output = new StringBuilder();
             Preamble = new StringBuilder();
             ClassName = className;
-            BaseType = baseType;
             Meta = new Dictionary<string, string>();
         }
 

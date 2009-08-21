@@ -48,7 +48,7 @@ namespace NHaml
         {
             var className = Utility.MakeClassName( ListExtensions.Last(_layoutViewSources).Path );
             var compiler = options.TemplateCompiler;
-            var templateClassBuilder = compiler.CreateTemplateClassBuilder(className, _templateBaseType );
+            var templateClassBuilder = compiler.CreateTemplateClassBuilder(className);
 
             var templateParser = new TemplateParser(options, templateClassBuilder, _layoutViewSources);
 
@@ -60,6 +60,10 @@ namespace NHaml
                 var modelType = GetModelType(templateClassBuilder.Meta);
                 templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
                 options.AddReference( modelType.Assembly );
+            }
+            else
+            {
+                templateClassBuilder.BaseType = _templateBaseType;
             }
 
             _templateFactory = compiler.Compile(viewSourceReader, templateParser.Options, templateClassBuilder);
