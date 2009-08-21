@@ -4,6 +4,35 @@
         <name>Castle.DynamicProxy2</name>
     </assembly>
     <members>
+        <member name="T:Castle.DynamicProxy.Contributors.ITypeContributor">
+            <summary>
+            Interface describing elements composing generated type
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.Contributors.ProxyElementContributor.IsAccessible(System.Reflection.MethodBase)">
+            <summary>
+            Checks if the method is public or protected.
+            </summary>
+            <param name="method"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.Contributors.ProxyElementContributor.AcceptMethod(System.Reflection.MethodInfo,System.Boolean,Castle.DynamicProxy.IProxyGenerationHook)">
+            <summary>
+            Performs some basic screening and invokes the <see cref="T:Castle.DynamicProxy.IProxyGenerationHook"/>
+            to select methods.
+            </summary>
+            <param name="method"></param>
+            <param name="onlyVirtuals"></param>
+            <param name="hook"></param>
+            <returns></returns>
+        </member>
+        <member name="M:Castle.DynamicProxy.Contributors.ProxyElementContributor.ShouldSkipAttributeReplication(System.Attribute)">
+            <summary>
+            Attributes should be replicated if they are non-inheritable,
+            but there are some special cases where the attributes means
+            something to the CLR, where they should be skipped.
+            </summary>
+        </member>
         <member name="T:Castle.DynamicProxy.Generators.Emitters.SimpleAST.IndirectReference">
             <summary>
             Wraps a reference that is passed 
@@ -18,28 +47,6 @@
         <member name="T:Castle.DynamicProxy.Generators.Emitters.SimpleAST.ReferencesToObjectArrayExpression">
             <summary>
             
-            </summary>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.InitializeConstructorArgs(System.Type,System.Attribute,System.Object[],System.Reflection.ParameterInfo[])">
-            <summary>
-            Here we try to match a constructor argument to its value.
-            Since we can't get the values from the assembly, we use some heuristics to get it.
-            a/ we first try to match all the properties on the attributes by name (case insensitive) to the argument
-            b/ if we fail we try to match them by property type, with some smarts about convertions (i,e: can use Guid for string).
-            </summary>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.ReplaceIfBetterMatch(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo,System.Reflection.PropertyInfo)">
-            <summary>
-            We have the following rules here.
-            Try to find a matching type, failing that, if the parameter is string, get the first property (under the assumption that
-            we can convert it.
-            </summary>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.Emitters.CustomAttributeUtil.ConvertValue(System.Object,System.Type)">
-            <summary>
-            Attributes can only accept simple types, so we return null for null,
-            if the value is passed as string we call to string (should help with converting), 
-            otherwise, we use the value as is (enums, integer, etc).
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.Generators.Emitters.LdcOpCodesDictionary">
@@ -154,15 +161,6 @@
             <param name="allowChangeTarget">If true the invocation will implement the IChangeProxyTarget interface</param>
             <returns></returns>
         </member>
-        <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.CreateIInvocationConstructor(System.Type,Castle.DynamicProxy.Generators.Emitters.NestedClassEmitter,Castle.DynamicProxy.Generators.Emitters.SimpleAST.FieldReference)">
-            <summary>
-            Generates the constructor for the nested class that extends
-            <see cref="T:Castle.DynamicProxy.AbstractInvocation"/>
-            </summary>
-            <param name="targetFieldType"></param>
-            <param name="nested"></param>
-            <param name="targetField"></param>
-        </member>
         <member name="M:Castle.DynamicProxy.Generators.BaseProxyGenerator.CreateInitializeCacheMethodBody(System.Type,System.Collections.Generic.IEnumerable{System.Reflection.MethodInfo},Castle.DynamicProxy.Generators.Emitters.ClassEmitter,Castle.DynamicProxy.Generators.Emitters.ConstructorEmitter)">
             <summary>
             Improvement: this cache should be static. We should generate a
@@ -174,16 +172,6 @@
             Attributes should be replicated if they are non-inheritable,
             but there are some special cases where the attributes means
             something to the CLR, where they should be skipped.
-            </summary>
-        </member>
-        <member name="F:Castle.DynamicProxy.Generators.BaseProxyGenerator.Proxy.Instance">
-            <summary>
-            Used to mark interface target as proxy instance. Used for special interfaces <see cref="T:System.Runtime.Serialization.ISerializable"/> and <see cref="T:Castle.Core.Interceptor.IProxyTargetAccessor"/>.
-            </summary>
-        </member>
-        <member name="F:Castle.DynamicProxy.Generators.BaseProxyGenerator.Proxy.Target">
-            <summary>
-            Used to mark interface target as proxy target.
             </summary>
         </member>
         <member name="M:Castle.DynamicProxy.Generators.CacheKey.#ctor(System.Type,System.Type[],Castle.DynamicProxy.ProxyGenerationOptions)">
@@ -209,6 +197,16 @@
             <param name="remover">The remove method.</param>
             <param name="attributes">The attributes.</param>
         </member>
+        <member name="M:Castle.DynamicProxy.Generators.InvocationTypeGenerator.CreateIInvocationConstructor(System.Type,Castle.DynamicProxy.Generators.Emitters.NestedClassEmitter,Castle.DynamicProxy.Generators.Emitters.SimpleAST.FieldReference,Castle.DynamicProxy.ProxyGenerationOptions)">
+            <summary>
+            Generates the constructor for the nested class that extends
+            <see cref="T:Castle.DynamicProxy.AbstractInvocation"/>
+            </summary>
+            <param name="targetFieldType"></param>
+            <param name="nested"></param>
+            <param name="targetField"></param>
+            <param name="proxyGenerationOptions"></param>
+        </member>
         <member name="T:Castle.DynamicProxy.Generators.InterfaceProxyWithTargetGenerator">
             <summary>
             
@@ -224,30 +222,6 @@
             <summary>
             Returns the methods implemented by a type. Use this instead of Type.GetMethods() to work around a CLR issue
             where duplicate MethodInfos are returned by Type.GetMethods() after a token of a generic type's method was loaded.
-            </summary>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.ProxyElementTarget.IsAccessible(System.Reflection.MethodBase)">
-            <summary>
-            Checks if the method is public or protected.
-            </summary>
-            <param name="method"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.ProxyElementTarget.AcceptMethod(System.Reflection.MethodInfo,System.Boolean,Castle.DynamicProxy.IProxyGenerationHook)">
-            <summary>
-            Performs some basic screening and invokes the <see cref="T:Castle.DynamicProxy.IProxyGenerationHook"/>
-            to select methods.
-            </summary>
-            <param name="method"></param>
-            <param name="onlyVirtuals"></param>
-            <param name="hook"></param>
-            <returns></returns>
-        </member>
-        <member name="M:Castle.DynamicProxy.Generators.ProxyElementTarget.ShouldSkipAttributeReplication(System.Attribute)">
-            <summary>
-            Attributes should be replicated if they are non-inheritable,
-            but there are some special cases where the attributes means
-            something to the CLR, where they should be skipped.
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.Serialization.ProxyObjectReference">
@@ -346,6 +320,28 @@
         <member name="T:Castle.DynamicProxy.CacheMappingsAttribute">
             <summary>
             Applied to the assemblies saved by <see cref="T:Castle.DynamicProxy.ModuleScope"/> in order to persist the cache data included in the persisted assembly.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.DefaultAttributeDisassembler.InitializeConstructorArgs(System.Type,System.Attribute,System.Object[],System.Reflection.ParameterInfo[])">
+            <summary>
+            Here we try to match a constructor argument to its value.
+            Since we can't get the values from the assembly, we use some heuristics to get it.
+            a/ we first try to match all the properties on the attributes by name (case insensitive) to the argument
+            b/ if we fail we try to match them by property type, with some smarts about convertions (i,e: can use Guid for string).
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.DefaultAttributeDisassembler.ReplaceIfBetterMatch(System.Reflection.ParameterInfo,System.Reflection.PropertyInfo,System.Reflection.PropertyInfo)">
+            <summary>
+            We have the following rules here.
+            Try to find a matching type, failing that, if the parameter is string, get the first property (under the assumption that
+            we can convert it.
+            </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.DefaultAttributeDisassembler.ConvertValue(System.Object,System.Type)">
+            <summary>
+            Attributes can only accept simple types, so we return null for null,
+            if the value is passed as string we call to string (should help with converting), 
+            otherwise, we use the value as is (enums, integer, etc).
             </summary>
         </member>
         <member name="T:Castle.DynamicProxy.DefaultProxyBuilder">
@@ -688,6 +684,13 @@
             <summary>
             Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
             </summary>
+        </member>
+        <member name="M:Castle.DynamicProxy.ProxyGenerationOptions.#ctor(Castle.DynamicProxy.IProxyGenerationHook,Castle.Core.Interceptor.IAttributeDisassembler)">
+            <summary>
+            Initializes a new instance of the <see cref="T:Castle.DynamicProxy.ProxyGenerationOptions"/> class.
+            </summary>
+            <param name="hook">The hook.</param>
+            <param name="disassembler">The ttribute dissassembler</param>
         </member>
         <member name="T:Castle.DynamicProxy.ProxyGenerator">
             <summary>

@@ -220,6 +220,22 @@
             </summary>
             <value>The type of the lifestyle handler.</value>
         </member>
+        <member name="T:Castle.Core.Interceptor.IAttributeDisassembler">
+            <summary>
+            Encapsulates process of custom attribute dissassembly back to <see cref="T:System.Reflection.Emit.CustomAttributeBuilder"/>.
+            </summary>
+            <remarks>
+            This interface is used for custom attribute replication in Dynamic Proxy and to put additional custom attributes on proxy type.
+            Implement it if default implementatio does not meet your needs or does not support your scenario.
+            </remarks>
+        </member>
+        <member name="M:Castle.Core.Interceptor.IAttributeDisassembler.Disassemble(System.Attribute)">
+            <summary>
+            Dissassembles given <paramref name="attribute"/> to <see cref="T:System.Reflection.Emit.CustomAttributeBuilder"/>.
+            </summary>
+            <param name="attribute">Custom attribute instance to disassemble.</param>
+            <returns>Builder that represents <paramref name="attribute"/>.</returns>
+        </member>
         <member name="T:Castle.Core.Interceptor.IInterceptor">
             <summary>
             New interface that is going to be used by DynamicProxy 2
