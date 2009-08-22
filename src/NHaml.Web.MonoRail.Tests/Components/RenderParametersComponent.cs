@@ -9,6 +9,10 @@ namespace NHaml.Web.MonoRail.Tests.Components
             RenderText((string)Context.ComponentParameters["key1"]);
             RenderText( Context.ComponentParameters["key2"].ToString());
             RenderText( (string) Context.ComponentParameters["key3"]);
+            RenderText( key4);
         }
+        [ViewComponentParam]
+        public string key4 { get; set; }
+
     }
 }
