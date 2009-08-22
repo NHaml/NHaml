@@ -21,8 +21,6 @@ namespace NHaml.Web.MonoRail.Tests
         protected HelperDictionary Helpers;
         protected Hashtable PropertyBag;
         protected DefaultViewComponentFactory ViewComponentFactory;
-        protected string _primaryTemplatesFolder;
-        protected string _secondaryTemplatesFolder;
         protected string Area;
         protected string ControllerName = "test_controller";
         protected StubEngineContext StubEngineContext;
@@ -39,8 +37,6 @@ namespace NHaml.Web.MonoRail.Tests
         public virtual void SetUp()
         {
 
-
-
             PropertyBag = new Hashtable(StringComparer.InvariantCultureIgnoreCase);
             Helpers = new HelperDictionary();
             var services = new StubMonoRailServices
@@ -52,8 +48,7 @@ namespace NHaml.Web.MonoRail.Tests
                 "example.org", "test", "/TestBrail", "http", 80,
                 "http://test.example.org/test_area/test_controller/test_action.tdd",
                 Area, ControllerName, Action, "tdd", "no.idea");
-            StubEngineContext = new StubEngineContext(new StubRequest(), new StubResponse(), services,
-                                                      urlInfo);
+            StubEngineContext = new StubEngineContext(new StubRequest(), new StubResponse(), services, urlInfo);
             StubEngineContext.AddService<IUrlBuilder>(services.UrlBuilder);
             StubEngineContext.AddService<IUrlTokenizer>(services.UrlTokenizer);
 
@@ -84,7 +79,6 @@ namespace NHaml.Web.MonoRail.Tests
             _templateEngine = _monoRailViewEngine.TemplateEngine;
             _templateEngine.Options.TemplateBaseType = typeof( NHamlMonoRailView );
             
-            _primaryTemplatesFolder = "CSharp2";
 
 
             ViewComponentFactory.Inspect(GetType().Assembly);
@@ -92,75 +86,21 @@ namespace NHaml.Web.MonoRail.Tests
         }
 
 
-        protected void AssertRender( string templateName )
+        protected void AssertRender(string templateName)
         {
-            AssertRender( templateName, null );
+            using (var output = new StringWriter())
+            {
+                _monoRailViewEngine.Process(templateName, output, StubEngineContext, null, ControllerContext);
+
+                AssertRender(output, templateName);
+            }
         }
 
-        protected void AssertRender( string templateName, string layoutName )
-        {
-            var expectedName = templateName;
-
-            if( !string.IsNullOrEmpty( layoutName ) )
-            {
-                expectedName = layoutName;
-            }
-
-            AssertRender( templateName, layoutName, expectedName );
-        }
-
-        protected void AssertRender( string templateName, string layoutName, string expectedName )
-        {
-            var output = new StringWriter();
-            var template = CreateTemplate( templateName, layoutName );
-
-            template.Render(StubEngineContext, output, ControllerContext );
-
-            AssertRender( output, expectedName );
-        }
-
-        protected NHamlMonoRailView CreateTemplate( string templateName, string layoutName )
-        {
-            var templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _primaryTemplatesFolder, templateName);
-
-            if (!File.Exists(templatePath))
-            {
-                templatePath = string.Format("{0}{1}\\{2}.haml", TemplatesFolder, _secondaryTemplatesFolder, templateName);
-            }
-
-            if (!File.Exists(templatePath))
-            {
-                templatePath = string.Format("{0}{1}.haml", TemplatesFolder, templateName);
-            }
-
-            if (!string.IsNullOrEmpty(layoutName))
-            {
-                layoutName = string.Format("{0}{1}.haml", TemplatesFolder, layoutName);
-            }
-
-            var stopwatch = Stopwatch.StartNew();
-
-            CompiledTemplate compiledTemplate;
-            if (layoutName == null)
-            {
-                compiledTemplate = _templateEngine.Compile(templatePath);
-            }
-            else
-            {
-                compiledTemplate = _templateEngine.Compile(templatePath, layoutName);
-            }
-            stopwatch.Stop();
-            Debug.WriteLine(string.Format("Compile took {0} ms", stopwatch.ElapsedMilliseconds));
-            var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
-            //TODOL should use _monoRailViewEngine.Process
-            template.ViewEngine = _monoRailViewEngine;
-            return template;
-        }
 
         protected static void AssertRender( StringWriter output, string expectedName )
         {
             Console.WriteLine( output );
-            Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );
+            Assert.AreEqual( File.ReadAllText( string.Format("{0}{1}.xhtml", ExpectedFolder, expectedName) ), output.ToString() );
         }
     }
 }

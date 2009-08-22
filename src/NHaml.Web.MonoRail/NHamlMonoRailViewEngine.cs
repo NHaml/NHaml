@@ -1,4 +1,5 @@
 ﻿using System;
+using System.CodeDom;
 using System.Collections.Generic;
 using System.Data.Linq;
 using System.Diagnostics;
@@ -7,10 +8,12 @@ using System.Linq.Expressions;
 using Castle.Core;
 using Castle.MonoRail.Framework;
 using Castle.MonoRail.Framework.Helpers;
+using NHaml.Compilers;
 
 namespace NHaml.Web.MonoRail
 {
     public delegate void Action();
+
     public class NHamlMonoRailViewEngine: ViewEngineBase
     {
         public TemplateEngine TemplateEngine { get; private set; }
@@ -35,6 +38,7 @@ namespace NHaml.Web.MonoRail
 
 
             var options = TemplateEngine.Options;
+            options.BeforeCompile = BeforeCompile;
             options.AddRule(new ComponentSectionMarkupRule());
             options.AddRule(new ComponentMarkupRule());
 
@@ -58,6 +62,25 @@ namespace NHaml.Web.MonoRail
             //    TemplateEngine.TemplateContentProvider.AddPathSource(@"Views/Components");
         }
 
+        private static void BeforeCompile(TemplateClassBuilder templateClassBuilder, object context)
+        {
+            var controllerContext = (IControllerContext) context;
+            var codeDomClassBuilder = (CodeDomClassBuilder)templateClassBuilder;
+
+            foreach (string key in controllerContext.Helpers.Keys)
+            {
+                var helper = (AbstractHelper) controllerContext.Helpers[key];
+                var type = helper.GetType();
+                var property = new CodeMemberField
+                               {
+                                   Name = key,
+                                   Type = new CodeTypeReference(type),
+                                   Attributes = MemberAttributes.Public,
+                               };
+                codeDomClassBuilder.Members.Add(property);
+            }
+        }
+
 
         public override object CreateJSGenerator(JSCodeGeneratorInfo generatorInfo, IEngineContext context, IController controller, IControllerContext controllerContext)
         {
@@ -76,10 +99,69 @@ namespace NHaml.Web.MonoRail
             var sources = GetLayoutFile(controllerContext);
             var templateFileName = GetTemplateFileName(templateName);
             sources.Add(templateFileName);
-            var compiledTemplate = TemplateEngine.Compile(sources,TemplateEngine.Options.TemplateBaseType);
+
+            var template = GetTemplate(controllerContext, sources);
+            template.Render(context, output, controllerContext);
+        }
+
+        private NHamlMonoRailView GetTemplate(IControllerContext controllerContext, IList<string> sources)
+        {
+            foreach (AbstractHelper abstractHelper in controllerContext.Helpers.Values)
+            {
+                TemplateEngine.Options.AddReferences(abstractHelper.GetType());
+            }
+            var compiledTemplate = TemplateEngine.Compile(TemplateEngine.Options.TemplateBaseType, TemplateEngine.ConvertPathsToViewSources(sources),controllerContext);
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
             template.ViewEngine = this;
-            template.Render(context, output, controllerContext);
+            var tempalteType = template.GetType();
+            foreach (var key in controllerContext.Helpers.Keys)
+            {
+                var property = tempalteType.GetField((string) key);
+                property.SetValue(template, controllerContext.Helpers[key]);
+            }
+            return template;
+        }
+
+        /// <summary>
+        /// This takes a filename and return an instance of the view ready to be used.
+        /// If the file does not exist, an exception is raised
+        /// The cache is checked to see if the file has already been compiled, and it had been
+        /// a check is made to see that the compiled instance is newer then the file's modification date.
+        /// If the file has not been compiled, or the version on disk is newer than the one in memory, a new
+        /// version is compiled.
+        /// Finally, an instance is created and returned	
+        /// </summary>
+        public NHamlMonoRailView GetCompiledScriptInstance(string file, IControllerContext controllerContext)
+        {
+            // normalize filename - replace / or \ to the system path seperator
+            var filename = file.Replace('/', Path.DirectorySeparatorChar)
+                .Replace('\\', Path.DirectorySeparatorChar);
+
+            filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
+            Trace.WriteLine(string.Format("Getting compiled instance of {0}", filename));
+
+            GetTemplate(controllerContext, new []{filename});
+            var template = TemplateEngine.Compile(file).CreateInstance();
+            return (NHamlMonoRailView)template;
+        }
+        public override void Process(string templateName, string layoutName, TextWriter output, IDictionary<string, object> parameters)
+        {
+            var controllerContext = GetControllerContext(layoutName, parameters);
+            Process(templateName, output, null, null, controllerContext);
+        }
+
+        public static ControllerContext GetControllerContext(string layoutName, IDictionary<string, object> parameters)
+        {
+            var controllerContext = new ControllerContext();
+            if (layoutName != null)
+            {
+                controllerContext.LayoutNames = new[] { layoutName };
+            }
+            foreach (var pair in parameters)
+            {
+                controllerContext.PropertyBag[pair.Key] = pair.Value;
+            }
+            return controllerContext;
         }
 
         //Taken from boo view engine
@@ -122,20 +204,7 @@ namespace NHaml.Web.MonoRail
             return list;
         }
 
-        public override void Process(string templateName, string layoutName, TextWriter output, IDictionary<string, object> parameters)
-        {
-            var controllerContext = new ControllerContext();
-            if (layoutName != null)
-            {
-                controllerContext.LayoutNames = new[] { layoutName };
-            }
-            foreach (var pair in parameters)
-            {
-                controllerContext.PropertyBag[pair.Key] = pair.Value;
-            }
-            Process(templateName, output, null, null, controllerContext);
-
-        }
+   
 
         public override void ProcessPartial(string partialName, TextWriter output, IEngineContext context, IController controller, IControllerContext controllerContext)
         {
@@ -165,26 +234,6 @@ namespace NHaml.Web.MonoRail
         }
 
 
-        /// <summary>
-        /// This takes a filename and return an instance of the view ready to be used.
-        /// If the file does not exist, an exception is raised
-        /// The cache is checked to see if the file has already been compiled, and it had been
-        /// a check is made to see that the compiled instance is newer then the file's modification date.
-        /// If the file has not been compiled, or the version on disk is newer than the one in memory, a new
-        /// version is compiled.
-        /// Finally, an instance is created and returned	
-        /// </summary>
-        public NHamlMonoRailView GetCompiledScriptInstance(string file)
-        {
-            // normalize filename - replace / or \ to the system path seperator
-            var filename = file.Replace('/', Path.DirectorySeparatorChar)
-                .Replace('\\', Path.DirectorySeparatorChar);
-
-            filename = EnsurePathDoesNotStartWithDirectorySeparator(filename);
-            Trace.WriteLine(string.Format("Getting compiled instnace of {0}", filename));
-
-            var template = TemplateEngine.Compile(file).CreateInstance();
-            return (NHamlMonoRailView) template;
-        }
+   
     }
 }

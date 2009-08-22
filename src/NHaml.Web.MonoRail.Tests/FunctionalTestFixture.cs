@@ -1,3 +1,4 @@
+using Castle.MonoRail.Framework.Helpers;
 using NUnit.Framework;
 
 namespace NHaml.Web.MonoRail.Tests
@@ -24,6 +25,17 @@ namespace NHaml.Web.MonoRail.Tests
         public virtual void RenderParametersComponent()
         {
             AssertRender("RenderParametersComponent");
+        }
+        [Test]
+        public virtual void WithHelper()
+        {
+            ControllerContext.Helpers.Add(new DummyHelper());
+            AssertRender("WithHelper");
+        }
+
+        public class DummyHelper : AbstractHelper
+        {
+            public string ValueFromHelper { get { return "valueFromHelper"; } }
         }
         [Test]
         public virtual void InnerComponent()

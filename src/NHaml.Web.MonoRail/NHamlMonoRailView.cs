@@ -34,7 +34,6 @@ namespace NHaml.Web.MonoRail
         public void Render(IEngineContext engineContext, TextWriter writer, IControllerContext controllerContext)
         {
             Invariant.ArgumentNotNull(controllerContext, "controllerContext");
-            Invariant.ArgumentNotNull(engineContext, "engineContext");
 
             ViewContext = engineContext;
 
@@ -58,10 +57,13 @@ namespace NHaml.Web.MonoRail
 
         protected virtual void CreateHelpers(IEngineContext engineContext)
         {
-            Ajax = new AjaxHelper(engineContext);
-            Html = new HtmlHelper(engineContext);
-            Url = new UrlHelper(engineContext);
-            Form = new FormHelper(engineContext);
+            if (engineContext != null)
+            {
+                Ajax = new AjaxHelper(engineContext);
+                Html = new HtmlHelper(engineContext);
+                Url = new UrlHelper(engineContext);
+                Form = new FormHelper(engineContext);
+            }
         }
 
         public AjaxHelper Ajax { get; protected set; }
@@ -183,7 +185,7 @@ namespace NHaml.Web.MonoRail
         public void OutputSubView(string subviewName, TextWriter writer, IDictionary parameters)
         {
             var subViewFileName = GetSubViewFilename(subviewName);
-            var subView = ViewEngine.GetCompiledScriptInstance(subViewFileName);
+            var subView = ViewEngine.GetCompiledScriptInstance(subViewFileName, ViewContext.CurrentControllerContext);
             subView.SetParent(this);
             foreach (DictionaryEntry entry in parameters)
             {

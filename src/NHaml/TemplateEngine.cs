@@ -64,17 +64,28 @@ namespace NHaml
 
         public CompiledTemplate Compile(IList<string> templatePaths, Type templateBaseType)
         {
+            var list = ConvertPathsToViewSources(templatePaths);
+
+            return Compile(list, templateBaseType);
+        }
+
+        public List<IViewSource> ConvertPathsToViewSources(IList<string> templatePaths)
+        {
             var list = new List<IViewSource>();
             foreach (var layoutTemplatePath in templatePaths)
             {
                 list.Add(Options.TemplateContentProvider.GetViewSource(layoutTemplatePath));
             }
-
-            return Compile(list, templateBaseType);
+            return list;
         }
 
 
         public CompiledTemplate Compile(IList<IViewSource> templateViewSources, Type templateBaseType )
+        {
+            return Compile(templateBaseType, templateViewSources, null);
+        }
+
+        public CompiledTemplate Compile(Type templateBaseType, IList<IViewSource> templateViewSources, object context)
         {
             Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
 
@@ -93,9 +104,9 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate( Options, templateViewSources, templateBaseType );
-
+                    compiledTemplate = new CompiledTemplate( Options, templateViewSources, templateBaseType,context );
                     _compiledTemplateCache.Add( key, compiledTemplate );
+                    return compiledTemplate;
                 }
             }
 

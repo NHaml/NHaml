@@ -82,6 +82,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="Expected\WithHelper.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Expected\InnerComponent.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -103,25 +106,28 @@
     <None Include="Expected\RenderBodyComponent.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\InnerComponent.haml">
+    <None Include="Views\WithHelper.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\PropertyBagComponent.haml">
+    <None Include="Views\InnerComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\RenderParametersComponent.haml">
+    <None Include="Views\PropertyBagComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\RenderSectionComponent.haml">
+    <None Include="Views\RenderParametersComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\RenderTextComponent.haml">
+    <None Include="Views\RenderSectionComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\RenderBodyComponent.haml">
+    <None Include="Views\RenderTextComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\SimpleComponent.haml">
+    <None Include="Views\RenderBodyComponent.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Views\SimpleComponent.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Views\Components\InnerComponent\Default.haml">
@@ -133,6 +139,9 @@
     <None Include="Views\Components\SimpleComponent\Default.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Templates\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

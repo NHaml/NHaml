@@ -13,11 +13,14 @@ namespace NHaml.Compilers
 
         public CodeDomProvider CodeDomProvider { get; set; }
 
+        public List<CodeTypeMember> Members { get; set; }
+
         private int preambleCount;
 
     	public CodeDomClassBuilder(string className)
             : base(className)
         {
+            Members = new List<CodeTypeMember>();
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
@@ -337,6 +340,7 @@ namespace NHaml.Compilers
 
         public override string Build(IList<string> imports)
         {
+            
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
             {
@@ -366,6 +370,7 @@ namespace NHaml.Compilers
                
                 declaration.BaseTypes.Add(BaseType);
                 declaration.Members.Add(RenderMethod);
+                declaration.Members.AddRange(Members.ToArray());
 
 
 //                var codeNamespace = new CodeNamespace();

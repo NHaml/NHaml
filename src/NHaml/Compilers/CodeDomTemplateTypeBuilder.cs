@@ -48,7 +48,7 @@ namespace NHaml.Compilers
                     writer.Write(Source);
                 }
 
-                //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for a  in memory assembly.
+                //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for an in memory assembly.
                 var tempFileName = Path.GetTempFileName();
                 var tempAssemblyName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".dll"));
                 var tempSymbolsName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".pdb"));

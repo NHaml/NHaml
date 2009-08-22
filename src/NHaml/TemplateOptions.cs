@@ -11,6 +11,8 @@ using NHaml.Utils;
 
 namespace NHaml
 {
+
+    public delegate void Action<T1, T2>(T1 obj1, T2 obj2);
     public class TemplateOptions
     {
         private int _indentSize;
@@ -77,6 +79,7 @@ namespace NHaml
         }
 
         public Set<string> Usings { get; private set; }
+        public Action<TemplateClassBuilder, Object> BeforeCompile{ get; set; }
 
         public Set<string> References { get; private set; }
 
@@ -170,8 +173,9 @@ namespace NHaml
         {
             try
             {
-
                 AddReference(type.Assembly.Location);
+
+                Usings.Add(type.Namespace);
             }
             catch (NotSupportedException)
             {
