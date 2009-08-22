@@ -38,5 +38,16 @@ namespace NHaml.Compilers.FSharp
             
             return build;
         }
+
+    
+        public override void AppendOutput(string value, bool newLine)
+        {
+            //WTF
+            if (value != null)
+            {
+                value = value.Replace("\"", "\\\"");
+            }
+            base.AppendOutput(value, newLine);
+        }
     }
 }
