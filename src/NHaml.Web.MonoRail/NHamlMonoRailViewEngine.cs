@@ -64,17 +64,15 @@ namespace NHaml.Web.MonoRail
 
         private static void BeforeCompile(TemplateClassBuilder templateClassBuilder, object context)
         {
-            var controllerContext = (IControllerContext) context;
+            var templateBuilderContext = (TemplateBuilderContext) context;
             var codeDomClassBuilder = (CodeDomClassBuilder)templateClassBuilder;
 
-            foreach (string key in controllerContext.Helpers.Keys)
+            foreach (var pair in templateBuilderContext.Helpers)
             {
-                var helper = (AbstractHelper) controllerContext.Helpers[key];
-                var type = helper.GetType();
                 var property = new CodeMemberField
                                {
-                                   Name = key,
-                                   Type = new CodeTypeReference(type),
+                                   Name = pair.Key,
+                                   Type = new CodeTypeReference(pair.Value),
                                    Attributes = MemberAttributes.Public,
                                };
                 codeDomClassBuilder.Members.Add(property);
@@ -110,7 +108,12 @@ namespace NHaml.Web.MonoRail
             {
                 TemplateEngine.Options.AddReferences(abstractHelper.GetType());
             }
-            var compiledTemplate = TemplateEngine.Compile(TemplateEngine.Options.TemplateBaseType, TemplateEngine.ConvertPathsToViewSources(sources),controllerContext);
+            var templateBuilderContext = new TemplateBuilderContext();
+            foreach (var key in controllerContext.Helpers.Keys)
+            {
+                templateBuilderContext.Helpers.Add((string) key, controllerContext.Helpers[key].GetType());
+	}
+            var compiledTemplate = TemplateEngine.Compile(TemplateEngine.Options.TemplateBaseType, TemplateEngine.ConvertPathsToViewSources(sources), templateBuilderContext);
             var template = (NHamlMonoRailView) compiledTemplate.CreateInstance();
             template.ViewEngine = this;
             var tempalteType = template.GetType();
@@ -235,5 +238,14 @@ namespace NHaml.Web.MonoRail
 
 
    
+    }
+
+    internal class TemplateBuilderContext
+    {
+        public TemplateBuilderContext()
+        {
+            Helpers = new Dictionary<string, Type>();
+        }
+        public Dictionary<string, Type> Helpers { get; set; }
     }
 }
