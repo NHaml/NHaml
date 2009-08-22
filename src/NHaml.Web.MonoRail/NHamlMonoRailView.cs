@@ -5,7 +5,6 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using Castle.MonoRail.Framework;
-using Castle.MonoRail.Framework.Helpers;
 using NHaml.Utils;
 
 namespace NHaml.Web.MonoRail
@@ -39,8 +38,6 @@ namespace NHaml.Web.MonoRail
 
             PropertyBag = controllerContext.PropertyBag;
 
-            CreateHelpers(engineContext);
-
             Render(writer);
         }
 
@@ -55,21 +52,6 @@ namespace NHaml.Web.MonoRail
             return disposable;
         }
 
-        protected virtual void CreateHelpers(IEngineContext engineContext)
-        {
-            if (engineContext != null)
-            {
-                Ajax = new AjaxHelper(engineContext);
-                Html = new HtmlHelper(engineContext);
-                Url = new UrlHelper(engineContext);
-                Form = new FormHelper(engineContext);
-            }
-        }
-
-        public AjaxHelper Ajax { get; protected set; }
-        public HtmlHelper Html { get; protected set; }
-        public UrlHelper Url { get; protected set; }
-        public FormHelper Form { get; protected set; }
 
         public IEngineContext ViewContext { get; private set; }
 
