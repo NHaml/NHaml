@@ -99,24 +99,19 @@
     <None Include="Expected\RenderBodyComponent.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Templates\RenderParametersComponent.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\RenderSectionComponent.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\RenderTextComponent.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\RenderBodyComponent.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Include="Templates\SimpleComponent.haml">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Views\Components\InnerComponent\Default.haml" />
+    <None Include="Views\Components\PropertyBagComponent\Default.haml" />
     <None Include="Views\Components\SimpleComponent\Default.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="Views\InnerComponent.haml" />
+    <None Include="Views\propertyBagComponent.haml" />
+    <None Include="Views\RenderBodyComponent.haml" />
+    <None Include="Views\RenderParametersComponent.haml" />
+    <None Include="Views\RenderSectionComponent.haml" />
+    <None Include="Views\RenderTextComponent.haml" />
+    <None Include="Views\SimpleComponent.haml" />
+    <None Include="Views\WithHelper.haml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

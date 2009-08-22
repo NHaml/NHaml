@@ -92,11 +92,11 @@
     <Compile Include="Compilers\CSharp4\CSharp4TemplateCompiler.cs" />
     <Compile Include="Compilers\CSharp4\CSharp4TemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
-    <Compile Include="Compilers\ListExtensions.cs" />
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />
     <Compile Include="ExpressionStringToken.cs" />
+    <Compile Include="ListExtensions.cs" />
     <Compile Include="ProxyExtracter.cs" />
     <Compile Include="Rules\NotEncodedEvalMarkupRule.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
@@ -140,10 +140,12 @@
     <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
     <Compile Include="Token.cs" />
+    <Compile Include="TokenReader.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
+    <Compile Include="ViewSourceReader.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">
