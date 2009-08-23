@@ -64,6 +64,11 @@ namespace NHaml.Compilers.IronRuby
             Output.AppendLine(string.Format("text_writer.{0}('{1}')", method, value.Replace("'", "\\'")));
         }
 
+        public override void AppendOutputLine()
+        {
+            Output.AppendLine("text_writer.WriteLine()");
+        }
+
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
         {
             if (code != null)

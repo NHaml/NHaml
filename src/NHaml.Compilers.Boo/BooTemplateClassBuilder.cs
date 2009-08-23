@@ -41,6 +41,10 @@ namespace NHaml.Compilers.Boo
 
             Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.{1}(\"\"\"{2}\"\"\")", CurrentTextWriterVariableName, method, value));
         }
+        public override void AppendOutputLine()
+        {
+            Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.WriteLine()", CurrentTextWriterVariableName));
+        }
 
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
         {

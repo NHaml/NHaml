@@ -73,16 +73,38 @@ namespace NHaml.Compilers
 
         }
 
+        public override void AppendOutputLine()
+        {
+            var writeInvoke = new CodeMethodInvokeExpression
+                                  {
+                                      Method = new CodeMethodReferenceExpression
+                                                   {
+                                                       MethodName = "WriteLine",
+                                                       TargetObject =
+                                                           new CodeVariableReferenceExpression
+                                                               {
+                                                                   VariableName = CurrentTextWriterVariableName
+                                                               }
+                                                   }
+                                  };
+            RenderMethod.Statements.Add(new CodeExpressionStatement
+                                            {
+                                                Expression = writeInvoke
+                                            });
+
+        }
+
         public override void AppendCode(string code, bool newLine, bool escapeHtml)
         {
             if (code != null)
             {
 
+                var method = newLine ? "WriteLine" : "Write";
                 var writeLine = new CodeMethodInvokeExpression
                                     {
                                         Method = new CodeMethodReferenceExpression
                                                      {
-                                                         MethodName = "WriteLine",
+                                                         MethodName = method,
                                                          TargetObject =
                                                              new CodeVariableReferenceExpression
                                                                  {

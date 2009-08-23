@@ -109,7 +109,7 @@ namespace NHaml.Rules
                     builder.AppendOutput(">" + content);
                     if ((currentInputLine.IndentCount + 1) == viewSourceReader.NextInputLine.IndentCount)
                     {
-                        builder.AppendOutputLine(string.Empty);
+                        builder.AppendOutputLine();
                         closingTag = currentInputLine.Indent + closingTag;
                     }
                 }

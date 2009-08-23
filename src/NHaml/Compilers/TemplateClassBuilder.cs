@@ -48,6 +48,8 @@ namespace NHaml.Compilers
             AppendOutput(value, true);
         }
 
+        public abstract void AppendOutputLine();
+
         public virtual void AppendCode(string code)
         {
             AppendCode(code, false, false);
