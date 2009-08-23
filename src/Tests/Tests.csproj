@@ -108,7 +108,10 @@
     <None Include="Functional\Expected\BlankLine.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="Functional\Expected\TextEval.xhtml">
+    <None Include="Functional\Expected\TextEvalEncode.xhtml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Include="Functional\Expected\TextEvalDontEncode.xhtml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Include="Functional\Expected\SelfClosing.xhtml">

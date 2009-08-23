@@ -72,12 +72,8 @@ namespace NHaml.Rules
             }
             else
             {
-                if ((content.Length > 50)
-                    || string.Equals("=", action)
-                    || string.Equals("&=", action)
-                    || string.Equals("!=", action))
+                if ((content.Length > 50) || ("=" == action) || ("&=" == action) || ("!=" == action))
                 {
-
                     builder.AppendOutput(">");
 
                     if (!isWhitespaceSensitive)
@@ -100,7 +96,7 @@ namespace NHaml.Rules
                     }
                     else
                     {
-                        AppendText(content,builder,options);
+                        AppendText(content, builder, options);
                     }
 
                     if (!isWhitespaceSensitive)
@@ -127,6 +123,8 @@ namespace NHaml.Rules
                 builder.AppendOutputLine();
             };
         }
+
+  
 
         private static void ParseAndRenderAttributes(TemplateClassBuilder builder, Match tagMatch)
         {

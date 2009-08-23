@@ -253,10 +253,19 @@ namespace NHaml.Tests
             AssertRender("AttributeEval");
         }
 
+
         [Test]
-        public virtual void TextEval()
+        public virtual void TextEvalEncodeHtml()
         {
-            AssertRender("TextEval");
+            _templateEngine.Options.EncodeHtml = true;
+            AssertRender("TextEvalEncode","TextEval");
+        }
+
+        [Test]
+        public virtual void TextEvalDontEncode()
+        {
+            _templateEngine.Options.EncodeHtml = false;
+            AssertRender("TextEvalDontEncode","TextEval");
         }
 
         [Test]

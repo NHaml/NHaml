@@ -14,13 +14,27 @@ namespace NHaml.Rules
 
         protected static void AppendText(string text, TemplateClassBuilder builder, TemplateOptions options)
         {
+            var encodeHtml = options.EncodeHtml;
+            if (text.StartsWith("!"))
+            {
+                text = text.Substring(1, text.Length - 1);
+                text.TrimStart(' ');
+                encodeHtml = false;
+            }
+            if (text.StartsWith("&"))
+            {
+                text = text.Substring(1, text.Length - 1);
+                text.TrimStart(' ');
+                encodeHtml = true;
+            }
+
             var parser = new ExpressionStringParser(text);
             parser.Parse();
             foreach (var expressionStringToken in parser.ExpressionStringTokens)
             {
                 if (expressionStringToken.IsExpression)
                 {
-                    builder.AppendCode(expressionStringToken.Value, options.EncodeHtml);
+                    builder.AppendCode(expressionStringToken.Value, encodeHtml);
                 }
                 else
                 {
