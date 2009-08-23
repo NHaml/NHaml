@@ -100,7 +100,7 @@ namespace NHaml.Rules
                     }
                     else
                     {
-                        builder.AppendOutput(content);
+                        AppendText(content,builder,options);
                     }
 
                     if (!isWhitespaceSensitive)
@@ -111,7 +111,8 @@ namespace NHaml.Rules
                 }
                 else
                 {
-                    builder.AppendOutput(">" + content);
+                    builder.AppendOutput(">");
+                    AppendText(content, builder, options);
                     if ((currentInputLine.IndentCount + 1) == viewSourceReader.NextInputLine.IndentCount)
                     {
                         builder.AppendOutputLine();
