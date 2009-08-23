@@ -15,7 +15,10 @@ namespace NHaml.Rules
         {
             var inputLine = viewSourceReader.CurrentInputLine;
             builder.AppendOutput( inputLine.Indent );
-            builder.AppendCodeLine( inputLine.NormalizedText.Trim(), true );
+            builder.AppendCode(inputLine.NormalizedText.Trim(), false, true);
+
+            builder.AppendOutputLine();
+
             return EmptyClosingAction;
         }
     }

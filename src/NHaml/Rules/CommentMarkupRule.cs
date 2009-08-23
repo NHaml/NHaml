@@ -41,25 +41,36 @@ namespace NHaml.Rules
 
             if( string.IsNullOrEmpty( content ) )
             {
-                builder.AppendOutputLine( openingTag.ToString() );
+                builder.AppendOutput(openingTag.ToString());
+                builder.AppendOutputLine();
                 closingTag.Insert(0, currentInputLine.Indent);
             }
             else
             {
                 if( content.Length > 50 )
                 {
-                    builder.AppendOutputLine( openingTag.ToString() );
+                    builder.AppendOutput(openingTag.ToString());
+                    builder.AppendOutputLine();
+
                     builder.AppendOutput( viewSourceReader.NextIndent );
-                    builder.AppendOutputLine( content );
+                    
+                    builder.AppendOutput(content);
+
+                    builder.AppendOutputLine();
                 }
                 else
                 {
-                    builder.AppendOutput( openingTag + content );
+                    builder.AppendOutput( openingTag.ToString() );
+                    builder.AppendOutput( content );
                     closingTag.Insert(0, ' ');
                 }
             }
 
-            return () => builder.AppendOutputLine( closingTag.ToString() );
+            return () =>
+                   {
+                       builder.AppendOutput(closingTag.ToString());
+                       builder.AppendOutputLine();
+                   };
         }
     }
 }
