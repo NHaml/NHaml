@@ -78,7 +78,7 @@ namespace NHaml.Rules
                     || string.Equals("!=", action))
                 {
 
-                    builder.AppendOutput(">", false);
+                    builder.AppendOutput(">");
 
                     if (!isWhitespaceSensitive)
                     {
@@ -100,7 +100,7 @@ namespace NHaml.Rules
                     }
                     else
                     {
-                        builder.AppendOutput(content, false);
+                        builder.AppendOutput(content);
                     }
 
                     if (!isWhitespaceSensitive)

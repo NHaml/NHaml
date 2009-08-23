@@ -40,14 +40,14 @@ namespace NHaml.Compilers.FSharp
         }
 
     
-        public override void AppendOutput(string value, bool newLine)
+        public override void AppendOutput(string value)
         {
             //WTF
             if (value != null)
             {
                 value = value.Replace("\"", "\\\"");
             }
-            base.AppendOutput(value, newLine);
+            base.AppendOutput(value);
         }
     }
 }

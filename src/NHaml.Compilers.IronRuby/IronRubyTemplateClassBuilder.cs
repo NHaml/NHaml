@@ -44,14 +44,13 @@ namespace NHaml.Compilers.IronRuby
             Preamble.AppendLine(code);
         }
 
-        public override void AppendOutput(string value, bool newLine)
+        public override void AppendOutput(string value)
         {
             if (value == null)
             {
                 return;
             }
 
-            var method = newLine ? "WriteLine" : "Write";
 
             if (Depth > 0)
             {
@@ -61,7 +60,7 @@ namespace NHaml.Compilers.IronRuby
                 }
             }
 
-            Output.AppendLine(string.Format("text_writer.{0}('{1}')", method, value.Replace("'", "\\'")));
+            Output.AppendLine(string.Format("text_writer.Write('{0}')", value.Replace("'", "\\'")));
         }
 
         public override void AppendOutputLine()

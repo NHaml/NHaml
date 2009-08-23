@@ -19,14 +19,13 @@ namespace NHaml.Compilers.Boo
             get { return new string(' ', 4 + ((Depth < 0 ? 0 : Depth)*2)); }
         }
 
-        public override void AppendOutput(string value, bool newLine)
+        public override void AppendOutput(string value)
         {
             if (value == null)
             {
                 return;
             }
 
-            var method = newLine ? "WriteLine" : "Write";
 
             if (!_disableOutputIndentationShrink && Depth > 0)
             {
@@ -39,7 +38,7 @@ namespace NHaml.Compilers.Boo
             // prevents problems with " at the end of the string
             value = value.Replace("\"", "\"\"\"+'\"'+\"\"\"");
 
-            Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.{1}(\"\"\"{2}\"\"\")", CurrentTextWriterVariableName, method, value));
+            Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.Write(\"\"\"{1}\"\"\")", CurrentTextWriterVariableName, value));
         }
         public override void AppendOutputLine()
         {

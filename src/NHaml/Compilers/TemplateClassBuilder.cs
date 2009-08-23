@@ -31,12 +31,9 @@ namespace NHaml.Compilers
 
         public string ClassName { get; private set; }
 
-        public abstract void AppendOutput(string value, bool newLine);
+        public abstract void AppendOutput(string value);
 
-        public virtual void AppendOutput(string value)
-        {
-            AppendOutput(value, false);
-        }
+   
 
    
 

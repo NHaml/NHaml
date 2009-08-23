@@ -30,14 +30,13 @@ namespace NHaml.Compilers
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
 
-        public override void AppendOutput(string value, bool newLine)
+        public override void AppendOutput(string value)
         {
             if (value == null)
             {
                 return;
             }
 
-            var method = newLine ? "WriteLine" : "Write";
 
             if (Depth > 0)
             {
@@ -52,7 +51,7 @@ namespace NHaml.Compilers
                                   {
                                       Method = new CodeMethodReferenceExpression
                                                    {
-                                                       MethodName = method,
+                                                       MethodName = "Write",
                                                        TargetObject =
                                                            new CodeVariableReferenceExpression
                                                                {
@@ -99,7 +98,7 @@ namespace NHaml.Compilers
             if (code != null)
             {
 
-                var writeLine = new CodeMethodInvokeExpression
+                var write = new CodeMethodInvokeExpression
                                     {
                                         Method = new CodeMethodReferenceExpression
                                                      {
@@ -144,17 +143,17 @@ namespace NHaml.Compilers
                                                                 }
                                                };
                     htmlEncodeInvoke.Parameters.Add(toStringInvoke);
-                    writeLine.Parameters.Add(htmlEncodeInvoke);
+                    write.Parameters.Add(htmlEncodeInvoke);
                 }
                 else
                 {
-                    writeLine.Parameters.Add(toStringInvoke);
+                    write.Parameters.Add(toStringInvoke);
                 }
 
 
                 RenderMethod.Statements.Add(new CodeExpressionStatement
                                                 {
-                                                    Expression = writeLine
+                                                    Expression = write
                                                 });
             }
         }
