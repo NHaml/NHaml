@@ -65,7 +65,8 @@ namespace NHaml.Rules
 
             if (string.IsNullOrEmpty(content))
             {
-                builder.AppendOutputLine(">");
+                builder.AppendOutput(">");
+                builder.AppendOutputLine();
                 closingTag = currentInputLine.Indent + closingTag;
             }
             else
@@ -84,23 +85,24 @@ namespace NHaml.Rules
 
                     if (string.Equals("=", action))
                     {
-                        builder.AppendCode(content, !isWhitespaceSensitive, options.EncodeHtml);
+                        builder.AppendCode(content, false, options.EncodeHtml);
                     }
                     else if (string.Equals("&=", action))
                     {
-                        builder.AppendCode(content, !isWhitespaceSensitive, true);
+                        builder.AppendCode(content, false, true);
                     }
                     else if (string.Equals("!=", action))
                     {
-                        builder.AppendCode(content, !isWhitespaceSensitive, false);
+                        builder.AppendCode(content, false, false);
                     }
                     else
                     {
-                        builder.AppendOutput(content, !isWhitespaceSensitive);
+                        builder.AppendOutput(content, false);
                     }
 
                     if (!isWhitespaceSensitive)
                     {
+                        builder.AppendOutputLine();
                         closingTag = currentInputLine.Indent + closingTag;
                     }
                 }

@@ -77,6 +77,10 @@ namespace NHaml.Compilers.IronRuby
                 {
                     code = string.Format("System::Web::HttpUtility.HtmlEncode({0})", code);
                 }
+                else
+                {
+                    code += ".ToString()";
+                }
 
                 Output.AppendLine(string.Format("text_writer.{0}({1})", (newLine ? "WriteLine" : "Write"), code));
             }
