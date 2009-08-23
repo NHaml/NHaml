@@ -40,10 +40,6 @@ namespace NHaml.Compilers
 
    
 
-        public virtual void AppendOutputLine(string value)
-        {
-            AppendOutput(value, true);
-        }
 
         public abstract void AppendOutputLine();
 

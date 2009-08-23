@@ -57,7 +57,8 @@ namespace NHaml.Rules
 
             if (string.Equals("/", action) || options.IsAutoClosingTag(tagName))
             {
-                builder.AppendOutputLine(" />");
+                builder.AppendOutput(" />");
+                builder.AppendOutputLine();
                 return EmptyClosingAction;
             }
 
@@ -76,10 +77,12 @@ namespace NHaml.Rules
                     || string.Equals("&=", action)
                     || string.Equals("!=", action))
                 {
-                    builder.AppendOutput(">", !isWhitespaceSensitive);
+
+                    builder.AppendOutput(">", false);
 
                     if (!isWhitespaceSensitive)
                     {
+                        builder.AppendOutputLine();
                         builder.AppendOutput(viewSourceReader.NextIndent);
                     }
 
@@ -117,7 +120,11 @@ namespace NHaml.Rules
                 }
             }
 
-            return () => builder.AppendOutputLine(closingTag);
+            return () =>
+            {
+                builder.AppendOutput(closingTag);
+                builder.AppendOutputLine();
+            };
         }
 
         private static void ParseAndRenderAttributes(TemplateClassBuilder builder, Match tagMatch)

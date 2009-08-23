@@ -12,7 +12,8 @@ namespace NHaml.Rules
         public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
         {
             builder.AppendOutput(viewSourceReader.CurrentInputLine.Indent);
-            builder.AppendOutputLine(viewSourceReader.CurrentInputLine.NormalizedText);
+            builder.AppendOutput(viewSourceReader.CurrentInputLine.NormalizedText);
+            builder.AppendOutputLine();
 
             return EmptyClosingAction;
         }
