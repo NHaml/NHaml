@@ -254,6 +254,12 @@ namespace NHaml.Tests
         }
 
         [Test]
+        public virtual void TextEval()
+        {
+            AssertRender("TextEval");
+        }
+
+        [Test]
         public virtual void AttributeNamespaceAndDynamic()
         {
             AssertRender("AttributeNamespaceAndDynamic");
