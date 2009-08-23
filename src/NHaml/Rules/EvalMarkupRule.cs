@@ -15,7 +15,7 @@ namespace NHaml.Rules
             var inputLine = viewSourceReader.CurrentInputLine;
 
             builder.AppendOutput( inputLine.Indent );
-            builder.AppendCode(inputLine.NormalizedText.Trim(), false, options.EncodeHtml);
+            builder.AppendCode(inputLine.NormalizedText.Trim(), options.EncodeHtml);
             
             builder.AppendOutputLine();
             return EmptyClosingAction;

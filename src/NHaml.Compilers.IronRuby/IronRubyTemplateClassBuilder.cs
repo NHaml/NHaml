@@ -69,7 +69,7 @@ namespace NHaml.Compilers.IronRuby
             Output.AppendLine("text_writer.WriteLine()");
         }
 
-        public override void AppendCode(string code, bool newLine, bool escapeHtml)
+        public override void AppendCode(string code, bool escapeHtml)
         {
             if (code != null)
             {
@@ -82,7 +82,7 @@ namespace NHaml.Compilers.IronRuby
                     code += ".ToString()";
                 }
 
-                Output.AppendLine(string.Format("text_writer.{0}({1})", (newLine ? "WriteLine" : "Write"), code));
+                Output.AppendLine(string.Format("text_writer.Write({0})", code));
             }
         }
 

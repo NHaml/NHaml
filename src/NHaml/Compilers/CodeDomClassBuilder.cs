@@ -94,17 +94,16 @@ namespace NHaml.Compilers
 
         }
 
-        public override void AppendCode(string code, bool newLine, bool escapeHtml)
+        public override void AppendCode(string code, bool escapeHtml)
         {
             if (code != null)
             {
 
-                var method = newLine ? "WriteLine" : "Write";
                 var writeLine = new CodeMethodInvokeExpression
                                     {
                                         Method = new CodeMethodReferenceExpression
                                                      {
-                                                         MethodName = method,
+                                                         MethodName = "Write",
                                                          TargetObject =
                                                              new CodeVariableReferenceExpression
                                                                  {

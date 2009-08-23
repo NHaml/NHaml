@@ -46,7 +46,7 @@ namespace NHaml.Compilers.Boo
             Output.AppendLine(Utility.FormatInvariant(IndentString + "{0}.WriteLine()", CurrentTextWriterVariableName));
         }
 
-        public override void AppendCode(string code, bool newLine, bool escapeHtml)
+        public override void AppendCode(string code, bool escapeHtml)
         {
             if (code != null)
             {
@@ -57,7 +57,7 @@ namespace NHaml.Compilers.Boo
                     code = string.Format("(HttpUtility.HtmlEncode{0})", code);
                 }
 
-                Output.AppendLine(string.Format("{0}textWriter.{1}{2};", IndentString, (newLine ? "WriteLine" : "Write"), code));
+                Output.AppendLine(string.Format("{0}textWriter.Write{1};", IndentString, code));
             }
         }
 

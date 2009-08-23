@@ -85,15 +85,15 @@ namespace NHaml.Rules
 
                     if (string.Equals("=", action))
                     {
-                        builder.AppendCode(content, false, options.EncodeHtml);
+                        builder.AppendCode(content, options.EncodeHtml);
                     }
                     else if (string.Equals("&=", action))
                     {
-                        builder.AppendCode(content, false, true);
+                        builder.AppendCode(content, true);
                     }
                     else if (string.Equals("!=", action))
                     {
-                        builder.AppendCode(content, false, false);
+                        builder.AppendCode(content, false);
                     }
                     else
                     {
