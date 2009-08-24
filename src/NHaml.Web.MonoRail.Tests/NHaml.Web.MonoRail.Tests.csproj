@@ -60,7 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Components\InnerComponent.cs" />
-    <Compile Include="Components\PropertyBagSimpleComponent.cs" />
+    <Compile Include="Components\PropertyBagComponent.cs" />
     <Compile Include="Components\SimpleComponent.cs" />
     <Compile Include="CSharp2FunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />

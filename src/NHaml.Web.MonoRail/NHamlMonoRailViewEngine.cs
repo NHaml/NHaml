@@ -92,19 +92,20 @@ namespace NHaml.Web.MonoRail
         {
             get { return ViewSourceLoader.ViewRootDir; }
         }
-        public override void Process(string templateName, TextWriter output, IEngineContext context, IController controller, IControllerContext controllerContext)
+        public override void Process(string templateName, TextWriter output, IEngineContext engineContext, IController controller, IControllerContext controllerContext)
         {
             var sources = GetLayoutFile(controllerContext);
             var templateFileName = GetTemplateFileName(templateName);
             sources.Add(templateFileName);
 
             var template = GetTemplate(controllerContext, sources);
-            template.Render(context, output, controllerContext);
+            template.Init(controllerContext,engineContext);
+            template.Render(output);
         }
 
         private NHamlMonoRailView GetTemplate(IControllerContext controllerContext, IList<string> sources)
         {
-            foreach (AbstractHelper abstractHelper in controllerContext.Helpers.Values)
+            foreach (var abstractHelper in controllerContext.Helpers.Values)
             {
                 TemplateEngine.Options.AddReferences(abstractHelper.GetType());
             }

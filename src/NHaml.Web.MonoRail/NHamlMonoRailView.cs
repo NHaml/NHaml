@@ -30,15 +30,15 @@ namespace NHaml.Web.MonoRail
             return dictionary;
         }
 
-        public void Render(IEngineContext engineContext, TextWriter writer, IControllerContext controllerContext)
+   
+
+        public void Init(IControllerContext controllerContext, IEngineContext engineContext)
         {
             Invariant.ArgumentNotNull(controllerContext, "controllerContext");
 
             ViewContext = engineContext;
 
             PropertyBag = controllerContext.PropertyBag;
-
-            Render(writer);
         }
 
         /// <summary>
@@ -87,6 +87,7 @@ namespace NHaml.Web.MonoRail
 			}
 			RemoveViewComponentProperties(componentContext.ComponentParameters);
 		}
+
         /// <summary>
         /// Adds the view component newProperties.
         /// This will be included in the parameters searching, note that this override
@@ -169,11 +170,12 @@ namespace NHaml.Web.MonoRail
             var subViewFileName = GetSubViewFilename(subviewName);
             var subView = ViewEngine.GetCompiledScriptInstance(subViewFileName, ViewContext.CurrentControllerContext);
             subView.SetParent(this);
+            subView.Init(ViewContext.CurrentControllerContext, ViewContext);
             foreach (DictionaryEntry entry in parameters)
             {
                 subView.PropertyBag[entry.Key] = entry.Value;
             }
-            subView.Render(ViewContext, writer, ViewContext.CurrentControllerContext);
+            subView.Render(writer);
             foreach (DictionaryEntry entry in subView.PropertyBag)
             {
                 if (!subView.PropertyBag.Contains(entry.Key + ".@bubbleUp"))
@@ -185,6 +187,90 @@ namespace NHaml.Web.MonoRail
             }
         }
 
+
+        //private void InitProperties(IEngineContext myContext, IController myController, IControllerContext controllerContext)
+        //{
+        //    PropertyBag = new Hashtable(StringComparer.InvariantCultureIgnoreCase)
+        //                      {
+        //                          {
+        //                              "Controller", myController
+        //                              }
+        //                      };
+
+        //    if (myContext != null)
+        //    {
+        //        PropertyBag.Add("request", myContext.Request);
+        //        PropertyBag.Add("response", myContext.Response);
+        //        PropertyBag.Add("session", myContext.Session);
+        //    }
+
+        //    if (controllerContext.Resources != null)
+        //    {
+        //        foreach (var key in controllerContext.Resources.Keys)
+        //        {
+        //            PropertyBag.Add(key, controllerContext.Resources[key]);
+        //        }
+        //    }
+
+        //    if (myContext != null && myContext.Request.QueryString != null)
+        //    {
+        //        foreach (var key in myContext.Request.QueryString.AllKeys)
+        //        {
+        //            if (key == null) continue;
+        //            PropertyBag[key] = myContext.Request.QueryString[key];
+        //        }
+        //    }
+
+        //    if (myContext != null && myContext.Request.Form != null)
+        //    {
+        //        foreach (var key in myContext.Request.Form.AllKeys)
+        //        {
+        //            if (key == null) continue;
+        //            PropertyBag[key] = myContext.Request.Form[key];
+        //        }
+        //    }
+
+
+        //    if (myContext != null && myContext.Flash != null)
+        //    {
+        //        foreach (DictionaryEntry entry in myContext.Flash)
+        //        {
+        //            PropertyBag[entry.Key] = entry.Value;
+        //        }
+        //    }
+
+        //    if (controllerContext.PropertyBag != null)
+        //    {
+        //        foreach (DictionaryEntry entry in controllerContext.PropertyBag)
+        //        {
+        //            PropertyBag[entry.Key] = entry.Value;
+        //        }
+        //    }
+
+        //    if (controllerContext.CustomActionParameters != null)
+        //    {
+        //        foreach (var entry in controllerContext.CustomActionParameters)
+        //        {
+        //            PropertyBag[entry.Key] = entry.Value;
+        //        }
+        //    }
+
+        
+        //    if (myContext != null)
+        //    {
+        //        PropertyBag["siteRoot"] = myContext.ApplicationPath;
+        //    }
+
+        //    if (parent != null)
+        //    {
+        //        foreach (DictionaryEntry entry in parent.PropertyBag)
+        //        {
+        //            PropertyBag[entry.Key] = entry.Value;
+        //        }
+        //    }
+
+        //}
+     
         private void SetParent(NHamlMonoRailView view)
         {
             ViewEngine = view.ViewEngine;
