@@ -219,7 +219,7 @@ namespace NHaml.Compilers
             var _invoke1 = new CodeMethodInvokeExpression();
             _invoke1.Parameters.Add(new CodeVariableReferenceExpression
                                         {
-                                            VariableName = "textWriter"
+                                            VariableName = CurrentTextWriterVariableName
                                         });
 
             _invoke1.Parameters.Add(new CodePrimitiveExpression
