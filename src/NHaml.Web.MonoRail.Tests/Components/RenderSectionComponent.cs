@@ -6,8 +6,8 @@ namespace NHaml.Web.MonoRail.Tests.Components
     {
         public override void Render()
         {
-            Context.RenderSection("Section1");
-            Context.RenderSection("Section2");
+            RenderSection("Section1");
+            RenderSection("Section2");
         }
     }
 }

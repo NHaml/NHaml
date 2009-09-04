@@ -6,7 +6,7 @@ namespace NHaml.Web.MonoRail.Tests.Components
     {
         public override void Render()
         {
-            Context.RenderBody();
+            RenderBody();
         }
     }
 }
