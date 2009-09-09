@@ -1,21 +1,29 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
-using System.Text.RegularExpressions;
+using System.Text;
 
 namespace NHaml.Utils
 {
     public static class Utility
     {
-        private static readonly Regex _pathCleaner = new Regex(
-          @"[^0-9a-z_]",
-          RegexOptions.IgnoreCase | RegexOptions.Compiled | RegexOptions.Singleline );
 
         public static string MakeClassName( string templatePath )
         {
             Invariant.ArgumentNotEmpty( templatePath, "templatePath" );
-
-            return _pathCleaner.Replace( templatePath, "_" ).Trim( '_' );
+            var stringBuilder = new StringBuilder();
+            foreach (var ch in templatePath)
+            {
+                if ((ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90) || (ch >= 0 && ch <= 9))
+                {
+                    stringBuilder.Append(ch);
+                }
+                else
+                {
+                    stringBuilder.Append('_');
+                }
+            }
+            return stringBuilder.ToString().Replace(templatePath, "_").Trim('_');
         }
 
         public static string MakeBaseClassName( Type baseType, string open, string close, string separator )
