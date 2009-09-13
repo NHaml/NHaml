@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Text;
 using IronRuby;
 using Microsoft.Scripting.Hosting;

@@ -44,6 +44,10 @@ namespace NHaml.Configuration
             {
                 options.AutoRecompile = section.AutoRecompile.Value;
             }
+            else
+            {
+                options.AutoRecompile = true;
+            }
 
             if (section.UseTabs.HasValue)
             {
