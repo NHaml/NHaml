@@ -33,8 +33,6 @@ namespace NHaml.Compilers
         {
             BuildSource(source);
 
-            Trace.WriteLine(Source);
-
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams);
             if (Options.OutputDebugFiles && SupportsDebug())

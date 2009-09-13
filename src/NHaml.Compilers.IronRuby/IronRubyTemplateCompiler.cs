@@ -31,9 +31,6 @@ namespace NHaml.Compilers.IronRuby
             ruby.Append(builder.Build(options.Usings));
 
             var templateSource = ruby.ToString();
-
-            Trace.WriteLine( templateSource );
-
             _scriptEngine.Execute( templateSource );
 
             return CreateTemplateFactory( _scriptEngine, builder.ClassName );
