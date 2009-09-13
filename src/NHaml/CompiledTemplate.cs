@@ -67,6 +67,7 @@ namespace NHaml
             {
                 templateClassBuilder.BaseType = _templateBaseType;
             }
+            templateParser.Options.AddReferences(_templateBaseType);
             if (options.BeforeCompile != null)
             {
                 options.BeforeCompile(templateClassBuilder, context);

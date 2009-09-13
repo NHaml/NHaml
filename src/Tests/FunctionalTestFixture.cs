@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using NUnit.Framework;
 
@@ -388,6 +389,25 @@ namespace NHaml.Tests
 
             AssertRender("CustomBaseClass");
         }
+        [Test]
+        public virtual void EnsureBaseAndInterfaceReferenceIsAddedFromOptions()
+        {
+            _templateEngine.Options.TemplateBaseType = typeof (GenericTemplateView<DataSet>);
+            AssertRender("EnsureBaseAndInterfaceReferenceIsAdded");
+        }
+
+        [Test]
+        public virtual void EnsureBaseAndInterfaceReferenceIsAdded()
+        {
+            var template = _templateEngine.Compile("EnsureBaseAndInterfaceReferenceIsAdded", typeof (GenericTemplateView<DataSet>));
+            using (var output = new StringWriter())
+            {
+                template.CreateInstance().Render(output);
+
+                AssertRender(output, "EnsureBaseAndInterfaceReferenceIsAdded");
+            }
+        }
+
 
         [Test,Ignore("I currently dont not know how to handle this, because the parsers can not handle the <>Anon types.")]
         public virtual void ViewBaseClassGenericAnon()

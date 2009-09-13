@@ -33,11 +33,6 @@ namespace NHaml.Compilers
 
         public abstract void AppendOutput(string value);
 
-   
-
-   
-
-
         public abstract void AppendOutputLine();
 
         public virtual void AppendCode(string code)

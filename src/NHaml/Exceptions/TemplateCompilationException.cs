@@ -24,28 +24,35 @@ namespace NHaml.Exceptions
 
             foreach( CompilerError error in compilerResults.Errors )
             {
-                message.AppendLine( error.ToString() );
-
-                if( error.Line > 0 )
-                {
-                    var line = error.Line - 1;
-
-                    if( line - 1 > 0 )
-                    {
-                        message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line - 1]) );
-                    }
-
-                    message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line]) );
-
-                    if( line + 1 < lines.Length )
-                    {
-                        message.AppendLine( string.Format("{0}: {1}", (line + 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line + 1]) );
-                    }
-
-                    message.AppendLine();
-                }
+                AppendError(message, error, lines);
             }
             throw new TemplateCompilationException( message.ToString(), compilerResults, templateSource );
+        }
+
+        private static void AppendError(StringBuilder message, CompilerError error, string[] lines)
+        {
+            message.AppendLine( error.ToString() );
+
+            if (error.Line <= 0)
+            {
+                return;
+            }
+
+            var line = error.Line - 1;
+
+            if( line - 1 > 0 )
+            {
+                message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line - 1]) );
+            }
+
+            message.AppendLine( string.Format("{0}: {1}", (line - 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line]) );
+
+            if( line + 1 < lines.Length )
+            {
+                message.AppendLine( string.Format("{0}: {1}", (line + 1).ToString( "0000", CultureInfo.CurrentUICulture ), lines[line + 1]) );
+            }
+
+            message.AppendLine();
         }
 
         private TemplateCompilationException( string message, CompilerResults compilerResults, string compiledTemplateSource )

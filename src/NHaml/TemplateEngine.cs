@@ -37,6 +37,7 @@ namespace NHaml
             lock( _compiledTemplateCache )
             {
                 _compiledTemplateCache.Clear();
+                //TODO: perhaps update usings here
             }
         }
 

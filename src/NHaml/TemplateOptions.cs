@@ -31,7 +31,7 @@ namespace NHaml
                 typeof(HttpUtility).Assembly.Location // System.Web
             });
             AutoClosingTags = new Set<string>(new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" });
-
+            ReferencedTypeHandles = new List<RuntimeTypeHandle>();
             MarkupRules = new List<MarkupRule>();
             _indentSize = 2;
             _templateBaseType = typeof(Template);
@@ -78,8 +78,10 @@ namespace NHaml
             set { _indentSize = UseTabs ? 1 : Math.Max(2, value); }
         }
 
+        //TODO: prob should not make this public
         public Set<string> Usings { get; private set; }
-        public Action<TemplateClassBuilder, Object> BeforeCompile{ get; set; }
+        public Action<TemplateClassBuilder, Object> BeforeCompile { get; set; }
+        List<RuntimeTypeHandle> ReferencedTypeHandles{ get; set; }
 
         public Set<string> References { get; private set; }
 
@@ -112,16 +114,15 @@ namespace NHaml
                 Invariant.ArgumentNotNull(value, "value");
 
                 if (!typeof(Template).IsAssignableFrom(value))
+                {
                     throw new InvalidOperationException("TemplateBaseType must inherit from CompiledTemplate");
-
+                }
                 _templateBaseType = value;
-
-                AddReferences(_templateBaseType);
-
-                Usings.Add(_templateBaseType.Namespace);
-
+             //   AddReferences(_templateBaseType);
                 if (TemplateBaseTypeChanged != null)
+                {
                     TemplateBaseTypeChanged(this, EventArgs.Empty);
+                }
             }
         }
 
@@ -171,6 +172,12 @@ namespace NHaml
 
         public void AddReferences(Type type)
         {
+            var typeHandle = type.TypeHandle;
+            if (ReferencedTypeHandles.Contains(typeHandle))
+            {
+                return;
+            }
+            ReferencedTypeHandles.Add(typeHandle);
             try
             {
                 AddReference(type.Assembly.Location);
@@ -188,6 +195,14 @@ namespace NHaml
                 {
                     AddReferences(genericArgument);
                 }
+            }
+            if (type.BaseType != null)
+            {
+                AddReferences(type.BaseType);
+            }
+            foreach (var @interface in type.GetInterfaces())
+            {
+                AddReferences(@interface);
             }
         }
 
