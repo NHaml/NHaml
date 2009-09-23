@@ -38,6 +38,7 @@ namespace NHaml.Tests
         {
             AssertRender(templates[0], templates);
         }
+
         protected void AssertRender(string expectedName, string templateName)
         {
             AssertRender(expectedName, new[] { templateName });

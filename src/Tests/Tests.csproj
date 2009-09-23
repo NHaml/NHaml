@@ -618,6 +618,9 @@
     <None Include="Functional\Templates\_Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Include="HamlSpec\tests.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
     <None Include="Issues\GC62\Mock\Content.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -694,6 +697,8 @@
     <Compile Include="Functional\FSharpFunctionalTests.cs" />
     <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
     <Compile Include="Functional\ImporterTests.cs" />
+    <Compile Include="HamlSpec\HamlSpecTests.cs" />
+    <Compile Include="HamlSpec\JSON.cs" />
     <Compile Include="Issues\GC62\Fixture.cs" />
     <Compile Include="Issues\GC53\Fixture.cs" />
     <Compile Include="Issues\GC58\Fixture.cs" />
