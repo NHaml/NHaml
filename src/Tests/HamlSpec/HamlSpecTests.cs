@@ -4,7 +4,8 @@ using NUnit.Framework;
 
 namespace NHaml.Tests.HamlSpec
 {
-    public class HamlSpecTests : FunctionalTestFixture
+    [TestFixture]
+    public class HamlSpecTests : TestFixtureBase
     {
         private readonly FileInfo _testFile = new FileInfo("test.haml");
 
