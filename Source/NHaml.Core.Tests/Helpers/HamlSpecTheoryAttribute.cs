@@ -39,6 +39,8 @@ namespace NHaml.Core.Tests.Helpers
                     var haml = (string)testValues["haml"];
                     var html = (string)testValues["html"];
 
+                    haml = haml.Replace(@"\n", "\n").Replace(@"\t", "\t");
+
                     var fullName = string.Format("{1} ({0})", groupName, testName);
                     yield return new TheoryCommand(method,fullName, new[] { fullName, haml, html });
                 }

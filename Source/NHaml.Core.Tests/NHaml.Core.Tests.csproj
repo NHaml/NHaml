@@ -56,9 +56,12 @@
     <Compile Include="HamlSpecTests.cs" />
     <Compile Include="Helpers\HamlSpecTheoryAttribute.cs" />
     <Compile Include="Helpers\JSON.cs" />
-    <Compile Include="InputLineReaderReadTests.cs" />
-    <Compile Include="InputLineReaderTests.cs" />
-    <Compile Include="ParserTests.cs" />
+    <Compile Include="Parser\CharacterReaderTests.cs" />
+    <Compile Include="Parser\ConsoleVisitor.cs" />
+    <Compile Include="Parser\InputLineReaderReadTests.cs" />
+    <Compile Include="Parser\InputLineReaderTests.cs" />
+    <Compile Include="Parser\InputLineTests.cs" />
+    <Compile Include="Parser\ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -2,23 +2,25 @@ namespace NHaml.Core.Parser
 {
     public class InputLine
     {
-        private readonly string _line;
-        private readonly int _lineNumber;
-
-        public InputLine(string line, int lineNumber)
+        public InputLine(string text, int lineNumber, int indent, bool isMultiline)
         {
-            _line = line;
-            _lineNumber = lineNumber;
+            Text = text;
+            LineNumber = lineNumber;
+            Indent = indent;
+            IsMultiline = isMultiline;
         }
 
-        public int LineNumber
-        {
-            get { return _lineNumber; }
-        }
+        public int Indent { get; private set; }
+        
+        public bool IsMultiline { get; private set; }
+
+        public string Text { get; private set; }
+
+        public int LineNumber { get; private set; }
 
         public override string ToString()
         {
-            return _line;
+            return string.Format("{0}: {1}", LineNumber, Text);
         }
     }
 }

@@ -40,10 +40,25 @@ namespace NHaml.Core.Parser
         {
             Prev = Current;
             Current = Next;
+            Next = null;
 
-            var line = _reader.ReadLine();
+            var rawText = _reader.ReadLine();
 
-            Next = line != null ? new InputLine(line, LineNumber) : null;
+            if(rawText != null)
+                Next = ReadInputLine(rawText);
+        }
+
+        private InputLine ReadInputLine(string rawText)
+        {
+            if(rawText == null)
+                throw new ArgumentNullException("rawText");
+
+            var text = rawText.TrimStart();
+
+            var indent = rawText.Length - text.Length;
+            var isMultiline = rawText.EndsWith("|");
+
+            return new InputLine(text, LineNumber + 1, indent, isMultiline);
         }
     }
 }

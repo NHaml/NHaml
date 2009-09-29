@@ -3,7 +3,7 @@ using System.IO;
 using NHaml.Core.Parser;
 using Xunit;
 
-namespace NHaml.Core.Tests
+namespace NHaml.Core.Tests.Parser
 {
     public class InputLineReaderTests
     {
