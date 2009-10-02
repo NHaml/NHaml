@@ -13,5 +13,6 @@ namespace NHaml.Core.Ast
         }
 
         public string Text { get; set; }
+        public bool IsInline { get; set; }
     }
 }

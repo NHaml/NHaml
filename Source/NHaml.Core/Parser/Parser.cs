@@ -1,4 +1,3 @@
-using System;
 using System.IO;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
@@ -14,7 +13,10 @@ namespace NHaml.Core.Parser
             _rules = new MarkupRuleBase[]
             {
                 new DocTypeMarkupRule(),
-                new TagMarkupRule()
+                new TagMarkupRule(),
+                new ContditionalCommentRule(),
+                new CommentRule(),
+                new FilterRule()
             };
         }
 
@@ -45,7 +47,11 @@ namespace NHaml.Core.Parser
             var document = new DocumentNode();
 
             while(parserReader.Read())
-                document.Chields.Add(parserReader.CreateNode());
+            {
+                var node = parserReader.CreateNode();
+                if(node != null)
+                    document.Childs.Add(node);
+            }
 
             return document;
         }

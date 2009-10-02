@@ -4,6 +4,6 @@ namespace NHaml.Core.Ast
 {
     public class DocumentNode : AstNode
     {
-        public List<AstNode> Chields = new List<AstNode>();
+        public List<AstNode> Childs = new List<AstNode>();
     }
 }

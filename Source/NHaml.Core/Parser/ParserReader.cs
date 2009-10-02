@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
 
@@ -8,6 +9,7 @@ namespace NHaml.Core.Parser
     {
         private readonly InputLineReader _reader;
         private readonly MarkupRuleBase[] _rules;
+        private MarkupRuleBase _markupRule;
 
         public ParserReader(MarkupRuleBase[] rules, InputLineReader reader)
         {
@@ -22,14 +24,12 @@ namespace NHaml.Core.Parser
 
         public int Indent { get; private set; }
 
-        public MarkupRuleBase MarkupRule { get; private set; }
-
         public bool Read()
         {
             if(!_reader.Read())
                 return false;
 
-            MarkupRule = FindMarkupRule(_reader.Current.Text);
+            _markupRule = FindMarkupRule(_reader.Current.Text);
             Text = _reader.Current.Text;
             Indent = _reader.Current.Indent;
 
@@ -38,7 +38,33 @@ namespace NHaml.Core.Parser
 
         public AstNode CreateNode()
         {
-            return MarkupRule != null ? MarkupRule.Process(this) : new TextNode(Text);
+            return _markupRule != null ? _markupRule.Process(this) : new TextNode(Text);
+        }
+
+        public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
+        {
+            var nodes = new List<AstNode>();
+
+            while(Read() && baseIdentation < Indent)
+            {
+                var node = CreateNode();
+
+                if(node != null)
+                    nodes.Add(node);
+            }
+
+            if(nodes.Count>0)
+            {
+                if(currentChild!=null)
+                    nodes.Insert(0,currentChild);
+
+                //if(nodes.Count == 1)
+                  //  return nodes[0];
+
+                return new ChildrenNode(nodes);
+            }
+
+            return currentChild;
         }
 
         private MarkupRuleBase FindMarkupRule(string text)

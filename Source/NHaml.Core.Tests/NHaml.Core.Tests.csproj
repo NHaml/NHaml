@@ -35,6 +35,7 @@
     <Reference Include="System.Core">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -57,7 +58,7 @@
     <Compile Include="Helpers\HamlSpecTheoryAttribute.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Parser\CharacterReaderTests.cs" />
-    <Compile Include="Parser\ConsoleVisitor.cs" />
+    <Compile Include="Parser\DebugVisitor.cs" />
     <Compile Include="Parser\InputLineReaderReadTests.cs" />
     <Compile Include="Parser\InputLineReaderTests.cs" />
     <Compile Include="Parser\InputLineTests.cs" />

@@ -37,6 +37,18 @@ namespace NHaml.Core.Parser
             return value != -1;
         }
 
+        public bool Read(int count)
+        {
+            if(count < 0)
+                throw new ArgumentOutOfRangeException("count");
+
+            for(var index = 0; index < count; index++)
+                if(!Read())
+                    return false;
+
+            return Read();
+        }
+
         public string ReadToEnd()
         {
             return Current + _reader.ReadToEnd();

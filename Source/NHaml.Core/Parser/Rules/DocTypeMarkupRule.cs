@@ -10,9 +10,22 @@ namespace NHaml.Core.Parser.Rules
             get { return new[] {"!!!"}; }
         }
 
-        public override AstNode Process(ParserReader reader)
+        public override AstNode Process(ParserReader parser)
         {
-            throw new NotImplementedException();
+            var reader = new CharacterReader(parser.Text);
+
+            reader.Read(3); // skip !!!
+
+            var node = new DocTypeNode();
+
+            if(!reader.IsEndOfStream)
+            {
+                reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                node.Text = reader.ReadToEnd();
+            }
+
+            return node;
         }
     }
 }
