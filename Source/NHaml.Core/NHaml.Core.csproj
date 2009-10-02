@@ -54,10 +54,12 @@
     <Compile Include="Ast\DocTypeNode.cs" />
     <Compile Include="Ast\DocumentNode.cs" />
     <Compile Include="Ast\FilterNode.cs" />
+    <Compile Include="Ast\LocalNode.cs" />
     <Compile Include="Ast\TagNode.cs" />
     <Compile Include="Ast\TextNode.cs" />
     <Compile Include="Ast\NodeVisitorBase.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
+    <Compile Include="Parser\AttributeReader.cs" />
     <Compile Include="Parser\InputLine.cs" />
     <Compile Include="Parser\InputLineReader.cs" />
     <Compile Include="Parser\Parser.cs" />

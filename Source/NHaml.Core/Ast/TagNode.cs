@@ -19,18 +19,5 @@ namespace NHaml.Core.Ast
         public string Name { get; set; }
 
         public List<AttributeNode> Attributes { get; private set; }
-
-        public AttributeNode GetOrAddAttribute(string name)
-        {
-            foreach(var attribute in Attributes)
-            {
-                if(attribute.Name == name)
-                    return attribute;
-            }
-
-            var newAttribute = new AttributeNode(name);
-            Attributes.Add(newAttribute);
-            return newAttribute;
-        }
     }
 }

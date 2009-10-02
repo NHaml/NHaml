@@ -24,6 +24,11 @@ namespace NHaml.Core.Parser
 
         public int Indent { get; private set; }
 
+        public bool IsEndOfStream
+        {
+            get { return _reader.Current == null; }
+        }
+
         public bool Read()
         {
             if(!_reader.Read())
@@ -45,21 +50,24 @@ namespace NHaml.Core.Parser
         {
             var nodes = new List<AstNode>();
 
-            while(Read() && baseIdentation < Indent)
+            while(Read())
             {
                 var node = CreateNode();
 
                 if(node != null)
                     nodes.Add(node);
+
+                if(_reader.Next != null && _reader.Next.Indent <= baseIdentation)
+                    break;
             }
 
-            if(nodes.Count>0)
+            if(nodes.Count > 0)
             {
-                if(currentChild!=null)
-                    nodes.Insert(0,currentChild);
+                if(currentChild != null)
+                    nodes.Insert(0, currentChild);
 
                 //if(nodes.Count == 1)
-                  //  return nodes[0];
+                //  return nodes[0];
 
                 return new ChildrenNode(nodes);
             }

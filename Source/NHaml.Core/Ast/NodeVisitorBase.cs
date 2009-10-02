@@ -4,7 +4,7 @@ namespace NHaml.Core.Ast
 {
     public abstract class NodeVisitorBase
     {
-        public int Indent { get; private set; }
+        public int Indent { get; set; }
 
         public virtual void Visit(DocumentNode node)
         {
@@ -60,6 +60,10 @@ namespace NHaml.Core.Ast
                 Visit(node.Child);
         }
 
+        public virtual void Visit(LocalNode node)
+        {
+        }
+
         public virtual void Visit(AstNode node)
         {
             if(node == null)
@@ -81,6 +85,8 @@ namespace NHaml.Core.Ast
                 Visit((DocTypeNode)node);
             else if(node is ConditionalCommentNode)
                 Visit((ConditionalCommentNode)node);
+            else if(node is LocalNode)
+                Visit((LocalNode)node);
             else
                 throw new InvalidOperationException("unknown node");
         }

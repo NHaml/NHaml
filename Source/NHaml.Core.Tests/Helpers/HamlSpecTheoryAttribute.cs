@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
@@ -22,7 +23,9 @@ namespace NHaml.Core.Tests.Helpers
                 throw new FileNotFoundException("resource " + resourceName + " not found");
 
             using(var reader = new StreamReader(resourceStream, Encoding.UTF8, false))
+            {
                 _jsonTests = reader.ReadToEnd();
+            }
 
             var testGroups = (Hashtable)JSON.JsonDecode(_jsonTests);
 
@@ -40,13 +43,23 @@ namespace NHaml.Core.Tests.Helpers
                     var html = (string)testValues["html"];
 
                     var config = (Hashtable)testValues["config"];
-
                     var format = config != null ? config["format"] : null;
 
-                    html = html.Replace("\n", System.Environment.NewLine);
+                    var locals = (Hashtable)testValues["locals"];
+                    var localsArr = new List<SpecLocal>();
+
+                    if(locals != null)
+                        foreach(DictionaryEntry local in locals)
+                            localsArr.Add(new SpecLocal
+                            {
+                                Name = local.Key.ToString(),
+                                Value = local.Value.ToString()
+                            });
+
+                    html = html.Replace("\n", Environment.NewLine);
 
                     var fullName = string.Format("{1} ({0})", groupName, testName);
-                    yield return new TheoryCommand(method, fullName, new[] { fullName, haml, html, format });
+                    yield return new TheoryCommand(method, fullName, new[] {fullName, haml, html, format, localsArr.ToArray()});
                 }
             }
         }

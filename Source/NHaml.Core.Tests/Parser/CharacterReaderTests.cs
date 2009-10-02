@@ -34,6 +34,29 @@ namespace NHaml.Core.Tests.Parser
         }
 
         [Fact]
+        public void ReadWhileStopsAtTheFirstCharIfConditionMatch()
+        {
+            var reader = new CharacterReader("ab");
+            reader.Read();
+            reader.Read();
+            
+            reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+            Assert.Equal('b',reader.Current);
+        }
+
+        [Fact]
+        public void ReadWhileStopsAtTheFirstCharIfConditionMatchAtStart()
+        {
+            var reader = new CharacterReader("ab");
+            reader.Read();
+            
+            reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+            Assert.Equal('a', reader.Current);
+        }
+
+        [Fact]
         public void ReadToEndReadsTest()
         {
             var reader = new CharacterReader("1test");
@@ -70,6 +93,7 @@ namespace NHaml.Core.Tests.Parser
         public void ReadWhileEndsOnTheRightChar()
         {
             var reader = new CharacterReader("test1234");
+            reader.Read();
 
             reader.ReadWhile(c => char.IsLetter(c));
 

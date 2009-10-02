@@ -1,5 +1,4 @@
 using System;
-using System.Collections.Generic;
 using NHaml.Core.Ast;
 
 namespace NHaml.Core.Parser.Rules
@@ -37,36 +36,82 @@ namespace NHaml.Core.Parser.Rules
                     case '#':
                     {
                         reader.Read(); // eat #
-                        var attribute = node.GetOrAddAttribute("id");
+
+                        var attribute = node.Attributes.Find(a => a.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase));
+
+                        if(attribute == null)
+                        {
+                            attribute = new AttributeNode("id");
+                            node.Attributes.Add(attribute);
+                        }
+
                         attribute.Value = new TextNode(reader.ReadWhile(IsNameChar));
+
                         continue;
                     }
                     case '.':
                     {
-                        string className = null;
-                        while(reader.Current == '.')
+                        reader.Read(); // eat .
+
+                        node.Attributes.Add(new AttributeNode("class")
                         {
-                            reader.Read(); // eat .   
-
-                            if(className != null)
-                                className += " ";
-
-                            className += reader.ReadWhile(IsNameChar);
-                        }
-
-                        var attribute = node.GetOrAddAttribute("class");
-                        attribute.Value = new TextNode(className);
+                            Value = new TextNode(reader.ReadWhile(IsNameChar))
+                        });
 
                         continue;
                     }
-                    /*case '{':
+                        /*case '{':
                     {
                         throw new NotSupportedException();
                     }*/
-                    /*case '(':
+                    case '(':
                     {
-                        throw new NotSupportedException();
-                    }*/
+                        reader.Read(); // eat (
+
+                        while(reader.Current != ')')
+                        {
+                            reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                            if(reader.IsEndOfStream)
+                            {
+                                if(!parserReader.Read())
+                                    break;
+                                
+                                reader = new CharacterReader(parserReader.Text);
+                                reader.Read();
+                            }
+
+                            var name = reader.ReadWhile(IsNameChar);
+
+                            reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                            //Todo: report error when there is no =
+                            reader.Read(); // =
+
+                            reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                            var attribute = new AttributeNode(name);
+                            node.Attributes.Add(attribute);
+                            switch(reader.Current)
+                            {
+                                case '\'':
+                                {
+                                    reader.Read(); // skip '
+                                    attribute.Value = new TextNode(reader.ReadWhile(c => c != '\''));
+                                    reader.Read(); // skip '
+                                    break;
+                                }
+
+                                default:
+                                {
+                                    attribute.Value = new LocalNode(reader.ReadWhile(IsNameChar));
+                                    break;
+                                }
+                            }
+                        }
+
+                        break;
+                    }
                     default:
                     {
                         var text = reader.Current + reader.ReadToEnd();

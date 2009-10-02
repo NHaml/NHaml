@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Text;
 using System.Web;
 using NHaml.Core.Ast;
 
@@ -9,6 +10,8 @@ namespace NHaml.Core.Tests.Parser
     public class DebugVisitor : NodeVisitorBase
     {
         private TextWriter _writer;
+
+        public Dictionary<string,string> Locals = new Dictionary<string, string>();
 
         public DebugVisitor(TextWriter writer)
         {
@@ -119,8 +122,32 @@ namespace NHaml.Core.Tests.Parser
         public override void Visit(TagNode node)
         {
             _writer.Write("<{0}", node.Name);
+            
+            var queue = new List<AttributeNode>(node.Attributes);
+            
+            var attributes = new List<AttributeNode>();
+            while(queue.Count>0)
+            {
+                var first = queue[0];
+                queue.RemoveAt(0);
+                attributes.Add(first);
 
-            var attributes = new List<AttributeNode>(node.Attributes);
+                var isId = first.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase);
+                
+                var buf = new List<string> {Capture(first.Value)};
+
+                foreach(var sameAtt in queue.FindAll(a => a.Name == first.Name))
+                {
+                    queue.Remove(sameAtt);
+                    buf.Add(Capture(sameAtt.Value));
+                }
+
+                if(!isId)
+                    buf.Sort((a1, a2) => a1.CompareTo(a2));
+
+                first.Value = new TextNode(string.Join(isId?"_":" ", buf.ToArray()));
+            }
+
             attributes.Sort((a1, a2) => a1.Name.CompareTo(a2.Name));
 
             foreach(var attribute in attributes)
@@ -128,7 +155,7 @@ namespace NHaml.Core.Tests.Parser
                 _writer.Write(' ');
                 Visit(attribute);
             }
-
+            
             if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
             {
                 _writer.Write(" />");
@@ -164,11 +191,13 @@ namespace NHaml.Core.Tests.Parser
                 case "javascript":
                 {
                     _writer.WriteLine(@"<script type='text/javascript'>");
-                    _writer.WriteLine(@"//<![CDATA[");
+                    _writer.Write(@"  //<![CDATA[");
+
+                    Indent++;
+                    VisitAndIdentAllways(node.Child);
+                    Indent--;
                     
-                    base.Visit(node.Child);
-                    
-                    _writer.WriteLine(@"//]]>");
+                    _writer.WriteLine(@"  //]]>");
                     _writer.WriteLine(@"</script>");
                     break;
                 }
@@ -224,6 +253,15 @@ namespace NHaml.Core.Tests.Parser
                 _writer.Write(' ');
 
             _writer.Write("-->");
+        }
+
+        public override void Visit(LocalNode node)
+        {
+            string value;
+            if(Locals.TryGetValue(node.Name, out value))
+                _writer.Write(value);
+            else
+                _writer.Write("~notfound~");
         }
 
         public string Capture(AstNode node)

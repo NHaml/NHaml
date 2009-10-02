@@ -63,9 +63,12 @@ namespace NHaml.Core.Parser
 
             do
             {
+                if(!predicate(Current))
+                    break;
+                
                 buffer.Append(Current);
             }
-            while(Read() && predicate(Current));
+            while(Read());
 
             return buffer.ToString();
         }
