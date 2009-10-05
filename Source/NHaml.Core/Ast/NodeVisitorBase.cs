@@ -60,7 +60,15 @@ namespace NHaml.Core.Ast
                 Visit(node.Child);
         }
 
-        public virtual void Visit(LocalNode node)
+        public virtual void Visit(CodeNode node)
+        {
+        }
+
+        public virtual void Visit(TextChunk chunk)
+        {
+        }
+
+        public virtual void Visit(CodeChunk chunk)
         {
         }
 
@@ -85,8 +93,12 @@ namespace NHaml.Core.Ast
                 Visit((DocTypeNode)node);
             else if(node is ConditionalCommentNode)
                 Visit((ConditionalCommentNode)node);
-            else if(node is LocalNode)
-                Visit((LocalNode)node);
+            else if(node is CodeNode)
+                Visit((CodeNode)node);
+            else if(node is TextChunk)
+                Visit((TextChunk)node);
+            else if(node is CodeChunk)
+                Visit((CodeChunk)node);
             else
                 throw new InvalidOperationException("unknown node");
         }

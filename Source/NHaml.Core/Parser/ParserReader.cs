@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Text;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
 
@@ -43,7 +44,7 @@ namespace NHaml.Core.Parser
 
         public AstNode CreateNode()
         {
-            return _markupRule != null ? _markupRule.Process(this) : new TextNode(Text);
+            return _markupRule != null ? _markupRule.Process(this) : ParseText(Text);
         }
 
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
@@ -66,9 +67,6 @@ namespace NHaml.Core.Parser
                 if(currentChild != null)
                     nodes.Insert(0, currentChild);
 
-                //if(nodes.Count == 1)
-                //  return nodes[0];
-
                 return new ChildrenNode(nodes);
             }
 
@@ -82,6 +80,76 @@ namespace NHaml.Core.Parser
                     return rule;
 
             return null;
+        }
+
+        public TextNode ParseText(string text)
+        {
+            return ParseText(new CharacterReader(text));
+        }
+
+        public TextNode ParseText(CharacterReader reader)
+        {
+            //Todo: extract to seperate class
+            var node = new TextNode();
+
+            var buffer = new StringBuilder();
+            while(reader.Read())
+                switch(reader.Current)
+                {
+                    case '\\':
+                    {
+                        if(reader.Next == '#')
+                            reader.Read(); // escaped # - eat \
+                        else if(reader.Next == '\\')
+                            reader.Read(); // escaped \ - eat \
+
+                        goto default;
+                    }
+                    case '#':
+                    {
+                        if(reader.Next == '{')
+                        {
+                            reader.Read(); // eat #
+
+                            if(buffer.Length > 0)
+                            {
+                                node.Chunks.Add(new TextChunk(buffer.ToString()));
+                                buffer = new StringBuilder();
+                            }
+
+                            while(reader.Read() && reader.Current != '}')
+                            {
+                                if(reader.Current == '\\')
+                                    if(reader.Next == '}')
+                                        reader.Read(); // escaped } - eat \
+                                    else if(reader.Next == '\\')
+                                        reader.Read(); // escaped \ - eat \
+
+                                buffer.Append(reader.Current);
+                            }
+
+                            if(buffer.Length > 0)
+                            {
+                                node.Chunks.Add(new CodeChunk(buffer.ToString()));
+                                buffer = new StringBuilder();
+                            }
+
+                            continue;
+                        }
+
+                        goto default;
+                    }
+                    default:
+                    {
+                        buffer.Append(reader.Current);
+                        break;
+                    }
+                }
+
+            if(buffer.Length > 0)
+                node.Chunks.Add(new TextChunk(buffer.ToString()));
+
+            return node;
         }
     }
 }

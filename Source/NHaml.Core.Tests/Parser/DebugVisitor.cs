@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text;
 using System.Web;
 using NHaml.Core.Ast;
 
@@ -11,7 +10,7 @@ namespace NHaml.Core.Tests.Parser
     {
         private TextWriter _writer;
 
-        public Dictionary<string,string> Locals = new Dictionary<string, string>();
+        public Dictionary<string, string> Locals = new Dictionary<string, string>();
 
         public DebugVisitor(TextWriter writer)
         {
@@ -119,21 +118,19 @@ namespace NHaml.Core.Tests.Parser
             Visit(node);
         }
 
-        public override void Visit(TagNode node)
+        private IEnumerable<AttributeNode> SortAndJoinAttributes(IEnumerable<AttributeNode> inputAttributes)
         {
-            _writer.Write("<{0}", node.Name);
-            
-            var queue = new List<AttributeNode>(node.Attributes);
-            
+            var queue = new List<AttributeNode>(inputAttributes);
+
             var attributes = new List<AttributeNode>();
-            while(queue.Count>0)
+            while(queue.Count > 0)
             {
                 var first = queue[0];
                 queue.RemoveAt(0);
                 attributes.Add(first);
 
                 var isId = first.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase);
-                
+
                 var buf = new List<string> {Capture(first.Value)};
 
                 foreach(var sameAtt in queue.FindAll(a => a.Name == first.Name))
@@ -145,17 +142,24 @@ namespace NHaml.Core.Tests.Parser
                 if(!isId)
                     buf.Sort((a1, a2) => a1.CompareTo(a2));
 
-                first.Value = new TextNode(string.Join(isId?"_":" ", buf.ToArray()));
+                first.Value = new TextNode(new TextChunk(string.Join(isId ? "_" : " ", buf.ToArray())));
             }
 
             attributes.Sort((a1, a2) => a1.Name.CompareTo(a2.Name));
 
-            foreach(var attribute in attributes)
+            return attributes;
+        }
+
+        public override void Visit(TagNode node)
+        {
+            _writer.Write("<{0}", node.Name);
+
+            foreach(var attribute in SortAndJoinAttributes(node.Attributes))
             {
                 _writer.Write(' ');
                 Visit(attribute);
             }
-            
+
             if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
             {
                 _writer.Write(" />");
@@ -171,7 +175,18 @@ namespace NHaml.Core.Tests.Parser
 
         public override void Visit(TextNode node)
         {
-            _writer.Write(node.Text);
+            foreach(var chunk in node.Chunks)
+                Visit(chunk);
+        }
+
+        public override void Visit(TextChunk chunk)
+        {
+            _writer.Write(chunk.Text);
+        }
+
+        public override void Visit(CodeChunk chunk)
+        {
+            WriteCode(chunk.Code);
         }
 
         public override void Visit(AttributeNode node)
@@ -196,7 +211,7 @@ namespace NHaml.Core.Tests.Parser
                     Indent++;
                     VisitAndIdentAllways(node.Child);
                     Indent--;
-                    
+
                     _writer.WriteLine(@"  //]]>");
                     _writer.WriteLine(@"</script>");
                     break;
@@ -255,13 +270,18 @@ namespace NHaml.Core.Tests.Parser
             _writer.Write("-->");
         }
 
-        public override void Visit(LocalNode node)
+        public override void Visit(CodeNode node)
+        {
+            WriteCode(node.Code);
+        }
+
+        private void WriteCode(string code)
         {
             string value;
-            if(Locals.TryGetValue(node.Name, out value))
+            if(Locals.TryGetValue(code, out value))
                 _writer.Write(value);
             else
-                _writer.Write("~notfound~");
+                _writer.Write("~~" + code + "~~");
         }
 
         public string Capture(AstNode node)

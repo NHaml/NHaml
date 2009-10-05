@@ -28,7 +28,7 @@ namespace NHaml.Core.Parser.Rules
 
             if(!reader.IsEndOfStream)
             {
-                node.Child = new TextNode(reader.ReadWhile(IsNameChar));
+                node.Child = parser.ParseText(reader.ReadWhile(IsNameChar));
             }
 
             node.Child = parser.ParseChildren(parser.Indent, node.Child);

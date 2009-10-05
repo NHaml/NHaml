@@ -15,7 +15,7 @@ namespace NHaml.Core.Tests
         {
             if(!string.IsNullOrEmpty(format)||
                 haml.Contains("=>")||
-                haml.Contains("#{"))
+                fullName=="interpolation inside code (interpolation)")
                 return;
 
             var output = new StringWriter();

@@ -28,8 +28,12 @@ namespace NHaml.Core.Parser
             get { return _reader.Peek() == -1; }
         }
 
+        public char Prev { get; private set; }
+
         public bool Read()
         {
+            Prev = Current;
+
             var value = _reader.Read();
 
             Current = (char)value;
@@ -65,12 +69,31 @@ namespace NHaml.Core.Parser
             {
                 if(!predicate(Current))
                     break;
-                
+
                 buffer.Append(Current);
             }
             while(Read());
 
             return buffer.ToString();
+        }
+
+        public void ReadWhiteSpaces()
+        {
+            ReadWhile(c => char.IsWhiteSpace(c));
+        }
+
+        public string ReadName()
+        {
+            return ReadWhile(IsNameChar);
+        }
+
+        public static bool IsNameChar(char ch)
+        {
+            return char.IsNumber(ch) ||
+                   char.IsLetter(ch) ||
+                   ch == '_' ||
+                   ch == '-' ||
+                   ch == ':';
         }
     }
 }

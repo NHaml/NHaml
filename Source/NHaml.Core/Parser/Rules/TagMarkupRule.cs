@@ -10,10 +10,10 @@ namespace NHaml.Core.Parser.Rules
             get { return new[] {"%", ".", "#"}; }
         }
 
-        public override AstNode Process(ParserReader parserReader)
+        public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parserReader.Text);
-            var indent = parserReader.Indent;
+            var reader = new CharacterReader(parser.Text);
+            var indent = parser.Indent;
             TagNode node;
 
             if(!reader.Read())
@@ -45,7 +45,7 @@ namespace NHaml.Core.Parser.Rules
                             node.Attributes.Add(attribute);
                         }
 
-                        attribute.Value = new TextNode(reader.ReadWhile(IsNameChar));
+                        attribute.Value = parser.ParseText(reader.ReadWhile(IsNameChar));
 
                         continue;
                     }
@@ -55,75 +55,92 @@ namespace NHaml.Core.Parser.Rules
 
                         node.Attributes.Add(new AttributeNode("class")
                         {
-                            Value = new TextNode(reader.ReadWhile(IsNameChar))
+                            Value = parser.ParseText(reader.ReadWhile(IsNameChar))
                         });
 
                         continue;
                     }
-                        /*case '{':
+                    case '=':
                     {
-                        throw new NotSupportedException();
-                    }*/
+                        reader.Read(); // eat =
+
+                        reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                        node.Child = new CodeNode(reader.ReadToEnd());
+
+                        break;
+                    }
                     case '(':
                     {
-                        reader.Read(); // eat (
-
-                        while(reader.Current != ')')
-                        {
-                            reader.ReadWhile(c => char.IsWhiteSpace(c));
-
-                            if(reader.IsEndOfStream)
-                            {
-                                if(!parserReader.Read())
-                                    break;
-                                
-                                reader = new CharacterReader(parserReader.Text);
-                                reader.Read();
-                            }
-
-                            var name = reader.ReadWhile(IsNameChar);
-
-                            reader.ReadWhile(c => char.IsWhiteSpace(c));
-
-                            //Todo: report error when there is no =
-                            reader.Read(); // =
-
-                            reader.ReadWhile(c => char.IsWhiteSpace(c));
-
-                            var attribute = new AttributeNode(name);
-                            node.Attributes.Add(attribute);
-                            switch(reader.Current)
-                            {
-                                case '\'':
-                                {
-                                    reader.Read(); // skip '
-                                    attribute.Value = new TextNode(reader.ReadWhile(c => c != '\''));
-                                    reader.Read(); // skip '
-                                    break;
-                                }
-
-                                default:
-                                {
-                                    attribute.Value = new LocalNode(reader.ReadWhile(IsNameChar));
-                                    break;
-                                }
-                            }
-                        }
-
+                        ParseAttributes(node, ref reader, parser);
                         break;
                     }
                     default:
                     {
                         var text = reader.Current + reader.ReadToEnd();
-                        node.Child = new TextNode(text.TrimStart()) {IsInline = true};
+                        node.Child = parser.ParseText(text.TrimStart());
 
                         break;
                     }
                 }
 
-            node.Child = parserReader.ParseChildren(indent, node.Child);
+            node.Child = parser.ParseChildren(indent, node.Child);
 
             return node;
+        }
+
+        public void ParseAttributes(TagNode node,ref CharacterReader reader,ParserReader parser)
+        {
+            reader.Read(); // eat (
+
+            while(reader.Current != ')')
+            {
+                reader.ReadWhiteSpaces();
+
+                if(reader.IsEndOfStream)
+                {
+                    if(!parser.Read())
+                        break;
+
+                    reader = new CharacterReader(parser.Text);
+                    reader.Read();
+                }
+
+                var name = reader.ReadName();
+
+                reader.ReadWhile(c => char.IsWhiteSpace(c));
+
+                //Todo: report error when there is no =
+                reader.Read(); // =
+
+                reader.ReadWhiteSpaces();
+
+                var attribute = new AttributeNode(name);
+                node.Attributes.Add(attribute);
+                switch(reader.Current)
+                {
+                    case '\'':
+                    {
+                        reader.Read(); // skip '
+                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '\''));
+                        reader.Read(); // skip '
+                        break;
+                    }
+                    case '"':
+                    {
+                        reader.Read(); // skip "
+                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '"'));
+                        reader.Read(); // skip "
+                        break;
+                    }
+                    default:
+                    {
+                        attribute.Value = new CodeNode(reader.ReadWhile(IsNameChar));
+                        break;
+                    }
+                }
+            }
+
         }
     }
 }

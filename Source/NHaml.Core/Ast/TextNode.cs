@@ -1,18 +1,23 @@
 using System;
+using System.Collections.Generic;
 
 namespace NHaml.Core.Ast
 {
     public class TextNode : AstNode
     {
-        public TextNode(string text)
+        public TextNode()
         {
-            if(text == null)
-                throw new ArgumentNullException("text");
-
-            Text = text;
+            Chunks = new List<ChunkNodeBase>();
         }
 
-        public string Text { get; set; }
-        public bool IsInline { get; set; }
+        public TextNode(ChunkNodeBase chunk)
+        {
+            if(chunk == null)
+                throw new ArgumentNullException("chunk");
+
+            Chunks = new List<ChunkNodeBase> {chunk};
+        }
+
+        public List<ChunkNodeBase> Chunks { get; private set; }
     }
 }

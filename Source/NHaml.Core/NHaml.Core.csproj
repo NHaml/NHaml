@@ -49,13 +49,16 @@
     <Compile Include="Ast\AstNode.cs" />
     <Compile Include="Ast\AttributeNode.cs" />
     <Compile Include="Ast\ChildrenNode.cs" />
+    <Compile Include="Ast\ChunkNodeBase.cs" />
+    <Compile Include="Ast\CodeChunk.cs" />
     <Compile Include="Ast\CommentNode.cs" />
     <Compile Include="Ast\ConditionalCommentNode.cs" />
     <Compile Include="Ast\DocTypeNode.cs" />
     <Compile Include="Ast\DocumentNode.cs" />
     <Compile Include="Ast\FilterNode.cs" />
-    <Compile Include="Ast\LocalNode.cs" />
+    <Compile Include="Ast\CodeNode.cs" />
     <Compile Include="Ast\TagNode.cs" />
+    <Compile Include="Ast\TextChunk.cs" />
     <Compile Include="Ast\TextNode.cs" />
     <Compile Include="Ast\NodeVisitorBase.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
