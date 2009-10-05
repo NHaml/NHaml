@@ -18,7 +18,7 @@ namespace NHaml.Core.Parser.Rules
 
             var node = new FilterNode(name);
 
-            node.Child = parserReader.ParseChildren(parserReader.Indent, node.Child);
+            node.Child = parserReader.ParseLines(parserReader.Indent, node.Child);
             
             return node;
         }

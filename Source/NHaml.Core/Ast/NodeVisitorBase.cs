@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 
 namespace NHaml.Core.Ast
 {
@@ -72,6 +73,7 @@ namespace NHaml.Core.Ast
         {
         }
 
+        [DebuggerStepThrough]
         public virtual void Visit(AstNode node)
         {
             if(node == null)

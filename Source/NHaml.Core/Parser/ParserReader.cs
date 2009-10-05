@@ -73,6 +73,33 @@ namespace NHaml.Core.Parser
             return currentChild;
         }
 
+        public AstNode ParseLines(int baseIdentation, AstNode currentChild)
+        {
+            var nodes = new List<AstNode>();
+
+            while(Read())
+            {
+                var node = ParseText(new CharacterReader(Text));
+
+                if(node != null)
+                    nodes.Add(node);
+
+                if(_reader.Next != null && _reader.Next.Indent <= baseIdentation)
+                    break;
+            }
+
+            if(nodes.Count > 0)
+            {
+                if(currentChild != null)
+                    nodes.Insert(0, currentChild);
+
+                return new ChildrenNode(nodes);
+            }
+
+            return currentChild;
+        }
+
+
         private MarkupRuleBase FindMarkupRule(string text)
         {
             foreach(var rule in _rules)
@@ -148,6 +175,9 @@ namespace NHaml.Core.Parser
 
             if(buffer.Length > 0)
                 node.Chunks.Add(new TextChunk(buffer.ToString()));
+
+            if(node.Chunks.Count == 0)
+                return null;
 
             return node;
         }

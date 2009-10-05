@@ -78,6 +78,22 @@ namespace NHaml.Core.Tests.Parser
             VisitAndIdentAllways(node);
         }
 
+        public override void Visit(DocumentNode node)
+        {
+            Indent++;
+
+            bool first = true;
+            foreach(var chield in node.Childs)
+            {
+                if(!first)
+                    _writer.WriteLine();
+                Visit(chield);
+                first = false;
+            }
+
+            Indent--;
+        }
+
         private void VisitAndIdentAllways(AstNode node)
         {
             if(node == null)
@@ -213,23 +229,22 @@ namespace NHaml.Core.Tests.Parser
                     Indent--;
 
                     _writer.WriteLine(@"  //]]>");
-                    _writer.WriteLine(@"</script>");
+                    _writer.Write(@"</script>");
                     break;
                 }
                 case "preserve":
                 {
                     var replace = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
 
-                    if(!replace.Contains(_writer.NewLine))
-                        replace += _writer.NewLine;
+                    replace += _writer.NewLine;
 
-                    _writer.WriteLine(replace.Replace(_writer.NewLine, "&#x000A;"));
+                    _writer.Write(replace.Replace(_writer.NewLine, "&#x000A;"));
 
                     break;
                 }
                 case "plain":
                 {
-                    _writer.WriteLine(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)));
+                    _writer.Write(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)));
                     break;
                 }
 
