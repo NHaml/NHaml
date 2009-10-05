@@ -11,12 +11,21 @@ namespace NHaml.Core.Tests.Helpers
 {
     public class HamlSpecTheoryAttribute : FactAttribute
     {
+        private readonly string _specName;
+
+        public HamlSpecTheoryAttribute(string specName)
+        {
+            if(specName == null)
+                throw new ArgumentNullException("specName");
+            _specName = specName;
+        }
+
         private string _jsonTests;
 
         protected override IEnumerable<ITestCommand> EnumerateTestCommands(IMethodInfo method)
         {
             var testType = method.MethodInfo.DeclaringType;
-            var resourceName = testType.Namespace + ".tests.json";
+            var resourceName = testType.Namespace + "."+_specName;
             var resourceStream = testType.Assembly.GetManifestResourceStream(resourceName);
 
             if(resourceStream == null)

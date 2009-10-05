@@ -57,6 +57,27 @@ namespace NHaml.Core.Tests.Parser
         }
 
         [Fact]
+        public void ReadsTwoAtStart()
+        {
+            var reader = new CharacterReader("abcd");
+            
+            reader.Read(2);
+
+            Assert.Equal('b',reader.Current);
+        }
+
+        [Fact]
+        public void ReadsTwo()
+        {
+            var reader = new CharacterReader("abcd");
+            reader.Read();
+
+            reader.Read(2);
+
+            Assert.Equal('c', reader.Current);
+        }
+
+        [Fact]
         public void ReadToEndReadsTest()
         {
             var reader = new CharacterReader("1test");

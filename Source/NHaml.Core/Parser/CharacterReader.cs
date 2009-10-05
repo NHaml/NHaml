@@ -50,7 +50,7 @@ namespace NHaml.Core.Parser
                 if(!Read())
                     return false;
 
-            return Read();
+            return true;
         }
 
         public string ReadToEnd()

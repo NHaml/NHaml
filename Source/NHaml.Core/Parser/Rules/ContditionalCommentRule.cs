@@ -13,7 +13,7 @@ namespace NHaml.Core.Parser.Rules
         public override AstNode Process(ParserReader parser)
         {
             var reader = new CharacterReader(parser.Text);
-            reader.Read(2); // eat /[
+            reader.Read(3); // eat /[
 
             var node = new ConditionalCommentNode();
 

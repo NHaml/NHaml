@@ -82,11 +82,12 @@ namespace NHaml.Core.Tests.Parser
         {
             Indent++;
 
-            bool first = true;
+            var first = true;
             foreach(var chield in node.Childs)
             {
                 if(!first)
                     _writer.WriteLine();
+                
                 Visit(chield);
                 first = false;
             }
@@ -292,6 +293,12 @@ namespace NHaml.Core.Tests.Parser
 
         private void WriteCode(string code)
         {
+            if(code=="1")
+            {
+                _writer.Write(code);
+                return;
+            }
+
             string value;
             if(Locals.TryGetValue(code, out value))
                 _writer.Write(value);

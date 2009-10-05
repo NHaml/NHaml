@@ -14,7 +14,7 @@ namespace NHaml.Core.Parser.Rules
         {
             var reader = new CharacterReader(parser.Text);
 
-            reader.Read(3); // skip !!!
+            reader.Read(4); // skip !!!
 
             var node = new DocTypeNode();
 
