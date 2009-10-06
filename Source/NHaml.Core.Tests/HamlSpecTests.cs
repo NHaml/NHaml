@@ -2,7 +2,6 @@ using System;
 using System.Diagnostics;
 using System.IO;
 using NHaml.Core.Tests.Helpers;
-using NHaml.Core.Tests.Parser;
 using Xunit;
 
 namespace NHaml.Core.Tests

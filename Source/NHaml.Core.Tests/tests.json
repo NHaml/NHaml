@@ -149,6 +149,10 @@
       "html" : "<div class='class1'></div>"
     }
 
+    "for simple tags in more lines" : {
+      "haml" : "%div\n  %div\n    %p",
+      "html" : "<div>\n  <div>\n    <p></p>\n  </div>\n</div>"
+	}
   },
 
   "tags with unusual HTML characters" : {
@@ -209,7 +213,11 @@
       "haml" : "%p.class1 hello",
       "html" : "<p class='class1'>hello</p>"
     }
-
+	
+    "multiple tags" : {
+      "haml" : "%div\n  %div\n    %p text",
+      "html" : "<div>\n  <div>\n    <p>text</p>\n  </div>\n</div>"
+    }
   },
 
   "tags with nested content" : {
@@ -224,6 +232,10 @@
       "html" : "<p class='class1'>\n  hello\n</p>"
     }
 
+    "multiple tags" : {
+      "haml" : "%div\n  %div\n    %p\n      text",
+      "html" : "<div>\n  <div>\n    <p>\n      text\n    </p>\n  </div>\n</div>"
+    }
   },
 
   "tags with HTML-style attributes": {

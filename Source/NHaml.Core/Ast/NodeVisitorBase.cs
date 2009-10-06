@@ -5,16 +5,10 @@ namespace NHaml.Core.Ast
 {
     public abstract class NodeVisitorBase
     {
-        public int Indent { get; set; }
-
         public virtual void Visit(DocumentNode node)
         {
-            Indent++;
-
             foreach(var chield in node.Childs)
                 Visit(chield);
-
-            Indent--;
         }
 
         public virtual void Visit(TagNode node)

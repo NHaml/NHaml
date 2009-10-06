@@ -4,10 +4,12 @@ using System.IO;
 using System.Web;
 using NHaml.Core.Ast;
 
-namespace NHaml.Core.Tests.Parser
+namespace NHaml.Core.Tests
 {
     public class DebugVisitor : NodeVisitorBase
     {
+        public int Indent { get; set; }
+
         private TextWriter _writer;
 
         public Dictionary<string, string> Locals = new Dictionary<string, string>();
@@ -20,9 +22,17 @@ namespace NHaml.Core.Tests.Parser
             _writer = writer;
         }
 
-        public void WriteIndent()
+        public override void Visit(DocumentNode node)
         {
-            _writer.Write(new String(' ', Indent*2));
+            var first = true;
+            foreach(var chield in node.Childs)
+            {
+                if(!first)
+                    _writer.WriteLine();
+
+                Visit(chield);
+                first = false;
+            }
         }
 
         public override void Visit(DocTypeNode node)
@@ -75,24 +85,147 @@ namespace NHaml.Core.Tests.Parser
 
         public override void Visit(ChildrenNode node)
         {
-            VisitAndIdentAllways(node);
-        }
-
-        public override void Visit(DocumentNode node)
-        {
             Indent++;
 
-            var first = true;
-            foreach(var chield in node.Childs)
-            {
-                if(!first)
-                    _writer.WriteLine();
-                
-                Visit(chield);
-                first = false;
-            }
+            VisitAndIdentAllways(node);
 
             Indent--;
+            WriteIndent();
+        }
+
+        public override void Visit(TagNode node)
+        {
+            _writer.Write("<{0}", node.Name);
+
+            foreach(var attribute in SortAndJoinAttributes(node.Attributes))
+            {
+                _writer.Write(' ');
+                Visit(attribute);
+            }
+
+            if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
+            {
+                _writer.Write(" />");
+                return;
+            }
+
+            _writer.Write(">");
+
+            Visit(node.Child);
+
+            _writer.Write("</{0}>", node.Name);
+
+        }
+
+        public override void Visit(TextNode node)
+        {
+            foreach(var chunk in node.Chunks)
+                Visit(chunk);
+        }
+
+        public override void Visit(TextChunk chunk)
+        {
+            _writer.Write(chunk.Text);
+        }
+
+        public override void Visit(CodeChunk chunk)
+        {
+            WriteCode(chunk.Code);
+        }
+
+        public override void Visit(AttributeNode node)
+        {
+            _writer.Write(node.Name);
+            _writer.Write("='");
+
+            base.Visit(node);
+
+            _writer.Write("'");
+        }
+
+        public override void Visit(FilterNode node)
+        {
+            switch(node.Name)
+            {
+                case "javascript":
+                {
+                    _writer.WriteLine(@"<script type='text/javascript'>");
+                    Indent++;
+                    WriteIndent();
+                    _writer.Write(@"//<![CDATA[");
+
+                    Indent++;
+                    VisitAndIdentAllways(node.Child);
+                    Indent--;
+
+                    WriteIndent();
+                    _writer.WriteLine(@"//]]>");
+                    
+                    Indent--;
+                    WriteIndent();
+                    _writer.Write(@"</script>");
+                    break;
+                }
+                case "preserve":
+                {
+                    var replace = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
+
+                    replace += _writer.NewLine;
+
+                    _writer.Write(replace.Replace(_writer.NewLine, "&#x000A;"));
+
+                    break;
+                }
+                case "plain":
+                {
+                    _writer.Write(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)));
+                    break;
+                }
+
+                case "escaped":
+                {
+                    var text = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
+                    _writer.Write(HttpUtility.HtmlEncode(text));
+                    break;
+                }
+                default:
+                    throw new Exception("filter not found");
+            }
+        }
+
+        public override void Visit(ConditionalCommentNode node)
+        {
+            _writer.Write("<!--[{0}]>", node.Condition);
+
+            Indent++;
+
+            VisitAndIdentAllways(node.Child);
+
+            Indent--;
+
+            _writer.Write("<![endif]-->");
+        }
+
+        public override void Visit(CommentNode node)
+        {
+            _writer.Write("<!--");
+
+            var space = !( node.Child is ChildrenNode );
+
+            if(space)
+                _writer.Write(' ');
+
+            base.Visit(node);
+
+            if(space)
+                _writer.Write(' ');
+
+            _writer.Write("-->");
+        }
+
+        public override void Visit(CodeNode node)
+        {
+            WriteCode(node.Code);
         }
 
         private void VisitAndIdentAllways(AstNode node)
@@ -167,133 +300,14 @@ namespace NHaml.Core.Tests.Parser
             return attributes;
         }
 
-        public override void Visit(TagNode node)
+        private void WriteIndent()
         {
-            _writer.Write("<{0}", node.Name);
-
-            foreach(var attribute in SortAndJoinAttributes(node.Attributes))
-            {
-                _writer.Write(' ');
-                Visit(attribute);
-            }
-
-            if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
-            {
-                _writer.Write(" />");
-                return;
-            }
-
-            _writer.Write(">");
-
-            Visit(node.Child);
-
-            _writer.Write("</{0}>", node.Name);
-        }
-
-        public override void Visit(TextNode node)
-        {
-            foreach(var chunk in node.Chunks)
-                Visit(chunk);
-        }
-
-        public override void Visit(TextChunk chunk)
-        {
-            _writer.Write(chunk.Text);
-        }
-
-        public override void Visit(CodeChunk chunk)
-        {
-            WriteCode(chunk.Code);
-        }
-
-        public override void Visit(AttributeNode node)
-        {
-            _writer.Write(node.Name);
-            _writer.Write("='");
-
-            base.Visit(node);
-
-            _writer.Write("'");
-        }
-
-        public override void Visit(FilterNode node)
-        {
-            switch(node.Name)
-            {
-                case "javascript":
-                {
-                    _writer.WriteLine(@"<script type='text/javascript'>");
-                    _writer.Write(@"  //<![CDATA[");
-
-                    Indent++;
-                    VisitAndIdentAllways(node.Child);
-                    Indent--;
-
-                    _writer.WriteLine(@"  //]]>");
-                    _writer.Write(@"</script>");
-                    break;
-                }
-                case "preserve":
-                {
-                    var replace = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
-
-                    replace += _writer.NewLine;
-
-                    _writer.Write(replace.Replace(_writer.NewLine, "&#x000A;"));
-
-                    break;
-                }
-                case "plain":
-                {
-                    _writer.Write(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)));
-                    break;
-                }
-
-                case "escaped":
-                {
-                    var text = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
-                    _writer.Write(HttpUtility.HtmlEncode(text));
-                    break;
-                }
-                default:
-                    throw new Exception("filter not found");
-            }
-        }
-
-        public override void Visit(ConditionalCommentNode node)
-        {
-            _writer.Write("<!--[{0}]>", node.Condition);
-
-            VisitAndIdentAllways(node.Child);
-
-            _writer.Write("<![endif]-->");
-        }
-
-        public override void Visit(CommentNode node)
-        {
-            _writer.Write("<!--");
-
-            var space = !( node.Child is ChildrenNode );
-
-            if(space)
-                _writer.Write(' ');
-
-            base.Visit(node);
-
-            if(space)
-                _writer.Write(' ');
-
-            _writer.Write("-->");
-        }
-
-        public override void Visit(CodeNode node)
-        {
-            WriteCode(node.Code);
+            _writer.Write(new String(' ', Indent*2));
         }
 
         private void WriteCode(string code)
         {
-            if(code=="1")
+            if(code == "1")
             {
                 _writer.Write(code);
                 return;
