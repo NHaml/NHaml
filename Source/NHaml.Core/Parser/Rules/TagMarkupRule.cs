@@ -13,22 +13,12 @@ namespace NHaml.Core.Parser.Rules
         public override AstNode Process(ParserReader parser)
         {
             var reader = new CharacterReader(parser.Text);
-            var indent = parser.Indent;
-            TagNode node;
+            var baseIndent = parser.Indent;
 
-            if(!reader.Read())
+            if(!reader.Read()) // initial read
                 return null;
 
-            if(reader.Current == '%')
-            {
-                reader.Read(); // eat %
-
-                var name = reader.ReadWhile(IsNameChar);
-
-                node = new TagNode(name);
-            }
-            else
-                node = new TagNode("div");
+            var node = CreateTagNode(reader);
 
             while(!reader.IsEndOfStream)
                 switch(reader.Current)
@@ -77,21 +67,36 @@ namespace NHaml.Core.Parser.Rules
                     }
                     case '{':
                     {
-
                         ParseRubyLikeAttributes(node, ref reader, parser);
                         break;
                     }
                     default:
                     {
-                        var text = reader.Current + reader.ReadToEnd();
+                        var text = reader.ReadToEnd();
                         node.Child = parser.ParseText(text.TrimStart());
 
                         break;
                     }
                 }
 
-            node.Child = parser.ParseChildren(indent, node.Child);
+            node.Child = parser.ParseChildren(baseIndent, node.Child);
 
+            return node;
+        }
+
+        private static TagNode CreateTagNode(CharacterReader reader)
+        {
+            TagNode node;
+            if(reader.Current == '%')
+            {
+                reader.Read(); // eat %
+
+                var name = reader.ReadWhile(IsNameChar);
+
+                node = new TagNode(name);
+            }
+            else
+                node = new TagNode("div");
             return node;
         }
 
@@ -146,8 +151,8 @@ namespace NHaml.Core.Parser.Rules
                     }
                 }
             }
-
         }
+
         public void ParseRubyLikeAttributes(TagNode node, ref CharacterReader reader, ParserReader parser)
         {
             reader.Read(); // eat {
@@ -166,23 +171,22 @@ namespace NHaml.Core.Parser.Rules
                 }
 
                 string name = null;
-                if(reader.Current == ':')
+                switch(reader.Current)
                 {
-                    reader.Read(); // eat :
-                    name = reader.ReadName();
+                    case ':':
+                        reader.Read(); // eat :
+                        name = reader.ReadName();
+                        break;
+                    case '\'':
+                        reader.Read(); // eat '
+                        name = reader.ReadWhile(c => c != '\'');
+                        reader.Read(); // eat '
+                        break;
+                    default:
+                        reader.Read(); // eat char
+                        break;
                 }
-                else if(reader.Current == '\'')
-                {
-                    reader.Read(); // eat '
-                    name = reader.ReadWhile(c => c != '\'');
-                    reader.Read(); // eat '
-                }
-                else
-                {
-                    // report error
-                    reader.Read(); // eat char
-                }
-                
+
                 reader.ReadWhiteSpaces();
 
                 //Todo: report error when there is no =>
@@ -217,15 +221,12 @@ namespace NHaml.Core.Parser.Rules
 
                 reader.ReadWhiteSpaces();
 
-                if(reader.Current!='}')
-                {
-                    //if(reader.Current!='}'&&reader.Current!=',')
-                    // report error here
+                //if(reader.Current!='}'&&reader.Current!=',')
+                // report error here
 
+                if(reader.Current != '}')
                     reader.Read(); // eat ,
-                }
             }
-
         }
     }
 }

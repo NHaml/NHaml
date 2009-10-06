@@ -47,7 +47,7 @@ namespace NHaml.Core.Parser
 
             while(parserReader.Read())
             {
-                var node = parserReader.CreateNode();
+                var node = parserReader.ParseNode();
                 if(node != null)
                     document.Childs.Add(node);
             }

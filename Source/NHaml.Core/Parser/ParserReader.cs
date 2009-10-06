@@ -30,6 +30,8 @@ namespace NHaml.Core.Parser
             get { return _reader.Current == null; }
         }
 
+        public CharacterReader Characters { get; private set; }
+
         public bool Read()
         {
             if(!_reader.Read())
@@ -37,49 +39,34 @@ namespace NHaml.Core.Parser
 
             _markupRule = FindMarkupRule(_reader.Current.Text);
             Text = _reader.Current.Text;
+            Characters = new CharacterReader(Text);
             Indent = _reader.Current.Indent;
 
             return true;
         }
 
-        public AstNode CreateNode()
+        public AstNode ParseNode()
         {
             return _markupRule != null ? _markupRule.Process(this) : ParseText(Text);
         }
 
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
         {
-            var nodes = new List<AstNode>();
-
-            while(Read())
-            {
-                var node = CreateNode();
-
-                if(node != null)
-                    nodes.Add(node);
-
-                if(_reader.Next != null && _reader.Next.Indent <= baseIdentation)
-                    break;
-            }
-
-            if(nodes.Count > 0)
-            {
-                if(currentChild != null)
-                    nodes.Insert(0, currentChild);
-
-                return new ChildrenNode(nodes);
-            }
-
-            return currentChild;
+            return ParseChildren(baseIdentation, currentChild, ParseNode);
         }
 
         public AstNode ParseLines(int baseIdentation, AstNode currentChild)
+        {
+            return ParseChildren(baseIdentation, currentChild, () => ParseText(Characters));
+        }
+
+        public AstNode ParseChildren(int baseIdentation, AstNode currentChild, Func<AstNode> parser)
         {
             var nodes = new List<AstNode>();
 
             while(Read())
             {
-                var node = ParseText(new CharacterReader(Text));
+                var node = parser();
 
                 if(node != null)
                     nodes.Add(node);
@@ -98,7 +85,6 @@ namespace NHaml.Core.Parser
 
             return currentChild;
         }
-
 
         private MarkupRuleBase FindMarkupRule(string text)
         {
