@@ -13,12 +13,14 @@ namespace NHaml.Core.Parser.Rules
         {
             if(parser.Text.StartsWith("-#"))
             {
+                // skip all children
                 parser.ParseChildren(parser.Indent, null);
                 return null;
             }
 
             var node = new CommentNode();
             var reader = new CharacterReader(parser.Text);
+            
             reader.Read(2); // eat /
 
             ReadConditionIfExists(reader, node);

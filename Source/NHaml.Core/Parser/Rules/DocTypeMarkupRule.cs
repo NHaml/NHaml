@@ -20,7 +20,7 @@ namespace NHaml.Core.Parser.Rules
 
             if(!reader.IsEndOfStream)
             {
-                reader.ReadWhile(c => char.IsWhiteSpace(c));
+                reader.ReadWhiteSpaces();
 
                 node.Text = reader.ReadToEnd();
             }
