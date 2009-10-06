@@ -49,12 +49,6 @@ namespace NHaml.Core.Ast
         {
         }
 
-        public virtual void Visit(ConditionalCommentNode node)
-        {
-            if(node.Child != null)
-                Visit(node.Child);
-        }
-
         public virtual void Visit(CodeNode node)
         {
         }
@@ -87,8 +81,6 @@ namespace NHaml.Core.Ast
                 Visit((AttributeNode)node);
             else if(node is DocTypeNode)
                 Visit((DocTypeNode)node);
-            else if(node is ConditionalCommentNode)
-                Visit((ConditionalCommentNode)node);
             else if(node is CodeNode)
                 Visit((CodeNode)node);
             else if(node is TextChunk)

@@ -187,34 +187,36 @@ namespace NHaml.Core.Tests
             }
         }
 
-        public override void Visit(ConditionalCommentNode node)
-        {
-            _writer.Write("<!--[{0}]>", node.Condition);
-
-            Indent++;
-
-            VisitAndIdentAllways(node.Child);
-
-            Indent--;
-
-            _writer.Write("<![endif]-->");
-        }
-
         public override void Visit(CommentNode node)
         {
-            _writer.Write("<!--");
+            if(string.IsNullOrEmpty(node.Condition))
+            {
+                _writer.Write("<!--");
 
-            var space = !( node.Child is ChildrenNode );
+                var space = !(node.Child is ChildrenNode);
 
-            if(space)
-                _writer.Write(' ');
+                if(space)
+                    _writer.Write(' ');
 
-            base.Visit(node);
+                base.Visit(node);
 
-            if(space)
-                _writer.Write(' ');
+                if(space)
+                    _writer.Write(' ');
 
-            _writer.Write("-->");
+                _writer.Write("-->");
+            }
+            else
+            {
+                _writer.Write("<!--[{0}]>", node.Condition);
+
+                Indent++;
+
+                VisitAndIdentAllways(node.Child);
+
+                Indent--;
+
+                _writer.Write("<![endif]-->");   
+            }
         }
 
         public override void Visit(CodeNode node)

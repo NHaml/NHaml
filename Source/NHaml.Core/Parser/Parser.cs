@@ -14,7 +14,6 @@ namespace NHaml.Core.Parser
             {
                 new DocTypeMarkupRule(),
                 new TagMarkupRule(),
-                new ContditionalCommentRule(),
                 new CommentRule(),
                 new FilterRule()
             };

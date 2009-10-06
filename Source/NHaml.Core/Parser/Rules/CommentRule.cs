@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using NHaml.Core.Ast;
 
 namespace NHaml.Core.Parser.Rules
@@ -8,7 +6,7 @@ namespace NHaml.Core.Parser.Rules
     {
         public override string[] Signifiers
         {
-            get { return new[] { "/", "-#" }; }
+            get { return new[] {"/", "-#"}; }
         }
 
         public override AstNode Process(ParserReader parser)
@@ -21,19 +19,28 @@ namespace NHaml.Core.Parser.Rules
 
             var node = new CommentNode();
             var reader = new CharacterReader(parser.Text);
-            reader.Read();
-            reader.Read(); // eat /
+            reader.Read(2); // eat /
 
-            reader.ReadWhile(c=>char.IsWhiteSpace(c));
+            ReadConditionIfExists(reader, node);
+
+            reader.ReadWhiteSpaces();
 
             if(!reader.IsEndOfStream)
-            {
-                node.Child = parser.ParseText(reader.ReadWhile(IsNameChar));
-            }
+                node.Child = parser.ParseText(reader.ReadName());
 
             node.Child = parser.ParseChildren(parser.Indent, node.Child);
 
             return node;
+        }
+
+        private static void ReadConditionIfExists(CharacterReader reader, CommentNode node)
+        {
+            if(reader.Current != '[')
+                return;
+            
+            reader.Read(); // eat [
+
+            node.Condition = reader.ReadWhile(c => c != ']');
         }
     }
 }
