@@ -37,50 +37,44 @@ namespace NHaml.Core.Tests
 
         public override void Visit(DocTypeNode node)
         {
-            if(string.IsNullOrEmpty(node.Text))
-            {
-                _writer.Write(
-                    @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">");
-                return;
-            }
+            _writer.Write(GetDocType(node.Text));
+        }
 
-            switch(node.Text)
+        private static string GetDocType( string id )
+        {
+            if(string.IsNullOrEmpty(id))
+                return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">";
+
+            switch(id)
             {
                 case "1.1":
                 {
-                    _writer.Write(@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">");
-                    break;
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">";
                 }
                 case "frameset":
                 {
-                    _writer.Write(
-                        @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Frameset//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"">");
-                    break;
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Frameset//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"">";
                 }
                 case "basic":
                 {
-                    _writer.Write(@"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML Basic 1.1//EN"" ""http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"">");
-                    break;
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML Basic 1.1//EN"" ""http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"">";
                 }
                 case "XML":
                 {
-                    _writer.Write(@"<?xml version='1.0' encoding='utf-8' ?>");
-                    break;
+                    return @"<?xml version='1.0' encoding='utf-8' ?>";
                 }
                 case "strict":
                 {
-                    _writer.Write(@"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">");
-                    break;
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">";
                 }
                 case "mobile":
                 {
-                    _writer.Write(
-                        @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">");
-                    break;
+                    return @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">";
                 }
                 default:
-                    throw new Exception("unknown doctype");
+                throw new Exception("unknown doctype");
             }
+
         }
 
         public override void Visit(ChildrenNode node)
