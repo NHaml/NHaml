@@ -6,9 +6,14 @@ namespace NHaml.Core.Parser
 {
     public class CharacterReader
     {
-        private readonly StringReader _reader;
+        private StringReader _reader;
 
         public CharacterReader(string text)
+        {
+            Initialize(text);
+        }
+
+        public void Initialize(string text)
         {
             if(text == null)
                 throw new ArgumentNullException("text");

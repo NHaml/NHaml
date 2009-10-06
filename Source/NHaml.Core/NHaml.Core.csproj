@@ -61,12 +61,12 @@
     <Compile Include="Ast\TextNode.cs" />
     <Compile Include="Ast\NodeVisitorBase.cs" />
     <Compile Include="Exceptions\ParserException.cs" />
-    <Compile Include="Parser\AttributeReader.cs" />
     <Compile Include="Parser\InputLine.cs" />
     <Compile Include="Parser\InputLineReader.cs" />
     <Compile Include="Parser\Parser.cs" />
     <Compile Include="Parser\ParserReader.cs" />
     <Compile Include="Parser\CharacterReader.cs" />
+    <Compile Include="Parser\AttributeParser.cs" />
     <Compile Include="Parser\Rules\CommentRule.cs" />
     <Compile Include="Parser\Rules\DocTypeMarkupRule.cs" />
     <Compile Include="Parser\Rules\FilterRule.cs" />

@@ -13,12 +13,13 @@ namespace NHaml.Core.Parser.Rules
         public override AstNode Process(ParserReader parser)
         {
             var reader = new CharacterReader(parser.Text);
+            var attributeParser = new AttributeParser(reader, parser);
             var baseIndent = parser.Indent;
 
             if(!reader.Read()) // initial read
                 return null;
 
-            var node = CreateTagNode(reader);
+            var node = ReadTagNode(reader);
 
             while(!reader.IsEndOfStream)
                 switch(reader.Current)
@@ -35,7 +36,7 @@ namespace NHaml.Core.Parser.Rules
                             node.Attributes.Add(attribute);
                         }
 
-                        attribute.Value = parser.ParseText(reader.ReadWhile(IsNameChar));
+                        attribute.Value = parser.ParseText(reader.ReadName());
 
                         continue;
                     }
@@ -45,7 +46,7 @@ namespace NHaml.Core.Parser.Rules
 
                         node.Attributes.Add(new AttributeNode("class")
                         {
-                            Value = parser.ParseText(reader.ReadWhile(IsNameChar))
+                            Value = parser.ParseText(reader.ReadName())
                         });
 
                         continue;
@@ -54,7 +55,7 @@ namespace NHaml.Core.Parser.Rules
                     {
                         reader.Read(); // eat =
 
-                        reader.ReadWhile(c => char.IsWhiteSpace(c));
+                        reader.ReadWhiteSpaces();
 
                         node.Child = new CodeNode(reader.ReadToEnd());
 
@@ -62,12 +63,12 @@ namespace NHaml.Core.Parser.Rules
                     }
                     case '(':
                     {
-                        ParseAttributes(node, ref reader, parser);
+                        node.Attributes.AddRange(attributeParser.ParseHtmlStyle());
                         break;
                     }
                     case '{':
                     {
-                        ParseRubyLikeAttributes(node, ref reader, parser);
+                        node.Attributes.AddRange(attributeParser.ParseRubyStyle());
                         break;
                     }
                     default:
@@ -84,149 +85,18 @@ namespace NHaml.Core.Parser.Rules
             return node;
         }
 
-        private static TagNode CreateTagNode(CharacterReader reader)
+        private static TagNode ReadTagNode(CharacterReader reader)
         {
-            TagNode node;
             if(reader.Current == '%')
             {
                 reader.Read(); // eat %
 
-                var name = reader.ReadWhile(IsNameChar);
-
-                node = new TagNode(name);
-            }
-            else
-                node = new TagNode("div");
-            return node;
-        }
-
-        public void ParseAttributes(TagNode node, ref CharacterReader reader, ParserReader parser)
-        {
-            reader.Read(); // eat (
-
-            while(reader.Current != ')')
-            {
-                reader.ReadWhiteSpaces();
-
-                if(reader.IsEndOfStream)
-                {
-                    if(!parser.Read())
-                        break;
-
-                    reader = new CharacterReader(parser.Text);
-                    reader.Read();
-                }
-
                 var name = reader.ReadName();
 
-                reader.ReadWhile(c => char.IsWhiteSpace(c));
-
-                //Todo: report error when there is no =
-                reader.Read(); // =
-
-                reader.ReadWhiteSpaces();
-
-                var attribute = new AttributeNode(name);
-                node.Attributes.Add(attribute);
-                switch(reader.Current)
-                {
-                    case '\'':
-                    {
-                        reader.Read(); // skip '
-                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '\''));
-                        reader.Read(); // skip '
-                        break;
-                    }
-                    case '"':
-                    {
-                        reader.Read(); // skip "
-                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '"'));
-                        reader.Read(); // skip "
-                        break;
-                    }
-                    default:
-                    {
-                        attribute.Value = new CodeNode(reader.ReadWhile(IsNameChar));
-                        break;
-                    }
-                }
+                return new TagNode(name);
             }
-        }
-
-        public void ParseRubyLikeAttributes(TagNode node, ref CharacterReader reader, ParserReader parser)
-        {
-            reader.Read(); // eat {
-
-            while(reader.Current != '}')
-            {
-                reader.ReadWhiteSpaces();
-
-                if(reader.IsEndOfStream)
-                {
-                    if(!parser.Read())
-                        break;
-
-                    reader = new CharacterReader(parser.Text);
-                    reader.Read();
-                }
-
-                string name = null;
-                switch(reader.Current)
-                {
-                    case ':':
-                        reader.Read(); // eat :
-                        name = reader.ReadName();
-                        break;
-                    case '\'':
-                        reader.Read(); // eat '
-                        name = reader.ReadWhile(c => c != '\'');
-                        reader.Read(); // eat '
-                        break;
-                    default:
-                        reader.Read(); // eat char
-                        break;
-                }
-
-                reader.ReadWhiteSpaces();
-
-                //Todo: report error when there is no =>
-                reader.Read(2); // =>
-
-                reader.ReadWhiteSpaces();
-
-                var attribute = new AttributeNode(name);
-                node.Attributes.Add(attribute);
-                switch(reader.Current)
-                {
-                    case '\'':
-                    {
-                        reader.Read(); // skip '
-                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '\''));
-                        reader.Read(); // skip '
-                        break;
-                    }
-                    case '"':
-                    {
-                        reader.Read(); // skip "
-                        attribute.Value = parser.ParseText(reader.ReadWhile(c => c != '"'));
-                        reader.Read(); // skip "
-                        break;
-                    }
-                    default:
-                    {
-                        attribute.Value = new CodeNode(reader.ReadWhile(IsNameChar));
-                        break;
-                    }
-                }
-
-                reader.ReadWhiteSpaces();
-
-                //if(reader.Current!='}'&&reader.Current!=',')
-                // report error here
-
-                if(reader.Current != '}')
-                    reader.Read(); // eat ,
-            }
+            
+            return new TagNode("div");
         }
     }
 }

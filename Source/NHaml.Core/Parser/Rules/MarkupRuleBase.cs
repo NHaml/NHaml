@@ -25,14 +25,5 @@ namespace NHaml.Core.Parser.Rules
         }
 
         public abstract AstNode Process(ParserReader reader);
-
-        public static bool IsNameChar(char ch)
-        {
-            return char.IsNumber(ch) ||
-                   char.IsLetter(ch) ||
-                   ch == '_' ||
-                   ch == '-' ||
-                   ch == ':';
-        }
     }
 }

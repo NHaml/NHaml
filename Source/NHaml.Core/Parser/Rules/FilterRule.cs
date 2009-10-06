@@ -14,7 +14,7 @@ namespace NHaml.Core.Parser.Rules
             var reader = new CharacterReader(parserReader.Text);
             reader.Read(2); // eat :
 
-            var name = reader.ReadWhile(IsNameChar);
+            var name = reader.ReadName();
 
             var node = new FilterNode(name);
 
