@@ -31,8 +31,10 @@ namespace NHaml.Core.Ast
             get
             {
                 var counter = 0;
+                
                 foreach(var node in _children)
                     counter++;
+                
                 return counter;
             }
         }

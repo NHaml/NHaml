@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
 
@@ -30,8 +29,6 @@ namespace NHaml.Core.Parser
             get { return _reader.Current == null; }
         }
 
-        public CharacterReader Characters { get; private set; }
-
         public bool Read()
         {
             if(!_reader.Read())
@@ -39,7 +36,6 @@ namespace NHaml.Core.Parser
 
             _markupRule = FindMarkupRule(_reader.Current.Text);
             Text = _reader.Current.Text;
-            Characters = new CharacterReader(Text);
             Indent = _reader.Current.Indent;
 
             return true;
@@ -50,6 +46,11 @@ namespace NHaml.Core.Parser
             return _markupRule != null ? _markupRule.Process(this) : ParseText(Text);
         }
 
+        public TextNode ParseText(string text)
+        {
+            return new TextParser(new CharacterReader(text)).Parse();
+        }
+
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
         {
             return ParseChildren(baseIdentation, currentChild, ParseNode);
@@ -57,10 +58,10 @@ namespace NHaml.Core.Parser
 
         public AstNode ParseLines(int baseIdentation, AstNode currentChild)
         {
-            return ParseChildren(baseIdentation, currentChild, () => ParseText(Characters));
+            return ParseChildren(baseIdentation, currentChild, () => ParseText(Text));
         }
 
-        public AstNode ParseChildren(int baseIdentation, AstNode currentChild, Func<AstNode> parser)
+        private AstNode ParseChildren(int baseIdentation, AstNode currentChild, Func<AstNode> parser)
         {
             var nodes = new List<AstNode>();
 
@@ -93,79 +94,6 @@ namespace NHaml.Core.Parser
                     return rule;
 
             return null;
-        }
-
-        public TextNode ParseText(string text)
-        {
-            return ParseText(new CharacterReader(text));
-        }
-
-        public TextNode ParseText(CharacterReader reader)
-        {
-            //Todo: extract to seperate class
-            var node = new TextNode();
-
-            var buffer = new StringBuilder();
-            while(reader.Read())
-                switch(reader.Current)
-                {
-                    case '\\':
-                    {
-                        if(reader.Next == '#')
-                            reader.Read(); // escaped # - eat \
-                        else if(reader.Next == '\\')
-                            reader.Read(); // escaped \ - eat \
-
-                        goto default;
-                    }
-                    case '#':
-                    {
-                        if(reader.Next == '{')
-                        {
-                            reader.Read(); // eat #
-
-                            if(buffer.Length > 0)
-                            {
-                                node.Chunks.Add(new TextChunk(buffer.ToString()));
-                                buffer = new StringBuilder();
-                            }
-
-                            while(reader.Read() && reader.Current != '}')
-                            {
-                                if(reader.Current == '\\')
-                                    if(reader.Next == '}')
-                                        reader.Read(); // escaped } - eat \
-                                    else if(reader.Next == '\\')
-                                        reader.Read(); // escaped \ - eat \
-
-                                buffer.Append(reader.Current);
-                            }
-
-                            if(buffer.Length > 0)
-                            {
-                                node.Chunks.Add(new CodeChunk(buffer.ToString()));
-                                buffer = new StringBuilder();
-                            }
-
-                            continue;
-                        }
-
-                        goto default;
-                    }
-                    default:
-                    {
-                        buffer.Append(reader.Current);
-                        break;
-                    }
-                }
-
-            if(buffer.Length > 0)
-                node.Chunks.Add(new TextChunk(buffer.ToString()));
-
-            if(node.Chunks.Count == 0)
-                return null;
-
-            return node;
         }
     }
 }

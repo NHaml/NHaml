@@ -1,7 +1,6 @@
 namespace NHaml.Core.Ast
 {
-    public class AstNode
+    public abstract class AstNode
     {
-        
     }
 }
