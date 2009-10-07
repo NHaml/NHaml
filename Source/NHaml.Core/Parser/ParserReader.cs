@@ -61,7 +61,7 @@ namespace NHaml.Core.Parser
             return ParseChildren(baseIdentation, currentChild, () => ParseText(Text));
         }
 
-        private AstNode ParseChildren(int baseIdentation, AstNode currentChild, Func<AstNode> parser)
+        private AstNode ParseChildren(int baseIdentation, AstNode currentChild, ParseActionDelegate parser)
         {
             var nodes = new List<AstNode>();
 
@@ -95,5 +95,7 @@ namespace NHaml.Core.Parser
 
             return null;
         }
+
+        private delegate AstNode ParseActionDelegate();
     }
 }
