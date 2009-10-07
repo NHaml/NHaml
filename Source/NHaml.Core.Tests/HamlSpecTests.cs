@@ -11,14 +11,13 @@ namespace NHaml.Core.Tests
         [HamlSpecTheory("tests.json")]
         public void Test(string fullName, string haml, string html, string format, SpecLocal[] locals)
         {
-            if(!string.IsNullOrEmpty(format) ||
-               fullName == "interpolation inside code (interpolation)")
+            if(fullName == "interpolation inside code (interpolation)")
                 return;
 
             var output = new StringWriter();
             var parser = new Core.Parser.Parser();
             var writer = new StringWriter();
-            var visitor = new DebugVisitor(writer);
+            var visitor = new DebugVisitor(writer) { Format = format };
 
             output.WriteLine("Name: " + fullName);
             foreach(var local in locals)
