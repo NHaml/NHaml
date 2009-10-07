@@ -8,12 +8,9 @@ namespace NHaml.Core.Tests
 {
     public class DebugVisitor : NodeVisitorBase
     {
-        public int Indent { get; set; }
-
         private TextWriter _writer;
 
         public Dictionary<string, string> Locals = new Dictionary<string, string>();
-        public string Format { get; set; }
 
         public DebugVisitor(TextWriter writer)
         {
@@ -22,6 +19,9 @@ namespace NHaml.Core.Tests
 
             _writer = writer;
         }
+
+        public int Indent { get; set; }
+        public string Format { get; set; }
 
         public override void Visit(DocumentNode node)
         {
@@ -41,7 +41,7 @@ namespace NHaml.Core.Tests
             _writer.Write(GetDocType(node.Text));
         }
 
-        private string GetDocType( string id )
+        private string GetDocType(string id)
         {
             if(string.IsNullOrEmpty(id))
                 if(Format == "html4")
@@ -49,7 +49,8 @@ namespace NHaml.Core.Tests
                 else if(Format == "html5")
                     return @"<!DOCTYPE html>";
                 else
-                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">";
+                    return
+                        @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">";
 
             switch(id)
             {
@@ -59,9 +60,9 @@ namespace NHaml.Core.Tests
                 }
                 case "frameset":
                 {
-                    if(Format=="html4")
+                    if(Format == "html4")
                         return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01 Frameset//EN"" ""http://www.w3.org/TR/html4/frameset.dtd"">";
-                    
+
                     return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Frameset//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"">";
                 }
                 case "basic":
@@ -81,7 +82,8 @@ namespace NHaml.Core.Tests
                 }
                 case "mobile":
                 {
-                    return @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">";
+                    return
+                        @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">";
                 }
                 default:
                     throw new Exception("unknown doctype");
@@ -110,7 +112,10 @@ namespace NHaml.Core.Tests
 
             if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
             {
-                _writer.Write(" />");
+                if(Format == "html4" || Format == "html5")
+                    _writer.Write(">");
+                else
+                    _writer.Write(" />");
                 return;
             }
 
@@ -119,7 +124,6 @@ namespace NHaml.Core.Tests
             Visit(node.Child);
 
             _writer.Write("</{0}>", node.Name);
-
         }
 
         public override void Visit(TextNode node)
@@ -165,7 +169,7 @@ namespace NHaml.Core.Tests
 
                     WriteIndent();
                     _writer.WriteLine(@"//]]>");
-                    
+
                     Indent--;
                     WriteIndent();
                     _writer.Write(@"</script>");
@@ -204,7 +208,7 @@ namespace NHaml.Core.Tests
             {
                 _writer.Write("<!--");
 
-                var space = !(node.Child is ChildrenNode);
+                var space = !( node.Child is ChildrenNode );
 
                 if(space)
                     _writer.Write(' ');
@@ -226,7 +230,7 @@ namespace NHaml.Core.Tests
 
                 Indent--;
 
-                _writer.Write("<![endif]-->");   
+                _writer.Write("<![endif]-->");
             }
         }
 
