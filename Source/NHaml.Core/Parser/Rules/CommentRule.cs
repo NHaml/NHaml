@@ -19,7 +19,7 @@ namespace NHaml.Core.Parser.Rules
             }
 
             var node = new CommentNode();
-            var reader = new CharacterReader(parser.Text);
+            var reader = new CharacterReader(parser.Text,0);
             
             reader.Read(2); // eat /
 
@@ -28,7 +28,7 @@ namespace NHaml.Core.Parser.Rules
             reader.ReadWhiteSpaces();
 
             if(!reader.IsEndOfStream)
-                node.Child = parser.ParseText(reader.ReadName());
+                node.Child = parser.ParseText(reader.ReadName(),reader.Index);
 
             node.Child = parser.ParseChildren(parser.Indent, node.Child);
 

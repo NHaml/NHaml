@@ -43,12 +43,12 @@ namespace NHaml.Core.Parser
 
         public AstNode ParseNode()
         {
-            return _markupRule != null ? _markupRule.Process(this) : ParseText(Text);
+            return _markupRule != null ? _markupRule.Process(this) : ParseText(Text, 0);
         }
 
-        public TextNode ParseText(string text)
+        public TextNode ParseText(string text, int offset)
         {
-            return new TextParser(new CharacterReader(text)).Parse();
+            return new TextParser(new CharacterReader(text, 0)).Parse();
         }
 
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
@@ -58,7 +58,7 @@ namespace NHaml.Core.Parser
 
         public AstNode ParseLines(int baseIdentation, AstNode currentChild)
         {
-            return ParseChildren(baseIdentation, currentChild, () => ParseText(Text));
+            return ParseChildren(baseIdentation, currentChild, () => ParseText(Text, 0));
         }
 
         private AstNode ParseChildren(int baseIdentation, AstNode currentChild, ParseActionDelegate parser)

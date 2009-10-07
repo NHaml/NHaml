@@ -11,9 +11,6 @@ namespace NHaml.Core.Tests
         [HamlSpecTheory("tests.json")]
         public void Test(string fullName, string haml, string html, string format, SpecLocal[] locals)
         {
-            if(fullName == "interpolation inside code (interpolation)")
-                return;
-
             var output = new StringWriter();
             var parser = new Core.Parser.Parser();
             var writer = new StringWriter();

@@ -8,11 +8,6 @@ namespace NHaml.Core.Parser
     {
         private StringReader _reader;
 
-        public CharacterReader(string text)
-        {
-            Initialize(text, 0);
-        }
-
         public CharacterReader(string text, int offset)
         {
             Initialize(text, offset);

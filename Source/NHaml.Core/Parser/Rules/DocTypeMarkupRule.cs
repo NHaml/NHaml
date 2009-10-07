@@ -12,7 +12,7 @@ namespace NHaml.Core.Parser.Rules
 
         public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parser.Text);
+            var reader = new CharacterReader(parser.Text,0);
 
             reader.Read(4); // skip !!!
 

@@ -12,7 +12,7 @@ namespace NHaml.Core.Parser.Rules
 
         public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parser.Text);
+            var reader = new CharacterReader(parser.Text, 0);
             var attributeParser = new AttributeParser(reader, parser);
             var baseIndent = parser.Indent;
 
@@ -36,7 +36,7 @@ namespace NHaml.Core.Parser.Rules
                             node.Attributes.Add(attribute);
                         }
 
-                        attribute.Value = parser.ParseText(reader.ReadName());
+                        attribute.Value = parser.ParseText(reader.ReadName(), reader.Index);
 
                         continue;
                     }
@@ -46,7 +46,7 @@ namespace NHaml.Core.Parser.Rules
 
                         node.Attributes.Add(new AttributeNode("class")
                         {
-                            Value = parser.ParseText(reader.ReadName())
+                            Value = parser.ParseText(reader.ReadName(), reader.Index)
                         });
 
                         continue;
@@ -73,8 +73,9 @@ namespace NHaml.Core.Parser.Rules
                     }
                     default:
                     {
+                        var index = reader.Index;
                         var text = reader.ReadToEnd();
-                        node.Child = parser.ParseText(text.TrimStart());
+                        node.Child = parser.ParseText(text.TrimStart(),index);
 
                         break;
                     }
@@ -95,7 +96,7 @@ namespace NHaml.Core.Parser.Rules
 
                 return new TagNode(name);
             }
-            
+
             return new TagNode("div");
         }
     }

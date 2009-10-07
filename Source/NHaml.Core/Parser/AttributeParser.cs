@@ -157,7 +157,7 @@ namespace NHaml.Core.Parser
         {
             _reader.Read(); // skip '
             
-            var value = _parser.ParseText(_reader.ReadWhile(c => c != '\''));
+            var value = _parser.ParseText(_reader.ReadWhile(c => c != '\''),_reader.Index);
             
             _reader.Read(); // skip '
 
@@ -168,7 +168,7 @@ namespace NHaml.Core.Parser
         {
             _reader.Read(); // skip "
             
-            var value = _parser.ParseText(_reader.ReadWhile(c => c != '"'));
+            var value = _parser.ParseText(_reader.ReadWhile(c => c != '"'),_reader.Index);
 
             _reader.Read(); // skip "
 

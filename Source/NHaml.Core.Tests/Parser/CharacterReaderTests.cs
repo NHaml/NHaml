@@ -8,7 +8,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void Reads4Chars()
         {
-            var reader = new CharacterReader("test");
+            var reader = new CharacterReader("test",0);
 
             Assert.True(reader.Read());
             Assert.Equal('t', reader.Current);
@@ -31,7 +31,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadToEndReadsTestOneRead()
         {
-            var reader = new CharacterReader("test");
+            var reader = new CharacterReader("test",0);
             reader.Read(); // Current = t
 
             Assert.Equal("test", reader.ReadToEnd());
@@ -40,7 +40,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadWhileStopsAtTheFirstCharIfConditionMatch()
         {
-            var reader = new CharacterReader("ab");
+            var reader = new CharacterReader("ab",0);
             reader.Read();
             reader.Read();
 
@@ -52,7 +52,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadWhileStopsAtTheFirstCharIfConditionMatchAtStart()
         {
-            var reader = new CharacterReader("ab");
+            var reader = new CharacterReader("ab",0);
             reader.Read();
 
             reader.ReadWhile(c => char.IsWhiteSpace(c));
@@ -63,7 +63,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadsTwoAtStart()
         {
-            var reader = new CharacterReader("abcd");
+            var reader = new CharacterReader("abcd",0);
 
             reader.Read(2);
 
@@ -73,7 +73,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadsTwo()
         {
-            var reader = new CharacterReader("abcd");
+            var reader = new CharacterReader("abcd",0);
             reader.Read();
 
             reader.Read(2);
@@ -84,7 +84,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadToEndReadsTest()
         {
-            var reader = new CharacterReader("1test");
+            var reader = new CharacterReader("1test",0);
             reader.Read(); // Current = 1
             reader.Read(); // Current = t
 
@@ -94,7 +94,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadWhileReadsTestOneRead()
         {
-            var reader = new CharacterReader("test1234");
+            var reader = new CharacterReader("test1234",0);
             reader.Read(); // Current = t
 
             var result = reader.ReadWhile(c => char.IsLetter(c));
@@ -105,7 +105,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadWhileReadsTest()
         {
-            var reader = new CharacterReader("1test1234");
+            var reader = new CharacterReader("1test1234",0);
             reader.Read(); // Current = 1
             reader.Read(); // Current = t
 
@@ -117,7 +117,7 @@ namespace NHaml.Core.Tests.Parser
         [Fact]
         public void ReadWhileEndsOnTheRightChar()
         {
-            var reader = new CharacterReader("test1234");
+            var reader = new CharacterReader("test1234",0);
             reader.Read();
 
             reader.ReadWhile(c => char.IsLetter(c));
