@@ -13,14 +13,18 @@ namespace NHaml.Core.Tests.Parser
             Assert.True(reader.Read());
             Assert.Equal('t', reader.Current);
             Assert.Equal('e', reader.Next);
+            Assert.Equal(0, reader.Index);
             Assert.True(reader.Read());
             Assert.Equal('e', reader.Current);
             Assert.Equal('s', reader.Next);
+            Assert.Equal(1, reader.Index);
             Assert.True(reader.Read());
             Assert.Equal('s', reader.Current);
             Assert.Equal('t', reader.Next);
+            Assert.Equal(2, reader.Index);
             Assert.True(reader.Read());
             Assert.Equal('t', reader.Current);
+            Assert.Equal(3, reader.Index);
             Assert.False(reader.Read());
         }
 
@@ -39,10 +43,10 @@ namespace NHaml.Core.Tests.Parser
             var reader = new CharacterReader("ab");
             reader.Read();
             reader.Read();
-            
+
             reader.ReadWhile(c => char.IsWhiteSpace(c));
 
-            Assert.Equal('b',reader.Current);
+            Assert.Equal('b', reader.Current);
         }
 
         [Fact]
@@ -50,7 +54,7 @@ namespace NHaml.Core.Tests.Parser
         {
             var reader = new CharacterReader("ab");
             reader.Read();
-            
+
             reader.ReadWhile(c => char.IsWhiteSpace(c));
 
             Assert.Equal('a', reader.Current);
@@ -60,10 +64,10 @@ namespace NHaml.Core.Tests.Parser
         public void ReadsTwoAtStart()
         {
             var reader = new CharacterReader("abcd");
-            
+
             reader.Read(2);
 
-            Assert.Equal('b',reader.Current);
+            Assert.Equal('b', reader.Current);
         }
 
         [Fact]
@@ -83,8 +87,8 @@ namespace NHaml.Core.Tests.Parser
             var reader = new CharacterReader("1test");
             reader.Read(); // Current = 1
             reader.Read(); // Current = t
-            
-            Assert.Equal("test",reader.ReadToEnd());
+
+            Assert.Equal("test", reader.ReadToEnd());
         }
 
         [Fact]
@@ -107,7 +111,7 @@ namespace NHaml.Core.Tests.Parser
 
             var result = reader.ReadWhile(c => char.IsLetter(c));
 
-            Assert.Equal("test",result);
+            Assert.Equal("test", result);
         }
 
         [Fact]

@@ -183,7 +183,7 @@ namespace NHaml.Core.Parser
             if(!_parser.Read())
                 return false;
 
-            _reader.Initialize(_parser.Text);
+            _reader.Initialize(_parser.Text,0);
             
             return _reader.Read();
         }

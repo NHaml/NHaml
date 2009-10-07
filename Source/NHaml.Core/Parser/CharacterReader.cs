@@ -10,16 +10,24 @@ namespace NHaml.Core.Parser
 
         public CharacterReader(string text)
         {
-            Initialize(text);
+            Initialize(text, 0);
         }
 
-        public void Initialize(string text)
+        public CharacterReader(string text, int offset)
+        {
+            Initialize(text, offset);
+        }
+
+        public void Initialize(string text, int offset)
         {
             if(text == null)
                 throw new ArgumentNullException("text");
 
+            Index = offset - 1;
             _reader = new StringReader(text);
         }
+
+        public int Index { get; private set; }
 
         public char Current { get; private set; }
 
@@ -42,6 +50,7 @@ namespace NHaml.Core.Parser
             var value = _reader.Read();
 
             Current = (char)value;
+            Index++;
 
             return value != -1;
         }
@@ -60,7 +69,14 @@ namespace NHaml.Core.Parser
 
         public string ReadToEnd()
         {
-            return Current + _reader.ReadToEnd();
+            var buffer = new StringBuilder();
+            
+            buffer.Append(Current);
+            
+            while(Read())
+                buffer.Append(Current);
+
+            return buffer.ToString();
         }
 
         public string ReadWhile(Predicate<char> predicate)
