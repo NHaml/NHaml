@@ -61,6 +61,7 @@
     <Compile Include="DebugVisitor.cs" />
     <Compile Include="Parser\InputLineReaderReadTests.cs" />
     <Compile Include="Parser\InputLineReaderTests.cs" />
+    <Compile Include="Parser\InputReaderTests.cs" />
     <Compile Include="Parser\InputLineTests.cs" />
     <Compile Include="Parser\ParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

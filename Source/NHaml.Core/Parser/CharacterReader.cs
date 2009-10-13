@@ -6,54 +6,92 @@ namespace NHaml.Core.Parser
 {
     public class CharacterReader
     {
+        private char? _currentChar;
+        private char? _nextChar;
+        private char? _prevChar;
         private StringReader _reader;
 
-        public CharacterReader(string text, int offset)
+        protected CharacterReader()
         {
-            Initialize(text, offset);
         }
 
-        public void Initialize(string text, int offset)
+        public CharacterReader(string text, int index)
         {
-            if(text == null)
-                throw new ArgumentNullException("text");
-
-            Index = offset - 1;
-            _reader = new StringReader(text);
+            Initialze(text, index);
         }
 
         public int Index { get; private set; }
 
-        public char Current { get; private set; }
-
-        public char Next
+        public char? CurrentChar
         {
-            get { return (char)_reader.Peek(); }
+            get { return _currentChar; }
+        }
+
+        public char? NextChar
+        {
+            get { return _nextChar; }
+        }
+
+        public char? PrevChar
+        {
+            get { return _prevChar; }
         }
 
         public bool IsEndOfStream
         {
-            get { return _reader.Peek() == -1; }
+            get { return !_currentChar.HasValue; }
         }
 
-        public char Prev { get; private set; }
+        protected void Initialze(string text, int index)
+        {
+            if(text == null)
+                throw new ArgumentNullException("text");
+
+            _reader = new StringReader(text);
+            _prevChar = null;
+            _currentChar = null;
+            _nextChar = null;
+            Index = index - 1;
+        }
 
         public bool Read()
         {
-            Prev = Current;
+            if(!_currentChar.HasValue)
+                ReadCore();
 
-            var value = _reader.Read();
+            ReadCore();
 
-            Current = (char)value;
-            Index++;
+            if(_currentChar.HasValue || _prevChar.HasValue)
+                Index++;
 
-            return value != -1;
+            return _currentChar.HasValue;
         }
 
-        public bool Read(int count)
+        protected void ReadCore()
         {
-            if(count < 0)
-                throw new ArgumentOutOfRangeException("count");
+            if(_reader==null)
+                return;
+
+            var charNumber = _reader.Read();
+
+            _prevChar = _currentChar;
+            _currentChar = _nextChar;
+
+            if(charNumber == -1)
+                _nextChar = null;
+            else
+                _nextChar = (char)charNumber;
+        }
+
+        public bool Skip(string skiplist)
+        {
+            //Todo: Check if the right chars are ware skiped and return parser error
+
+            var count = skiplist.Length;
+
+            if(!_currentChar.HasValue)
+                if(!Read())
+                    return false;
 
             for(var index = 0; index < count; index++)
                 if(!Read())
@@ -65,11 +103,12 @@ namespace NHaml.Core.Parser
         public string ReadToEnd()
         {
             var buffer = new StringBuilder();
-            
-            buffer.Append(Current);
-            
+
+            if(_currentChar.HasValue)
+                buffer.Append(CurrentChar);
+
             while(Read())
-                buffer.Append(Current);
+                buffer.Append(CurrentChar);
 
             return buffer.ToString();
         }
@@ -81,19 +120,22 @@ namespace NHaml.Core.Parser
 
             var buffer = new StringBuilder();
 
+            if(!_currentChar.HasValue && !Read())
+                return null;
+
             do
             {
-                if(!predicate(Current))
+                if(!predicate(CurrentChar.Value))
                     break;
 
-                buffer.Append(Current);
+                buffer.Append(CurrentChar);
             }
             while(Read());
 
             return buffer.ToString();
         }
 
-        public void ReadWhiteSpaces()
+        public void SkipWhiteSpaces()
         {
             ReadWhile(c => char.IsWhiteSpace(c));
         }
@@ -103,7 +145,7 @@ namespace NHaml.Core.Parser
             return ReadWhile(IsNameChar);
         }
 
-        public static bool IsNameChar(char ch)
+        private static bool IsNameChar(char ch)
         {
             return char.IsNumber(ch) ||
                    char.IsLetter(ch) ||

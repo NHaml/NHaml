@@ -9,17 +9,17 @@ namespace NHaml.Core.Parser.Rules
             get { return new[]{":"};}
         }
 
-        public override AstNode Process(ParserReader parserReader)
+        public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parserReader.Text,0);
+            var reader = parser.Input;
             
-            reader.Read(2); // eat :
+            reader.Skip(":");
 
             var name = reader.ReadName();
 
             var node = new FilterNode(name);
 
-            node.Child = parserReader.ParseLines(parserReader.Indent, node.Child);
+            node.Child = parser.ParseLines(parser.Indent, node.Child);
             
             return node;
         }

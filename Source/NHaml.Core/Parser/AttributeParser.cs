@@ -6,46 +6,42 @@ namespace NHaml.Core.Parser
 {
     public class AttributeParser
     {
-        private readonly CharacterReader _reader;
+        private readonly InputReader _reader;
         private readonly ParserReader _parser;
 
-        public AttributeParser(CharacterReader reader, ParserReader parser)
+        public AttributeParser(ParserReader parser)
         {
-            if(reader == null)
-                throw new ArgumentNullException("reader");
             if(parser == null)
                 throw new ArgumentNullException("parser");
-
-            _reader = reader;
+            _reader = parser.Input;
             _parser = parser;
         }
 
         public IEnumerable<AttributeNode> ParseHtmlStyle()
         {
-            _reader.Read(); // eat (
+            _reader.Skip("(");
 
-            while(_reader.Current != ')')
+            while(_reader.CurrentChar != ')')
             {
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
-                if(!ReadNextLineIfEof())
+                if(!_reader.ReadNextLineAndReadIfEndOfStream())
                 {
-                    // report error
+                    //Todo: report error
                     break;
                 }
 
                 var name = _reader.ReadName();
 
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
-                //Todo: report error when there is no =
-                _reader.Read(); // =
+                _reader.Skip("=");
 
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
                 var attribute = new AttributeNode(name);
 
-                switch(_reader.Current)
+                switch(_reader.CurrentChar)
                 {
                     case '\'':
                     {
@@ -66,34 +62,35 @@ namespace NHaml.Core.Parser
 
                 yield return attribute;
             }
+
+            _reader.Skip(")");
         }
 
         public IEnumerable<AttributeNode> ParseRubyStyle()
         {
-            _reader.Read(); // eat {
+            _reader.Skip("{");
 
-            while(_reader.Current != '}')
+            while(_reader.CurrentChar != '}')
             {
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
-                if(!ReadNextLineIfEof())
+                if(!_reader.ReadNextLineAndReadIfEndOfStream())
                 {
-                    // report error 
+                    //Todo: report error
                     break;
                 }
 
                 var name = ReadRubyStyleName();
 
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
-                //Todo: report error when there is no =>
-                _reader.Read(2); // =>
+                _reader.Skip("=>");
 
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
                 var attribute = new AttributeNode(name);
-                
-                switch(_reader.Current)
+
+                switch(_reader.CurrentChar)
                 {
                     case '\'':
                     {
@@ -114,38 +111,38 @@ namespace NHaml.Core.Parser
 
                 yield return attribute;
 
-                _reader.ReadWhiteSpaces();
+                _reader.SkipWhiteSpaces();
 
-                //if(reader.Current!='}'&&reader.Current!=',')
-                // report error here
+                if(_reader.CurrentChar == ',')
+                    _reader.Skip(",");
+            }
 
-                if(_reader.Current != '}')
-                    _reader.Read(); // eat ,
-            }        
+            _reader.Skip("}");
         }
 
         private string ReadRubyStyleName()
         {
             string name = null;
-            
-            switch(_reader.Current)
+
+            switch(_reader.CurrentChar)
             {
                 case ':':
                 {
-                    _reader.Read(); // eat :
+                    _reader.Skip(":");
                     name = _reader.ReadName();
                     break;
                 }
                 case '\'':
                 {
-                    _reader.Read(); // eat '
-                    
+                    _reader.Skip("'");
+
                     name = _reader.ReadWhile(c => c != '\'');
-                    
-                    _reader.Read(); // eat '
+
+                    _reader.Skip("'");
                 }
                     break;
                 default:
+                    // Todo: something :-)
                     _reader.Read(); // eat char
                     break;
             }
@@ -155,37 +152,26 @@ namespace NHaml.Core.Parser
 
         private TextNode ReadTickMarkString()
         {
-            _reader.Read(); // skip '
-            
-            var value = _parser.ParseText(_reader.ReadWhile(c => c != '\''),_reader.Index);
-            
-            _reader.Read(); // skip '
+            _reader.Skip("'");
+
+            var index = _parser.Index;
+            var value = _parser.ParseText(_reader.ReadWhile(c => c != '\''), index);
+
+            _reader.Skip("'");
 
             return value;
         }
 
         private TextNode ReadQuotedString()
         {
-            _reader.Read(); // skip "
-            
-            var value = _parser.ParseText(_reader.ReadWhile(c => c != '"'),_reader.Index);
+            _reader.Skip("\"");
 
-            _reader.Read(); // skip "
+            var index = _parser.Index;
+            var value = _parser.ParseText(_reader.ReadWhile(c => c != '"'), index);
+
+            _reader.Skip("\""); 
 
             return value;
-        }
-
-        private bool ReadNextLineIfEof()
-        {
-            if(!_reader.IsEndOfStream)
-                return true;
-
-            if(!_parser.Read())
-                return false;
-
-            _reader.Initialize(_parser.Text,0);
-            
-            return _reader.Read();
         }
     }
 }

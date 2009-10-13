@@ -2,17 +2,20 @@ namespace NHaml.Core.Parser
 {
     public class InputLine
     {
-        public InputLine(string text, int lineNumber, int indent, bool isMultiline)
+        public InputLine(string text, int lineNumber, int indent, int startIndex, bool isMultiLine)
         {
             Text = text;
             LineNumber = lineNumber;
             Indent = indent;
-            IsMultiline = isMultiline;
+            StartIndex = startIndex;
+            IsMultiLine = isMultiLine;
         }
 
-        public int Indent { get; private set; }
+        public int StartIndex { get; private set; }
         
-        public bool IsMultiline { get; private set; }
+        public bool IsMultiLine { get; private set; }
+
+        public int Indent { get; private set; }
 
         public string Text { get; private set; }
 

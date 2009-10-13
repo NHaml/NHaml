@@ -12,22 +12,23 @@ namespace NHaml.Core.Parser.Rules
 
         public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parser.Text, 0);
-            var attributeParser = new AttributeParser(reader, parser);
+            var reader = parser.Input;
+            var attributeParser = new AttributeParser(parser);
             var baseIndent = parser.Indent;
 
-            if(!reader.Read()) // initial read
+            if(!reader.Read())
                 return null;
 
             var node = ReadTagNode(reader);
-
+            
             while(!reader.IsEndOfStream)
-                switch(reader.Current)
+                switch(reader.CurrentChar)
                 {
                     case '#':
                     {
-                        reader.Read(); // eat #
+                        reader.Skip("#");
 
+                        //Todo: should be a port of output
                         var attribute = node.Attributes.Find(a => a.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase));
 
                         if(attribute == null)
@@ -42,7 +43,7 @@ namespace NHaml.Core.Parser.Rules
                     }
                     case '.':
                     {
-                        reader.Read(); // eat .
+                        reader.Skip(".");
 
                         node.Attributes.Add(new AttributeNode("class")
                         {
@@ -53,9 +54,9 @@ namespace NHaml.Core.Parser.Rules
                     }
                     case '=':
                     {
-                        reader.Read(); // eat =
+                        reader.Skip("=");
 
-                        reader.ReadWhiteSpaces();
+                        reader.SkipWhiteSpaces();
 
                         node.Child = new CodeNode(reader.ReadToEnd());
 
@@ -75,7 +76,7 @@ namespace NHaml.Core.Parser.Rules
                     {
                         var index = reader.Index;
                         var text = reader.ReadToEnd();
-                        node.Child = parser.ParseText(text.TrimStart(),index);
+                        node.Child = parser.ParseText(text.TrimStart(), index);
 
                         break;
                     }
@@ -83,21 +84,25 @@ namespace NHaml.Core.Parser.Rules
 
             node.Child = parser.ParseChildren(baseIndent, node.Child);
 
+            node.EndInfo = reader.SourceInfo;
+
             return node;
         }
 
-        private static TagNode ReadTagNode(CharacterReader reader)
+        private static TagNode ReadTagNode(InputReader reader)
         {
-            if(reader.Current == '%')
+            var operatorInfo = reader.SourceInfo;
+
+            if(reader.CurrentChar == '%')
             {
-                reader.Read(); // eat %
+                reader.Skip("%");
 
                 var name = reader.ReadName();
 
-                return new TagNode(name);
+                return new TagNode(name) { StartInfo = operatorInfo, OperatorInfo = operatorInfo };
             }
 
-            return new TagNode("div");
+            return new TagNode("div") { StartInfo = operatorInfo, OperatorInfo = operatorInfo };
         }
     }
 }

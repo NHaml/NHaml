@@ -12,15 +12,15 @@ namespace NHaml.Core.Parser.Rules
 
         public override AstNode Process(ParserReader parser)
         {
-            var reader = new CharacterReader(parser.Text,0);
+            var reader = parser.Input;
 
-            reader.Read(4); // skip !!!
+            reader.Skip("!!!");
 
             var node = new DocTypeNode();
 
             if(!reader.IsEndOfStream)
             {
-                reader.ReadWhiteSpaces();
+                reader.SkipWhiteSpaces();
 
                 node.Text = reader.ReadToEnd();
             }

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
 
@@ -7,48 +8,50 @@ namespace NHaml.Core.Parser
 {
     public class ParserReader
     {
-        private readonly InputLineReader _reader;
         private readonly MarkupRuleBase[] _rules;
         private MarkupRuleBase _markupRule;
 
-        public ParserReader(MarkupRuleBase[] rules, InputLineReader reader)
+        public ParserReader(MarkupRuleBase[] rules, InputReader reader)
         {
             if(reader == null)
                 throw new ArgumentNullException("reader");
 
             _rules = rules;
-            _reader = reader;
+            Input = reader;
         }
+
+        public int LineNumber { get; private set; }
 
         public string Text { get; private set; }
 
         public int Indent { get; private set; }
 
-        public bool IsEndOfStream
-        {
-            get { return _reader.Current == null; }
-        }
+        public int Index { get; private set; }
+
+        public InputReader Input { get; private set; }
 
         public bool Read()
         {
-            if(!_reader.Read())
+            if(!Input.ReadNextLine())
                 return false;
 
-            _markupRule = FindMarkupRule(_reader.Current.Text);
-            Text = _reader.Current.Text;
-            Indent = _reader.Current.Indent;
+            _markupRule = FindMarkupRule(Input.CurrentLine.Text);
+            Text = Input.CurrentLine.Text;
+            Index = Input.CurrentLine.StartIndex;
+            LineNumber = Input.CurrentLine.LineNumber;
+            Indent = Input.CurrentLine.Indent;
 
             return true;
+        }
+
+        public TextNode ParseText( string text, int index )
+        {
+            return new TextParser(new CharacterReader(text,index)).Parse();
         }
 
         public AstNode ParseNode()
         {
             return _markupRule != null ? _markupRule.Process(this) : ParseText(Text, 0);
-        }
-
-        public TextNode ParseText(string text, int offset)
-        {
-            return new TextParser(new CharacterReader(text, 0)).Parse();
         }
 
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
@@ -72,7 +75,7 @@ namespace NHaml.Core.Parser
                 if(node != null)
                     nodes.Add(node);
 
-                if(_reader.Next != null && _reader.Next.Indent <= baseIdentation)
+                if(Input.NextLine != null && Input.NextLine.Indent <= baseIdentation)
                     break;
             }
 

@@ -11,6 +11,8 @@ namespace NHaml.Core.Parser.Rules
 
         public override AstNode Process(ParserReader parser)
         {
+            var reader = parser.Input;
+
             if(parser.Text.StartsWith("-#"))
             {
                 // skip all children
@@ -19,30 +21,27 @@ namespace NHaml.Core.Parser.Rules
             }
 
             var node = new CommentNode();
-            var reader = new CharacterReader(parser.Text,0);
-            
-            reader.Read(2); // eat /
 
-            ReadConditionIfExists(reader, node);
+            reader.Skip("/");
 
-            reader.ReadWhiteSpaces();
+            reader.SkipWhiteSpaces();
 
-            if(!reader.IsEndOfStream)
-                node.Child = parser.ParseText(reader.ReadName(),reader.Index);
+            if(reader.CurrentChar == '[')
+            {
+                reader.Skip("[");
+
+                node.Condition = reader.ReadWhile(c => c != ']');
+            }
+            else if(!reader.IsEndOfStream)
+            {
+                var index = reader.Index;
+                var text = reader.ReadToEnd();
+                node.Child = parser.ParseText(text, index);
+            }
 
             node.Child = parser.ParseChildren(parser.Indent, node.Child);
 
             return node;
-        }
-
-        private static void ReadConditionIfExists(CharacterReader reader, CommentNode node)
-        {
-            if(reader.Current != '[')
-                return;
-            
-            reader.Read(); // eat [
-
-            node.Condition = reader.ReadWhile(c => c != ']');
         }
     }
 }

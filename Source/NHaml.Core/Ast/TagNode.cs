@@ -19,5 +19,7 @@ namespace NHaml.Core.Ast
         public string Name { get; set; }
 
         public List<AttributeNode> Attributes { get; private set; }
+
+        public SourceInfo OperatorInfo{get;set;}
     }
 }

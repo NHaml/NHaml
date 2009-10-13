@@ -23,7 +23,7 @@ namespace NHaml.Core.Parser
         {
             using(var reader = new StringReader(input))
             {
-                return Parse(new InputLineReader(reader));
+                return Parse(new InputReader(reader));
             }
         }
 
@@ -36,11 +36,11 @@ namespace NHaml.Core.Parser
         {
             using(var reader = new StreamReader(file.FullName))
             {
-                return Parse(new InputLineReader(reader));
+                return Parse(new InputReader(reader));
             }
         }
 
-        internal DocumentNode Parse(InputLineReader reader)
+        internal DocumentNode Parse(InputReader reader)
         {
             var parserReader = new ParserReader(_rules, reader);
             var document = new DocumentNode();
