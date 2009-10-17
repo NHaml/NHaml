@@ -101,7 +101,9 @@ namespace NHaml.Compilers
         private static DirectoryInfo GetNHamlTempDirectoryInfo()
         {
             var codeBase = Assembly.GetExecutingAssembly().GetName().CodeBase.Remove(0, 8);
-            var nhamlTempPath = Path.Combine(Path.GetDirectoryName(codeBase), "nhamlTemp");
+            var runningFolder = Path.GetDirectoryName(codeBase).Replace(@"\", "_").Replace(":","");
+            var nhamlTempPath = Path.Combine(Path.GetTempPath(), "nhamlTemp");
+            nhamlTempPath = Path.Combine(nhamlTempPath, runningFolder);
             var directoryInfo = new DirectoryInfo(nhamlTempPath);
             if (!directoryInfo.Exists)
             {
