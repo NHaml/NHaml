@@ -1,6 +1,7 @@
 using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
@@ -109,6 +110,7 @@ namespace NHaml.Compilers
             {
                 directoryInfo.Create();
             }
+            Debug.WriteLine(string.Format("NHaml temp directory is '{0}'.", directoryInfo.FullName));
             return directoryInfo;
         }
 
