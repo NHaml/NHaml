@@ -16,6 +16,11 @@ namespace NHaml.TemplateResolution
         /// <param name="fileInfo">The file info.</param>
         public FileViewSource(FileInfo fileInfo)
         {
+            fileInfo.Refresh();
+            if (!fileInfo.Exists)
+            {
+                throw new FileNotFoundException("FileNotFound", fileInfo.FullName);
+            }
             _fileInfo = fileInfo;
             _lastUpdated = LastModified;
         }
