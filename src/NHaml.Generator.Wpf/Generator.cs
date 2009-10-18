@@ -87,7 +87,7 @@ namespace NHaml.Generator.Wpf
             var value = navigator.Value;
             if (isInsidePre)
             {
-                var split = value.Split(new[]{"\r\n"}, StringSplitOptions.None);
+                var split = value.Split(new[]{Environment.NewLine}, StringSplitOptions.None);
                 for (var index = 0; index < split.Length; index++)
                 {
                     var line = split[index];
@@ -126,7 +126,7 @@ namespace NHaml.Generator.Wpf
                     value = value.Substring(1, value.Length - 1);
                     continue;
                 }
-                if (value.StartsWith("\r\n"))
+				if (value.StartsWith(Environment.NewLine))
                 {
                     value = value.Substring(2, value.Length - 2);
                     continue;
@@ -141,7 +141,7 @@ namespace NHaml.Generator.Wpf
                     value = value.Substring(0, value.Length - 1);
                     continue;
                 }
-                if (value.EndsWith("\r\n"))
+				if (value.EndsWith(Environment.NewLine))
                 {
                     value = value.Substring(0, value.Length - 2);
                     continue;
