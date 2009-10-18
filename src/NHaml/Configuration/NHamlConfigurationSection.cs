@@ -86,7 +86,7 @@ namespace NHaml.Configuration
 				}
 				catch (Exception exception)
 				{
-					var message = string.Format("Coule not load Assembly '{0}'.\r\nDid you forget to fully qualify it?\r\neg 'System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'", assemblyName);
+					var message = string.Format("Coule not load Assembly '{0}'.Did you forget to fully qualify it?eg 'System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'", assemblyName);
 					throw new Exception(message, exception);
 				}
 				options.AddReference(assembly.Location);
