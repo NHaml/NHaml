@@ -44,23 +44,23 @@
   <ItemGroup>
     <Reference Include="Boo.Lang, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="Boo.Lang.CodeDom, Version=2.0.9.1, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.CodeDom.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.CodeDom.dll</HintPath>
     </Reference>
     <Reference Include="Boo.Lang.Compiler, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.Compiler.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.Compiler.dll</HintPath>
     </Reference>
     <Reference Include="Boo.Lang.Extensions, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.Extensions.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.Extensions.dll</HintPath>
     </Reference>
     <Reference Include="Boo.Lang.Parser, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.Parser.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.Parser.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>

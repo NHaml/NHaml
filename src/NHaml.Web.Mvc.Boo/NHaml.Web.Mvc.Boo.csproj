@@ -36,7 +36,7 @@
   <ItemGroup>
     <Reference Include="Boo.Lang, Version=2.0.0.0, Culture=neutral, PublicKeyToken=32c39770e9a21a67, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Boo.Lang.dll</HintPath>
+      <HintPath>..\..\lib\Boo\Boo.Lang.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">

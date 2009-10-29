@@ -42,19 +42,19 @@
   <ItemGroup>
     <Reference Include="IronRuby, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\IronRuby.dll</HintPath>
+      <HintPath>..\..\lib\IronRuby\net2\IronRuby.dll</HintPath>
     </Reference>
     <Reference Include="IronRuby.Libraries, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\IronRuby.Libraries.dll</HintPath>
+      <HintPath>..\..\lib\IronRuby\net2\IronRuby.Libraries.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Microsoft.Scripting.dll</HintPath>
+      <HintPath>..\..\lib\IronRuby\net2\Microsoft.Scripting.dll</HintPath>
     </Reference>
     <Reference Include="Microsoft.Scripting.Core, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Microsoft.Scripting.Core.dll</HintPath>
+      <HintPath>..\..\lib\IronRuby\net2\Microsoft.Scripting.Core.dll</HintPath>
     </Reference>
     <Reference Include="System" />
   </ItemGroup>
