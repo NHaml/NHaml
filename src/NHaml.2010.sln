@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
-# Visual Studio 10
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB-34CF-4A08-B70B-6582290AA010}"
 	ProjectSection(SolutionItems) = preProject
 		CodingStandards.txt = CodingStandards.txt
