@@ -40,7 +40,7 @@ namespace NHaml.Compilers.IronRuby
 
             protected override void CoreRender( TextWriter textWriter )
             {
-                ScriptEngine.Operations.Call( RenderAction, textWriter );
+                ScriptEngine.Operations.Invoke( RenderAction, textWriter );
             }
         }
     }
