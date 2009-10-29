@@ -6,7 +6,7 @@ using NHaml.Web.Mvc.Boo.Helpers;
 #if NET4
 using ReturnString = System.Web.Mvc.MvcHtmlString;
 #else
-using ReturnString = String;
+using ReturnString = System.String;
 #endif
 
 namespace NHaml.Web.Mvc.Boo.Extensions
