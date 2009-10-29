@@ -35,7 +35,7 @@ namespace NHaml.Web.Mvc.IronRuby
 
                 public void Render( ViewContext viewContext, TextWriter writer )
                 {
-                    ScriptEngine.Operations.Invoke( RenderAction, viewContext, new DlrTextWriterShim( writer ) );
+                    ScriptEngine.Operations.Invoke(RenderAction, viewContext, new DlrTextWriterShim(writer));
                 }
 
             }
