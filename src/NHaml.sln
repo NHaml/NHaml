@@ -35,10 +35,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Xps", "NHaml.Xps\NHam
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Xps.Tests", "NHaml.Xps.Tests\NHaml.Xps.Tests.csproj", "{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail", "NHaml.Web.MonoRail\NHaml.Web.MonoRail.csproj", "{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.MonoRail", "Samples\NHaml.Samples.MonoRail\NHaml.Samples.MonoRail.csproj", "{F461BA12-81DF-4027-97B0-432473217259}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Generator.Wpf", "NHaml.Generator.Wpf\NHaml.Generator.Wpf.csproj", "{4921904C-453F-49C6-B2C4-58688C3E720B}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.VisualBasic", "NHaml.Compilers.VisualBasic\NHaml.Compilers.VisualBasic.csproj", "{4184100B-81EB-4FCA-9A15-250B6BEFBC4A}"
@@ -48,8 +44,6 @@ EndProject
 Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "NHaml.Samples.Mvc.VisualBasic", "Samples\NHaml.Samples.Mvc.VisualBasic\NHaml.Samples.Mvc.VisualBasic.vbproj", "{28FCD51D-3CDD-4124-BC5E-B4C854CE163F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.FSharp", "NHaml.Compilers.FSharp\NHaml.Compilers.FSharp.csproj", "{FEDE4641-1834-42E0-BD10-84D1136882E2}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.MonoRail.Tests", "NHaml.Web.MonoRail.Tests\NHaml.Web.MonoRail.Tests.csproj", "{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,14 +99,6 @@ Global
 		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE55B1F2-5B6D-4A63-B5BC-2B4C2737DD9C}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E909E3D5-C8C7-457F-9C6C-E3643AC7D3E5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F461BA12-81DF-4027-97B0-432473217259}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F461BA12-81DF-4027-97B0-432473217259}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F461BA12-81DF-4027-97B0-432473217259}.Release|Any CPU.Build.0 = Release|Any CPU
 		{4921904C-453F-49C6-B2C4-58688C3E720B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{4921904C-453F-49C6-B2C4-58688C3E720B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4921904C-453F-49C6-B2C4-58688C3E720B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -133,10 +119,6 @@ Global
 		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEDE4641-1834-42E0-BD10-84D1136882E2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1DD229FA-276F-4189-9D62-ED44A1BAC5AA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -145,7 +127,5 @@ Global
 		{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
 		{87E05CD0-D7D0-4073-BE09-D8AB9934FFB4} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
 		{9699C346-0124-4DC8-A97D-60BE669ABD34} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
-		{F461BA12-81DF-4027-97B0-432473217259} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
-		{28FCD51D-3CDD-4124-BC5E-B4C854CE163F} = {3A6FD686-BE88-44A8-8511-AB2E3EB54C07}
 	EndGlobalSection
 EndGlobal
