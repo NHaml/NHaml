@@ -14,6 +14,8 @@ namespace NHaml.Compilers.VisualBasic
         {
             
         }
+    
+ 
 
         public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
         {

@@ -1,6 +1,4 @@
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Reflection;
 using System.Text;
 
 namespace NHaml.Compilers.FSharp
@@ -19,12 +17,6 @@ namespace NHaml.Compilers.FSharp
         protected override bool SupportsDebug()
         {
             return false;
-        }
-
-        protected override Type ExtractType(string typeName, Assembly assembly)
-        {
-            var fullTypeName = "TempNHamlNamespace." + typeName;
-            return assembly.GetType(fullTypeName, true, true);
         }
 
 

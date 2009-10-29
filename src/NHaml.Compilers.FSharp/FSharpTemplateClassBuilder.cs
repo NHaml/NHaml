@@ -18,8 +18,26 @@ namespace NHaml.Compilers.FSharp
                 Value = " (",
             });
         }
+        public override void AppendPreambleCode(string code)
+        {
+             RenderMethod.Statements.Insert(PreambleCount, new CodeSnippetStatement(code));
+            PreambleCount++;
+        }
+
+        public override void AppendSilentCode(string code, bool closeStatement)
+        {
+            if (code != null)
+            {
+                code = code.Trim();
 
 
+                RenderMethod.Statements.Add(new CodeSnippetStatement
+                                            {
+                                                Value = code,
+                                            });
+            }
+
+        }
         protected override void RenderEndBlock()
         {
             RenderMethod.Statements.Add(new CodeSnippetStatement
@@ -40,14 +58,14 @@ namespace NHaml.Compilers.FSharp
         }
 
     
-        public override void AppendOutput(string value)
-        {
-            //WTF
-            if (value != null)
-            {
-                value = value.Replace("\"", "\\\"");
-            }
-            base.AppendOutput(value);
-        }
+        //public override void AppendOutput(string value)
+        //{
+        //    //WTF
+        //    if (value != null)
+        //    {
+        //        value = value.Replace("\"", "\\\"");
+        //    }
+        //    base.AppendOutput(value);
+        //}
     }
 }

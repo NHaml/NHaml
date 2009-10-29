@@ -15,7 +15,7 @@ namespace NHaml.Compilers
 
         public List<CodeTypeMember> Members { get; set; }
 
-        private int preambleCount;
+        protected int PreambleCount{ get; set; }
 
     	public CodeDomClassBuilder(string className)
             : base(className)
@@ -29,7 +29,30 @@ namespace NHaml.Compilers
                                };
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
+        public override void AppendSilentCode(string code, bool closeStatement)
+        {
+            if (code != null)
+            {
+                code = code.Trim();
 
+                if (closeStatement)
+                {
+                    RenderMethod.Statements.Add(new CodeSnippetExpression
+                    {
+                        Value = code,
+                    });
+                }
+                else
+                {
+                    RenderMethod.Statements.Add(new CodeSnippetStatement
+                    {
+                        Value = code,
+                    });
+                }
+
+            }
+
+        }
         public override void AppendOutput(string value)
         {
             if (value == null)
@@ -125,7 +148,6 @@ namespace NHaml.Compilers
                 toStringInvoke.Parameters.Add(new CodeSnippetExpression
                                                   {
                                                       Value = code
-
                                                   });
 
 
@@ -187,30 +209,7 @@ namespace NHaml.Compilers
       
         }
 
-        public override void AppendSilentCode(string code, bool closeStatement)
-        {
-            if (code != null)
-            {
-                code = code.Trim();
-
-                if (closeStatement)
-                {
-                    RenderMethod.Statements.Add(new CodeSnippetExpression
-                                                    {
-                                                        Value = code,
-                                                    });
-                }
-                else
-                {
-                    RenderMethod.Statements.Add(new CodeSnippetStatement
-                                                    {
-                                                        Value = code,
-                                                    });
-                }
-
-            }
-        
-        }
+  
 
 
         public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
@@ -354,8 +353,8 @@ namespace NHaml.Compilers
                                  };
 
             //  RenderMethod.Statements.Insert(preambleCount, new CodeSnippetStatement(code));
-            RenderMethod.Statements.Insert(preambleCount, new CodeExpressionStatement(expression));
-            preambleCount++;
+            RenderMethod.Statements.Insert(PreambleCount, new CodeExpressionStatement(expression));
+            PreambleCount++;
         }
 
         public override string Build(IList<string> imports)

@@ -12,7 +12,7 @@ namespace NHaml.Tests.HamlSpec
         [Test,Ignore]
         public void ExecuteTestSuite()
         {
-            string jsonTests = File.ReadAllText(@"HamlSpec\tests.json");
+            var jsonTests = File.ReadAllText(@"HamlSpec\tests.json");
             var testGroups = (Hashtable)JSON.JsonDecode(jsonTests);
 
             foreach(DictionaryEntry testGroup in testGroups)

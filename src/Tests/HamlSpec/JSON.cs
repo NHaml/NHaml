@@ -1,5 +1,4 @@
 using System;
-using System.Data;
 using System.Collections;
 using System.Globalization;
 using System.Text;
@@ -46,17 +45,17 @@ namespace NHaml.Tests.HamlSpec
         public static object JsonDecode(string json)
         {
             // save the string for debug information
-            JSON.instance.lastDecode = json;
+            instance.lastDecode = json;
 
             if (json != null) {
-                char[] charArray = json.ToCharArray();
-                int index = 0;
-                bool success = true;
-                object value = JSON.instance.ParseValue(charArray, ref index, ref success);
+                var charArray = json.ToCharArray();
+                var index = 0;
+                var success = true;
+                var value = instance.ParseValue(charArray, ref index, ref success);
                 if (success) {
-                    JSON.instance.lastErrorIndex = -1;
+                    instance.lastErrorIndex = -1;
                 } else {
-                    JSON.instance.lastErrorIndex = index;
+                    instance.lastErrorIndex = index;
                 }
                 return value;
             } else {
@@ -71,8 +70,8 @@ namespace NHaml.Tests.HamlSpec
         /// <returns>A JSON encoded string, or null if object 'json' is not serializable</returns>
         public static string JsonEncode(object json)
         {
-            StringBuilder builder = new StringBuilder(BUILDER_CAPACITY);
-            bool success = JSON.instance.SerializeValue(json, builder);
+            var builder = new StringBuilder(BUILDER_CAPACITY);
+            var success = instance.SerializeValue(json, builder);
             return (success ? builder.ToString() : null);
         }
 
@@ -82,7 +81,7 @@ namespace NHaml.Tests.HamlSpec
         /// <returns></returns>
         public static bool LastDecodeSuccessful()
         {
-            return (JSON.instance.lastErrorIndex == -1);
+            return (instance.lastErrorIndex == -1);
         }
 
         /// <summary>
@@ -91,7 +90,7 @@ namespace NHaml.Tests.HamlSpec
         /// <returns></returns>
         public static int GetLastErrorIndex()
         {
-            return JSON.instance.lastErrorIndex;
+            return instance.lastErrorIndex;
         }
 
         /// <summary>
@@ -101,57 +100,57 @@ namespace NHaml.Tests.HamlSpec
         /// <returns></returns>
         public static string GetLastErrorSnippet()
         {
-            if (JSON.instance.lastErrorIndex == -1) {
+            if (instance.lastErrorIndex == -1) {
                 return "";
             } else {
-                int startIndex = JSON.instance.lastErrorIndex - 5;
-                int endIndex = JSON.instance.lastErrorIndex + 15;
+                var startIndex = instance.lastErrorIndex - 5;
+                var endIndex = instance.lastErrorIndex + 15;
                 if (startIndex < 0) {
                     startIndex = 0;
                 }
-                if (endIndex >= JSON.instance.lastDecode.Length) {
-                    endIndex = JSON.instance.lastDecode.Length - 1;
+                if (endIndex >= instance.lastDecode.Length) {
+                    endIndex = instance.lastDecode.Length - 1;
                 }
 
-                return JSON.instance.lastDecode.Substring(startIndex, endIndex - startIndex + 1);
+                return instance.lastDecode.Substring(startIndex, endIndex - startIndex + 1);
             }
         }
 
         protected Hashtable ParseObject(char[] json, ref int index)
         {
-            Hashtable table = new Hashtable();
+            var table = new Hashtable();
             int token;
 
             // {
             NextToken(json, ref index);
 
-            bool done = false;
+            var done = false;
             while (!done) {
                 token = LookAhead(json, index);
-                if (token == JSON.TOKEN_NONE) {
+                if (token == TOKEN_NONE) {
                     return null;
-                } else if (token == JSON.TOKEN_COMMA) {
+                } else if (token == TOKEN_COMMA) {
                     NextToken(json, ref index);
-                } else if (token == JSON.TOKEN_CURLY_CLOSE) {
+                } else if (token == TOKEN_CURLY_CLOSE) {
                     NextToken(json, ref index);
                     return table;
                 } else {
 
                     // name
-                    string name = ParseString(json, ref index);
+                    var name = ParseString(json, ref index);
                     if (name == null) {
                         return null;
                     }
 
                     // :
                     token = NextToken(json, ref index);
-                    if (token != JSON.TOKEN_COLON) {
+                    if (token != TOKEN_COLON) {
                         return null;
                     }
 
                     // value
-                    bool success = true;
-                    object value = ParseValue(json, ref index, ref success);
+                    var success = true;
+                    var value = ParseValue(json, ref index, ref success);
                     if (!success) {
                         return null;
                     }
@@ -165,24 +164,24 @@ namespace NHaml.Tests.HamlSpec
 
         protected ArrayList ParseArray(char[] json, ref int index)
         {
-            ArrayList array = new ArrayList();
+            var array = new ArrayList();
 
             // [
             NextToken(json, ref index);
 
-            bool done = false;
+            var done = false;
             while (!done) {
-                int token = LookAhead(json, index);
-                if (token == JSON.TOKEN_NONE) {
+                var token = LookAhead(json, index);
+                if (token == TOKEN_NONE) {
                     return null;
-                } else if (token == JSON.TOKEN_COMMA) {
+                } else if (token == TOKEN_COMMA) {
                     NextToken(json, ref index);
-                } else if (token == JSON.TOKEN_SQUARED_CLOSE) {
+                } else if (token == TOKEN_SQUARED_CLOSE) {
                     NextToken(json, ref index);
                     break;
                 } else {
-                    bool success = true;
-                    object value = ParseValue(json, ref index, ref success);
+                    var success = true;
+                    var value = ParseValue(json, ref index, ref success);
                     if (!success) {
                         return null;
                     }
@@ -197,24 +196,24 @@ namespace NHaml.Tests.HamlSpec
         protected object ParseValue(char[] json, ref int index, ref bool success)
         {
             switch (LookAhead(json, index)) {
-                case JSON.TOKEN_STRING:
+                case TOKEN_STRING:
                     return ParseString(json, ref index);
-                case JSON.TOKEN_NUMBER:
+                case TOKEN_NUMBER:
                     return ParseNumber(json, ref index);
-                case JSON.TOKEN_CURLY_OPEN:
+                case TOKEN_CURLY_OPEN:
                     return ParseObject(json, ref index);
-                case JSON.TOKEN_SQUARED_OPEN:
+                case TOKEN_SQUARED_OPEN:
                     return ParseArray(json, ref index);
-                case JSON.TOKEN_TRUE:
+                case TOKEN_TRUE:
                     NextToken(json, ref index);
                     return Boolean.Parse("TRUE");
-                case JSON.TOKEN_FALSE:
+                case TOKEN_FALSE:
                     NextToken(json, ref index);
                     return Boolean.Parse("FALSE");
-                case JSON.TOKEN_NULL:
+                case TOKEN_NULL:
                     NextToken(json, ref index);
                     return null;
-                case JSON.TOKEN_NONE:
+                case TOKEN_NONE:
                     break;
             }
 
@@ -224,15 +223,14 @@ namespace NHaml.Tests.HamlSpec
 
         protected string ParseString(char[] json, ref int index)
         {
-            string s = "";
-            char c;
+            var s = "";
 
             EatWhitespace(json, ref index);
 			
             // "
-            c = json[index++];
+            var c = json[index++];
 
-            bool complete = false;
+            var complete = false;
             while (!complete) {
 
                 if (index == json.Length) {
@@ -266,13 +264,13 @@ namespace NHaml.Tests.HamlSpec
                     } else if (c == 't') {
                         s += '\t';
                     } else if (c == 'u') {
-                        int remainingLength = json.Length - index;
+                        var remainingLength = json.Length - index;
                         if (remainingLength >= 4) {
                             // fetch the next 4 chars
-                            char[] unicodeCharArray = new char[4];
+                            var unicodeCharArray = new char[4];
                             Array.Copy(json, index, unicodeCharArray, 0, 4);
                             // parse the 32 bit hex into an integer codepoint
-                            uint codePoint = UInt32.Parse(new string(unicodeCharArray), NumberStyles.HexNumber);
+                            var codePoint = UInt32.Parse(new string(unicodeCharArray), NumberStyles.HexNumber);
                             // convert the integer codepoint to a unicode char and add to string
                             s += Char.ConvertFromUtf32((int)codePoint);
                             // skip 4 chars
@@ -299,9 +297,9 @@ namespace NHaml.Tests.HamlSpec
         {
             EatWhitespace(json, ref index);
 
-            int lastIndex = GetLastIndexOfNumber(json, index);
-            int charLength = (lastIndex - index) + 1;
-            char[] numberCharArray = new char[charLength];
+            var lastIndex = GetLastIndexOfNumber(json, index);
+            var charLength = (lastIndex - index) + 1;
+            var numberCharArray = new char[charLength];
 
             Array.Copy(json, index, numberCharArray, 0, charLength);
             index = lastIndex + 1;
@@ -330,7 +328,7 @@ namespace NHaml.Tests.HamlSpec
 
         protected int LookAhead(char[] json, int index)
         {
-            int saveIndex = index;
+            var saveIndex = index;
             return NextToken(json, ref saveIndex);
         }
 
@@ -339,34 +337,34 @@ namespace NHaml.Tests.HamlSpec
             EatWhitespace(json, ref index);
 
             if (index == json.Length) {
-                return JSON.TOKEN_NONE;
+                return TOKEN_NONE;
             }
 			
-            char c = json[index];
+            var c = json[index];
             index++;
             switch (c) {
                 case '{':
-                    return JSON.TOKEN_CURLY_OPEN;
+                    return TOKEN_CURLY_OPEN;
                 case '}':
-                    return JSON.TOKEN_CURLY_CLOSE;
+                    return TOKEN_CURLY_CLOSE;
                 case '[':
-                    return JSON.TOKEN_SQUARED_OPEN;
+                    return TOKEN_SQUARED_OPEN;
                 case ']':
-                    return JSON.TOKEN_SQUARED_CLOSE;
+                    return TOKEN_SQUARED_CLOSE;
                 case ',':
-                    return JSON.TOKEN_COMMA;
+                    return TOKEN_COMMA;
                 case '"':
-                    return JSON.TOKEN_STRING;
+                    return TOKEN_STRING;
                 case '0': case '1': case '2': case '3': case '4': 
                 case '5': case '6': case '7': case '8': case '9':
                 case '-': 
-                    return JSON.TOKEN_NUMBER;
+                    return TOKEN_NUMBER;
                 case ':':
-                    return JSON.TOKEN_COLON;
+                    return TOKEN_COLON;
             }
             index--;
 
-            int remainingLength = json.Length - index;
+            var remainingLength = json.Length - index;
 
             // false
             if (remainingLength >= 5) {
@@ -376,7 +374,7 @@ namespace NHaml.Tests.HamlSpec
                     json[index + 3] == 's' &&
                     json[index + 4] == 'e') {
                         index += 5;
-                        return JSON.TOKEN_FALSE;
+                        return TOKEN_FALSE;
                     }
             }
 
@@ -387,7 +385,7 @@ namespace NHaml.Tests.HamlSpec
                     json[index + 2] == 'u' &&
                     json[index + 3] == 'e') {
                         index += 4;
-                        return JSON.TOKEN_TRUE;
+                        return TOKEN_TRUE;
                     }
             }
 
@@ -398,11 +396,11 @@ namespace NHaml.Tests.HamlSpec
                     json[index + 2] == 'l' &&
                     json[index + 3] == 'l') {
                         index += 4;
-                        return JSON.TOKEN_NULL;
+                        return TOKEN_NULL;
                     }
             }
 
-            return JSON.TOKEN_NONE;
+            return TOKEN_NONE;
         }
 
         protected bool SerializeObjectOrArray(object objectOrArray, StringBuilder builder)
@@ -420,11 +418,11 @@ namespace NHaml.Tests.HamlSpec
         {
             builder.Append("{");
 
-            IDictionaryEnumerator e = anObject.GetEnumerator();
-            bool first = true;
+            var e = anObject.GetEnumerator();
+            var first = true;
             while (e.MoveNext()) {
-                string key = e.Key.ToString();
-                object value = e.Value;
+                var key = e.Key.ToString();
+                var value = e.Value;
 
                 if (!first) {
                     builder.Append(", ");
@@ -447,9 +445,9 @@ namespace NHaml.Tests.HamlSpec
         {
             builder.Append("[");
 
-            bool first = true;
-            for (int i = 0; i < anArray.Count; i++) {
-                object value = anArray[i];
+            var first = true;
+            for (var i = 0; i < anArray.Count; i++) {
+                var value = anArray[i];
 
                 if (!first) {
                     builder.Append(", ");
@@ -476,7 +474,7 @@ namespace NHaml.Tests.HamlSpec
                 SerializeArray((ArrayList)value, builder);
             } else if (IsNumeric(value)) {
                 SerializeNumber(Convert.ToDouble(value), builder);
-            } else if ((value is Boolean) && ((Boolean)value == true)) {
+            } else if ((value is Boolean) && (Boolean)value) {
                 builder.Append("true");
             } else if ((value is Boolean) && ((Boolean)value == false)) {
                 builder.Append("false");
@@ -492,9 +490,9 @@ namespace NHaml.Tests.HamlSpec
         {
             builder.Append("\"");
 
-            char[] charArray = aString.ToCharArray();
-            for (int i = 0; i < charArray.Length; i++) {
-                char c = charArray[i];
+            var charArray = aString.ToCharArray();
+            for (var i = 0; i < charArray.Length; i++) {
+                var c = charArray[i];
                 if (c == '"') {
                     builder.Append("\\\"");
                 } else if (c == '\\') {
@@ -510,7 +508,7 @@ namespace NHaml.Tests.HamlSpec
                 } else if (c == '\t') {
                     builder.Append("\\t");
                 } else {
-                    int codepoint = Convert.ToInt32(c);
+                    var codepoint = Convert.ToInt32(c);
                     if ((codepoint >= 32) && (codepoint <= 126)) {
                         builder.Append(c);
                     } else {
