@@ -14,10 +14,17 @@ namespace NHaml.Compilers.VisualBasic
         {
             
         }
-    
- 
 
-        public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
+
+    	protected override string Comment
+    	{
+			get
+			{
+				return "'";
+			}
+    	}
+
+    	public override void AppendAttributeTokens(string schema, string name, IList<ExpressionStringToken> values)
         {
             var code = new StringBuilder();
             foreach (var item in values)

@@ -31,6 +31,7 @@ namespace NHaml.Compilers
         [SuppressMessage("Microsoft.Portability", "CA1903")]
         public Type Build(string source, string typeName)
         {
+        	//Debug.WriteLine(source);
             BuildSource(source);
 
             var compilerParams = new CompilerParameters();

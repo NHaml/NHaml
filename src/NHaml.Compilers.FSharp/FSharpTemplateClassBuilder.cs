@@ -38,7 +38,15 @@ namespace NHaml.Compilers.FSharp
             }
 
         }
-        protected override void RenderEndBlock()
+    	protected override string Comment
+    	{
+			get
+			{
+				return string.Empty;
+			}
+    	}
+
+    	protected override void RenderEndBlock()
         {
             RenderMethod.Statements.Add(new CodeSnippetStatement
             {

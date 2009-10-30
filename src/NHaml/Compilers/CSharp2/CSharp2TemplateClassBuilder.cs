@@ -8,19 +8,27 @@ namespace NHaml.Compilers.CSharp2
         {
         }
 
-        protected override void RenderEndBlock()
+    	protected override string Comment
+    	{
+			get
+			{
+				return "//";
+			}
+    	}
+
+    	protected override void RenderEndBlock()
         {
-            RenderMethod.Statements.Add(new CodeSnippetStatement
+			RenderMethod.Statements.Add(new CodeSnippetExpression
             {
-                Value = "}",
+                Value = "}//",
             });
         }
 
         protected override void RenderBeginBlock()
         {
-            RenderMethod.Statements.Add(new CodeSnippetStatement
+            RenderMethod.Statements.Add(new CodeSnippetExpression
             {
-                Value = "{",
+				Value = "{//",
             });
         }
     }

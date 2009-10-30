@@ -31,29 +31,26 @@ namespace NHaml.Compilers
         }
         public override void AppendSilentCode(string code, bool closeStatement)
         {
-            if (code != null)
-            {
-                code = code.Trim();
+			if (code != null)
+			{
+				code = code.Trim();
 
-                if (closeStatement)
-                {
-                    RenderMethod.Statements.Add(new CodeSnippetExpression
-                    {
-                        Value = code,
-                    });
-                }
-                else
-                {
-                    RenderMethod.Statements.Add(new CodeSnippetStatement
-                    {
-                        Value = code,
-                    });
-                }
+				if (!closeStatement)
+				{
+					code = code + Comment;
+				}
+				RenderMethod.Statements.Add(new CodeSnippetExpression
+				                            {
+				                            	Value = code,
+				                            });
 
-            }
+			}
 
         }
-        public override void AppendOutput(string value)
+
+    	protected abstract string Comment { get; }
+
+    	public override void AppendOutput(string value)
         {
             if (value == null)
             {
