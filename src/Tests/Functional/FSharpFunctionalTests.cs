@@ -1,9 +1,10 @@
+
+#if (DEBUG)
 using NHaml.Compilers.FSharp;
 using NUnit.Framework;
 
 namespace NHaml.Tests.Functional
 {
-#if (DEBUG)
     [TestFixture]
     public class FSharpFunctionalTests : FunctionalTestFixture
     {
@@ -34,5 +35,6 @@ namespace NHaml.Tests.Functional
             base.LambdaEval();
         }
     }
-#endif
 }
+
+#endif
