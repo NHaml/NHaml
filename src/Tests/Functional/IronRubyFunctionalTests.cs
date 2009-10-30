@@ -35,7 +35,11 @@ namespace NHaml.Tests.Functional
             base.LambdaEval();
         }
 
-
+		[Test, Ignore]
+		public override void MetaModel()
+		{
+			base.MetaModel();
+		}
         [Test, Ignore]
         public override void MetaWithoutModel()
         {
