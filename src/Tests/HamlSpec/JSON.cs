@@ -126,7 +126,7 @@ namespace NHaml.Tests.HamlSpec
             var done = false;
             while (!done)
             {
-            	int token = LookAhead(json, index);
+            	var token = LookAhead(json, index);
             	if (token == TOKEN_NONE) {
                     return null;
                 } else if (token == TOKEN_COMMA) {
@@ -228,16 +228,15 @@ namespace NHaml.Tests.HamlSpec
             EatWhitespace(json, ref index);
 			
             // "
-            var c = json[index++];
 
-            var complete = false;
+        	var complete = false;
             while (!complete) {
 
                 if (index == json.Length) {
                     break;
                 }
 
-                c = json[index++];
+                var c = json[index++];
                 if (c == '"') {
                     complete = true;
                     break;

@@ -15,6 +15,7 @@ namespace NHaml.Tests.Functional
             _templateEngine.Options.TemplateContentProvider.PathSources.Insert(0, TemplatesFolder + @"IronRuby");
         }
 
+		[Test]
         [Ignore("Until debugging with IR works")]
         public override void WithRunTimeException()
         {
@@ -34,16 +35,6 @@ namespace NHaml.Tests.Functional
             base.LambdaEval();
         }
 
-        [Test, Ignore]
-        public override void MultiLayout()
-        {
-            base.MultiLayout();
-        }
-        [Test, Ignore]
-        public override void MetaModel()
-        {
-            base.MetaModel();
-        }
 
         [Test, Ignore]
         public override void MetaWithoutModel()
