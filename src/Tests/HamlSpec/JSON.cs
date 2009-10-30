@@ -119,15 +119,15 @@ namespace NHaml.Tests.HamlSpec
         protected Hashtable ParseObject(char[] json, ref int index)
         {
             var table = new Hashtable();
-            int token;
 
-            // {
+        	// {
             NextToken(json, ref index);
 
             var done = false;
-            while (!done) {
-                token = LookAhead(json, index);
-                if (token == TOKEN_NONE) {
+            while (!done)
+            {
+            	int token = LookAhead(json, index);
+            	if (token == TOKEN_NONE) {
                     return null;
                 } else if (token == TOKEN_COMMA) {
                     NextToken(json, ref index);
@@ -159,7 +159,7 @@ namespace NHaml.Tests.HamlSpec
                 }
             }
 
-            return table;
+        	return table;
         }
 
         protected ArrayList ParseArray(char[] json, ref int index)

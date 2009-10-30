@@ -35,9 +35,9 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\FSharp.Compiler.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Compiler.CodeDom, Version=1.9.6.2, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+    <Reference Include="FSharp.Compiler.CodeDom, Version=1.9.7.8, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\FSharp.Compiler.CodeDom.dll</HintPath>
+      <HintPath>..\..\lib\FSharp\FSharp.Compiler.CodeDom.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Core, Version=1.9.6.2, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
