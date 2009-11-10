@@ -63,7 +63,7 @@ namespace NHaml.Web.Mvc
             _templateEngine.Options.AddReference( typeof( NHamlMvcView<> ).Assembly.Location );
         }
 
-        protected TemplateEngine TemplateEngine
+        public TemplateEngine TemplateEngine
         {
             get { return _templateEngine; }
         }
