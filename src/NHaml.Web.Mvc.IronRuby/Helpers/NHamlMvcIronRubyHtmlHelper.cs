@@ -1,11 +1,6 @@
 ﻿using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using IronRuby.Builtins;
-#if NET4
-using ReturnString = System.Web.Mvc.MvcHtmlString;
-#else
-using ReturnString = System.String;
-#endif
 
 namespace NHaml.Web.Mvc.IronRuby.Helpers
 {
@@ -18,22 +13,22 @@ namespace NHaml.Web.Mvc.IronRuby.Helpers
         {
         }
 
-        public ReturnString ActionLink(string linkText, Hash values)
+        public MvcHtmlString ActionLink(string linkText, Hash values)
         {
             return this.RouteLink( linkText, values.ToRouteDictionary() );
         }
 
-        public ReturnString TextBox(string name, object value)
+        public MvcHtmlString TextBox(string name, object value)
         {
             return InputExtensions.TextBox( this, name, value );
         }
 
-        public ReturnString TextBox(string name)
+        public MvcHtmlString TextBox(string name)
         {
             return InputExtensions.TextBox( this, name );
         }
 
-        public ReturnString DropDownList(string name, SelectList selectList)
+        public MvcHtmlString DropDownList(string name, SelectList selectList)
         {
             return SelectExtensions.DropDownList( this, name, selectList );
         }

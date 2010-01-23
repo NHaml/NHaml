@@ -43,10 +43,6 @@
     <NoWarn>1685</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Scripting, Version=1.0.0.5000, Culture=neutral, processorArchitecture=MSIL">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\Microsoft.Scripting.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Core">
@@ -60,9 +56,9 @@
     <Reference Include="System.Web.Abstractions">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
-    <Reference Include="System.Web.Mvc, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\MVC1.0\System.Web.Mvc.dll</HintPath>
+      <HintPath>..\..\lib\MVC2.0\System.Web.Mvc.dll</HintPath>
     </Reference>
     <Reference Include="System.Web.Routing">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
