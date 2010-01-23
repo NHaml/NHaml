@@ -74,6 +74,7 @@ namespace NHaml.Tests
             mockViewContext.ExpectGet(x => x.ViewData).Returns(new ViewDataDictionary());
             mockViewContext.ExpectGet(x => x.TempData).Returns(new TempDataDictionary());
             mockViewContext.ExpectGet(x => x.RouteData).Returns(_controllerContext.RouteData);
+            mockViewContext.ExpectGet(x => x.Writer).Returns(Output);
             view.Render(mockViewContext.Object, Output);
 
             AssertRender(Output, expectedName);
