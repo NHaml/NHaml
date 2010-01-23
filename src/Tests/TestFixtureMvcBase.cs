@@ -66,7 +66,7 @@ namespace NHaml.Tests
 
         protected void AssertView( IView view, string expectedName )
         {
-            Assert.IsNotNull(view, "ViewEngine dose not returned a view");
+            Assert.IsNotNull(view, "ViewEngine does not returned a view");
             var mockViewContext = new Mock<ViewContext>();
             mockViewContext.ExpectGet( x => x.View ).Returns( view );
             mockViewContext.ExpectGet( x => x.Controller ).Returns( _controllerContext.Controller );

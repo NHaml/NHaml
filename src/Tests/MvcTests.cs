@@ -15,7 +15,7 @@ namespace NHaml.Tests
         public void RenderViewWhenMasterIsNullButApplicationHamlNotExists()
         {
             var save = _viewEngine.DefaultMaster;
-            _viewEngine.DefaultMaster = "__DefaultMasterDoseNotExists";
+            _viewEngine.DefaultMaster = "__DefaultMasterDoesNotExists";
 
             AssertView( "Simple", null, "RenderOnlyPartialView" );
 
@@ -32,7 +32,7 @@ namespace NHaml.Tests
         public void RenderViewWhenMasterIsEmptyButApplicationHamlNotExists()
         {
             var save = _viewEngine.DefaultMaster;
-            _viewEngine.DefaultMaster = "__DefaultMasterDoseNotExists";
+            _viewEngine.DefaultMaster = "__DefaultMasterDoesNotExists";
 
             AssertView( "Simple", string.Empty, "RenderOnlyPartialView" );
 
@@ -84,19 +84,19 @@ namespace NHaml.Tests
         }
 
         [Test]
-        public void MasterDoseNotExists()
+        public void MasterDoesNotExists()
         {
-            var view = _viewEngine.FindView( _controllerContext, "Simple", "__MasterDoseNotExists", false ).View;
+            var view = _viewEngine.FindView( _controllerContext, "Simple", "__MasterDoesNotExists", false ).View;
 
-            Assert.IsNull( view, "ViewEngine should not return a view when the master file dose not exists" );
+            Assert.IsNull( view, "ViewEngine should not return a view when the master file does not exists" );
         }
 
         [Test]
-        public void ViewDoseNotExists()
+        public void ViewDoesNotExists()
         {
-            var view = _viewEngine.FindView( _controllerContext, "__ViewDoseNotExits", null, false ).View;
+            var view = _viewEngine.FindView( _controllerContext, "__ViewDoesNotExits", null, false ).View;
 
-            Assert.IsNull( view, "ViewEngine should not return a view when the view file dose not exists" );
+            Assert.IsNull( view, "ViewEngine should not return a view when the view file does not exists" );
         }
    
     }
