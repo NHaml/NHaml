@@ -1,7 +1,0 @@
-- Category category = (Category)ViewData["category"]
-$Component SimpleComponent
-%h2= category.CategoryName
-%ul
-  - foreach (var product in category.Products)
-    _ Product
-= Html.LinkTo("Add New Product", "Products", "New")
