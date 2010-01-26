@@ -38,11 +38,11 @@ namespace NHaml.Tests
 
             ViewEngines.Engines.Add(_viewEngine);
 
-            mockHttpRequest.Expect(req => req.MapPath(It.IsAny<string>()))
+            mockHttpRequest.Setup(req => req.MapPath(It.IsAny<string>()))
                 .Returns<string>(FakeServerMapPath);
-            mockHttpResponse.Expect(rsp => rsp.Output).Returns(Output);
-            mockContext.Expect(ctx => ctx.Response).Returns(mockHttpResponse.Object);
-            mockContext.Expect(ctx => ctx.Request).Returns(mockHttpRequest.Object);
+            mockHttpResponse.Setup(rsp => rsp.Output).Returns(Output);
+            mockContext.Setup(ctx => ctx.Response).Returns(mockHttpResponse.Object);
+            mockContext.Setup(ctx => ctx.Request).Returns(mockHttpRequest.Object);
 
             var routeData = new RouteData();
             routeData.Values.Add("controller", "Mock");
@@ -68,13 +68,13 @@ namespace NHaml.Tests
         {
             Assert.IsNotNull(view, "ViewEngine does not returned a view");
             var mockViewContext = new Mock<ViewContext>();
-            mockViewContext.ExpectGet( x => x.View ).Returns( view );
-            mockViewContext.ExpectGet( x => x.Controller ).Returns( _controllerContext.Controller );
-            mockViewContext.ExpectGet(x => x.HttpContext).Returns(_controllerContext.HttpContext);
-            mockViewContext.ExpectGet(x => x.ViewData).Returns(new ViewDataDictionary());
-            mockViewContext.ExpectGet(x => x.TempData).Returns(new TempDataDictionary());
-            mockViewContext.ExpectGet(x => x.RouteData).Returns(_controllerContext.RouteData);
-            mockViewContext.ExpectGet(x => x.Writer).Returns(Output);
+            mockViewContext.SetupGet(x => x.View).Returns(view);
+            mockViewContext.SetupGet(x => x.Controller).Returns(_controllerContext.Controller);
+            mockViewContext.SetupGet(x => x.HttpContext).Returns(_controllerContext.HttpContext);
+            mockViewContext.SetupGet(x => x.ViewData).Returns(new ViewDataDictionary());
+            mockViewContext.SetupGet(x => x.TempData).Returns(new TempDataDictionary());
+            mockViewContext.SetupGet(x => x.RouteData).Returns(_controllerContext.RouteData);
+            mockViewContext.SetupGet(x => x.Writer).Returns(Output);
             view.Render(mockViewContext.Object, Output);
 
             AssertRender(Output, expectedName);

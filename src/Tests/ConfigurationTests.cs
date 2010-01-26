@@ -17,7 +17,7 @@ namespace NHaml.Tests
         private static void CreateAndAssertTemplateCompiler( string name, Type templateCompilerType )
         {
             var sectionMock = new Mock<NHamlConfigurationSection>();
-            sectionMock.Expect( s => s.TemplateCompiler )
+            sectionMock.Setup(s => s.TemplateCompiler)
               .Returns( () => name );
 
             var templateCompiler = sectionMock.Object.CreateTemplateCompiler();
