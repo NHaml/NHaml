@@ -73,9 +73,6 @@
     <Compile Include="Models\ProductsViewData.cs" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="App_Data\Northwind.sdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <Content Include="Default.aspx" />
     <Content Include="Content\Site.css" />
   </ItemGroup>
@@ -105,6 +102,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="App_Data\" />
     <Folder Include="Properties\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -138,7 +136,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
     <PreBuildEvent>del /q/f "$(TargetDir)*.*"
-copy /Y "$(ProjectDir)App_Data\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
+copy /Y "$(SolutionDir)Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
 copy "$(ProjectDir)Web.net35.config" "$(ProjectDir)Web.config"</PreBuildEvent>
   </PropertyGroup>
 </Project>
