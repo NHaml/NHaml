@@ -1,10 +1,10 @@
-NHaml
+ï»¿NHaml
 ==============
 NHaml (pronounced enamel) is a pure .NET implementation of the popular Rails Haml view engine. From the Haml website:
 
-"Haml is a markup language that‘s used to cleanly and simply describe the XHTML of any web document, without the use of inline code. Haml functions as a replacement for inline page templating systems such as PHP, ERB, and ASP. However, Haml avoids the need for explicitly coding XHTML into the template, because it is actually an abstract description of the XHTML, with some code to generate dynamic content." 
+"Haml is a markup language thatâ€˜s used to cleanly and simply describe the XHTML of any web document, without the use of inline code. Haml functions as a replacement for inline page templating systems such as PHP, ERB, and ASP. However, Haml avoids the need for explicitly coding XHTML into the template, because it is actually an abstract description of the XHTML, with some code to generate dynamic content." 
 
-In other words, NHaml is an external DSL for XML. It’s primary qualities are it’s simplicity, terseness, performance and that it outputs nicely formatted XML. Additionally, the NHaml view engine provides support for Rails style layouts and partials and ships with an ASP.NET MVC view engine. 
+In other words, NHaml is an external DSL for XML. Itâ€™s primary qualities are itâ€™s simplicity, terseness, performance and that it outputs nicely formatted XML. Additionally, the NHaml view engine provides support for Rails style layouts and partials and ships with an ASP.NET MVC view engine. 
 
 License
 ================
@@ -30,16 +30,16 @@ THE SOFTWARE.
 
 Issues
 ================
-Ouer IssueTracker is located here: http://code.google.com/p/nhaml/issues/list
+Ouer IssueTracker is located here: [http://code.google.com/p/nhaml/issues/list]
 
 Getting Help
 ===========
-The Google Group NHaml-Users at (http://groups.google.com/group/nhaml-users) is the best place to go.
+The Google Group NHaml-Users at ([http://groups.google.com/group/nhaml-users]) is the best place to go.
 
 Contributors
 ============
-- Andrew Peters http://andrewpeters.net
-- Steve Wagner (lanwin) http://www.lanwin.de
+- Andrew Peters [http://andrewpeters.net]
+- Steve Wagner (lanwin) [http://www.lanwin.de]
 - Simon Cropp
 
 
