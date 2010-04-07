@@ -1,5 +1,6 @@
 
 using NHaml.Compilers;
+using System.Collections.Generic;
 
 namespace NHaml.Rules
 {
@@ -19,7 +20,15 @@ namespace NHaml.Rules
             var key = content.Substring(0, indexOfEquals).Trim();
             var value = content.Substring(indexOfEquals+1, content.Length - indexOfEquals - 1).Trim();
 
-            builder.Meta[key] = value;
+            if (key == "type")
+            {
+              key = "model";
+            }
+            if (!builder.Meta.ContainsKey(key))
+            {
+              builder.Meta[key] = new List<string>();
+            }
+            builder.Meta[key].Add(value);
 
             return EmptyClosingAction;
         }

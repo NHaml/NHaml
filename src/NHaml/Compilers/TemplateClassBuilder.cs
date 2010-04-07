@@ -14,11 +14,11 @@ namespace NHaml.Compilers
             Output = new StringBuilder();
             Preamble = new StringBuilder();
             ClassName = className;
-            Meta = new Dictionary<string, string>();
+            Meta = new Dictionary<string, List<string> >();
         }
 
 
-        public Dictionary<string, string> Meta { get; private set; }
+        public Dictionary<string, List<string> > Meta { get; private set; }
 		public string CurrentTextWriterVariableName { get; set; }
         public Type BaseType { get; set; }
 

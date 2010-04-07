@@ -68,6 +68,24 @@ namespace NHaml
                 templateClassBuilder.BaseType = _templateBaseType;
             }
             templateParser.Options.AddReferences(_templateBaseType);
+
+            List<string> values;
+            if (templateClassBuilder.Meta.TryGetValue("namespace", out values))
+            {
+              foreach (string value in values)
+              {
+                templateParser.Options.AddUsing(value);
+              }
+            }
+
+            if (templateClassBuilder.Meta.TryGetValue("assembly", out values))
+            {
+              foreach (string value in values)
+              {
+                templateParser.Options.AddReference(value);
+              }
+            }
+
             if (options.BeforeCompile != null)
             {
                 options.BeforeCompile(templateClassBuilder, context);
@@ -78,11 +96,12 @@ namespace NHaml
          
         }
 
-        private static Type GetModelType(IDictionary<string, string> meta)
+        private static Type GetModelType(IDictionary<string, List<string> > meta)
         {
-            string model;
-            if (meta.TryGetValue("model", out model))
+            List<string> modellist;
+            if (meta.TryGetValue("model", out modellist))
             {
+                var model = modellist[0];
                 foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
                     var modelType = assembly.GetType(model, false, true);

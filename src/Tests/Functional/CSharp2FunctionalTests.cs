@@ -11,5 +11,17 @@ namespace NHaml.Tests.Functional
 
             _templateEngine.Options.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
         }
+
+        [Test]
+        public virtual void MetaNamespace()
+        {
+          AssertRender("MetaNamespace");
+        }
+
+        [Test]
+        public virtual void MetaAssembly()
+        {
+          AssertRender("MetaAssembly");
+        }
     }
 }
