@@ -39,13 +39,13 @@ namespace NHaml.Web.Mvc
 #endif
         protected virtual void CreateHelpers( ViewContext viewContext )
         {
-            Ajax = new AjaxHelper( viewContext, this );
-            Html = new HtmlHelper( viewContext, this );
+            Ajax = new AjaxHelper<TModel>( viewContext, this );
+            Html = new HtmlHelper<TModel>( viewContext, this );
             Url = new UrlHelper( viewContext.RequestContext );
         }
 
-        public AjaxHelper Ajax { get; protected set; }
-        public HtmlHelper Html { get; protected set; }
+        public AjaxHelper<TModel> Ajax { get; protected set; }
+        public HtmlHelper<TModel> Html { get; protected set; }
         public UrlHelper Url { get; protected set; }
 
         public ViewContext ViewContext { get; private set; }
