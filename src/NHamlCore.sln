@@ -1,6 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.Boo", "NHaml.Compilers.Boo\NHaml.Compilers.Boo.csproj", "{E9AFFBF2-A4E1-459A-9BB7-80A59D4AA8FD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Compilers.IronRuby", "NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj", "{ACB2E0A4-C775-4294-9626-8F042C009CE1}"
