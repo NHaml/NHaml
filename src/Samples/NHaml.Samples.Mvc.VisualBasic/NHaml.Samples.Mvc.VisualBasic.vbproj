@@ -147,7 +147,6 @@
     <Folder Include="My Project\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.VisualBasic.targets" />
-  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">
@@ -178,6 +177,6 @@
     <PostBuildEvent>del "$(TargetDir)Microsoft.Scripting.ExtensionAttribute.*"</PostBuildEvent>
     <PreBuildEvent>del /q/f "$(TargetDir)*.*"
 copy /Y "$(SolutionDir)Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
-copy "$(ProjectDir)Web.net35.config" "$(ProjectDir)Web.config"</PreBuildEvent>
+</PreBuildEvent>
   </PropertyGroup>
 </Project>
