@@ -1,8 +1,6 @@
 ﻿
-Microsoft Visual Studio Solution File, Format Version 10.00
-# Visual Studio 2008
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml", "NHaml\NHaml.csproj", "{9B885FC4-45C0-4526-9253-A799238EDD66}"
-EndProject
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB-34CF-4A08-B70B-6582290AA010}"
 	ProjectSection(SolutionItems) = preProject
 		CodingStandards.txt = CodingStandards.txt
@@ -12,6 +10,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Items", "Items", "{1472B7FB
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{3A6FD686-BE88-44A8-8511-AB2E3EB54C07}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml", "NHaml\NHaml.csproj", "{9B885FC4-45C0-4526-9253-A799238EDD66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests", "Tests\Tests.csproj", "{94F9E5B5-2BE3-4C25-BCCF-86874D10854A}"
 EndProject
