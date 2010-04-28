@@ -12,7 +12,8 @@
     <RootNamespace>NHaml.Samples.Mvc.CSharp</RootNamespace>
     <AssemblyName>NHaml.Samples.Mvc.CSharp</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
-    <FileUpgradeFlags>0</FileUpgradeFlags>
+    <FileUpgradeFlags>
+    </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation />
   </PropertyGroup>
