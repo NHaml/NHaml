@@ -1,6 +1,6 @@
 ﻿using System.Web.Mvc;
 
-namespace NHaml.Samples.Mvc.CSharp.Models
+namespace NHaml.Samples.Mvc.CSharp4.Models
 {
     public class ProductsEditViewData
     {

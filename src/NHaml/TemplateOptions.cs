@@ -210,12 +210,10 @@ namespace NHaml
         {
             Invariant.ArgumentNotEmpty(assemblyLocation, "assemblyLocation");
             //TODO: sort this with iron ruby
-#if NET4
             if (assemblyLocation.ToLower().EndsWith("mscorlib.dll"))
             {
                 return;
             }
-#endif
             References.Add(assemblyLocation);
         }
 

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-namespace NHaml.Samples.Mvc.CSharp.Models
+namespace NHaml.Samples.Mvc.CSharp4.Models
 {
     public partial class NorthwindDataContext
     {

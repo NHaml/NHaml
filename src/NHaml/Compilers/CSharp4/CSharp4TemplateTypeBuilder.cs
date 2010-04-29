@@ -5,7 +5,7 @@ namespace NHaml.Compilers.CSharp4
         public CSharp4TemplateTypeBuilder(TemplateOptions options)
             : base( options)
         {
-            ProviderOptions.Add("CompilerVersion", "v4");
+            ProviderOptions.Add("CompilerVersion", "v4.0");
         }
 
 

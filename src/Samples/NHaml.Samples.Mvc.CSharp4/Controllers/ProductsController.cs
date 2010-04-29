@@ -1,8 +1,8 @@
 ﻿using System.Configuration;
 using System.Web.Mvc;
-using NHaml.Samples.Mvc.CSharp.Models;
+using NHaml.Samples.Mvc.CSharp4.Models;
 
-namespace NHaml.Samples.Mvc.CSharp.Controllers
+namespace NHaml.Samples.Mvc.CSharp4.Controllers
 {
     public class ProductsController : Controller
     {

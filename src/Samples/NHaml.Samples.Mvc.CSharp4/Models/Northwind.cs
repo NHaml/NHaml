@@ -15,7 +15,7 @@ using System.Data.Linq.Mapping;
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace NHaml.Samples.Mvc.CSharp.Models
+namespace NHaml.Samples.Mvc.CSharp4.Models
 {
     [Database( Name = "northwind" )]
     public partial class NorthwindDataContext : DataContext

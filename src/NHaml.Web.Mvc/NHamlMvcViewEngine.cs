@@ -7,6 +7,7 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Security;
 #endif
+using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
@@ -47,18 +48,17 @@ namespace NHaml.Web.Mvc
             _templateEngine.Options.AddUsing( "System.Web.Mvc" );
             _templateEngine.Options.AddUsing( "System.Web.Mvc.Html" );
             _templateEngine.Options.AddUsing( "System.Web.Routing" );
+            _templateEngine.Options.AddUsing("NHaml.Web.Mvc");
+            _templateEngine.Options.AddUsing("System.Web.Mvc.Html");
 
-            _templateEngine.Options.AddUsing( "NHaml.Web.Mvc" );
-
-#if NET4
-            _templateEngine.Options.AddReference( Assembly.Load("System.Web.Routing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35").Location );
-#endif
+            foreach (var referencedAssembly in typeof(MvcHandler).Assembly.GetReferencedAssemblies())
+            {
+                _templateEngine.Options.AddReference(Assembly.Load(referencedAssembly).Location);
+            } 
             _templateEngine.Options.AddReference( typeof( UserControl ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( RouteValueDictionary ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( LinkExtensions ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( Expression ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( IView ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( NHamlMvcView<> ).Assembly.Location );
         }
