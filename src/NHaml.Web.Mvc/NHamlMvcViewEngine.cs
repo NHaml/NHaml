@@ -1,12 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Linq;
-using System.Linq.Expressions;
-
-#if (NET4)
-using System.Reflection;
-using System.Security;
-#endif
 using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
@@ -26,20 +20,12 @@ namespace NHaml.Web.Mvc
 
         public string DefaultMaster { get; set; }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         public NHamlMvcViewEngine()
         {
             InitializeTemplateEngine();
             InitializeViewLocations();
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         private void InitializeTemplateEngine()
         {
             DefaultMaster = "Application";
@@ -84,10 +70,6 @@ namespace NHaml.Web.Mvc
             PartialViewLocationFormats = ViewLocationFormats;
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
             if (string.IsNullOrEmpty(masterName))
@@ -106,10 +88,6 @@ namespace NHaml.Web.Mvc
             return base.FindView(controllerContext, viewName, masterName, useCache);
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
             return (IView)_templateEngine.Compile(
@@ -117,10 +95,6 @@ namespace NHaml.Web.Mvc
                 GetViewBaseType(controllerContext)).CreateInstance();
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
@@ -128,19 +102,11 @@ namespace NHaml.Web.Mvc
             return (IView)_templateEngine.Compile(new List<string>{ masterPath, viewPath}, GetViewBaseType(controllerContext)).CreateInstance();
         }
 
-//#if NET4
-//        [SecuritySafeCritical]
-//        [SecurityCritical]
-//#endif
         protected virtual Type ViewGenericBaseType
         {
             get { return typeof(NHamlMvcView<>); }
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         protected virtual Type GetViewBaseType(ControllerContext controllerContext)
         {
             var modelType = typeof(object);
@@ -162,10 +128,6 @@ namespace NHaml.Web.Mvc
             return ViewGenericBaseType.MakeGenericType(modelType);
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         protected virtual string VirtualPathToPhysicalPath(RequestContext context, string path)
         {
             return context.HttpContext.Request.MapPath(path);

@@ -3,11 +3,7 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
-
 using NHaml.Utils;
-#if NET4
-using System.Security;
-#endif
 
 namespace NHaml.Web.Mvc
 {
@@ -16,10 +12,6 @@ namespace NHaml.Web.Mvc
     public abstract class NHamlMvcView<TModel> : Template, IView, IViewDataContainer
       where TModel : class
     {
-#if NET4
-    [SecuritySafeCritical]
-    [SecurityCritical]
-#endif
         public void Render( ViewContext viewContext, TextWriter writer )
         {
             Invariant.ArgumentNotNull( viewContext, "viewContext" );
@@ -33,10 +25,6 @@ namespace NHaml.Web.Mvc
             Render( writer );
         }
 
-#if NET4
-    [SecuritySafeCritical]
-    [SecurityCritical]
-#endif
         protected virtual void CreateHelpers( ViewContext viewContext )
         {
             Ajax = new AjaxHelper( viewContext, this );
@@ -70,10 +58,6 @@ namespace NHaml.Web.Mvc
             set { SetViewData( value ); }
         }
 
-#if NET4
-        [SecuritySafeCritical]
-        [SecurityCritical]
-#endif
         private void SetViewData( ViewDataDictionary viewData )
         {
             if( typeof( ViewDataDictionary<TModel> ).IsAssignableFrom( viewData.GetType() ) )
