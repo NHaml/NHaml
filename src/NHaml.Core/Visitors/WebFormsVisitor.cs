@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NHaml.Core.Ast;
+using System.Web;
 
 namespace NHaml.Core.Visitors
 {
@@ -112,10 +113,12 @@ namespace NHaml.Core.Visitors
             _sb.Append(text);
         }
 
-        protected override void WriteCode(string code)
+        protected override void WriteCode(string code, bool escapeHtml)
         {
             _sb.Append("<%= ");
+            if (escapeHtml) _sb.Append("Html.Encode(");
             _sb.Append(code);
+            if (escapeHtml) _sb.Append(")");
             _sb.Append(" %>");
         }
 
@@ -125,7 +128,7 @@ namespace NHaml.Core.Visitors
             _sb = new StringBuilder();
         }
 
-        protected override string PopWriter()
+        protected override object PopWriter()
         {
             var result = _sb.ToString();
             _sb = _stack.Pop();
@@ -148,6 +151,51 @@ namespace NHaml.Core.Visitors
         protected override void WriteEndBlock()
         {
             _sb.Append("<% } %>");
+        }
+
+        protected override void WriteData(object data, string filter)
+        {
+            if (filter == null)
+            {
+                WriteText(data as string);
+                return;
+            }
+            switch (filter)
+            {
+                case "preserve":
+                    {
+                        var replace = data as string;
+                        replace += System.Environment.NewLine;
+                        WriteText(replace.Replace(System.Environment.NewLine, "&#x000A;"));
+                        break;
+                    }
+                case "plain":
+                    {
+                        WriteText(data as string);
+                        break;
+                    }
+                case "escaped":
+                    {
+                        var text = data as string;
+                        WriteText(HttpUtility.HtmlEncode(text));
+                        break;
+                    }
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        protected override LateBindingNode DataJoiner(string joinString, object[] data, bool sort)
+        {
+            List<string> d = new List<string>();
+            foreach (object o in data) {
+                d.Add(o as string);
+            }
+            if (sort)
+            {
+                d.Sort();
+            }
+            return new LateBindingNode() { Value = String.Join(joinString, d.ToArray()) };
         }
     }
 }

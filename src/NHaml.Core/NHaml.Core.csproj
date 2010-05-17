@@ -50,6 +50,7 @@
     <Compile Include="Ast\DocumentNode.cs" />
     <Compile Include="Ast\FilterNode.cs" />
     <Compile Include="Ast\CodeNode.cs" />
+    <Compile Include="Ast\LateBindingNode.cs" />
     <Compile Include="IO\SourceInfo.cs" />
     <Compile Include="Ast\TagNode.cs" />
     <Compile Include="Ast\TextChunk.cs" />
@@ -75,6 +76,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Visitors\CodeDomVisitor.cs" />
     <Compile Include="Visitors\DebugVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
     <Compile Include="Visitors\WebFormsVisitor.cs" />

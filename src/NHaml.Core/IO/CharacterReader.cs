@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using NHaml.Core.Exceptions;
 
 namespace NHaml.Core.IO
 {
@@ -87,17 +88,19 @@ namespace NHaml.Core.IO
 
         public bool Skip(string skiplist)
         {
-            //Todo: Check if the right chars are ware skiped and return parser error
-
             var count = skiplist.Length;
 
-            if(!_currentChar.HasValue)
-                if(!Read())
-                    return false;
+            if (!_currentChar.HasValue)
+                if (!Read())
+                    throw new ParserException(this,String.Format("Parser error: '{0}' expected, but end of line found",skiplist[0]));
 
-            for(var index = 0; index < count; index++)
-                if(!Read())
-                    return false;
+            for (var index = 0; index < count; index++)
+            {
+                if (_currentChar.Value != skiplist[index])
+                    throw new ParserException(this, String.Format("Parser error: '{0}' expected, but '{1}' found", skiplist[index], _currentChar.Value));
+                if (!Read() && (index != count-1))
+                    throw new ParserException(this, String.Format("Parser error: '{0}' expected, but end of line found", skiplist[0]));
+            }
 
             return true;
         }

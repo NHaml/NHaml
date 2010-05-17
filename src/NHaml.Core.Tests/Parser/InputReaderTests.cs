@@ -166,11 +166,12 @@ namespace NHaml.Core.Tests.Parser
             var input = new StringReader("abcdef");
             var reader = new InputReader(input);
             Assert.True(reader.ReadNextLine());
+            Assert.True(reader.Read());
 
             Assert.True(reader.Read());
             Assert.True(reader.Skip("bc"));
-            Assert.AreEqual('c', reader.CurrentChar);
-            Assert.AreEqual(2, reader.Index);
+            Assert.AreEqual('d', reader.CurrentChar);
+            Assert.AreEqual(3, reader.Index);
         }
 
         [Test]

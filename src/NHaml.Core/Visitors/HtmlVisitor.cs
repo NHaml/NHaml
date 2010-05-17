@@ -136,7 +136,7 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(CodeChunk chunk)
         {
-            WriteCode(chunk.Code);
+            WriteCode(chunk.Code, false);
         }
 
         public override void Visit(AttributeNode node)
@@ -188,30 +188,11 @@ namespace NHaml.Core.Visitors
                     WriteText(@"</script>");
                     break;
                 }
-                case "preserve":
-                {
-                    var replace = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
-
-                    replace += System.Environment.NewLine;
-
-                    WriteText(replace.Replace(System.Environment.NewLine, "&#x000A;"));
-
-                    break;
-                }
-                case "plain":
-                {
-                    WriteText(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)));
-                    break;
-                }
-
-                case "escaped":
-                {
-                    var text = Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child));
-                    WriteText(HttpUtility.HtmlEncode(text));
-                    break;
-                }
                 default:
-                    throw new Exception("filter not found");
+                {
+                    WriteData(Capture(() => VisitAndIdentOnlyWithMoreChilds(node.Child)), node.Name);
+                    break;
+                }
             }
         }
 
@@ -249,7 +230,7 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(CodeNode node)
         {
-            WriteCode(node.Code);
+            WriteCode(node.Code, false);
         }
 
         private void VisitAndIdentAlways(AstNode node)
@@ -292,12 +273,30 @@ namespace NHaml.Core.Visitors
             Visit(node);
         }
 
+        private bool TryGetSimpleTextNode(TextNode node, out string textvalue)
+        {
+            textvalue = null;
+            bool issimple = ((node.Chunks.Count == 0) || ((node.Chunks.Count == 1) && (node.Chunks[0] is TextChunk)));
+            if (issimple)
+            {
+                textvalue = "";
+                if (node.Chunks.Count == 1)
+                    textvalue = (node.Chunks[0] as TextChunk).Text;
+            }
+            return issimple;
+        }
+
+        public override void Visit(LateBindingNode node) 
+        {
+            WriteData(node.Value,null);
+        }
+
         private IEnumerable<AttributeNode> SortAndJoinAttributes(IEnumerable<AttributeNode> inputAttributes)
         {
             var queue = new List<AttributeNode>(inputAttributes);
 
             var attributes = new List<AttributeNode>();
-            while(queue.Count > 0)
+            while (queue.Count > 0)
             {
                 var first = queue[0];
                 queue.RemoveAt(0);
@@ -305,18 +304,18 @@ namespace NHaml.Core.Visitors
 
                 var isId = first.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase);
 
-                var buf = new List<string> {Capture(first.Value)};
+                var buf = new List<object> { Capture(first.Value) };
 
-                foreach(var sameAtt in queue.FindAll(a => a.Name == first.Name))
+                foreach (var sameAtt in queue.FindAll(a => a.Name == first.Name))
                 {
                     queue.Remove(sameAtt);
                     buf.Add(Capture(sameAtt.Value));
                 }
 
-                if(!isId)
-                    buf.Sort((a1, a2) => a1.CompareTo(a2));
+                /*if (!isId)
+                    buf.Sort((a1, a2) => DataComparer(a1,a2));*/
 
-                first.Value = new TextNode(new TextChunk(string.Join(isId ? "_" : " ", buf.ToArray())));
+                first.Value = DataJoiner(isId ? "_" : " ", buf.ToArray(), !isId);
             }
 
             attributes.Sort((a1, a2) => a1.Name.CompareTo(a2.Name));
@@ -329,7 +328,7 @@ namespace NHaml.Core.Visitors
             WriteText(new String(' ', Indent*2));
         }
 
-        public string Capture(AstNode node)
+        public object Capture(AstNode node)
         {
             if(node == null)
                 throw new ArgumentNullException("node");
@@ -337,7 +336,7 @@ namespace NHaml.Core.Visitors
             return Capture(() => Visit(node));
         }
 
-        public string Capture(AstAction action)
+        public object Capture(AstAction action)
         {
             if(action == null)
                 throw new ArgumentNullException("action");
@@ -357,7 +356,7 @@ namespace NHaml.Core.Visitors
         /// Writes code fragments to the output
         /// </summary>
         /// <param name="code">The code to write</param>
-        protected abstract void WriteCode(string code);
+        protected abstract void WriteCode(string code, bool escapeHtml);
 
         /// <summary>
         /// Creates a new writer, saves the old one on a stack
@@ -365,10 +364,10 @@ namespace NHaml.Core.Visitors
         protected abstract void PushWriter();
 
         /// <summary>
-        /// Pops the writer returning it's contents
+        /// Pops the writer returning the associated data
         /// </summary>
-        /// <returns>The contents</returns>
-        protected abstract string PopWriter();
+        /// <returns>Associated data</returns>
+        protected abstract object PopWriter();
 
         /// <summary>
         /// Starts a new code block with the code fragment given
@@ -380,5 +379,15 @@ namespace NHaml.Core.Visitors
         /// Ends the code block
         /// </summary>
         protected abstract void WriteEndBlock();
+
+        /// <summary>
+        /// Write Visitor specific data back
+        /// </summary>
+        protected abstract void WriteData(object data, string filter);
+
+        /// <summary>
+        /// Joins visitor specific data using the specified string sorting them if nescessary
+        /// </summary>
+        protected abstract LateBindingNode DataJoiner(string joinString, object[] data, bool sort);
     }
 }

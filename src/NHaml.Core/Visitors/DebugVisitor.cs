@@ -21,7 +21,7 @@ namespace NHaml.Core.Visitors
             _stack = new Stack<TextWriter>();
         }
 
-        protected override void WriteCode(string code)
+        protected override void WriteCode(string code, bool escapteHtml)
         {
             if (code == "1")
             {
@@ -47,7 +47,7 @@ namespace NHaml.Core.Visitors
             _writer = new StringWriter();
         }
 
-        protected override string PopWriter()
+        protected override object PopWriter()
         {
             if (_stack.Count==0)
                 throw new InvalidOperationException("The stack is empty");
@@ -66,6 +66,51 @@ namespace NHaml.Core.Visitors
         protected override void WriteEndBlock()
         {
             _writer.Write("~~end~~");
+        }
+
+        protected override void WriteData(object data, string filter)
+        {
+            if (filter == null)
+            {
+                WriteText(data as string);
+                return;
+            }
+            switch (filter) {
+                case "preserve":
+                    {
+                        var replace = data as string;
+                        replace += System.Environment.NewLine;
+                        WriteText(replace.Replace(System.Environment.NewLine, "&#x000A;"));
+                        break;
+                    }
+                case "plain":
+                    {
+                        WriteText(data as string);
+                        break;
+                    }
+                case "escaped":
+                    {
+                        var text = data as string;
+                        WriteText(HttpUtility.HtmlEncode(text));
+                        break;
+                    }
+                default:
+                    throw new NotSupportedException();
+            }
+        }
+
+        protected override LateBindingNode DataJoiner(string joinString, object[] data, bool sort)
+        {
+            List<string> d = new List<string>();
+            foreach (object o in data)
+            {
+                d.Add(o as string);
+            }
+            if (sort)
+            {
+                d.Sort();
+            }
+            return new LateBindingNode() { Value = String.Join(joinString, d.ToArray()) };
         }
     }
 }

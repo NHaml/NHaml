@@ -59,6 +59,10 @@ namespace NHaml.Core.Ast
         {
         }
 
+        public virtual void Visit(LateBindingNode node)
+        {
+        }
+
         public virtual void Visit(TextChunk chunk)
         {
         }
@@ -73,28 +77,30 @@ namespace NHaml.Core.Ast
             if(node == null)
                 return;
 
-            if(node is ChildrenNode)
+            if (node is ChildrenNode)
                 Visit((ChildrenNode)node);
-            else if(node is TextNode)
+            else if (node is TextNode)
                 Visit((TextNode)node);
-            else if(node is TagNode)
+            else if (node is TagNode)
                 Visit((TagNode)node);
-            else if(node is FilterNode)
+            else if (node is FilterNode)
                 Visit((FilterNode)node);
-            else if(node is CommentNode)
+            else if (node is CommentNode)
                 Visit((CommentNode)node);
-            else if(node is AttributeNode)
+            else if (node is AttributeNode)
                 Visit((AttributeNode)node);
-            else if(node is DocTypeNode)
+            else if (node is DocTypeNode)
                 Visit((DocTypeNode)node);
-            else if(node is CodeNode)
+            else if (node is CodeNode)
                 Visit((CodeNode)node);
             else if (node is CodeBlockNode)
                 Visit((CodeBlockNode)node);
-            else if(node is TextChunk)
+            else if (node is TextChunk)
                 Visit((TextChunk)node);
-            else if(node is CodeChunk)
+            else if (node is CodeChunk)
                 Visit((CodeChunk)node);
+            else if (node is LateBindingNode)
+                Visit((LateBindingNode)node);
             else
                 throw new InvalidOperationException("unknown node");
         }
