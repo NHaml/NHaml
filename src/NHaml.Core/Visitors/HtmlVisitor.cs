@@ -29,7 +29,8 @@ namespace NHaml.Core.Visitors
                     WriteText(System.Environment.NewLine);
 
                 Visit(child);
-                first = false;
+                if (!(child is MetaNode))
+                    first = false;
             }
         }
 

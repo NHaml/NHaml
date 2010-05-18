@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using NHaml.Core.Ast;
 using NHaml.Core.IO;
+using NHaml.Core.Exceptions;
 
 namespace NHaml.Core.Parser
 {
@@ -20,6 +21,11 @@ namespace NHaml.Core.Parser
 
         public IEnumerable<AttributeNode> ParseHtmlStyle()
         {
+            return ParseHtmlStyle(true);
+        }
+
+        public IEnumerable<AttributeNode> ParseHtmlStyle(bool allowCodeBlock)
+        {
             _reader.Skip("(");
 
             while(_reader.CurrentChar != ')')
@@ -28,8 +34,7 @@ namespace NHaml.Core.Parser
 
                 if(!_reader.ReadNextLineAndReadIfEndOfStream())
                 {
-                    //Todo: report error
-                    break;
+                    throw new ParserException(_reader, "Data expected but end of line found");
                 }
 
                 var name = _reader.ReadName();
@@ -56,7 +61,10 @@ namespace NHaml.Core.Parser
                     }
                     default:
                     {
-                        attribute.Value = new CodeNode(_reader.ReadName());
+                        if (allowCodeBlock)
+                            attribute.Value = new CodeNode(_reader.ReadName());
+                        else
+                            throw new ParserException(_reader, "Code blocks not allowed");
                         break;
                     }
                 }
@@ -71,6 +79,11 @@ namespace NHaml.Core.Parser
 
         public IEnumerable<AttributeNode> ParseRubyStyle()
         {
+            return ParseRubyStyle(true);
+        }
+
+        public IEnumerable<AttributeNode> ParseRubyStyle(bool allowCodeBlock)
+        {
             _reader.Skip("{");
 
             while(_reader.CurrentChar != '}')
@@ -79,8 +92,7 @@ namespace NHaml.Core.Parser
 
                 if(!_reader.ReadNextLineAndReadIfEndOfStream())
                 {
-                    //Todo: report error
-                    break;
+                    throw new ParserException(_reader, "Data expected but end of line found");
                 }
 
                 var name = ReadRubyStyleName();
@@ -107,7 +119,10 @@ namespace NHaml.Core.Parser
                     }
                     default:
                     {
-                        attribute.Value = new CodeNode(_reader.ReadName());
+                        if (allowCodeBlock)
+                            attribute.Value = new CodeNode(_reader.ReadName());
+                        else
+                            throw new ParserException(_reader, "Code not allowed");
                         break;
                     }
                 }

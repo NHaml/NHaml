@@ -51,6 +51,7 @@
     <Compile Include="Ast\FilterNode.cs" />
     <Compile Include="Ast\CodeNode.cs" />
     <Compile Include="Ast\LateBindingNode.cs" />
+    <Compile Include="Ast\MetaNode.cs" />
     <Compile Include="Compilers\CSharpCompiler.cs" />
     <Compile Include="IO\SourceInfo.cs" />
     <Compile Include="Ast\TagNode.cs" />

@@ -22,34 +22,73 @@ namespace NHaml.Core.Parser.Rules
         public override AstNode Process(ParserReader parser)
         {
             var reader = parser.Input;
+            var attributeParser = new AttributeParser(parser);
+            var baseIndent = parser.Indent;
+
             if (!reader.Read())
                 return null;
 
             reader.Skip("@");
-
             var name = reader.ReadName();
-            string value = null;
+            var node = new MetaNode(name);
+
             reader.SkipWhiteSpaces();
-            switch (reader.CurrentChar)
+
+            while (!reader.IsEndOfStream)
             {
-                case '=':
-                    reader.Skip("=");
-                    reader.SkipWhiteSpaces();
-                    value = reader.ReadToEnd();
-                    break;
-                default:
-                    return null;
+                switch (reader.CurrentChar)
+                {
+                    case '=':
+                        {
+                            reader.Skip("=");
+                            reader.SkipWhiteSpaces();
+                            switch (reader.CurrentChar) {
+                                case '\'':
+                                    reader.Skip("'");
+                                    node.Value = reader.ReadWhile(c => c != '\'');
+                                    reader.Skip("'");
+                                    break;
+                                case '"':
+                                    reader.Skip("\"");
+                                    node.Value = reader.ReadWhile(c => c != '"');
+                                    reader.Skip("\"");
+                                    break;
+                                default:
+                                    node.Value = reader.ReadName();
+                                    break;
+                            }
+                            break;
+                        }
+                    case '(':
+                        {
+                            node.Attributes.AddRange(attributeParser.ParseHtmlStyle(false));
+                            break;
+                        }
+                    case '{':
+                        {
+                            node.Attributes.AddRange(attributeParser.ParseRubyStyle(false));
+                            break;
+                        }
+                    default:
+                        {
+                            var index = reader.Index;
+                            var text = reader.ReadToEnd();
+                            node.Child = parser.ParseText(text.TrimStart(), index);
+                            break;
+                        }
+                }
+                reader.SkipWhiteSpaces();
             }
 
-            List<string> data;
-            if (!_node.Metadata.TryGetValue(name, out data))
+            if (reader.NextLine != null && reader.NextLine.Indent > reader.CurrentLine.Indent)
             {
-                data = new List<string>();
+                node.Child = parser.ParseChildren(baseIndent, node.Child);
             }
-            data.Add(value);
-            _node.Metadata[name] = data;
 
-            return null;
+            node.EndInfo = reader.SourceInfo;
+            if (!_node.Metadata.ContainsKey(name)) _node.Metadata[name] = new List<MetaNode>();
+            _node.Metadata[name].Add(node);
+            return node;
         }
     }
 }

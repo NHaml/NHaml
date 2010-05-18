@@ -51,6 +51,12 @@ namespace NHaml.Core.Ast
                 Visit(node.Value);
         }
 
+        public virtual void Visit(MetaNode node)
+        {
+            if (node.Child != null)
+                Visit(node.Child);
+        }
+
         public virtual void Visit(DocTypeNode node)
         {
         }
@@ -101,6 +107,8 @@ namespace NHaml.Core.Ast
                 Visit((CodeChunk)node);
             else if (node is LateBindingNode)
                 Visit((LateBindingNode)node);
+            else if (node is MetaNode)
+                Visit((MetaNode)node);
             else
                 throw new InvalidOperationException("unknown node");
         }

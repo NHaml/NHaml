@@ -19,66 +19,59 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(DocumentNode node)
         {
-            List<string> data;
+            List<MetaNode> data;
             if (node.Metadata.TryGetValue("namespace",out data)) {
-                foreach (string str in data) {
-                    WriteText("<%@ Import Namespace=\""+str+"\" %>" + Environment.NewLine);
+                foreach (MetaNode str in data) {
+                    WriteText("<%@ Import Namespace=\""+str.Value+"\" %>" + Environment.NewLine);
                 }
             }
 
             if (node.Metadata.TryGetValue("assembly",out data)) {
-                foreach (string str in data) {
-                    WriteText("<%@ Assembly Name=\"" + str + "\" %>" + Environment.NewLine);
+                foreach (MetaNode str in data) {
+                    WriteText("<%@ Assembly Name=\"" + str.Value + "\" %>" + Environment.NewLine);
                 }
             }
 
-            bool isPage = true;
-            Dictionary<string,string> d = new Dictionary<string,string>();
+            var pagedefiniton = new MetaNode("page");
 
+            if (node.Metadata.TryGetValue("page", out data))
+            {
+                pagedefiniton = data[0];
+            }
             if (node.Metadata.TryGetValue("control",out data)) {
-                isPage = false;
+                pagedefiniton = data[0];
             }
 
-            if (node.Metadata.TryGetValue("language", out data))
+            if (pagedefiniton.Attributes.Find(x => x.Name == "Language") == null)
             {
-                d["Language"] = data[0];
-            }
-            else
-            {
-                d["Language"] = "C#";
+                pagedefiniton.Attributes.Add(new AttributeNode("Language") { Value = new TextNode(new TextChunk("C#")) });
             }
 
-            if (node.Metadata.TryGetValue("autoeventwireup", out data))
+            if (pagedefiniton.Attributes.Find(x => x.Name == "AutoEventWireup") == null)
             {
-                d["AutoEventWireup"] = data[0];
-            }
-            else
-            {
-                d["AutoEventWireup"] = "true";
-            }
-            
-            if (isPage) {
-                d["Inherits"] = "System.Web.Mvc.ViewPage";
-            } else {
-                d["Inherits"] = "System.Web.Mvc.ViewUserControl";
+                pagedefiniton.Attributes.Add(new AttributeNode("AutoEventWireup") { Value = new TextNode(new TextChunk("true")) });
             }
 
-            if (node.Metadata.TryGetValue("inherits", out data))
+            if (pagedefiniton.Attributes.Find(x => x.Name == "Inherits") == null)
             {
-                d["Inherits"] = data[0];
-            }
+                if (pagedefiniton.Name == "page")
+                    pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewPage")) });
+                else
+                    pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewUserControl")) });
+            }           
 
             if (node.Metadata.TryGetValue("type", out data))
             {
-                d["Inherits"] = d["Inherits"] + "<" + data[1] + ">";
+                var tc = pagedefiniton.Attributes.Find(x => x.Name == "Inherits");
+                tc.Value = new TextNode(new TextChunk(((tc.Value as TextNode).Chunks[0] as TextChunk).Text + "<" + data[0].Value + ">"));
             }
 
-            if (node.Metadata.TryGetValue("masterpagefile", out data))
+            if (pagedefiniton.Attributes.Find(x => x.Name == "MasterPageFile") == null)
             {
-                d["MasterPageFile"] = data[0];
+                pagedefiniton.Attributes.Add(new AttributeNode("MasterPageFile") { Value = new TextNode(new TextChunk("true")) });
             }
 
-            if (isPage)
+            if (pagedefiniton.Name == "page")
             {
                 WriteText("<%@ Page ");
             }
@@ -86,14 +79,13 @@ namespace NHaml.Core.Visitors
             {
                 WriteText("<%@ Control ");
             }
-            foreach (var pair in d)
+            foreach (var attr in pagedefiniton.Attributes)
             {
-                WriteText(pair.Key);
+                WriteText(attr.Name);
                 WriteText("=\"");
-                WriteText(pair.Value);
+                WriteText(((attr.Value as TextNode).Chunks[0] as TextChunk).Text);
                 WriteText("\" ");
             }
-
             WriteText(" %>" + System.Environment.NewLine);
 
             foreach(var child in node.Childs)
