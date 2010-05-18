@@ -54,7 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HamlSpecTests.cs" />
+    <Compile Include="SpecTests\DebugCompiler.cs" />
+    <Compile Include="SpecTests\DebugVisitor.cs" />
+    <Compile Include="SpecTests\HamlSpecTests.cs" />
     <Compile Include="Helpers\HamlSpecTheory.cs" />
     <Compile Include="Helpers\JSON.cs" />
     <Compile Include="Parser\CharacterReaderTests.cs" />

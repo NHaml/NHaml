@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using NHaml.Core.Ast;
+using NHaml.Core.Visitors;
 
-namespace NHaml.Core.Visitors
+namespace NHaml.Core.Tests
 {
     public class DebugVisitor : HtmlVisitor
     {

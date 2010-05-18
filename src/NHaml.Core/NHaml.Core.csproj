@@ -78,7 +78,6 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Visitors\CodeDomVisitor.cs" />
-    <Compile Include="Visitors\DebugVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
     <Compile Include="Visitors\WebFormsVisitor.cs" />
   </ItemGroup>

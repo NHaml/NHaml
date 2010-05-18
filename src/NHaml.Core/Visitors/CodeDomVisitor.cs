@@ -146,7 +146,7 @@ namespace NHaml.Core.Visitors
                                 }
                             };
                             converter.Parameters.Add(toStringInvoke);
-                            writer.Parameters.Add(toStringInvoke);
+                            writer.Parameters.Add(converter);
                             break;
                         }
                     default:
