@@ -76,7 +76,7 @@ namespace NHaml.Core.Parser
                 if(node != null)
                     nodes.Add(node);
 
-                if(Input.NextLine != null && Input.NextLine.Indent <= baseIdentation)
+                if (Input.NextLine != null && Input.NextLine.Indent <= baseIdentation)
                     break;
             }
 

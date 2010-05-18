@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NHaml.Core.Parser;
 using NHaml.Core.Visitors;
+using NHaml.Core.Compilers;
 
 namespace NHaml.Console
 {
@@ -16,9 +17,12 @@ namespace NHaml.Console
                 var parser = new Parser();
                 var document = parser.ParseFile(args[0]);
 
-                var wf = new WebFormsVisitor();
+                /*var wf = new WebFormsVisitor();
                 wf.Visit(document);
-                System.Console.WriteLine(wf.Result());
+                System.Console.WriteLine(wf.Result());*/
+
+                var cf = new CSharpCompiler(document);
+                System.Console.WriteLine(cf.GetSource());
             }
             else
             {

@@ -18,7 +18,10 @@ namespace NHaml.Core.Parser.Rules
             var code = reader.ReadToEnd();
             var node = new CodeBlockNode(code);
 
-            node.Child = parser.ParseChildren(parser.Indent, node.Child);
+            if (reader.NextLine != null && reader.NextLine.Indent > reader.CurrentLine.Indent)
+            {
+                node.Child = parser.ParseChildren(parser.Indent, node.Child);
+            }
 
             return node;
         }
