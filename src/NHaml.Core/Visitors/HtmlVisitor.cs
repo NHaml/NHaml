@@ -22,6 +22,7 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(DocumentNode node)
         {
+            StartVisit();
             var first = true;
             foreach(var child in node.Childs)
             {
@@ -32,6 +33,15 @@ namespace NHaml.Core.Visitors
                 if (!(child is MetaNode))
                     first = false;
             }
+            EndVisit();
+        }
+
+        protected virtual void EndVisit()
+        {
+        }
+
+        protected virtual void StartVisit()
+        {
         }
 
         public override void Visit(DocTypeNode node)

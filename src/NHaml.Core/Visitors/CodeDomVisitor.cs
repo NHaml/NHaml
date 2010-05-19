@@ -12,6 +12,7 @@ namespace NHaml.Core.Visitors
     {
         private CodeMemberMethod _code;
         private Stack<string> _stack;
+        private StringBuilder _builder;
         private string _writerName;
         private int _blockCount;
 
@@ -27,19 +28,41 @@ namespace NHaml.Core.Visitors
             _stack = new Stack<string>();
             _writerName = "textWriter";
             _blockCount = 0;
+            _builder = new StringBuilder();
         }
 
         public CodeMemberMethod Method { get { return _code; } }
 
+        protected override void EndVisit()
+        {
+            PopString();
+            base.EndVisit();
+        }
+
+        protected void PushString(string text)
+        {
+            _builder.Append(text);
+        }
+
+        protected void PopString()
+        {
+            if (_builder.Length > 0)
+            {
+                var writer = WriterCaller(_writerName);
+                writer.Parameters.Add(new CodePrimitiveExpression { Value = _builder.ToString() });
+                _code.Statements.Add(new CodeExpressionStatement { Expression = writer });
+                _builder = new StringBuilder();
+            }
+        }
+
         protected override void WriteText(string text)
         {
-            var writer = WriterCaller(_writerName);
-            writer.Parameters.Add(new CodePrimitiveExpression { Value = text });
-            _code.Statements.Add(new CodeExpressionStatement { Expression = writer });
+            PushString(text);
         }
 
         protected override void WriteCode(string code, bool escapeHtml)
         {
+            PopString();
             var writer = WriterCaller(_writerName);
             var toStringInvoke = ToStringCaller(code);
            
@@ -67,6 +90,7 @@ namespace NHaml.Core.Visitors
 
         protected override void PushWriter()
         {
+            PopString();
             _stack.Push(_writerName);
             _writerName = "textWriter" + _blockCount;
             _blockCount++;
@@ -80,6 +104,7 @@ namespace NHaml.Core.Visitors
 
         protected override object PopWriter()
         {
+            PopString();
             string varname = _writerName;
             _writerName = _stack.Pop();
             return varname;
@@ -87,12 +112,14 @@ namespace NHaml.Core.Visitors
 
         protected override void WriteStartBlock(string code, bool hasChild)
         {
+            PopString();
             _code.Statements.Add(new CodeSnippetStatement(code));
             if (hasChild) _code.Statements.Add(new CodeSnippetStatement(StartBlock));
         }
 
         protected override void WriteEndBlock()
         {
+            PopString();
             _code.Statements.Add(new CodeSnippetStatement(EndBlock));
         }
 
@@ -101,6 +128,7 @@ namespace NHaml.Core.Visitors
 
         protected override void WriteData(object data, string filter)
         {
+            PopString();
             var writer = WriterCaller(_writerName);
             var toStringInvoke = CodeWriterToStringCaller(data as string);
             if (filter == null)
@@ -158,60 +186,68 @@ namespace NHaml.Core.Visitors
 
         protected override LateBindingNode DataJoiner(string joinString, object[] data, bool sort)
         {
-            string djWriterName = "textWriter" + _blockCount;
-            _blockCount++;
+            PopString();
+            if (data.Length > 1)
+            {
+                string djWriterName = "textWriter" + _blockCount;
+                _blockCount++;
 
-            _code.Statements.Add(new CodeVariableDeclarationStatement
-            {
-                Name = djWriterName,
-                Type = new CodeTypeReference(typeof(StringWriter)),
-                InitExpression = new CodeObjectCreateExpression(typeof(StringWriter))
-            });
-            _code.Statements.Add(new CodeVariableDeclarationStatement
-            {
-                Name = djWriterName+"l",
-                Type = new CodeTypeReference(typeof(List<string>)),
-                InitExpression = new CodeObjectCreateExpression(typeof(List<string>))
-            });
+                _code.Statements.Add(new CodeVariableDeclarationStatement
+                {
+                    Name = djWriterName,
+                    Type = new CodeTypeReference(typeof(StringWriter)),
+                    InitExpression = new CodeObjectCreateExpression(typeof(StringWriter))
+                });
+                _code.Statements.Add(new CodeVariableDeclarationStatement
+                {
+                    Name = djWriterName + "l",
+                    Type = new CodeTypeReference(typeof(List<string>)),
+                    InitExpression = new CodeObjectCreateExpression(typeof(List<string>))
+                });
 
-            foreach (object o in data)
-            {
-                var adder = new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(
-                        new CodeVariableReferenceExpression(djWriterName + "l"),
-                        "Add")
-                    );
-                var atostring = ToStringCaller(o as string);
-                adder.Parameters.Add(atostring);
-                _code.Statements.Add(adder);
-            }
-            if (sort)
-            {
-                var sorter = new CodeMethodInvokeExpression(
+                foreach (object o in data)
+                {
+                    var adder = new CodeMethodInvokeExpression(
                         new CodeMethodReferenceExpression(
-                            new CodeVariableReferenceExpression(djWriterName+"l"),
-                            "Sort"
+                            new CodeVariableReferenceExpression(djWriterName + "l"),
+                            "Add")
+                        );
+                    var atostring = ToStringCaller(o as string);
+                    adder.Parameters.Add(atostring);
+                    _code.Statements.Add(adder);
+                }
+                if (sort)
+                {
+                    var sorter = new CodeMethodInvokeExpression(
+                            new CodeMethodReferenceExpression(
+                                new CodeVariableReferenceExpression(djWriterName + "l"),
+                                "Sort"
+                            )
+                        );
+                    _code.Statements.Add(sorter);
+                }
+                var joincall = new CodeMethodInvokeExpression(
+                        new CodeMethodReferenceExpression(
+                            new CodeVariableReferenceExpression("String"),
+                            "Join"
                         )
                     );
-                _code.Statements.Add(sorter);
+                joincall.Parameters.Add(new CodePrimitiveExpression(joinString));
+                joincall.Parameters.Add(new CodeMethodInvokeExpression(
+                        new CodeMethodReferenceExpression(
+                            new CodeVariableReferenceExpression(djWriterName + "l"),
+                            "ToArray")
+                        )
+                    );
+                var writerCaller = WriterCaller(djWriterName);
+                writerCaller.Parameters.Add(joincall);
+                _code.Statements.Add(writerCaller);
+                return new LateBindingNode() { Value = djWriterName };
             }
-            var joincall = new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(
-                        new CodeVariableReferenceExpression("String"),
-                        "Join"
-                    )
-                );
-            joincall.Parameters.Add(new CodePrimitiveExpression(joinString));
-            joincall.Parameters.Add(new CodeMethodInvokeExpression(
-                    new CodeMethodReferenceExpression(
-                        new CodeVariableReferenceExpression(djWriterName+"l"),
-                        "ToArray")
-                    )
-                );
-            var writerCaller = WriterCaller(djWriterName);
-            writerCaller.Parameters.Add(joincall);
-            _code.Statements.Add(writerCaller);
-            return new LateBindingNode() { Value = djWriterName };
+            else
+            {
+                return new LateBindingNode() { Value = data[0] as string };
+            }
         }
 
         private CodeMethodInvokeExpression WriterCaller(string writername)

@@ -54,7 +54,7 @@ namespace NHaml.Core.Parser.Rules
                                     reader.Skip("\"");
                                     break;
                                 default:
-                                    node.Value = reader.ReadName();
+                                    node.Value = reader.ReadWhile(c => !Char.IsWhiteSpace(c) && c!='(' && c!='{' );
                                     break;
                             }
                             break;
