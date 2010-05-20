@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using NHaml.Core.Ast;
+using NHaml.Core.Exceptions;
 
 namespace NHaml.Core.Parser.Rules
 {
@@ -16,7 +17,7 @@ namespace NHaml.Core.Parser.Rules
 
         public override string[] Signifiers
         {
-            get { return new[] { "@" }; }
+            get { return new[] { "@","_" }; }
         }
 
         public override AstNode Process(ParserReader parser)
@@ -25,14 +26,36 @@ namespace NHaml.Core.Parser.Rules
             var attributeParser = new AttributeParser(parser);
             var baseIndent = parser.Indent;
 
+            bool isPartial = false;
+
             if (!reader.Read())
                 return null;
 
-            reader.Skip("@");
-            var name = reader.ReadName();
+            string name;
+            if (reader.CurrentChar == '_')
+            {
+                reader.Skip("_");
+                name = "contentplaceholder";
+                isPartial = true;
+            }
+            else
+            {
+                reader.Skip("@");
+                name = reader.ReadName();
+                isPartial = false;
+            }
             var node = new MetaNode(name);
 
             reader.SkipWhiteSpaces();
+
+            if (isPartial && (reader.CurrentChar != null))
+            {
+                node.Value = reader.ReadWhile(c => !Char.IsWhiteSpace(c) && c != '(' && c != '{');
+            }
+            else
+            {
+                node.Value = "Main";
+            }
 
             while (!reader.IsEndOfStream)
             {
@@ -40,22 +63,30 @@ namespace NHaml.Core.Parser.Rules
                 {
                     case '=':
                         {
-                            reader.Skip("=");
-                            reader.SkipWhiteSpaces();
-                            switch (reader.CurrentChar) {
-                                case '\'':
-                                    reader.Skip("'");
-                                    node.Value = reader.ReadWhile(c => c != '\'');
-                                    reader.Skip("'");
-                                    break;
-                                case '"':
-                                    reader.Skip("\"");
-                                    node.Value = reader.ReadWhile(c => c != '"');
-                                    reader.Skip("\"");
-                                    break;
-                                default:
-                                    node.Value = reader.ReadWhile(c => !Char.IsWhiteSpace(c) && c!='(' && c!='{' );
-                                    break;
+                            if (!isPartial)
+                            {
+                                reader.Skip("=");
+                                reader.SkipWhiteSpaces();
+                                switch (reader.CurrentChar)
+                                {
+                                    case '\'':
+                                        reader.Skip("'");
+                                        node.Value = reader.ReadWhile(c => c != '\'');
+                                        reader.Skip("'");
+                                        break;
+                                    case '"':
+                                        reader.Skip("\"");
+                                        node.Value = reader.ReadWhile(c => c != '"');
+                                        reader.Skip("\"");
+                                        break;
+                                    default:
+                                        node.Value = reader.ReadWhile(c => !Char.IsWhiteSpace(c) && c != '(' && c != '{');
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                throw new ParserException(reader, "'=' is not allowed in partial definitions");
                             }
                             break;
                         }

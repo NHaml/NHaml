@@ -5,6 +5,7 @@ using System.Text;
 using NHaml.Core.Parser;
 using NHaml.Core.Visitors;
 using NHaml.Core.Compilers;
+using NHaml.Core.Template;
 
 namespace NHaml.Console
 {
@@ -50,8 +51,9 @@ namespace NHaml.Console
                         }
                     case "cs":
                         {
-                            var cf = new CSharpCompiler(document);
-                            System.Console.WriteLine(cf.GetSource());
+                            var cf = new CSharpClassBuilder();
+                            cf.SetDocument(document, "TestClass");
+                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
                             break;
                         }
                     default:

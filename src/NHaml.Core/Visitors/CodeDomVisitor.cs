@@ -25,6 +25,8 @@ namespace NHaml.Core.Visitors
                         "textWriter"
                     )
                 );
+            _code.Name = "CoreRender";
+            _code.Attributes = MemberAttributes.Public | MemberAttributes.Override;
             _stack = new Stack<string>();
             _writerName = "textWriter";
             _blockCount = 0;

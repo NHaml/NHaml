@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Core.Tests", "src\NHa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Console", "src\NHaml.Console\NHaml.Console.csproj", "{CF0A9532-EDBB-46AF-AE34-784D7CD46486}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc", "src\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj", "{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Release|Any CPU.Build.0 = Release|Any CPU
+		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

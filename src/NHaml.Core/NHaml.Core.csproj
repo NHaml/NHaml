@@ -12,6 +12,8 @@
     <AssemblyName>NHaml.Core</AssemblyName>
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>    
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
   </PropertyGroup>
@@ -34,6 +36,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Web" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
@@ -52,7 +55,17 @@
     <Compile Include="Ast\CodeNode.cs" />
     <Compile Include="Ast\LateBindingNode.cs" />
     <Compile Include="Ast\MetaNode.cs" />
-    <Compile Include="Compilers\CSharpCompiler.cs" />
+    <Compile Include="Compilers\CSharpClassBuilder.cs" />
+    <Compile Include="Compilers\IClassBuilder.cs" />
+    <Compile Include="Compilers\CodeDomVisitorClassBuilder.cs" />
+    <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
+    <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
+    <Compile Include="Configuration\ConfigurationCollection.cs" />
+    <Compile Include="Configuration\KeyedConfigurationElement.cs" />
+    <Compile Include="Configuration\NamespaceConfigurationElement.cs" />
+    <Compile Include="Configuration\NamespacesConfigurationCollection.cs" />
+    <Compile Include="Configuration\NHamlConfigurationSection.cs" />
+    <Compile Include="Exceptions\TemplateCompilationException.cs" />
     <Compile Include="IO\SourceInfo.cs" />
     <Compile Include="Ast\TagNode.cs" />
     <Compile Include="Ast\TextChunk.cs" />
@@ -78,6 +91,20 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
+    <Compile Include="TemplateResolution\FileViewSource.cs" />
+    <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
+    <Compile Include="TemplateResolution\IViewSource.cs" />
+    <Compile Include="Template\CompiledTemplate.cs" />
+    <Compile Include="Template\Template.cs" />
+    <Compile Include="Template\TemplateEngine.cs" />
+    <Compile Include="Template\TemplateFactory.cs" />
+    <Compile Include="Template\TemplateOptions.cs" />
+    <Compile Include="Utils\Invariant.cs" />
+    <Compile Include="Utils\ListExtensions.cs" />
+    <Compile Include="Utils\ProxyExtractor.cs" />
+    <Compile Include="Utils\StringSet.cs" />
+    <Compile Include="Utils\Utility.cs" />
     <Compile Include="Visitors\CodeDomVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
     <Compile Include="Visitors\WebFormsVisitor.cs" />
