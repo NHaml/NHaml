@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Web;
 using NHaml.Core.Ast;
+using NHaml.Core.Template;
 
 namespace NHaml.Core.Visitors
 {
@@ -13,10 +14,17 @@ namespace NHaml.Core.Visitors
     {
         public delegate void AstAction();
 
-        public HtmlVisitor()
+        public HtmlVisitor(TemplateOptions options)
         {
+            Options = options;
         }
 
+        public HtmlVisitor()
+        {
+            Options = new TemplateOptions();
+        }
+
+        public TemplateOptions Options { get; protected set; }
         public int Indent { get; set; }
         public string Format { get; set; }
 
@@ -118,7 +126,7 @@ namespace NHaml.Core.Visitors
                 Visit(attribute);
             }
 
-            if(node.Child == null && node.Name.Equals("meta", StringComparison.InvariantCultureIgnoreCase))
+            if(node.Child == null && Options.IsAutoClosingTag(node.Name))
             {
                 if(Format == "html4" || Format == "html5")
                     WriteText(">");
@@ -334,9 +342,16 @@ namespace NHaml.Core.Visitors
             return attributes;
         }
 
-        private void WriteIndent()
+        public virtual void WriteIndent()
         {
-            WriteText(new String(' ', Indent*2));
+            if (Options.UseTabs)
+            {
+                WriteText(new String('\t', Options.IndentSize * Indent));
+            }
+            else
+            {
+                WriteText(new String(' ', Options.IndentSize * Indent));
+            }
         }
 
         public object Capture(AstNode node)

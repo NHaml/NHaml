@@ -17,6 +17,63 @@ namespace NHaml.Core.Visitors
             _stack = new Stack<StringBuilder>();
         }
 
+        public override void Visit(MetaNode node)
+        {
+            if (node.Name == "contentplaceholder")
+            {
+                bool hasChild = node.Child != null;
+                WriteText(String.Format("<asp:ContentPlaceHolder ID=\"{0}\" runat=\"server\"", node.Value));
+                if (hasChild)
+                {
+                    WriteText(">");
+                    WriteText(Environment.NewLine);
+                    Indent++;
+                    Visit(node.Child);
+                    Indent--;
+                    WriteText("</asp:ContentPlaceHolder>");
+                }
+                else
+                {
+                    WriteText(" />");
+                }
+            }
+            else if (node.Name == "partialcontent")
+            {
+                string obj = null;
+                foreach (var attr in node.Attributes)
+                {
+                    if (attr.Name == "model")
+                    {
+                        obj = ((TextChunk)(((TextNode)attr.Value).Chunks[0])).Text;
+                    }
+                }
+                if (obj != null)
+                {
+                    WriteCode(String.Format("Html.RenderPartial(\"{0}\")",node.Value),false);
+                }
+                else
+                {
+                    WriteCode(String.Format("Html.RenderPartial(\"{0}\",{1})", node.Value, obj), false);
+                }
+            }
+            else if (node.Name == "content")
+            {
+                WriteText(String.Format("<asp:Content ID=\"{0}\" runat=\"server\">", node.Value));
+                WriteText(Environment.NewLine);
+                Indent++;
+                if (node.Child!=null)
+                    Visit(node.Child);
+                Indent--;
+                WriteText(Environment.NewLine);
+                WriteIndent();
+                WriteText("</asp:Content>");
+            }
+            else
+            {
+                base.Visit(node);
+            }
+        }
+
         public override void Visit(DocumentNode node)
         {
             List<MetaNode> data;
@@ -38,7 +95,12 @@ namespace NHaml.Core.Visitors
             {
                 pagedefiniton = data[0];
             }
-            if (node.Metadata.TryGetValue("control",out data)) {
+            if (node.Metadata.TryGetValue("control",out data))
+            {
+                pagedefiniton = data[0];
+            }
+            if (node.Metadata.TryGetValue("master", out data))
+            {
                 pagedefiniton = data[0];
             }
 
@@ -56,8 +118,10 @@ namespace NHaml.Core.Visitors
             {
                 if (pagedefiniton.Name == "page")
                     pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewPage")) });
-                else
+                else if (pagedefiniton.Name == "control")
                     pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewUserControl")) });
+                else
+                    pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewMasterPage")) });
             }           
 
             if (node.Metadata.TryGetValue("type", out data))
@@ -75,9 +139,13 @@ namespace NHaml.Core.Visitors
             {
                 WriteText("<%@ Page ");
             }
-            else
+            else if (pagedefiniton.Name == "control")
             {
                 WriteText("<%@ Control ");
+            }
+            else
+            {
+                WriteText("<%@ Master ");
             }
             foreach (var attr in pagedefiniton.Attributes)
             {
@@ -88,10 +156,27 @@ namespace NHaml.Core.Visitors
             }
             WriteText(" %>" + System.Environment.NewLine);
 
+            bool hasContentMetaFlags = node.Metadata.ContainsKey("content");
+
+            if (!hasContentMetaFlags)
+            {
+                WriteText("<asp:Content ID=\"Main\" runat=\"server\">");
+                WriteText(Environment.NewLine);
+                Indent++;
+            }
+
             foreach(var child in node.Childs)
             {
                 WriteText(System.Environment.NewLine);
                 Visit(child);
+            }
+
+            if (!hasContentMetaFlags)
+            {
+                WriteText(System.Environment.NewLine);
+                Indent--;
+                WriteIndent();
+                WriteText("</asp:Content>");
             }
         }
 

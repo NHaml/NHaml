@@ -3,17 +3,21 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Reflection;
 using System.Web;
-using NHaml.Core.Compilers;
 using NHaml.Core.TemplateResolution;
 using NHaml.Core.Utils;
+using NHaml.Core.Compilers;
 
 namespace NHaml.Core.Template
 {
+
     public delegate void Action<T1, T2>(T1 obj1, T2 obj2);
     public class TemplateOptions
     {
+        private int _indentSize;
+
         private Type _templateBaseType;
         private IClassBuilder _templateCompiler;
+        private bool _useTabs;
 
         public TemplateOptions()
         {
@@ -26,7 +30,9 @@ namespace NHaml.Core.Template
             });
             AutoClosingTags = new Set<string>(new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" });
             ReferencedTypeHandles = new List<RuntimeTypeHandle>();
+            _indentSize = 2;
             _templateBaseType = typeof(Template);
+            _templateCompiler = new CSharpClassBuilder();
             TemplateContentProvider = new FileTemplateContentProvider();
         }
 
@@ -36,7 +42,23 @@ namespace NHaml.Core.Template
         public bool EncodeHtml { get; set; }
         public bool OutputDebugFiles { get; set; }
 
+        public bool UseTabs
+        {
+            get { return _useTabs; }
+            set
+            {
+                _useTabs = value;
+
+                IndentSize = _indentSize;
+            }
+        }
         public ITemplateContentProvider TemplateContentProvider { get; set; }
+
+        public int IndentSize
+        {
+            get { return _indentSize; }
+            set { _indentSize = UseTabs ? 1 : Math.Max(2, value); }
+        }
 
         //TODO: prob should not make this public
         public Set<string> Usings { get; private set; }
@@ -79,8 +101,16 @@ namespace NHaml.Core.Template
             }
         }
 
+
         public event EventHandler TemplateCompilerChanged;
         public event EventHandler TemplateBaseTypeChanged;
+
+        public bool IsAutoClosingTag(string tag)
+        {
+            Invariant.ArgumentNotEmpty(tag, "tag");
+
+            return AutoClosingTags.Contains(tag.ToUpperInvariant());
+        }
 
         public void AddUsing(string @namespace)
         {

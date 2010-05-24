@@ -83,7 +83,10 @@ namespace NHaml.Core.Parser.Rules
                     }
                 }
 
-            node.Child = parser.ParseChildren(baseIndent, node.Child);
+            if (reader.NextLine != null && reader.NextLine.Indent > reader.CurrentLine.Indent)
+            {
+                node.Child = parser.ParseChildren(baseIndent, node.Child);
+            }
 
             node.EndInfo = reader.SourceInfo;
 

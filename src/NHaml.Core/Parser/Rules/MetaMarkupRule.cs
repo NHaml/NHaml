@@ -50,6 +50,7 @@ namespace NHaml.Core.Parser.Rules
 
             if (isPartial && (reader.CurrentChar != null))
             {
+                node.Name = "partialcontent";
                 node.Value = reader.ReadWhile(c => !Char.IsWhiteSpace(c) && c != '(' && c != '{');
             }
             else
