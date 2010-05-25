@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using NHaml.Core.Exceptions;
 using NHaml.Core.Utils;
 using NHaml.Core.Ast;
+using NHaml.Core.TemplateResolution;
 
 namespace NHaml.Core.Template
 {
@@ -12,15 +13,18 @@ namespace NHaml.Core.Template
         private readonly Type _templateBaseType;
         private readonly object context;
         private TemplateFactory _templateFactory;
+        private CompiledTemplate _masterFile;
+        private IViewSource _contentFile;
         private readonly object _sync = new object();
         private IList<Func<bool>> viewSourceModifiedChecks;
 
-        internal CompiledTemplate(TemplateOptions options, Type templateBaseType, object context)
+        internal CompiledTemplate(TemplateOptions options, Type templateBaseType, object context, CompiledTemplate masterFile, IViewSource contentFile )
         {
             this.options = options;
             _templateBaseType = templateBaseType;
             this.context = context;
-
+            _masterFile = masterFile;
+            _contentFile = contentFile;
             Compile(context);
         }
 
@@ -46,36 +50,40 @@ namespace NHaml.Core.Template
 
         private void Compile(object context)
         {
-            /*var className = Utility.MakeClassName(ListExtensions.Last(_layoutViewSources).Path);
-            var compiler = options.TemplateCompiler;
+            var className = Utility.MakeClassName(_contentFile.Path);
+            var compiler = options.GetTemplateCompiler();
 
+            Template masterTemplate = null;
+            if (_masterFile != null) {
+                masterTemplate = _masterFile.CreateInstance();
+            }
 
-            var templateClassBuilder = compiler.CreateTemplateClassBuilder(className);
-
-            var templateParser = new TemplateParser(options, templateClassBuilder, _layoutViewSources);
-
-            var viewSourceReader = templateParser.Parse();
-            viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
-
+            compiler.SetDocument(_contentFile.ParseResult, className);
+            
             if (_templateBaseType.IsGenericTypeDefinition)
             {
                 var modelType = GetModelType(compiler.Document);
-                templateClassBuilder.BaseType = _templateBaseType.MakeGenericType(modelType);
+                options.TemplateBaseType = _templateBaseType.MakeGenericType(modelType);
                 options.AddReference(modelType.Assembly);
             }
             else
             {
-                templateClassBuilder.BaseType = _templateBaseType;
+                options.TemplateBaseType = _templateBaseType;
             }
-            templateParser.Options.AddReferences(_templateBaseType);
+            compiler.GenerateType(options);
+
+            viewSourceModifiedChecks = new List<Func<bool>>();
+            viewSourceModifiedChecks.Add(() => _contentFile.IsModified);
+            foreach (var fileModifiedCheck in _masterFile.viewSourceModifiedChecks)
+                viewSourceModifiedChecks.Add(fileModifiedCheck);
+
+            options.AddReferences(_templateBaseType);
             if (options.BeforeCompile != null)
             {
-                options.BeforeCompile(templateClassBuilder, context);
+                options.BeforeCompile(compiler, context);
             }
 
-            _templateFactory = compiler.Compile(viewSourceReader, templateParser.Options, templateClassBuilder);
-
-            */
+            _templateFactory = new TemplateFactory(compiler.GenerateType(options));
         }
 
         private static Type GetModelType(DocumentNode n)

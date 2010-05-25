@@ -59,7 +59,7 @@ namespace NHaml.Core.Configuration
 
 			if (!string.IsNullOrEmpty(section.TemplateCompiler))
 			{
-				options.TemplateCompiler = section.CreateTemplateCompiler();
+				options.TemplateCompilerType = section.CreateTemplateCompilerType();
 			}
 
 			foreach (var assemblyConfigurationElement in section.Assemblies)
@@ -132,7 +132,7 @@ namespace NHaml.Core.Configuration
 			get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
 		}
 
-		public IClassBuilder CreateTemplateCompiler()
+		public Type CreateTemplateCompilerType()
 		{
 			var templateCompiler = TemplateCompiler;
 
@@ -163,7 +163,7 @@ namespace NHaml.Core.Configuration
 				throw new ConfigurationErrorsException(message);
 			}
 
-			return (IClassBuilder)Activator.CreateInstance(type);
+			return type;
 		}
 	}
 }

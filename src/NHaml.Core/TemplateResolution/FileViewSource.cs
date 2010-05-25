@@ -1,4 +1,5 @@
 using System.IO;
+using NHaml.Core.Ast;
 
 namespace NHaml.Core.TemplateResolution
 {
@@ -9,6 +10,7 @@ namespace NHaml.Core.TemplateResolution
     {
         private readonly FileInfo _fileInfo;
         private long _lastUpdated;
+        private DocumentNode _result;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="FileViewSource"/> class.
@@ -23,6 +25,7 @@ namespace NHaml.Core.TemplateResolution
             }
             _fileInfo = fileInfo;
             _lastUpdated = LastModified;
+            _result = null;
         }
 
         public StreamReader GetStreamReader()
@@ -45,6 +48,18 @@ namespace NHaml.Core.TemplateResolution
         public bool IsModified
         {
             get { return _lastUpdated < LastModified; }
+        }
+
+        public DocumentNode ParseResult
+        {
+            get {
+                if ((_result == null) || (IsModified))
+                {
+                    var parser = new Parser.Parser();
+                    _result = parser.ParseFile(_fileInfo);
+                }
+                return _result;
+            }
         }
     }
 }

@@ -8,6 +8,30 @@ using System.IO;
 
 namespace NHaml.Core.Visitors
 {
+    public class CodeDomHtmlHelperPartialMethod : IPartialRenderMethod
+    {
+        public object RenderMethod(string PartialName, object PartialObject)
+        {
+            var result = new CodeMethodInvokeExpression
+            {
+                Method = new CodeMethodReferenceExpression
+                {
+                    MethodName = "RenderPartial",
+                    TargetObject = new CodeVariableReferenceExpression
+                    {
+                        VariableName = "Html"
+                    }
+                }
+            };
+            result.Parameters.Add(new CodePrimitiveExpression(PartialName));
+            if (PartialObject != null)
+            {
+                result.Parameters.Add(new CodeSnippetExpression { Value = PartialObject.ToString() });
+            }
+            return result;
+        }
+    }
+
     public abstract class CodeDomVisitor : HtmlVisitor
     {
         private CodeMemberMethod _actualCode;
@@ -18,6 +42,7 @@ namespace NHaml.Core.Visitors
         private StringBuilder _builder;
         private string _writerName;
         private int _blockCount;
+        private IPartialRenderMethod _partialMethod;
 
         private CodeMemberMethod CreateNewMethod(string name)
         {
@@ -94,6 +119,8 @@ namespace NHaml.Core.Visitors
                 );
             _runContent.Name = "RunContent";
             _runContent.Attributes = MemberAttributes.Public | MemberAttributes.Override;
+
+            _partialMethod = Options.GetPartialRenderMethod();
         }
 
         public Dictionary<string,CodeMemberMethod> Methods { get { return _methods; } }
@@ -102,22 +129,7 @@ namespace NHaml.Core.Visitors
 
         public virtual void RenderPartial(string PartialName, string Code)
         {
-            var result = new CodeMethodInvokeExpression
-            {
-                Method = new CodeMethodReferenceExpression
-                {
-                    MethodName = "RenderPartial",
-                    TargetObject = new CodeVariableReferenceExpression
-                    {
-                        VariableName = "Html"
-                    }
-                }
-            };
-            result.Parameters.Add(new CodePrimitiveExpression(PartialName));
-            if (Code != null)
-            {
-                result.Parameters.Add(new CodeSnippetExpression { Value = Code });
-            }
+            var result = (CodeExpression)_partialMethod.RenderMethod(PartialName, Code);
             _actualCode.Statements.Add(result);
         }
 
@@ -138,7 +150,7 @@ namespace NHaml.Core.Visitors
                         }
                     }
                 };
-                childInvoke.Parameters.Add(new CodeSnippetExpression { Value = _writerName });
+                childInvoke.Parameters.Add(new CodeVariableReferenceExpression { VariableName = _writerName });
                 childInvoke.Parameters.Add(new CodePrimitiveExpression { Value = node.Value });
 
                 if (hasChild)
@@ -151,7 +163,7 @@ namespace NHaml.Core.Visitors
                             TargetObject = new CodeThisReferenceExpression()
                         }
                     };
-                    baseInvoke.Parameters.Add(new CodeSnippetExpression { Value = _writerName });
+                    baseInvoke.Parameters.Add(new CodeVariableReferenceExpression { VariableName = _writerName });
                     baseInvoke.Parameters.Add(new CodePrimitiveExpression { Value = node.Value });
 
                     var ifStatement = new CodeConditionStatement(

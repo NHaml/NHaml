@@ -7,7 +7,7 @@ using NHaml.Core.Configuration;
 
 namespace NHaml.Core.Template
 {
-    public  class TemplateEngine
+    public class TemplateEngine
     {
         private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache;
 
@@ -39,9 +39,7 @@ namespace NHaml.Core.Template
                 _compiledTemplateCache.Clear();
                 //TODO: perhaps update usings here
             }
-        }
-
-     
+        }  
 
         public CompiledTemplate Compile(params string[] templatePath )
         {
@@ -56,7 +54,6 @@ namespace NHaml.Core.Template
         {
             return Compile(new List<string>{templatePath}, templateBaseType );
         }
-
 
         public CompiledTemplate Compile(List<string> templatePaths )
         {
@@ -79,7 +76,6 @@ namespace NHaml.Core.Template
             }
             return list;
         }
-
 
         public CompiledTemplate Compile(IList<IViewSource> templateViewSources, Type templateBaseType )
         {
@@ -105,7 +101,14 @@ namespace NHaml.Core.Template
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    //compiledTemplate = new CompiledTemplate( Options, templateViewSources, templateBaseType,context );
+                    if (templateViewSources.Count == 1)
+                    {
+                        compiledTemplate = new CompiledTemplate(Options, templateBaseType, context, null, templateViewSources[0]);
+                    }
+                    else
+                    {
+                        compiledTemplate = new CompiledTemplate(Options, templateBaseType, context, Compile(new List<IViewSource>{templateViewSources[0]},templateBaseType) , templateViewSources[1]);
+                    }
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;
                 }

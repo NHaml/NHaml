@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v2.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>    
+    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>
     <TargetFrameworkSubset>
     </TargetFrameworkSubset>
   </PropertyGroup>
@@ -107,6 +107,7 @@
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Visitors\CodeDomVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
+    <Compile Include="Visitors\IPartialRenderMethod.cs" />
     <Compile Include="Visitors\WebFormsVisitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

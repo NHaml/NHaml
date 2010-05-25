@@ -3,18 +3,48 @@ using System.Collections.Generic;
 using System.Text;
 using NHaml.Core.Ast;
 using System.Web;
+using NHaml.Core.Template;
 
 namespace NHaml.Core.Visitors
 {
+    public class WebFormsHtmlHelperPartialMethod : IPartialRenderMethod
+    {
+        public object RenderMethod(string PartialName, object PartialObject)
+        {
+            string result = null;
+            if (PartialObject == null)
+            {
+                result = String.Format("Html.RenderPartial(\"{0}\")", PartialName);
+            }
+            else
+            {
+                result = String.Format("Html.RenderPartial(\"{0}\",{1})", PartialName, PartialObject);
+            }
+            return result;
+        }
+    }
+
+
     public class WebFormsVisitor : HtmlVisitor
     {
         StringBuilder _sb;
         Stack<StringBuilder> _stack;
+        IPartialRenderMethod _partialMethod;
 
-        public WebFormsVisitor()
+        public WebFormsVisitor() : base()
         {
             _sb = new StringBuilder();
             _stack = new Stack<StringBuilder>();
+            Options.PartialRenderMethodType = typeof(WebFormsHtmlHelperPartialMethod);
+            _partialMethod = Options.GetPartialRenderMethod();
+        }
+
+        public WebFormsVisitor(TemplateOptions o)
+            : base(o)
+        {
+            _sb = new StringBuilder();
+            _stack = new Stack<StringBuilder>();
+            _partialMethod = Options.GetPartialRenderMethod();
         }
 
         public override void Visit(MetaNode node)
@@ -27,9 +57,7 @@ namespace NHaml.Core.Visitors
                 if (hasChild)
                 {
                     WriteText(">");
-                    //Indent++;
                     Visit(node.Child);
-                    //Indent--;
                     WriteText("</asp:ContentPlaceHolder>");
                 }
                 else
@@ -47,22 +75,13 @@ namespace NHaml.Core.Visitors
                         obj = ((TextChunk)(((TextNode)attr.Value).Chunks[0])).Text;
                     }
                 }
-                if (obj == null)
-                {
-                    WriteCode(String.Format("Html.RenderPartial(\"{0}\")",node.Value),false);
-                }
-                else
-                {
-                    WriteCode(String.Format("Html.RenderPartial(\"{0}\",{1})", node.Value, obj), false);
-                }
+                WriteCode(_partialMethod.RenderMethod(node.Value, obj).ToString(), false);
             }
             else if (node.Name == "content")
             {
                 WriteText(String.Format("<asp:Content ID=\"{0}\" runat=\"server\">", node.Value));
-                //Indent++;
                 if (node.Child!=null)
                     Visit(node.Child);
-                //Indent--;
                 WriteText(Environment.NewLine);
                 WriteIndent();
                 WriteText("</asp:Content>");
@@ -88,7 +107,16 @@ namespace NHaml.Core.Visitors
                 }
             }
 
-            var pagedefiniton = new MetaNode("page");
+            MetaNode pagedefiniton = null;
+
+            if (node.Metadata.ContainsKey("contentplaceholder"))
+            {
+                pagedefiniton = new MetaNode("master");
+            }
+            else
+            {
+                pagedefiniton = new MetaNode("page");
+            }
 
             if (node.Metadata.TryGetValue("page", out data))
             {
@@ -129,10 +157,10 @@ namespace NHaml.Core.Visitors
                 tc.Value = new TextNode(new TextChunk(((tc.Value as TextNode).Chunks[0] as TextChunk).Text + "<" + data[0].Value + ">"));
             }
 
-            if (pagedefiniton.Attributes.Find(x => x.Name == "MasterPageFile") == null)
+            /*if (pagedefiniton.Attributes.Find(x => x.Name == "MasterPageFile") == null)
             {
                 pagedefiniton.Attributes.Add(new AttributeNode("MasterPageFile") { Value = new TextNode(new TextChunk("true")) });
-            }
+            }*/
 
             if (pagedefiniton.Name == "page")
             {

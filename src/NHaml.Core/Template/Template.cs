@@ -9,11 +9,12 @@ namespace NHaml.Core.Template
         protected Template()
         {
             Child = null;
+            Master = null;
         }
 
-        protected Template(Template child)
+        protected Template(Template master)
         {
-            Child = child;
+            Master = master;
         }
 
         public abstract bool ContainsContent(string name);
@@ -21,9 +22,18 @@ namespace NHaml.Core.Template
 
         public virtual void Render(TextWriter textWriter)
         {
-            RunContent(textWriter, "Main");
+            if (Master == null)
+            {
+                RunContent(textWriter, "Main");
+            }
+            else
+            {
+                Master.Child = this;
+                Master.RunContent(textWriter, "Main");
+            }
         }
 
+        public Template Master { get; set; }
         public Template Child { get; set; }
     }
 }

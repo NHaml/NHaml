@@ -1,4 +1,5 @@
 using System.IO;
+using NHaml.Core.Ast;
 
 namespace NHaml.Core.TemplateResolution
 {
@@ -7,6 +8,8 @@ namespace NHaml.Core.TemplateResolution
     /// </summary>
     public interface IViewSource
     {
+        DocumentNode ParseResult { get; }
+
         /// <summary>
         /// Opens the view stream.
         /// </summary>

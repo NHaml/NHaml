@@ -15,31 +15,27 @@ namespace NHaml.Core.TemplateResolution
 
         public IViewSource GetViewSource(string templateName)
         {
-            return GetViewSource(templateName, new List<IViewSource>());
+            return GetViewSource(templateName, new List<string>());
         }
 
-        public IViewSource GetViewSource(string templateName, IList<IViewSource> parentViewSourceList)
+        public IViewSource GetViewSource(string templateName, IList<string> templatePaths)
         {
             Invariant.ArgumentNotEmpty(templateName, "templateName");
-            Invariant.ArgumentNotNull(parentViewSourceList, "parentViewSourceList");
+            Invariant.ArgumentNotNull(templatePaths, "parentViewSourceList");
             templateName = SuffixWithHaml(templateName);
             var fileInfo = CreateFileInfo(templateName);
             if (fileInfo != null && fileInfo.Exists)
             {
                 return new FileViewSource(fileInfo);
             }
-            for (var index = 0; index < parentViewSourceList.Count; index++)
+            foreach (string path in templatePaths)
             {
-                var source = parentViewSourceList[index];
-                //search where the current parent template exists
-                var parentDirectory = Path.GetDirectoryName(source.Path);
-                var combine = Path.Combine(parentDirectory, templateName);
+                var combine = Path.Combine(path, templateName);
                 if (File.Exists(combine))
                 {
                     return new FileViewSource(new FileInfo(combine));
                 }
             }
-
             throw new FileNotFoundException(string.Format("Could not find template '{0}'.", templateName));
         }
 

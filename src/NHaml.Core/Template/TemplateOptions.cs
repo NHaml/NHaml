@@ -6,18 +6,20 @@ using System.Web;
 using NHaml.Core.TemplateResolution;
 using NHaml.Core.Utils;
 using NHaml.Core.Compilers;
+using NHaml.Core.Visitors;
 
 namespace NHaml.Core.Template
 {
-
     public delegate void Action<T1, T2>(T1 obj1, T2 obj2);
-    public class TemplateOptions
+
+    public class TemplateOptions : ICloneable
     {
         private int _indentSize;
 
         private Type _templateBaseType;
-        private IClassBuilder _templateCompiler;
+        private Type _templateCompilerType;
         private bool _useTabs;
+        private Type _partialRenderMethodType;
 
         public TemplateOptions()
         {
@@ -33,8 +35,23 @@ namespace NHaml.Core.Template
             _indentSize = 2;
             BaseIndent = 0;
             _templateBaseType = typeof(Template);
-            _templateCompiler = new CSharpClassBuilder();
+            _templateCompilerType = typeof(CSharpClassBuilder);
+            _partialRenderMethodType = typeof(CodeDomHtmlHelperPartialMethod);
             TemplateContentProvider = new FileTemplateContentProvider();
+        }
+
+        public TemplateOptions(TemplateOptions o)
+        {
+            Usings = o.Usings;
+            References = o.References;
+            AutoClosingTags = o.AutoClosingTags;
+            ReferencedTypeHandles = o.ReferencedTypeHandles;
+            _indentSize = o.IndentSize;
+            BaseIndent = o.BaseIndent;
+            _templateBaseType = o.TemplateBaseType;
+            _templateCompilerType = o.TemplateCompilerType;
+            _partialRenderMethodType = o.PartialRenderMethodType;
+            TemplateContentProvider = o.TemplateContentProvider;
         }
 
         public Set<string> AutoClosingTags { get; private set; }
@@ -70,14 +87,38 @@ namespace NHaml.Core.Template
 
         public Set<string> References { get; private set; }
 
-        public IClassBuilder TemplateCompiler
+        public IClassBuilder GetTemplateCompiler()
         {
-            get { return _templateCompiler; }
+            return (IClassBuilder)Activator.CreateInstance(_templateCompilerType);
+        }
+
+        public Type TemplateCompilerType
+        {
+            get { return _templateCompilerType; }
             set
             {
                 Invariant.ArgumentNotNull(value, "value");
 
-                _templateCompiler = value;
+                _templateCompilerType = value;
+
+                if (TemplateCompilerChanged != null)
+                    TemplateCompilerChanged(this, EventArgs.Empty);
+            }
+        }
+
+        public IPartialRenderMethod GetPartialRenderMethod()
+        {
+            return (IPartialRenderMethod)Activator.CreateInstance(_partialRenderMethodType);
+        }
+
+        public Type PartialRenderMethodType
+        {
+            get { return _partialRenderMethodType; }
+            set
+            {
+                Invariant.ArgumentNotNull(value, "value");
+
+                _partialRenderMethodType = value;
 
                 if (TemplateCompilerChanged != null)
                     TemplateCompilerChanged(this, EventArgs.Empty);
@@ -174,6 +215,11 @@ namespace NHaml.Core.Template
             Invariant.ArgumentNotNull(assembly, "assembly");
 
             AddReference(assembly.Location);
+        }
+
+        public object Clone()
+        {
+            return new TemplateOptions(this);
         }
     }
 

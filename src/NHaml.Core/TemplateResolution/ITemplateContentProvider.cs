@@ -15,9 +15,9 @@ namespace NHaml.Core.TemplateResolution
         /// Builds and returns a representation of a view template
         /// </summary>
         /// <param name="templatePath">The template path.</param>
-        /// <param name="parentViewSourceList">The parent view source list.</param>
+        /// <param name="parentViewSourceList">The list of paths where to search</param>
         /// <returns></returns>
-        IViewSource GetViewSource( string templatePath, IList<IViewSource> parentViewSourceList );
+        IViewSource GetViewSource(string templateName, IList<string> templatePaths);
 
         /// <summary>
         /// Gets a list of path sources
