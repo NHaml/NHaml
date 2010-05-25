@@ -37,11 +37,15 @@ namespace NHaml.Core.Compilers
             var declaration = new CodeTypeDeclaration
             {
                 Name = ClassName,
-                IsClass = true
+                IsClass = true,
             };
 
+            CodeMemberMethod[] ctm = new CodeMemberMethod[Visitor.Methods.Count];
+            Visitor.Methods.Values.CopyTo(ctm, 0);
             declaration.BaseTypes.Add(options.TemplateBaseType);
-            declaration.Members.Add(Visitor.Method);
+            declaration.Members.AddRange(ctm);
+            declaration.Members.Add(Visitor.RunContentMethod);
+            declaration.Members.Add(Visitor.ContainsContentMethod);
 
             testNamespace.Types.Add(declaration);
             return compileUnit;

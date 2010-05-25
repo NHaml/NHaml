@@ -19,6 +19,7 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(MetaNode node)
         {
+            
             if (node.Name == "contentplaceholder")
             {
                 bool hasChild = node.Child != null;
@@ -26,10 +27,9 @@ namespace NHaml.Core.Visitors
                 if (hasChild)
                 {
                     WriteText(">");
-                    WriteText(Environment.NewLine);
-                    Indent++;
+                    //Indent++;
                     Visit(node.Child);
-                    Indent--;
+                    //Indent--;
                     WriteText("</asp:ContentPlaceHolder>");
                 }
                 else
@@ -47,7 +47,7 @@ namespace NHaml.Core.Visitors
                         obj = ((TextChunk)(((TextNode)attr.Value).Chunks[0])).Text;
                     }
                 }
-                if (obj != null)
+                if (obj == null)
                 {
                     WriteCode(String.Format("Html.RenderPartial(\"{0}\")",node.Value),false);
                 }
@@ -59,11 +59,10 @@ namespace NHaml.Core.Visitors
             else if (node.Name == "content")
             {
                 WriteText(String.Format("<asp:Content ID=\"{0}\" runat=\"server\">", node.Value));
-                WriteText(Environment.NewLine);
-                Indent++;
+                //Indent++;
                 if (node.Child!=null)
                     Visit(node.Child);
-                Indent--;
+                //Indent--;
                 WriteText(Environment.NewLine);
                 WriteIndent();
                 WriteText("</asp:Content>");
@@ -156,7 +155,7 @@ namespace NHaml.Core.Visitors
             }
             WriteText(" %>" + System.Environment.NewLine);
 
-            bool hasContentMetaFlags = node.Metadata.ContainsKey("content");
+            bool hasContentMetaFlags = node.Metadata.ContainsKey("content") || pagedefiniton.Name != "page";
 
             if (!hasContentMetaFlags)
             {

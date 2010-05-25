@@ -49,9 +49,7 @@ namespace NHaml.Core.Tests
                 );
             }
 
-            Visitor.Method.Name = "TestMethod";
-            Visitor.Method.Attributes = MemberAttributes.Public;
-            declaration.Members.Add(Visitor.Method);
+            declaration.Members.Add(Visitor.Methods["Main"]);
             testNamespace.Types.Add(declaration);
 
             var unit = new CodeCompileUnit();
@@ -75,7 +73,7 @@ namespace NHaml.Core.Tests
             object runnerobject = Activator.CreateInstance(runner);
             StringWriter sw = new StringWriter();
             //cp.GenerateCodeFromCompileUnit(unit, sw, new CodeGeneratorOptions());
-            runner.InvokeMember("TestMethod", BindingFlags.InvokeMethod, null, runnerobject, new object[] { sw });
+            runner.InvokeMember("RenderMain", BindingFlags.InvokeMethod, null, runnerobject, new object[] { sw });
             return sw.GetStringBuilder().ToString();
         }
 

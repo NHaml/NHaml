@@ -10,35 +10,227 @@ namespace NHaml.Core.Visitors
 {
     public abstract class CodeDomVisitor : HtmlVisitor
     {
-        private CodeMemberMethod _code;
+        private CodeMemberMethod _actualCode;
+        private CodeMemberMethod _containsContent;
+        private CodeMemberMethod _runContent;
+        private Dictionary<string, CodeMemberMethod> _methods;
         private Stack<string> _stack;
         private StringBuilder _builder;
         private string _writerName;
         private int _blockCount;
 
-        public CodeDomVisitor()
+        private CodeMemberMethod CreateNewMethod(string name)
         {
-            _code = new CodeMemberMethod();
-            _code.Parameters.Add(
+            var Code = new CodeMemberMethod();
+            Code.Parameters.Add(
                     new CodeParameterDeclarationExpression(
                         new CodeTypeReference(typeof(TextWriter)),
                         "textWriter"
                     )
                 );
-            _code.Name = "CoreRender";
-            _code.Attributes = MemberAttributes.Public | MemberAttributes.Override;
+            Code.Name = "Render"+name;
+            Code.Attributes = MemberAttributes.Public;
+            _methods.Add(name, Code);
+
+            var containsCode = new CodeConditionStatement(
+                new CodeBinaryOperatorExpression(
+                    new CodeVariableReferenceExpression("name"),
+                    CodeBinaryOperatorType.ValueEquality,
+                    new CodePrimitiveExpression(name)
+                ),
+                new CodeMethodReturnStatement(new CodePrimitiveExpression(true))
+            );
+            _containsContent.Statements.Add(containsCode);
+
+            var runCode = new CodeConditionStatement(
+                new CodeBinaryOperatorExpression(
+                    new CodeVariableReferenceExpression("name"),
+                    CodeBinaryOperatorType.ValueEquality,
+                    new CodePrimitiveExpression(name)
+                ),
+                new CodeExpressionStatement(
+                    new CodeMethodInvokeExpression(
+                        new CodeThisReferenceExpression(),
+                        "Render"+name,
+                        new CodeVariableReferenceExpression("textWriter")
+                    )
+                )
+            );
+            _runContent.Statements.Add(runCode);
+            return Code;
+        }
+
+        public CodeDomVisitor()
+        {
+            _methods = new Dictionary<string, CodeMemberMethod>();
             _stack = new Stack<string>();
             _writerName = "textWriter";
             _blockCount = 0;
             _builder = new StringBuilder();
+
+            _containsContent = new CodeMemberMethod();
+            _containsContent.Parameters.Add(
+                    new CodeParameterDeclarationExpression(
+                        new CodeTypeReference(typeof(string)),
+                        "name"
+                    )
+                );
+            _containsContent.ReturnType = new CodeTypeReference(typeof(bool));
+            _containsContent.Name = "ContainsContent";
+            _containsContent.Attributes = MemberAttributes.Public | MemberAttributes.Override;
+
+            _runContent = new CodeMemberMethod();
+            _runContent.Parameters.Add(
+                    new CodeParameterDeclarationExpression(
+                        new CodeTypeReference(typeof(TextWriter)),
+                        "textWriter"
+                    )
+                );
+            _runContent.Parameters.Add(
+                    new CodeParameterDeclarationExpression(
+                        new CodeTypeReference(typeof(string)),
+                        "name"
+                    )
+                );
+            _runContent.Name = "RunContent";
+            _runContent.Attributes = MemberAttributes.Public | MemberAttributes.Override;
         }
 
-        public CodeMemberMethod Method { get { return _code; } }
+        public Dictionary<string,CodeMemberMethod> Methods { get { return _methods; } }
+        public CodeMemberMethod ContainsContentMethod { get { return _containsContent; } }
+        public CodeMemberMethod RunContentMethod { get { return _runContent; } }
 
-        protected override void EndVisit()
+        public virtual void RenderPartial(string PartialName, string Code)
+        {
+            var result = new CodeMethodInvokeExpression
+            {
+                Method = new CodeMethodReferenceExpression
+                {
+                    MethodName = "RenderPartial",
+                    TargetObject = new CodeVariableReferenceExpression
+                    {
+                        VariableName = "Html"
+                    }
+                }
+            };
+            result.Parameters.Add(new CodePrimitiveExpression(PartialName));
+            if (Code != null)
+            {
+                result.Parameters.Add(new CodeSnippetExpression { Value = Code });
+            }
+            _actualCode.Statements.Add(result);
+        }
+
+        public override void Visit(MetaNode node)
         {
             PopString();
-            base.EndVisit();
+            if (node.Name == "contentplaceholder")
+            {
+                bool hasChild = node.Child != null;
+                var childInvoke = new CodeMethodInvokeExpression
+                {
+                    Method = new CodeMethodReferenceExpression
+                    {
+                        MethodName = "RunContent",
+                        TargetObject = new CodeVariableReferenceExpression
+                        {
+                            VariableName = "Child"
+                        }
+                    }
+                };
+                childInvoke.Parameters.Add(new CodeSnippetExpression { Value = _writerName });
+                childInvoke.Parameters.Add(new CodePrimitiveExpression { Value = node.Value });
+
+                if (hasChild)
+                {
+                    var baseInvoke = new CodeMethodInvokeExpression
+                    {
+                        Method = new CodeMethodReferenceExpression
+                        {
+                            MethodName = "RunContent",
+                            TargetObject = new CodeThisReferenceExpression()
+                        }
+                    };
+                    baseInvoke.Parameters.Add(new CodeSnippetExpression { Value = _writerName });
+                    baseInvoke.Parameters.Add(new CodePrimitiveExpression { Value = node.Value });
+
+                    var ifStatement = new CodeConditionStatement(
+                            new CodeMethodInvokeExpression(
+                                new CodeVariableReferenceExpression("Child"),
+                                "ContainsContent",
+                                new CodePrimitiveExpression(node.Value)
+                            )
+                        );
+                    ifStatement.TrueStatements.Add(childInvoke);
+                    ifStatement.FalseStatements.Add(baseInvoke);
+                    _actualCode.Statements.Add(ifStatement);
+
+                    string oldMethod = "Main";
+                    foreach (var pair in _methods)
+                    {
+                        if (pair.Value == _actualCode)
+                            oldMethod = pair.Key;
+                    }
+                    _actualCode = CreateNewMethod(node.Value);
+                    if (node.Child != null)
+                        Visit(node.Child);
+                    PopString();
+                    _actualCode = _methods[oldMethod];
+                }
+                else
+                {
+                    _actualCode.Statements.Add(childInvoke);
+                }
+            }
+            else if (node.Name == "partialcontent")
+            {
+                string obj = null;
+                foreach (var attr in node.Attributes)
+                {
+                    if (attr.Name == "model")
+                    {
+                        obj = ((TextChunk)(((TextNode)attr.Value).Chunks[0])).Text;
+                    }
+                }
+                RenderPartial(node.Value,obj);
+            }
+            else if (node.Name == "content")
+            {
+                string oldMethod = "Main";
+                foreach (var pair in _methods) {
+                    if (pair.Value == _actualCode)
+                        oldMethod = pair.Key;
+                }
+                _actualCode = CreateNewMethod(node.Value);
+                if (node.Child != null)
+                    Visit(node.Child);
+                PopString();
+                _actualCode = _methods[oldMethod];
+            }
+            else
+            {
+                base.Visit(node);
+            }
+        }
+
+        protected override void StartVisit(DocumentNode node)
+        {
+            if (node.Metadata.ContainsKey("content"))
+            {
+                _actualCode = CreateNewMethod("BaseContentHolderMethod");
+            }
+            else
+            {
+                _actualCode = CreateNewMethod("Main");
+            }
+            base.StartVisit(node);
+        }
+
+        protected override void EndVisit(DocumentNode node)
+        {
+            PopString();
+            _containsContent.Statements.Add(new CodeMethodReturnStatement(new CodePrimitiveExpression(false)));
+            base.EndVisit(node);
         }
 
         protected void PushString(string text)
@@ -52,7 +244,7 @@ namespace NHaml.Core.Visitors
             {
                 var writer = WriterCaller(_writerName);
                 writer.Parameters.Add(new CodePrimitiveExpression { Value = _builder.ToString() });
-                _code.Statements.Add(new CodeExpressionStatement { Expression = writer });
+                _actualCode.Statements.Add(new CodeExpressionStatement { Expression = writer });
                 _builder = new StringBuilder();
             }
         }
@@ -87,7 +279,7 @@ namespace NHaml.Core.Visitors
                 writer.Parameters.Add(toStringInvoke);
             }
 
-            _code.Statements.Add(new CodeExpressionStatement { Expression = writer });
+            _actualCode.Statements.Add(new CodeExpressionStatement { Expression = writer });
         }
 
         protected override void PushWriter()
@@ -96,7 +288,7 @@ namespace NHaml.Core.Visitors
             _stack.Push(_writerName);
             _writerName = "textWriter" + _blockCount;
             _blockCount++;
-            _code.Statements.Add(new CodeVariableDeclarationStatement
+            _actualCode.Statements.Add(new CodeVariableDeclarationStatement
                 {
                     Name = _writerName,
                     Type = new CodeTypeReference(typeof(StringWriter)),
@@ -115,14 +307,14 @@ namespace NHaml.Core.Visitors
         protected override void WriteStartBlock(string code, bool hasChild)
         {
             PopString();
-            _code.Statements.Add(new CodeSnippetStatement(code));
-            if (hasChild) _code.Statements.Add(new CodeSnippetStatement(StartBlock));
+            _actualCode.Statements.Add(new CodeSnippetStatement(code));
+            if (hasChild) _actualCode.Statements.Add(new CodeSnippetStatement(StartBlock));
         }
 
         protected override void WriteEndBlock()
         {
             PopString();
-            _code.Statements.Add(new CodeSnippetStatement(EndBlock));
+            _actualCode.Statements.Add(new CodeSnippetStatement(EndBlock));
         }
 
         protected abstract string StartBlock { get; }
@@ -183,7 +375,7 @@ namespace NHaml.Core.Visitors
                         throw new NotSupportedException();
                 }
             }
-            _code.Statements.Add(new CodeExpressionStatement { Expression = writer });
+            _actualCode.Statements.Add(new CodeExpressionStatement { Expression = writer });
         }
 
         protected override LateBindingNode DataJoiner(string joinString, object[] data, bool sort)
@@ -194,13 +386,13 @@ namespace NHaml.Core.Visitors
                 string djWriterName = "textWriter" + _blockCount;
                 _blockCount++;
 
-                _code.Statements.Add(new CodeVariableDeclarationStatement
+                _actualCode.Statements.Add(new CodeVariableDeclarationStatement
                 {
                     Name = djWriterName,
                     Type = new CodeTypeReference(typeof(StringWriter)),
                     InitExpression = new CodeObjectCreateExpression(typeof(StringWriter))
                 });
-                _code.Statements.Add(new CodeVariableDeclarationStatement
+                _actualCode.Statements.Add(new CodeVariableDeclarationStatement
                 {
                     Name = djWriterName + "l",
                     Type = new CodeTypeReference(typeof(List<string>)),
@@ -216,7 +408,7 @@ namespace NHaml.Core.Visitors
                         );
                     var atostring = ToStringCaller(o as string);
                     adder.Parameters.Add(atostring);
-                    _code.Statements.Add(adder);
+                    _actualCode.Statements.Add(adder);
                 }
                 if (sort)
                 {
@@ -226,7 +418,7 @@ namespace NHaml.Core.Visitors
                                 "Sort"
                             )
                         );
-                    _code.Statements.Add(sorter);
+                    _actualCode.Statements.Add(sorter);
                 }
                 var joincall = new CodeMethodInvokeExpression(
                         new CodeMethodReferenceExpression(
@@ -243,7 +435,7 @@ namespace NHaml.Core.Visitors
                     );
                 var writerCaller = WriterCaller(djWriterName);
                 writerCaller.Parameters.Add(joincall);
-                _code.Statements.Add(writerCaller);
+                _actualCode.Statements.Add(writerCaller);
                 return new LateBindingNode() { Value = djWriterName };
             }
             else

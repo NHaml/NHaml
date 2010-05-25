@@ -31,12 +31,15 @@ namespace NHaml.Core.Template
             AutoClosingTags = new Set<string>(new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" });
             ReferencedTypeHandles = new List<RuntimeTypeHandle>();
             _indentSize = 2;
+            BaseIndent = 0;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharpClassBuilder();
             TemplateContentProvider = new FileTemplateContentProvider();
         }
 
         public Set<string> AutoClosingTags { get; private set; }
+
+        public int BaseIndent { get; set; }
 
         public bool AutoRecompile { get; set; }
         public bool EncodeHtml { get; set; }

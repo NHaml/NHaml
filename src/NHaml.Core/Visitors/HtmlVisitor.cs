@@ -30,7 +30,7 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(DocumentNode node)
         {
-            StartVisit();
+            StartVisit(node);
             var first = true;
             foreach(var child in node.Childs)
             {
@@ -41,14 +41,14 @@ namespace NHaml.Core.Visitors
                 if (!(child is MetaNode))
                     first = false;
             }
-            EndVisit();
+            EndVisit(node);
         }
 
-        protected virtual void EndVisit()
+        protected virtual void EndVisit(DocumentNode node)
         {
         }
 
-        protected virtual void StartVisit()
+        protected virtual void StartVisit(DocumentNode node)
         {
         }
 
@@ -346,11 +346,11 @@ namespace NHaml.Core.Visitors
         {
             if (Options.UseTabs)
             {
-                WriteText(new String('\t', Options.IndentSize * Indent));
+                WriteText(new String('\t', Options.IndentSize * (Indent + Options.BaseIndent)));
             }
             else
             {
-                WriteText(new String(' ', Options.IndentSize * Indent));
+                WriteText(new String(' ', Options.IndentSize * (Indent + Options.BaseIndent)));
             }
         }
 

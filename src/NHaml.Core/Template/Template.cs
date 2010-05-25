@@ -8,16 +8,22 @@ namespace NHaml.Core.Template
     {
         protected Template()
         {
+            Child = null;
         }
 
-        public void Render(TextWriter textWriter)
+        protected Template(Template child)
         {
-            CoreRender(textWriter);
+            Child = child;
         }
 
-        public virtual void CoreRender(TextWriter textWriter)
+        public abstract bool ContainsContent(string name);
+        public abstract void RunContent(TextWriter textWriter, string name);
+
+        public virtual void Render(TextWriter textWriter)
         {
+            RunContent(textWriter, "Main");
         }
 
+        public Template Child { get; set; }
     }
 }
