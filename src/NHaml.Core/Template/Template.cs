@@ -17,11 +17,20 @@ namespace NHaml.Core.Template
             Master = master;
         }
 
+        protected virtual void PreRender(TextWriter writer)
+        {
+        }
+
+        protected virtual void PostRender(TextWriter writer)
+        {
+        }
+
         public abstract bool ContainsContent(string name);
         public abstract void RunContent(TextWriter textWriter, string name);
 
         public virtual void Render(TextWriter textWriter)
         {
+            PreRender(textWriter);
             if (Master == null)
             {
                 RunContent(textWriter, "Main");
@@ -31,6 +40,7 @@ namespace NHaml.Core.Template
                 Master.Child = this;
                 Master.RunContent(textWriter, "Main");
             }
+            PostRender(textWriter);
         }
 
         public Template Master { get; set; }

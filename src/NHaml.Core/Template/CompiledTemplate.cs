@@ -60,8 +60,13 @@ namespace NHaml.Core.Template
 
             viewSourceModifiedChecks = new List<Func<bool>>();
             viewSourceModifiedChecks.Add(() => _contentFile.IsModified);
-            foreach (var fileModifiedCheck in _masterFile.viewSourceModifiedChecks)
-                viewSourceModifiedChecks.Add(fileModifiedCheck);
+            if (_masterFile != null)
+            {
+                foreach (var fileModifiedCheck in _masterFile.viewSourceModifiedChecks)
+                {
+                    viewSourceModifiedChecks.Add(fileModifiedCheck);
+                }
+            }
 
             options.AddReferences(_templateBaseType);
             if (options.BeforeCompile != null)

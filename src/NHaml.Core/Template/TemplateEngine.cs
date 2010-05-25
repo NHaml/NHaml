@@ -50,17 +50,28 @@ namespace NHaml.Core.Template
 
         public CompiledTemplate Compile( string templatePath, string masterPath )
         {
-            return Compile( Options.TemplateContentProvider.GetViewSource(templatePath),
-                            Options.TemplateContentProvider.GetViewSource(masterPath)
-                          );
+            IViewSource template = Options.TemplateContentProvider.GetViewSource(templatePath);
+            IViewSource master = null;
+            if (masterPath!=null) {
+                master = Options.TemplateContentProvider.GetViewSource(masterPath);
+            }
+            return Compile(template,master);
         }
 
         public CompiledTemplate Compile(string templatePath, string masterPath, string defaultMasterPath)
         {
-            return Compile(Options.TemplateContentProvider.GetViewSource(templatePath),
-                            Options.TemplateContentProvider.GetViewSource(masterPath),
-                            Options.TemplateContentProvider.GetViewSource(defaultMasterPath)
-                          );
+            IViewSource template = Options.TemplateContentProvider.GetViewSource(templatePath);
+            IViewSource master = null;
+            if (masterPath != null)
+            {
+                master = Options.TemplateContentProvider.GetViewSource(masterPath);
+            }
+            IViewSource defaultMaster = null;
+            if (defaultMasterPath != null)
+            {
+                defaultMaster = Options.TemplateContentProvider.GetViewSource(defaultMasterPath);
+            }
+            return Compile(template,master,defaultMaster);
         }
 
         public CompiledTemplate Compile(IViewSource template, IViewSource master)
@@ -70,10 +81,15 @@ namespace NHaml.Core.Template
 
         public CompiledTemplate Compile(IViewSource template, IViewSource master, IViewSource defaultMaster)
         {
-            return Compile(template,
-                Compile(master, (IViewSource)null, null),
-                Compile(defaultMaster, (IViewSource)null, null),
-                null);
+            CompiledTemplate compiledMaster = null;
+            if (master != null)
+                compiledMaster = Compile(master, (IViewSource)null, null);
+
+            CompiledTemplate compiledDefaultMaster = null;
+            if (defaultMaster != null)
+                compiledDefaultMaster = Compile(defaultMaster, (IViewSource)null, null);
+
+            return Compile(template,compiledMaster, compiledDefaultMaster, null);
         }
 
         public CompiledTemplate Compile(IViewSource template, CompiledTemplate master, CompiledTemplate defaultMaster, object context)

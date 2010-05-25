@@ -52,7 +52,7 @@ namespace NHaml.Core.Visitors
 
             if (pagedefiniton.Attributes.Find(x => x.Name == "Inherits") == null)
             {
-                pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk(options.TemplateBaseType.Name)) });
+                pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk(options.TemplateBaseType.ToString())) });
             }
 
             if (metadata.TryGetValue("type", out data))
