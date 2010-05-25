@@ -4,6 +4,8 @@ using System.Text;
 using NHaml.Core.TemplateResolution;
 using NHaml.Core.Utils;
 using NHaml.Core.Configuration;
+using NHaml.Core.Ast;
+using NHaml.Core.Visitors;
 
 namespace NHaml.Core.Template
 {
@@ -41,57 +43,76 @@ namespace NHaml.Core.Template
             }
         }  
 
-        public CompiledTemplate Compile(params string[] templatePath )
-        {
-            return Compile( templatePath, Options.TemplateBaseType );
-        }
         public CompiledTemplate Compile( string templatePath )
         {
-            return Compile( templatePath, Options.TemplateBaseType );
+            return Compile( Options.TemplateContentProvider.GetViewSource(templatePath), null );
         }
 
-        public CompiledTemplate Compile( string templatePath, Type templateBaseType )
+        public CompiledTemplate Compile( string templatePath, string masterPath )
         {
-            return Compile(new List<string>{templatePath}, templateBaseType );
+            return Compile( Options.TemplateContentProvider.GetViewSource(templatePath),
+                            Options.TemplateContentProvider.GetViewSource(masterPath)
+                          );
         }
 
-        public CompiledTemplate Compile(List<string> templatePaths )
+        public CompiledTemplate Compile(string templatePath, string masterPath, string defaultMasterPath)
         {
-            return Compile(templatePaths, Options.TemplateBaseType );
+            return Compile(Options.TemplateContentProvider.GetViewSource(templatePath),
+                            Options.TemplateContentProvider.GetViewSource(masterPath),
+                            Options.TemplateContentProvider.GetViewSource(defaultMasterPath)
+                          );
         }
 
-        public CompiledTemplate Compile(IList<string> templatePaths, Type templateBaseType)
+        public CompiledTemplate Compile(IViewSource template, IViewSource master)
         {
-            var list = ConvertPathsToViewSources(templatePaths);
-
-            return Compile(list, templateBaseType);
+            return Compile(template, master, null);
         }
 
-        public List<IViewSource> ConvertPathsToViewSources(IList<string> templatePaths)
+        public CompiledTemplate Compile(IViewSource template, IViewSource master, IViewSource defaultMaster)
         {
-            var list = new List<IViewSource>();
-            foreach (var layoutTemplatePath in templatePaths)
+            return Compile(template,
+                Compile(master, (IViewSource)null, null),
+                Compile(defaultMaster, (IViewSource)null, null),
+                null);
+        }
+
+        public CompiledTemplate Compile(IViewSource template, CompiledTemplate master, CompiledTemplate defaultMaster, object context)
+        {
+            Invariant.ArgumentNotNull( template, "template" );
+
+            var opts = (TemplateOptions)Options.Clone();
+
+            MetaNode pagedefiniton = MetaDataFiller.FillAndGetPageDefinition(template.ParseResult.Metadata, Options);
+            // inherittype will contain the @type data too
+            string inherittype = ((TextChunk)((TextNode)pagedefiniton.Attributes.Find(x => x.Name == "Inherits").Value).Chunks[0]).Text;
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
-                list.Add(Options.TemplateContentProvider.GetViewSource(layoutTemplatePath));
+                var modelType = assembly.GetType(inherittype, false, true);
+                if (modelType != null)
+                {
+                    opts.TemplateBaseType = ProxyExtractor.GetNonProxiedType(modelType);
+                }
             }
-            return list;
-        }
+            
+            var templateCacheKey = template.Path;
 
-        public CompiledTemplate Compile(IList<IViewSource> templateViewSources, Type templateBaseType )
-        {
-            return Compile(templateBaseType, templateViewSources, null);
-        }
-
-        public CompiledTemplate Compile(Type templateBaseType, IList<IViewSource> templateViewSources, object context)
-        {
-            Invariant.ArgumentNotNull( templateBaseType, "templateBaseType" );
-
-            templateBaseType = ProxyExtractor.GetNonProxiedType(templateBaseType);
-            var templateCacheKey = new StringBuilder();
-
-            foreach( var layoutTemplatePath in templateViewSources )
+            // check if there is a default masterpagefile definition inside the content page.
+            // If yes, use that instead of the defaultTemplate
+            if (master == null)
             {
-                templateCacheKey.AppendFormat( "{0}, ", layoutTemplatePath.Path );
+                AttributeNode masterNode = pagedefiniton.Attributes.Find(x => x.Name == "MasterPageFile");
+                if (masterNode != null)
+                {
+                    string masterName = ((TextChunk)((TextNode)masterNode.Value).Chunks[0]).Text;
+                    master = Compile(masterName);
+                }
+                else
+                {
+                    if (defaultMaster != null)
+                    {
+                        master = defaultMaster;
+                    }
+                }
             }
 
             CompiledTemplate compiledTemplate;
@@ -101,14 +122,7 @@ namespace NHaml.Core.Template
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    if (templateViewSources.Count == 1)
-                    {
-                        compiledTemplate = new CompiledTemplate(Options, templateBaseType, context, null, templateViewSources[0]);
-                    }
-                    else
-                    {
-                        compiledTemplate = new CompiledTemplate(Options, templateBaseType, context, Compile(new List<IViewSource>{templateViewSources[0]},templateBaseType) , templateViewSources[1]);
-                    }
+                    compiledTemplate = new CompiledTemplate(opts, opts.TemplateBaseType, context, master, template);
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;
                 }

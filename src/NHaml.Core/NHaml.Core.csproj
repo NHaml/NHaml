@@ -108,6 +108,7 @@
     <Compile Include="Visitors\CodeDomVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
     <Compile Include="Visitors\IPartialRenderMethod.cs" />
+    <Compile Include="Visitors\MetaDataFiller.cs" />
     <Compile Include="Visitors\WebFormsVisitor.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

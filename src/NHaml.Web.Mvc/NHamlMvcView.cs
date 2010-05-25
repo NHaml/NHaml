@@ -8,7 +8,13 @@ using NHaml.Core.Template;
 
 namespace NHaml.Web.Mvc
 {
-    [AspNetHostingPermission( SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    public abstract class NHamlMvcView : NHamlMvcView<object>
+    {
+    };
+
+    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
     [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public abstract class NHamlMvcView<TModel> : Template, IView, IViewDataContainer
       where TModel : class
@@ -16,25 +22,21 @@ namespace NHaml.Web.Mvc
         public void Render( ViewContext viewContext, TextWriter writer )
         {
             Invariant.ArgumentNotNull( viewContext, "viewContext" );
-
             ViewContext = viewContext;
-
             SetViewData( viewContext.ViewData );
-
             CreateHelpers( viewContext );
-
             Render( writer );
         }
 
         protected virtual void CreateHelpers( ViewContext viewContext )
         {
-            Ajax = new AjaxHelper( viewContext, this );
-            Html = new HtmlHelper( viewContext, this );
+            Ajax = new AjaxHelper<TModel>( viewContext, this );
+            Html = new HtmlHelper<TModel>( viewContext, this );
             Url = new UrlHelper( viewContext.RequestContext );
         }
 
-        public AjaxHelper Ajax { get; protected set; }
-        public HtmlHelper Html { get; protected set; }
+        public AjaxHelper<TModel> Ajax { get; protected set; }
+        public HtmlHelper<TModel> Html { get; protected set; }
         public UrlHelper Url { get; protected set; }
 
         public ViewContext ViewContext { get; private set; }

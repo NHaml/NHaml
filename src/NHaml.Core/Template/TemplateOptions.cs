@@ -17,6 +17,7 @@ namespace NHaml.Core.Template
         private int _indentSize;
 
         private Type _templateBaseType;
+
         private Type _templateCompilerType;
         private bool _useTabs;
         private Type _partialRenderMethodType;
@@ -38,20 +39,6 @@ namespace NHaml.Core.Template
             _templateCompilerType = typeof(CSharpClassBuilder);
             _partialRenderMethodType = typeof(CodeDomHtmlHelperPartialMethod);
             TemplateContentProvider = new FileTemplateContentProvider();
-        }
-
-        public TemplateOptions(TemplateOptions o)
-        {
-            Usings = o.Usings;
-            References = o.References;
-            AutoClosingTags = o.AutoClosingTags;
-            ReferencedTypeHandles = o.ReferencedTypeHandles;
-            _indentSize = o.IndentSize;
-            BaseIndent = o.BaseIndent;
-            _templateBaseType = o.TemplateBaseType;
-            _templateCompilerType = o.TemplateCompilerType;
-            _partialRenderMethodType = o.PartialRenderMethodType;
-            TemplateContentProvider = o.TemplateContentProvider;
         }
 
         public Set<string> AutoClosingTags { get; private set; }
@@ -219,7 +206,7 @@ namespace NHaml.Core.Template
 
         public object Clone()
         {
-            return new TemplateOptions(this);
+            return this.MemberwiseClone();
         }
     }
 

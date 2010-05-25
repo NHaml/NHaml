@@ -45,6 +45,11 @@ namespace NHaml.Web.Mvc
             _templateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( LinkExtensions ).Assembly.Location );
             _templateEngine.Options.AddReference( typeof( IView ).Assembly.Location );
+
+            if (_templateEngine.Options.TemplateBaseType == typeof(Template))
+            {
+                _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView);
+            }
         }
 
         public TemplateEngine TemplateEngine
@@ -65,7 +70,15 @@ namespace NHaml.Web.Mvc
                 "~/Views/Shared/{0}.haml"
             };
 
+            AreaViewLocationFormats = new[]
+            {
+                "~/Areas/{2}/Views/{1}/{0}.haml",
+                "~/Areas/{2}/Views/Shared/{0}.haml"
+            };
+
             PartialViewLocationFormats = ViewLocationFormats;
+
+            AreaPartialViewLocationFormats = AreaViewLocationFormats;
         }
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
@@ -88,38 +101,14 @@ namespace NHaml.Web.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-            return (IView)_templateEngine.Compile(
-                VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath),
-                GetViewBaseType(controllerContext)).CreateInstance();
+            return (IView)_templateEngine.Compile(VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath)).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
             masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-            return (IView)_templateEngine.Compile(new List<string>{ masterPath, viewPath}, GetViewBaseType(controllerContext)).CreateInstance();
-        }
-
-        protected virtual Type GetViewBaseType(ControllerContext controllerContext)
-        {
-            var modelType = typeof(object);
-
-            var viewData = controllerContext.Controller.ViewData;
-
-            var viewContext = controllerContext as ViewContext;
-
-            if ((viewContext != null) && (viewContext.ViewData != null))
-            {
-                viewData = viewContext.ViewData;
-            }
-
-            if ((viewData != null) && (viewData.Model != null))
-            {
-                modelType = viewData.Model.GetType();
-            }
-
-            //return ViewGenericBaseType.MakeGenericType(modelType);
-            return typeof(Template);
+            return (IView)_templateEngine.Compile(viewPath,masterPath,DefaultMaster).CreateInstance();
         }
 
         protected virtual string VirtualPathToPhysicalPath(RequestContext context, string path)

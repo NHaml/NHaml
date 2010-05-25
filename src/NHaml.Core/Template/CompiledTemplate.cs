@@ -30,7 +30,10 @@ namespace NHaml.Core.Template
 
         public Template CreateInstance()
         {
-            return _templateFactory.CreateTemplate();
+            Template t = _templateFactory.CreateTemplate();
+            if (_masterFile != null)
+                t.Master = _masterFile.CreateInstance();
+            return t;
         }
 
         public void Recompile()
@@ -53,24 +56,7 @@ namespace NHaml.Core.Template
             var className = Utility.MakeClassName(_contentFile.Path);
             var compiler = options.GetTemplateCompiler();
 
-            Template masterTemplate = null;
-            if (_masterFile != null) {
-                masterTemplate = _masterFile.CreateInstance();
-            }
-
             compiler.SetDocument(_contentFile.ParseResult, className);
-            
-            if (_templateBaseType.IsGenericTypeDefinition)
-            {
-                var modelType = GetModelType(compiler.Document);
-                options.TemplateBaseType = _templateBaseType.MakeGenericType(modelType);
-                options.AddReference(modelType.Assembly);
-            }
-            else
-            {
-                options.TemplateBaseType = _templateBaseType;
-            }
-            compiler.GenerateType(options);
 
             viewSourceModifiedChecks = new List<Func<bool>>();
             viewSourceModifiedChecks.Add(() => _contentFile.IsModified);
@@ -84,27 +70,6 @@ namespace NHaml.Core.Template
             }
 
             _templateFactory = new TemplateFactory(compiler.GenerateType(options));
-        }
-
-        private static Type GetModelType(DocumentNode n)
-        {
-            List<MetaNode> modelList;
-            if (n.Metadata.TryGetValue("model", out modelList))
-            {
-                string model = modelList[0].Value;
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    var modelType = assembly.GetType(model, false, true);
-                    if (modelType != null)
-                    {
-                        return modelType;
-                    }
-                }
-
-                var message = string.Format("The given model type '{0}' was not found.", model);
-                throw new TemplateCompilationException(message);
-            }
-            return typeof (object);
         }
     }
 }

@@ -107,39 +107,7 @@ namespace NHaml.Core.Visitors
                 }
             }
 
-            MetaNode pagedefiniton = null;
-
-            if (node.Metadata.ContainsKey("contentplaceholder"))
-            {
-                pagedefiniton = new MetaNode("master");
-            }
-            else
-            {
-                pagedefiniton = new MetaNode("page");
-            }
-
-            if (node.Metadata.TryGetValue("page", out data))
-            {
-                pagedefiniton = data[0];
-            }
-            if (node.Metadata.TryGetValue("control",out data))
-            {
-                pagedefiniton = data[0];
-            }
-            if (node.Metadata.TryGetValue("master", out data))
-            {
-                pagedefiniton = data[0];
-            }
-
-            if (pagedefiniton.Attributes.Find(x => x.Name == "Language") == null)
-            {
-                pagedefiniton.Attributes.Add(new AttributeNode("Language") { Value = new TextNode(new TextChunk("C#")) });
-            }
-
-            if (pagedefiniton.Attributes.Find(x => x.Name == "AutoEventWireup") == null)
-            {
-                pagedefiniton.Attributes.Add(new AttributeNode("AutoEventWireup") { Value = new TextNode(new TextChunk("true")) });
-            }
+            MetaNode pagedefiniton = MetaDataFiller.FillAndGetPageDefinition(node.Metadata, Options);
 
             if (pagedefiniton.Attributes.Find(x => x.Name == "Inherits") == null)
             {
@@ -149,18 +117,13 @@ namespace NHaml.Core.Visitors
                     pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewUserControl")) });
                 else
                     pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk("System.Web.Mvc.ViewMasterPage")) });
-            }           
+            }
 
             if (node.Metadata.TryGetValue("type", out data))
             {
                 var tc = pagedefiniton.Attributes.Find(x => x.Name == "Inherits");
                 tc.Value = new TextNode(new TextChunk(((tc.Value as TextNode).Chunks[0] as TextChunk).Text + "<" + data[0].Value + ">"));
             }
-
-            /*if (pagedefiniton.Attributes.Find(x => x.Name == "MasterPageFile") == null)
-            {
-                pagedefiniton.Attributes.Add(new AttributeNode("MasterPageFile") { Value = new TextNode(new TextChunk("true")) });
-            }*/
 
             if (pagedefiniton.Name == "page")
             {
