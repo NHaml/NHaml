@@ -80,7 +80,8 @@ namespace NHaml.Core.Visitors
                         "Render"+name,
                         new CodeVariableReferenceExpression("textWriter")
                     )
-                )
+                ),
+                new CodeMethodReturnStatement()
             );
             _runContent.Statements.Add(runCode);
             return Code;
@@ -181,7 +182,24 @@ namespace NHaml.Core.Visitors
                         );
                     ifStatement.TrueStatements.Add(childInvoke);
                     ifStatement.FalseStatements.Add(baseInvoke);
-                    _actualCode.Statements.Add(ifStatement);
+
+                    var safeIfInvoke = new CodeConditionStatement(
+                        new CodeBinaryOperatorExpression(
+                            new CodeVariableReferenceExpression("Child"),
+                            CodeBinaryOperatorType.ValueEquality,
+                            new CodePrimitiveExpression(null)
+                        ),
+                        new CodeStatement[] {
+                            new CodeThrowExceptionStatement(
+                                new CodeObjectCreateExpression(
+                                    new CodeTypeReference(typeof(InvalidOperationException)),
+                                    new CodePrimitiveExpression("Child is missing")
+                                )
+                            )},
+                        new CodeStatement[] { ifStatement }
+                    );
+
+                    _actualCode.Statements.Add(safeIfInvoke);
 
                     string oldMethod = "Main";
                     foreach (var pair in _methods)
@@ -197,7 +215,22 @@ namespace NHaml.Core.Visitors
                 }
                 else
                 {
-                    _actualCode.Statements.Add(childInvoke);
+                    var safeChildInvoke = new CodeConditionStatement(
+                        new CodeBinaryOperatorExpression(
+                            new CodeVariableReferenceExpression("Child"),
+                            CodeBinaryOperatorType.ValueEquality,
+                            new CodePrimitiveExpression(null)
+                        ),
+                        new CodeStatement[] {
+                            new CodeThrowExceptionStatement(
+                                new CodeObjectCreateExpression(
+                                    new CodeTypeReference(typeof(InvalidOperationException)),
+                                    new CodePrimitiveExpression("Child is missing")
+                                )
+                            )},
+                        new CodeStatement[] { new CodeExpressionStatement(childInvoke) }
+                    );
+                    _actualCode.Statements.Add(safeChildInvoke);
                 }
             }
             else if (node.Name == "partialcontent")
@@ -247,7 +280,58 @@ namespace NHaml.Core.Visitors
         protected override void EndVisit(DocumentNode node)
         {
             PopString();
-            _containsContent.Statements.Add(new CodeMethodReturnStatement(new CodePrimitiveExpression(false)));
+            _runContent.Statements.Add(
+                new CodeConditionStatement(
+                    new CodeBinaryOperatorExpression(
+                        new CodeVariableReferenceExpression("Child"),
+                        CodeBinaryOperatorType.ValueEquality,
+                        new CodePrimitiveExpression(null)
+                    ),
+                new CodeStatement[] {
+                        new CodeThrowExceptionStatement(
+                            new CodeObjectCreateExpression(
+                                new CodeTypeReference(typeof(InvalidOperationException)),
+                                new CodeBinaryOperatorExpression(
+                                    new CodeBinaryOperatorExpression(
+                                        new CodePrimitiveExpression("Template Entry Point "),
+                                        CodeBinaryOperatorType.Add,
+                                        new CodeVariableReferenceExpression("name")
+                                    ),
+                                    CodeBinaryOperatorType.Add,
+                                    new CodePrimitiveExpression(" is missing")
+                                )
+                            )
+                        )
+                    },
+                new CodeStatement[] {new CodeExpressionStatement(
+                        new CodeMethodInvokeExpression(
+                            new CodeMethodReferenceExpression(
+                                new CodeVariableReferenceExpression("Child"),
+                                "RunContent"),
+                            new CodeVariableReferenceExpression("textWriter"),
+                            new CodeVariableReferenceExpression("name")
+                        )
+                    )
+                }
+            ));
+            _containsContent.Statements.Add(
+                new CodeConditionStatement(
+                    new CodeBinaryOperatorExpression(
+                        new CodeVariableReferenceExpression("Child"),
+                        CodeBinaryOperatorType.ValueEquality,
+                        new CodePrimitiveExpression(null)
+                    ),
+                new CodeStatement[] {new CodeMethodReturnStatement(new CodePrimitiveExpression(false))},
+                new CodeStatement[] {new CodeMethodReturnStatement(
+                        new CodeMethodInvokeExpression(
+                            new CodeMethodReferenceExpression(
+                                new CodeVariableReferenceExpression("Child"),
+                                "ContainsContent"),
+                            new CodeVariableReferenceExpression("name")
+                        )
+                    )
+                }
+            ));
             base.EndVisit(node);
         }
 

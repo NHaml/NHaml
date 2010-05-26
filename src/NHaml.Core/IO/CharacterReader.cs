@@ -150,6 +150,23 @@ namespace NHaml.Core.IO
             return ReadWhile(IsNameChar);
         }
 
+        public string ReadNameEscaped()
+        {
+            StringBuilder sb = new StringBuilder();
+            sb.Append(ReadWhile(IsNameChar));
+            while (CurrentChar == '\\')
+            {
+                Skip("\\");
+                if (CurrentChar != null)
+                {
+                    sb.Append(CurrentChar);
+                    Read();
+                }
+                sb.Append(ReadWhile(IsNameChar));
+            }
+            return sb.ToString();
+        }
+
         private static bool IsNameChar(char ch)
         {
             return char.IsNumber(ch) ||

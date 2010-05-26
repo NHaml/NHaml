@@ -36,13 +36,18 @@ namespace NHaml.Tests
 
         protected void AssertRender(string templateName, string masterName)
         {
+            AssertRender(templateName, masterName, templateName);
+        }
+
+        protected void AssertRender(string templateName, string masterName, string expectedOutputName)
+        {
             using (var output = new StringWriter())
             {
                 var templ = CreateTemplate(templateName, masterName);
 
                 templ.Render( output );
 
-                AssertRender( output, templateName );
+                AssertRender( output, expectedOutputName );
             }
         }
 

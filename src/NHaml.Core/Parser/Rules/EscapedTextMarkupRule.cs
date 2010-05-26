@@ -8,7 +8,7 @@ namespace NHaml.Core.Parser.Rules
     {
         public override string[] Signifiers
         {
-            get { return new[] {"!", "&"}; }
+            get { return new[] {"!", "&", "\\"}; }
         }
 
         public override AstNode Process(ParserReader parser)
@@ -27,6 +27,10 @@ namespace NHaml.Core.Parser.Rules
             {
                 reader.CurrentLine.EscapeLine = true;
                 reader.Skip("&");
+            }
+            else if (reader.CurrentChar == '\\')
+            {
+                reader.Skip("\\");
             }
 
             var index = reader.Index;

@@ -20,6 +20,8 @@ namespace NHaml.Core.Template
         private readonly object _sync = new object();
         private IList<Func<bool>> viewSourceModifiedChecks;
 
+        public IViewSource ContentFile { get { return _contentFile; } }
+
         internal CompiledTemplate(TemplateOptions options, Type templateBaseType, object context, CompiledTemplate masterFile, IViewSource contentFile )
         {
             this.options = options;

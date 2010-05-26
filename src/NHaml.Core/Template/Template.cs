@@ -38,7 +38,7 @@ namespace NHaml.Core.Template
             else
             {
                 Master.Child = this;
-                Master.RunContent(textWriter, "Main");
+                Master.Render(textWriter);
             }
             PostRender(textWriter);
         }

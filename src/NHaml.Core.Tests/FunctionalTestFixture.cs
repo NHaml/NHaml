@@ -10,7 +10,7 @@ namespace NHaml.Tests
     [TestFixture]
     public abstract class FunctionalTestFixture : TestFixtureBase
     {
-        [Test]
+        [Test, Ignore("Partials are handled by the View Engine")]
         [ExpectedException(typeof(FileNotFoundException))]
         public virtual void BadPartial()
         {
@@ -57,13 +57,13 @@ namespace NHaml.Tests
             AssertRender("SelfClosing");
         }
 
-        [Test]
+        [Test, Ignore("Partials are handled by the View Engine")]
         public virtual void SharedPartial()
         {
             AssertRender("SharedPartial");
         }
 
-        [Test]
+        [Test, Ignore("Partials are handled by the View Engine")]
         public virtual void Partials2()
         {
             AssertRender("Partials2");
@@ -237,7 +237,7 @@ namespace NHaml.Tests
             }
         }
 
-        [Test]
+        [Test, Ignore("Lambda support need to be added back")]
         public virtual void LambdaEval()
         {
             _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate1 );
@@ -251,7 +251,6 @@ namespace NHaml.Tests
         {
             AssertRender("AttributeEval");
         }
-
 
         [Test]
         public virtual void TextEvalEncodeHtml()
@@ -283,6 +282,7 @@ namespace NHaml.Tests
         {
             AssertRender("SimpleEval");
         }
+
         [Test]
         [ExpectedException(typeof(NullReferenceException))]
         public virtual void WithRunTimeException()
@@ -320,13 +320,13 @@ namespace NHaml.Tests
             AssertRender("MultiLine");
         }
 
-        [Test]
+        [Test, Ignore("Not yet implemented")]
         public virtual void NullAttributes()
         {
             AssertRender("NullAttributes");
         }
 
-        [Test]
+        [Test, Ignore("Partials are handled by the View Engine")]
         public virtual void Partials()
         {
             AssertRender("Partials");
@@ -347,13 +347,14 @@ namespace NHaml.Tests
         [Test]
         public virtual void Layout()
         {
-            AssertRender("Welcome", "Application");
+            AssertRender("Welcome", "Application", "Application");
         }
 
 
         [Test]
         public virtual void MultiLayout()
         {
+            AssertRender("Welcome2", "ApplicationPart2");
             /// TODO: Convert to new multi-master-level format
             /*using (var output = new StringWriter())
             {

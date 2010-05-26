@@ -44,7 +44,7 @@ namespace NHaml.Core.Parser.Rules
                             node.Attributes.Add(attribute);
                         }
 
-                        attribute.Value = parser.ParseText(reader.ReadName(), reader.Index);
+                        attribute.Value = parser.ParseText(reader.ReadNameEscaped(), reader.Index);
 
                         continue;
                     }
@@ -54,7 +54,7 @@ namespace NHaml.Core.Parser.Rules
 
                         node.Attributes.Add(new AttributeNode("class")
                         {
-                            Value = parser.ParseText(reader.ReadName(), reader.Index)
+                            Value = parser.ParseText(reader.ReadNameEscaped(), reader.Index)
                         });
 
                         continue;
@@ -115,7 +115,7 @@ namespace NHaml.Core.Parser.Rules
             {
                 reader.Skip("%");
 
-                var name = reader.ReadName();
+                var name = reader.ReadNameEscaped();
 
                 return new TagNode(name) { StartInfo = operatorInfo, OperatorInfo = operatorInfo };
             }

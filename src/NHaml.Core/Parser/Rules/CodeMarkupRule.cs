@@ -13,6 +13,9 @@ namespace NHaml.Core.Parser.Rules
         {
             var reader = parser.Input;
 
+            if (!reader.Read())
+                return null;
+
             if (reader.CurrentChar == '&')
             {
                 reader.CurrentLine.EscapeLine = true;

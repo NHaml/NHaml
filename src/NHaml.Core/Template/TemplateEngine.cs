@@ -98,6 +98,22 @@ namespace NHaml.Core.Template
 
             var opts = (TemplateOptions)Options.Clone();
 
+            List<MetaNode> data;
+            if (template.ParseResult.Metadata.TryGetValue("assembly", out data))
+            {
+                foreach (var assemblyNode in data)
+                {
+                    opts.AddReference(assemblyNode.Value);
+                }
+            }
+            if (template.ParseResult.Metadata.TryGetValue("namespace", out data))
+            {
+                foreach (var namespaceNode in data)
+                {
+                    opts.AddUsing(namespaceNode.Value);
+                }
+            }
+
             MetaNode pagedefiniton = MetaDataFiller.FillAndGetPageDefinition(template.ParseResult.Metadata, Options);
             // inherittype will contain the @type data too
             string inherittype = ((TextChunk)((TextNode)pagedefiniton.Attributes.Find(x => x.Name == "Inherits").Value).Chunks[0]).Text;
@@ -110,8 +126,6 @@ namespace NHaml.Core.Template
                 }
             }
             
-            var templateCacheKey = template.Path;
-
             // check if there is a default masterpagefile definition inside the content page.
             // If yes, use that instead of the defaultTemplate
             if (master == null)
@@ -130,6 +144,9 @@ namespace NHaml.Core.Template
                     }
                 }
             }
+
+            var templateCacheKey = template.Path;
+            if (master != null) templateCacheKey = templateCacheKey + master.ContentFile.Path;
 
             CompiledTemplate compiledTemplate;
 

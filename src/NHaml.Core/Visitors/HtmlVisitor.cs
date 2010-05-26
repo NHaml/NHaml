@@ -68,7 +68,9 @@ namespace NHaml.Core.Visitors
                     return
                         @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">";
 
-            switch(id)
+            var arr = new List<string>(id.Split(' '));
+
+            switch(arr[0])
             {
                 case "1.1":
                 {
@@ -81,6 +83,26 @@ namespace NHaml.Core.Visitors
 
                     return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Frameset//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd"">";
                 }
+                case "HTML":
+                    {
+                        if (arr.Count>1) {
+                            switch (arr[1]) {
+                                case "frameset":
+                                    {
+                                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01 Frameset//EN"" ""http://www.w3.org/TR/html4/frameset.dtd"">";
+                                    }
+                                case "strict":
+                                    {
+                                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">";
+                                    }
+                                case "transitional":
+                                    {
+                                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd"">";
+                                    }
+                            }
+                        }
+                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd"">";
+                    }
                 case "basic":
                 {
                     return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML Basic 1.1//EN"" ""http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd"">";
@@ -89,17 +111,33 @@ namespace NHaml.Core.Visitors
                 {
                     if(Format == "html4" || Format == "html5")
                         return string.Empty;
+                    var encoding = "utf-8";
 
-                    return @"<?xml version='1.0' encoding='utf-8' ?>";
+                    if (arr.Count > 1)
+                    {
+                        encoding = arr[1];
+                    }
+
+                    return String.Format(@"<?xml version='1.0' encoding='{0}' ?>",encoding);
                 }
                 case "strict":
                 {
-                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">";
+                    if (Format == "html4")
+                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01//EN"" ""http://www.w3.org/TR/html4/strict.dtd"">";
+
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Strict//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"">";
                 }
                 case "mobile":
                 {
                     return
                         @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">";
+                }
+                case "transitional":
+                {
+                    if (Format=="html4")
+                        return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD HTML 4.01 Transitional//EN"" ""http://www.w3.org/TR/html4/loose.dtd"">";
+                        
+                    return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.0 Transitional//EN"" ""http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd"">";
                 }
                 default:
                     throw new Exception("unknown doctype");
@@ -113,7 +151,16 @@ namespace NHaml.Core.Visitors
             VisitAndIdentAlways(node);
 
             Indent--;
-            WriteIndent();
+
+            AstNode lastnode = null;
+            foreach (var n in node)
+            {
+                lastnode = n;
+            }
+            if (!(lastnode is CodeBlockNode))
+            {
+                WriteIndent();
+            }
         }
 
         public override void Visit(TagNode node)
@@ -230,7 +277,7 @@ namespace NHaml.Core.Visitors
                 var space = !( node.Child is ChildrenNode );
                 if(space)
                     WriteText(" ");
-                base.Visit(node);
+                Visit(node.Child);
                 if(space)
                     WriteText(" ");
                 WriteText("-->");
@@ -267,7 +314,10 @@ namespace NHaml.Core.Visitors
             if(node is ChildrenNode)
                 foreach(var childrenNode in (ChildrenNode)node)
                 {
-                    WriteIndent();
+                    if (!(childrenNode is CodeBlockNode))
+                    {
+                        WriteIndent();
+                    }
                     Visit(childrenNode);
                     if (!(childrenNode is CodeBlockNode))
                     {
@@ -276,7 +326,10 @@ namespace NHaml.Core.Visitors
                 }
             else
             {
-                WriteIndent();
+                if (!(node is CodeBlockNode))
+                {
+                    WriteIndent();
+                }
                 Visit(node);
                 if (!(node is CodeBlockNode))
                 {
@@ -340,7 +393,7 @@ namespace NHaml.Core.Visitors
                     value = new TextNode(new TextChunk(""));
                 }
 
-                var buf = new List<object> { Capture(first.Value) };
+                var buf = new List<object> { Capture(value) };
 
                 foreach (var sameAtt in queue.FindAll(a => a.Name == first.Name))
                 {
