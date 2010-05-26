@@ -34,7 +34,7 @@ namespace NHaml.Core.Visitors
             var first = true;
             foreach(var child in node.Childs)
             {
-                if(!first)
+                if ((!first) && (!(child is CodeBlockNode)))
                     WriteText(System.Environment.NewLine);
 
                 Visit(child);
@@ -264,13 +264,19 @@ namespace NHaml.Core.Visitors
                 {
                     WriteIndent();
                     Visit(childrenNode);
-                    WriteText(System.Environment.NewLine);
+                    if (!(childrenNode is CodeBlockNode))
+                    {
+                        WriteText(System.Environment.NewLine);
+                    }
                 }
             else
             {
                 WriteIndent();
                 Visit(node);
-                WriteText(System.Environment.NewLine);
+                if (!(node is CodeBlockNode))
+                {
+                    WriteText(System.Environment.NewLine);
+                }
             }
         }
 
@@ -330,9 +336,6 @@ namespace NHaml.Core.Visitors
                     queue.Remove(sameAtt);
                     buf.Add(Capture(sameAtt.Value));
                 }
-
-                /*if (!isId)
-                    buf.Sort((a1, a2) => DataComparer(a1,a2));*/
 
                 first.Value = DataJoiner(isId ? "_" : " ", buf.ToArray(), !isId);
             }
