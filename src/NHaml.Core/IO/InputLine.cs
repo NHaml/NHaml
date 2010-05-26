@@ -13,16 +13,12 @@ namespace NHaml.Core.IO
         }
 
         public int StartIndex { get; private set; }
-
-        public int StartPosition { get; private set; }
-        
+        public int StartPosition { get; private set; }      
         public bool IsMultiLine { get; private set; }
-
         public int Indent { get; private set; }
-
         public string Text { get; private set; }
-
         public int LineNumber { get; private set; }
+        public bool? EscapeLine { get; set; }
 
         public override string ToString()
         {

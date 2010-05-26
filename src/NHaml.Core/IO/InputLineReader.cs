@@ -85,18 +85,22 @@ namespace NHaml.Core.IO
 
         private InputLine ReadInputLine()
         {
-
             /// We use a new ReadLine command to track of the overall character position, because the
             /// built-in removes the end line characters, making it harder to track the actual position
             /// in the stream. However we don't really care about the line delimiter character,
             /// so we throw it away later on.
-            var line = ReadLine();
+            
+            /// Empty lines are not considered lines
+            var line = "";
 
-            if(line == "")
-                return null;
-
-            line = line.TrimEnd('\r', '\n');
-
+            while (line == "")
+            {
+                line = ReadLine();
+                if (line == "")
+                    return null;
+                line = line.TrimEnd('\r', '\n');
+            }
+            
             var lineWithoutIndent = line.TrimStart();
             var lineWithTrimedEnd = lineWithoutIndent.TrimEnd();
 

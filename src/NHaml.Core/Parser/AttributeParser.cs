@@ -62,7 +62,7 @@ namespace NHaml.Core.Parser
                     default:
                     {
                         if (allowCodeBlock)
-                            attribute.Value = new CodeNode(_reader.ReadName());
+                            attribute.Value = new CodeNode(_reader.ReadName(), _reader.CurrentLine.EscapeLine);
                         else
                             throw new ParserException(_reader, "Code blocks not allowed");
                         break;
@@ -120,7 +120,7 @@ namespace NHaml.Core.Parser
                     default:
                     {
                         if (allowCodeBlock)
-                            attribute.Value = new CodeNode(_reader.ReadName());
+                            attribute.Value = new CodeNode(_reader.ReadName(), _reader.CurrentLine.EscapeLine);
                         else
                             throw new ParserException(_reader, "Code not allowed");
                         break;

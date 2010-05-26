@@ -66,7 +66,7 @@ namespace NHaml.Tests
 
         protected void AssertRender( StringWriter output, string expectedName )
         {
-            Console.WriteLine( output );
+            //Console.WriteLine( output );
             Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ).TrimEnd(), output.ToString().TrimEnd() );
         }
     }

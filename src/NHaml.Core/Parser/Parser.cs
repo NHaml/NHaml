@@ -19,7 +19,8 @@ namespace NHaml.Core.Parser
                 new CommentRule(),
                 new FilterRule(),
                 new CodeBlockMarkupRule(),
-                new CodeMarkupRule()
+                new CodeMarkupRule(),
+                new EscapedTextMarkupRule()
             };
         }
 

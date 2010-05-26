@@ -24,7 +24,7 @@ namespace NHaml.Core.Visitors
             Options = new TemplateOptions();
         }
 
-        public TemplateOptions Options { get; protected set; }
+        public TemplateOptions Options { get; set; }
         public int Indent { get; set; }
         public string Format { get; set; }
 
@@ -38,7 +38,7 @@ namespace NHaml.Core.Visitors
                     WriteText(System.Environment.NewLine);
 
                 Visit(child);
-                if (!(child is MetaNode))
+                if ((!(child is MetaNode)) && (!(child is CodeBlockNode)))
                     first = false;
             }
             EndVisit(node);
@@ -126,7 +126,7 @@ namespace NHaml.Core.Visitors
                 Visit(attribute);
             }
 
-            if(node.Child == null && Options.IsAutoClosingTag(node.Name))
+            if(node.Child == null && (Options.IsAutoClosingTag(node.Name) || node.AutoClose))
             {
                 if(Format == "html4" || Format == "html5")
                     WriteText(">");
@@ -155,7 +155,14 @@ namespace NHaml.Core.Visitors
 
         public override void Visit(CodeChunk chunk)
         {
-            WriteCode(chunk.Code, false);
+            if (chunk.Escape.HasValue)
+            {
+                WriteCode(chunk.Code, chunk.Escape.Value);
+            }
+            else
+            {
+                WriteCode(chunk.Code, Options.EncodeHtml);
+            }
         }
 
         public override void Visit(AttributeNode node)
@@ -220,36 +227,34 @@ namespace NHaml.Core.Visitors
             if(string.IsNullOrEmpty(node.Condition))
             {
                 WriteText("<!--");
-
                 var space = !( node.Child is ChildrenNode );
-
                 if(space)
                     WriteText(" ");
-
                 base.Visit(node);
-
                 if(space)
                     WriteText(" ");
-
                 WriteText("-->");
             }
             else
             {
                 WriteText(String.Format("<!--[{0}]>", node.Condition));
-
                 Indent++;
-
                 VisitAndIdentAlways(node.Child);
-
                 Indent--;
-
                 WriteText("<![endif]-->");
             }
         }
 
         public override void Visit(CodeNode node)
         {
-            WriteCode(node.Code, false);
+            if (!node.Escape.HasValue)
+            {
+                WriteCode(node.Code, Options.EncodeHtml);
+            }
+            else
+            {
+                WriteCode(node.Code, node.Escape.Value);
+            }
         }
 
         private void VisitAndIdentAlways(AstNode node)
@@ -328,6 +333,12 @@ namespace NHaml.Core.Visitors
                 attributes.Add(first);
 
                 var isId = first.Name.Equals("id", StringComparison.InvariantCultureIgnoreCase);
+
+                var value = first.Value;
+                if (value == null)
+                {
+                    value = new TextNode(new TextChunk(""));
+                }
 
                 var buf = new List<object> { Capture(first.Value) };
 

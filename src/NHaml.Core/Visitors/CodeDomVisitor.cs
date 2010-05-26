@@ -5,6 +5,7 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using NHaml.Core.Ast;
 using System.IO;
+using NHaml.Core.Template;
 
 namespace NHaml.Core.Visitors
 {
@@ -121,6 +122,11 @@ namespace NHaml.Core.Visitors
             _runContent.Attributes = MemberAttributes.Public | MemberAttributes.Override;
 
             _partialMethod = Options.GetPartialRenderMethod();
+        }
+
+        public CodeDomVisitor(TemplateOptions options) : this()
+        {
+            Options = options;
         }
 
         public Dictionary<string,CodeMemberMethod> Methods { get { return _methods; } }

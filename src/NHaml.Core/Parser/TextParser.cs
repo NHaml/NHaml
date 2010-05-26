@@ -9,13 +9,15 @@ namespace NHaml.Core.Parser
     {
         private readonly CharacterReader _reader;
         private StringBuilder _buffer;
+        private bool? _escape;
 
-        public TextParser(CharacterReader reader)
+        public TextParser(CharacterReader reader, bool? escape)
         {
             if(reader == null)
                 throw new ArgumentNullException("reader");
 
             _reader = reader;
+            _escape = escape;
         }
 
         public TextNode Parse()
@@ -74,7 +76,7 @@ namespace NHaml.Core.Parser
             }
 
             if(_buffer.Length > 0)
-                node.Chunks.Add(new CodeChunk(ReturnAndClearBuffer()));
+                node.Chunks.Add(new CodeChunk(ReturnAndClearBuffer(),_escape));
         }
 
         private string ReturnAndClearBuffer()

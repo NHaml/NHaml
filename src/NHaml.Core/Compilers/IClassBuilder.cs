@@ -9,7 +9,7 @@ namespace NHaml.Core.Compilers
 {
     public interface IClassBuilder
     {
-        void SetDocument(DocumentNode node, string className);
+        void SetDocument(TemplateOptions options, DocumentNode node, string className);
 
         string ClassName { get; }
         DocumentNode Document { get; }

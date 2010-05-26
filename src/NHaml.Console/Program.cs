@@ -52,7 +52,7 @@ namespace NHaml.Console
                     case "cs":
                         {
                             var cf = new CSharpClassBuilder();
-                            cf.SetDocument(document, "TestClass");
+                            cf.SetDocument(null, document, "TestClass");
                             System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
                             break;
                         }

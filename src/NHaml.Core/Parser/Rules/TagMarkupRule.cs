@@ -25,6 +25,12 @@ namespace NHaml.Core.Parser.Rules
             while(!reader.IsEndOfStream)
                 switch(reader.CurrentChar)
                 {
+                    case '/':
+                    {
+                        reader.Skip("/");
+                        node.AutoClose = true;
+                        break;
+                    }
                     case '#':
                     {
                         reader.Skip("#");
@@ -53,13 +59,21 @@ namespace NHaml.Core.Parser.Rules
 
                         continue;
                     }
+                    case '&':
+                        reader.CurrentLine.EscapeLine = true;
+                        reader.Skip("&");
+                        break;
+                    case '!':
+                        reader.CurrentLine.EscapeLine = false;
+                        reader.Skip("!");
+                        break;
                     case '=':
                     {
                         reader.Skip("=");
 
                         reader.SkipWhiteSpaces();
 
-                        node.Child = new CodeNode(reader.ReadToEnd());
+                        node.Child = new CodeNode(reader.ReadToEnd(), reader.CurrentLine.EscapeLine);
 
                         break;
                     }

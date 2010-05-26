@@ -51,8 +51,12 @@ namespace NHaml.Core.Compilers
             return compileUnit;
         }
 
-        public void SetDocument(DocumentNode node, string className)
+        public void SetDocument(TemplateOptions options, DocumentNode node, string className)
         {
+            if (options != null)
+            {
+                Visitor.Options = options;
+            }
             _node = node;
             Visitor.Visit(node);
             ClassName = className;

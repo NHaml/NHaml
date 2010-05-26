@@ -15,11 +15,13 @@ namespace NHaml.Core.Ast
 
             Name = name;
             Attributes = new List<AttributeNode>();
+            AutoClose = false;
         }
 
         public string Name { get; set; }
 
         public List<AttributeNode> Attributes { get; private set; }
+        public bool AutoClose { get; set; }
 
         public SourceInfo OperatorInfo{get;set;}
     }

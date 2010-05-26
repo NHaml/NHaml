@@ -6,17 +6,27 @@ namespace NHaml.Core.Parser.Rules
     {
         public override string[] Signifiers
         {
-            get { return new[] { "=" }; }
+            get { return new[] { "=", "&=", "!=" }; }
         }
 
         public override AstNode Process(ParserReader parser)
         {
             var reader = parser.Input;
 
+            if (reader.CurrentChar == '&')
+            {
+                reader.CurrentLine.EscapeLine = true;
+                reader.Skip("&");
+            }
+            else if (reader.CurrentChar == '!')
+            {
+                reader.CurrentLine.EscapeLine = false;
+                reader.Skip("!");
+            }
             reader.Skip("=");
 
             var code = reader.ReadToEnd();
-            var node = new CodeNode(code);
+            var node = new CodeNode(code,reader.CurrentLine.EscapeLine);
 
             return node;
         }

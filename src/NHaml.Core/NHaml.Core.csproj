@@ -82,6 +82,7 @@
     <Compile Include="Parser\Rules\CodeBlockMarkupRule.cs" />
     <Compile Include="Parser\Rules\CodeMarkupRule.cs" />
     <Compile Include="Parser\Rules\CommentRule.cs" />
+    <Compile Include="Parser\Rules\EscapedTextMarkupRule.cs" />
     <Compile Include="Parser\Rules\DocTypeMarkupRule.cs" />
     <Compile Include="Parser\Rules\FilterRule.cs" />
     <Compile Include="Parser\Rules\MarkupRuleBase.cs" />

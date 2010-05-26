@@ -4,6 +4,8 @@ using NHaml.Core.Exceptions;
 using NHaml.Core.Utils;
 using NHaml.Core.Ast;
 using NHaml.Core.TemplateResolution;
+using System.CodeDom.Compiler;
+using System.Text;
 
 namespace NHaml.Core.Template
 {
@@ -56,7 +58,7 @@ namespace NHaml.Core.Template
             var className = Utility.MakeClassName(_contentFile.Path);
             var compiler = options.GetTemplateCompiler();
 
-            compiler.SetDocument(_contentFile.ParseResult, className);
+            compiler.SetDocument(options, _contentFile.ParseResult, className);
 
             viewSourceModifiedChecks = new List<Func<bool>>();
             viewSourceModifiedChecks.Add(() => _contentFile.IsModified);
@@ -74,7 +76,16 @@ namespace NHaml.Core.Template
                 options.BeforeCompile(compiler, context);
             }
 
-            _templateFactory = new TemplateFactory(compiler.GenerateType(options));
+            Type generated = compiler.GenerateType(options);
+            if (generated == null) {
+                StringBuilder errorString = new StringBuilder(); ;
+                foreach (CompilerError error in compiler.CompilerResults.Errors)
+                {
+                    errorString.AppendLine(error.ToString());
+                }
+                throw new TemplateCompilationException(errorString.ToString());
+            }
+            _templateFactory = new TemplateFactory(generated);
         }
     }
 }

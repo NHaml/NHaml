@@ -45,9 +45,9 @@ namespace NHaml.Core.Parser
             return true;
         }
 
-        public TextNode ParseText( string text, int index)
+        public TextNode ParseText( string text, int index )
         {
-            return new TextParser(new CharacterReader(text,index)).Parse();
+            return new TextParser(new CharacterReader(text,index), Input.CurrentLine.EscapeLine).Parse();
         }
 
         public AstNode ParseNode()

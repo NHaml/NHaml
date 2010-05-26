@@ -23,7 +23,7 @@ namespace NHaml.Tests
             AssertRender("BlankLine");
         }
 
-        [Test]
+        [Test, Ignore("Tabs are currently output-only in NHaml 3")]
         public virtual void Tabs()
         {
             _templateEngine.Options.UseTabs = true;
@@ -31,7 +31,7 @@ namespace NHaml.Tests
             AssertRender("Tabs");
         }
 
-        [Test]
+        [Test, Ignore("Alternative indentation is currently output-only in NHaml 3")]
         public virtual void FourSpaces()
         {
             _templateEngine.Options.IndentSize = 4;
@@ -90,15 +90,14 @@ namespace NHaml.Tests
         [Test]
         public virtual void EscapeHtmlOffByDefault()
         {
-            AssertRender("EscapeHtmlOff", "EscapeHtml");
+            AssertRender("EscapeHtmlOff");
         }
 
         [Test]
         public virtual void EscapeHtmlOnByDefault()
         {
             _templateEngine.Options.EncodeHtml = true;
-
-            AssertRender("EscapeHtmlOn", "EscapeHtml");
+            AssertRender("EscapeHtmlOn");
         }
 
         [Test]
@@ -152,7 +151,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaModel()
         {
-            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<string> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate("MetaModel");
@@ -172,7 +171,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaWithoutModel()
         {
-            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<object> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate("MetaWithoutModel");
@@ -181,9 +180,7 @@ namespace NHaml.Tests
             //Assert.IsAssignableFrom<CustomGenericTemplate<object>>(template);
 
             var output = new StringWriter();
-
             template.Render( output );
-
             AssertRender( output, "MetaWithoutModel" );
         }
 
@@ -260,14 +257,14 @@ namespace NHaml.Tests
         public virtual void TextEvalEncodeHtml()
         {
             _templateEngine.Options.EncodeHtml = true;
-            AssertRender("TextEvalEncode","TextEval");
+            AssertRender("TextEvalEncode");
         }
 
         [Test]
         public virtual void TextEvalDontEncode()
         {
             _templateEngine.Options.EncodeHtml = false;
-            AssertRender("TextEvalDontEncode","TextEval");
+            AssertRender("TextEvalDontEncode");
         }
 
         [Test]
@@ -335,7 +332,7 @@ namespace NHaml.Tests
             AssertRender("Partials");
         }
 
-        [Test]
+        [Test, Ignore("Preamble is deprecated, and inavailable")]
         public virtual void Preamble()
         {
             AssertRender("Preamble");
