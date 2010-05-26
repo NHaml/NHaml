@@ -22,7 +22,7 @@ namespace NHaml.Core.Parser.Rules
             {
                 reader.SkipWhiteSpaces();
 
-                node.Text = reader.ReadToEnd();
+                node.Text = reader.ReadToEndMultiLine();
             }
 
             return node;

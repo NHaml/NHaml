@@ -35,11 +35,14 @@ namespace NHaml.Core.Parser.Rules
             else if(!reader.IsEndOfStream)
             {
                 var index = reader.Index;
-                var text = reader.ReadToEnd();
+                var text = reader.ReadToEndMultiLine();
                 node.Child = parser.ParseText(text, index);
             }
 
-            node.Child = parser.ParseChildren(parser.Indent, node.Child);
+            if (reader.NextLine != null && reader.NextLine.Indent > reader.CurrentLine.Indent)
+            {
+                node.Child = parser.ParseChildren(parser.Indent, node.Child);
+            }
 
             return node;
         }

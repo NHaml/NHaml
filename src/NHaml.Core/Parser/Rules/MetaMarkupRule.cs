@@ -104,7 +104,7 @@ namespace NHaml.Core.Parser.Rules
                     default:
                         {
                             var index = reader.Index;
-                            var text = reader.ReadToEnd();
+                            var text = reader.ReadToEndMultiLine();
                             node.Child = parser.ParseText(text.TrimStart(), index);
                             break;
                         }

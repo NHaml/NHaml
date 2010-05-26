@@ -15,15 +15,15 @@ Foo |
     = "Baz"
 
 Foo |
-%a{href="#"} Bar |
+%a(href='#') Bar |
 Baz |
 
-%a{href="#"} Foo |
+%a(href='#') Foo |
 Bar |
 Baz |
 
-%img{src="#" |
-     href="#"} |
+%img(src='#' |
+     href='#') |
 
 %p
   = "Holy cow " + |
@@ -36,7 +36,7 @@ Baz |
     "3" |
   %br/
   - for (int i = 0; i < 2; i++)
-    - int j = i | 2
+    - int j = i | 2;
     = j
 
 - if (true |

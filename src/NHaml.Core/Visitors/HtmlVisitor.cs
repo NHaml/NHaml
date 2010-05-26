@@ -288,6 +288,7 @@ namespace NHaml.Core.Visitors
                 Indent++;
                 VisitAndIdentAlways(node.Child);
                 Indent--;
+                WriteIndent();
                 WriteText("<![endif]-->");
             }
         }

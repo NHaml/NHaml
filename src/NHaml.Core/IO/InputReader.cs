@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using NHaml.Core.IO;
+using System.Text;
 
 namespace NHaml.Core.IO
 {
@@ -49,6 +50,26 @@ namespace NHaml.Core.IO
             Initialze(CurrentLine.Text, CurrentLine.StartIndex);
 
             return true;
+        }
+
+        public string ReadToEndMultiLine()
+        {
+            if (CurrentLine.IsMultiLine)
+            {
+                StringBuilder sb = new StringBuilder();
+                sb.Append(ReadToEnd());
+                while (NextLine != null && NextLine.IsMultiLine)
+                {
+                    sb.Append(" ");
+                    ReadNextLine();
+                    sb.Append(ReadToEnd());
+                }
+                return sb.ToString();
+            }
+            else
+            {
+                return ReadToEnd();
+            }
         }
 
         public bool ReadNextLineAndReadIfEndOfStream()

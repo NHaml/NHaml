@@ -4,6 +4,7 @@ using System.IO;
 using NHaml.Core.Ast;
 using NHaml.Core.Parser.Rules;
 using NHaml.Core.IO;
+using System.Text;
 
 namespace NHaml.Core.Parser
 {
@@ -50,9 +51,29 @@ namespace NHaml.Core.Parser
             return new TextParser(new CharacterReader(text,index), Input.CurrentLine.EscapeLine).Parse();
         }
 
+        public TextNode ParseMultiLineText()
+        {
+            if (Input.CurrentLine.IsMultiLine)
+            {
+                StringBuilder sb = new StringBuilder(Text);
+                while ((Input.NextLine != null) && Input.NextLine.IsMultiLine)
+                {
+                    sb.Append(" ");
+                    Input.NextLine.EscapeLine = Input.CurrentLine.EscapeLine;
+                    Read();
+                    sb.Append(Text);
+                }
+                return ParseText(sb.ToString(), 0);
+            }
+            else
+            {
+                return ParseText(Text, 0);
+            }
+        }
+
         public AstNode ParseNode()
         {
-            return _markupRule != null ? _markupRule.Process(this) : ParseText(Text, 0);
+            return _markupRule != null ? _markupRule.Process(this) : ParseMultiLineText();
         }
 
         public AstNode ParseChildren(int baseIdentation, AstNode currentChild)
@@ -62,7 +83,7 @@ namespace NHaml.Core.Parser
 
         public AstNode ParseLines(int baseIdentation, AstNode currentChild)
         {
-            return ParseChildren(baseIdentation, currentChild, () => ParseText(Text, 0));
+            return ParseChildren(baseIdentation, currentChild, ParseMultiLineText);
         }
 
         private AstNode ParseChildren(int baseIdentation, AstNode currentChild, ParseActionDelegate parser)

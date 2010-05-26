@@ -110,11 +110,11 @@ namespace NHaml.Core.IO
 
             if(lineWithTrimedEnd.EndsWith("|"))
             {
-                line = lineWithTrimedEnd.Substring(0, lineWithTrimedEnd.Length - 1);
-                return new InputLine(line, _inputPosition, LineNumber + 1, indent, startIndex, false);
+                line = lineWithTrimedEnd.Substring(0, lineWithTrimedEnd.Length - 1).TrimEnd();
+                return new InputLine(line, _inputPosition, LineNumber + 1, indent, startIndex, true);
             }
 
-            return new InputLine(lineWithoutIndent, _inputPosition, LineNumber + 1, indent, startIndex, true);
+            return new InputLine(lineWithoutIndent, _inputPosition, LineNumber + 1, indent, startIndex, false);
         }
     }
 }

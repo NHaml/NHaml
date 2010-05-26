@@ -28,7 +28,7 @@ namespace NHaml.Core.Parser.Rules
             }
             reader.Skip("=");
 
-            var code = reader.ReadToEnd();
+            var code = reader.ReadToEndMultiLine();
             var node = new CodeNode(code,reader.CurrentLine.EscapeLine);
 
             return node;

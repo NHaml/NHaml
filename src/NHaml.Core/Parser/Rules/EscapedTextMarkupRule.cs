@@ -34,7 +34,7 @@ namespace NHaml.Core.Parser.Rules
             }
 
             var index = reader.Index;
-            var text = reader.ReadToEnd();
+            var text = reader.ReadToEndMultiLine();
             return parser.ParseText(text.TrimStart(), index);
         }
     }

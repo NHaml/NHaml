@@ -15,7 +15,7 @@ namespace NHaml.Core.Parser.Rules
 
             reader.Skip("-");
 
-            var code = reader.ReadToEnd();
+            var code = reader.ReadToEndMultiLine();
             var node = new CodeBlockNode(code);
 
             if (reader.NextLine != null && reader.NextLine.Indent > reader.CurrentLine.Indent)
