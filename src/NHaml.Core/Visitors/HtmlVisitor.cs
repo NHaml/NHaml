@@ -152,15 +152,7 @@ namespace NHaml.Core.Visitors
 
             Indent--;
 
-            AstNode lastnode = null;
-            foreach (var n in node)
-            {
-                lastnode = n;
-            }
-            if (!(lastnode is CodeBlockNode))
-            {
-                WriteIndent();
-            }
+            WriteIndent();
         }
 
         public override void Visit(TagNode node)
@@ -227,7 +219,7 @@ namespace NHaml.Core.Visitors
             if (node.Child != null)
             {
                 WriteStartBlock(node.Code, true);
-                Visit(node.Child);
+                VisitAndIdentAlways(node.Child,true);
                 WriteEndBlock();
             }
             else
@@ -305,41 +297,47 @@ namespace NHaml.Core.Visitors
             }
         }
 
-        private void VisitAndIdentAlways(AstNode node)
+        protected void VisitAndIdentAlways(AstNode node, bool codeblockcaller)
         {
-            if(node == null)
+            if (node == null)
                 return;
 
-            WriteText(System.Environment.NewLine);
+            if (!codeblockcaller)
+                WriteText(System.Environment.NewLine);
 
-            if(node is ChildrenNode)
-                foreach(var childrenNode in (ChildrenNode)node)
+            if (node is ChildrenNode)
+                foreach (var childrenNode in (ChildrenNode)node)
                 {
-                    if (!(childrenNode is CodeBlockNode))
+                    if (!(childrenNode is CodeBlockNode) && !(childrenNode is MetaNode))
                     {
                         WriteIndent();
                     }
                     Visit(childrenNode);
-                    if (!(childrenNode is CodeBlockNode))
+                    if (!(childrenNode is CodeBlockNode) && !(childrenNode is MetaNode))
                     {
                         WriteText(System.Environment.NewLine);
                     }
                 }
             else
             {
-                if (!(node is CodeBlockNode))
+                if (!codeblockcaller)
                 {
                     WriteIndent();
                 }
                 Visit(node);
-                if (!(node is CodeBlockNode))
+                if (!codeblockcaller)
                 {
                     WriteText(System.Environment.NewLine);
                 }
             }
         }
 
-        private void VisitAndIdentOnlyWithMoreChilds(AstNode node)
+        protected void VisitAndIdentAlways(AstNode node)
+        {
+            VisitAndIdentAlways(node, false);
+        }
+
+        protected void VisitAndIdentOnlyWithMoreChilds(AstNode node)
         {
             if(node == null)
                 return;

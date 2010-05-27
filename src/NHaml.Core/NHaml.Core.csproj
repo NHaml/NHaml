@@ -106,6 +106,7 @@
     <Compile Include="Utils\ProxyExtractor.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="Utils\Utility.cs" />
+    <Compile Include="Visitors\AstDisplayVisitor.cs" />
     <Compile Include="Visitors\CodeDomVisitor.cs" />
     <Compile Include="Visitors\HtmlVisitor.cs" />
     <Compile Include="Visitors\IPartialRenderMethod.cs" />

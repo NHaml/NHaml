@@ -354,17 +354,8 @@ namespace NHaml.Tests
         [Test]
         public virtual void MultiLayout()
         {
+            // ApplicationPart2 master file has a reference to ApplicationPart1
             AssertRender("Welcome2", "ApplicationPart2");
-            /// TODO: Convert to new multi-master-level format
-            /*using (var output = new StringWriter())
-            {
-                var compiledTemplate = _templateEngine.Compile(new List<string> { "ApplicationPart1", "ApplicationPart2", "Welcome"});
-                var template = compiledTemplate.CreateInstance();
-                template.Render(output);
-                Console.WriteLine(output);
-
-                Assert.AreEqual(File.ReadAllText(ExpectedFolder + "Application.xhtml"), output.ToString());
-            }*/
         }
 
         [Test]

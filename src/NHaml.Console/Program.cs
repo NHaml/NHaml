@@ -6,6 +6,7 @@ using NHaml.Core.Parser;
 using NHaml.Core.Visitors;
 using NHaml.Core.Compilers;
 using NHaml.Core.Template;
+using System.IO;
 
 namespace NHaml.Console
 {
@@ -56,6 +57,14 @@ namespace NHaml.Console
                             System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
                             break;
                         }
+                    case "ast":
+                        {
+                            StringWriter sw = new StringWriter();
+                            var wf = new AstDisplayVisitor(sw);
+                            wf.Visit(document);
+                            System.Console.WriteLine(sw.ToString());
+                            break;
+                        }
                     default:
                         System.Console.WriteLine("Invalid format.");
                         break;
@@ -63,7 +72,7 @@ namespace NHaml.Console
             }
             else
             {
-                System.Console.WriteLine("Usage: NHaml.Console [-format {asp|cs}] <input.haml>");
+                System.Console.WriteLine("Usage: NHaml.Console [-format {asp|cs|ast}] <input.haml>");
             }
         }
     }

@@ -200,6 +200,7 @@ namespace NHaml.Core.Visitors
                     );
 
                     _actualCode.Statements.Add(safeIfInvoke);
+                    WriteText(System.Environment.NewLine);
 
                     string oldMethod = "Main";
                     foreach (var pair in _methods)
@@ -209,7 +210,7 @@ namespace NHaml.Core.Visitors
                     }
                     _actualCode = CreateNewMethod(node.Value);
                     if (node.Child != null)
-                        Visit(node.Child);
+                        VisitAndIdentAlways(node.Child,true);
                     PopString();
                     _actualCode = _methods[oldMethod];
                 }
@@ -231,6 +232,7 @@ namespace NHaml.Core.Visitors
                         new CodeStatement[] { new CodeExpressionStatement(childInvoke) }
                     );
                     _actualCode.Statements.Add(safeChildInvoke);
+                    WriteText(System.Environment.NewLine);
                 }
             }
             else if (node.Name == "partialcontent")
@@ -254,7 +256,7 @@ namespace NHaml.Core.Visitors
                 }
                 _actualCode = CreateNewMethod(node.Value);
                 if (node.Child != null)
-                    Visit(node.Child);
+                    VisitAndIdentAlways(node.Child,true);
                 PopString();
                 _actualCode = _methods[oldMethod];
             }
