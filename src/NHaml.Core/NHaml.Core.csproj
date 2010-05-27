@@ -55,6 +55,7 @@
     <Compile Include="Ast\CodeNode.cs" />
     <Compile Include="Ast\LateBindingNode.cs" />
     <Compile Include="Ast\MetaNode.cs" />
+    <Compile Include="Compilers\CSharp3ClassBuilder.cs" />
     <Compile Include="Compilers\CSharpClassBuilder.cs" />
     <Compile Include="Compilers\IClassBuilder.cs" />
     <Compile Include="Compilers\CodeDomVisitorClassBuilder.cs" />

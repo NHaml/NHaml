@@ -50,6 +50,13 @@
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
     <Reference Include="System.Web" />
+    <Reference Include="System.Web.Abstractions">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
+    <Reference Include="System.Web.Mvc, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
+    <Reference Include="System.Web.Routing">
+      <RequiredTargetFramework>3.5</RequiredTargetFramework>
+    </Reference>
     <Reference Include="System.Xml.Linq">
       <RequiredTargetFramework>3.5</RequiredTargetFramework>
     </Reference>
@@ -62,6 +69,7 @@
   <ItemGroup>
     <Compile Include="FunctionalTestFixture.cs" />
     <Compile Include="Functional\CSharp2FunctionalTests.cs" />
+    <Compile Include="MvcTests.cs" />
     <Compile Include="SpecTests\DebugCompiler.cs" />
     <Compile Include="SpecTests\DebugVisitor.cs" />
     <Compile Include="SpecTests\HamlSpecTests.cs" />
@@ -76,6 +84,7 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Helpers\SpecLocal.cs" />
     <Compile Include="TestFixtureBase.cs" />
+    <Compile Include="TestFixtureMvcBase.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="tests.json" />
@@ -84,6 +93,10 @@
     <ProjectReference Include="..\NHaml.Core\NHaml.Core.csproj">
       <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
       <Name>NHaml.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
+      <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
+      <Name>NHaml.Web.Mvc</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

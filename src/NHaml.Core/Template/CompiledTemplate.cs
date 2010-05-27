@@ -78,6 +78,8 @@ namespace NHaml.Core.Template
                 options.BeforeCompile(compiler, context);
             }
 
+            //Console.WriteLine(compiler.GenerateSource(options));
+
             Type generated = compiler.GenerateType(options);
             if (generated == null) {
                 StringBuilder errorString = new StringBuilder(); ;
