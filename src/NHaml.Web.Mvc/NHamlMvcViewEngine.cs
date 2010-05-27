@@ -52,8 +52,6 @@ namespace NHaml.Web.Mvc
             {
                 _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView);
             }
-
-            _templateEngine.Options.TemplateCompilerType = typeof(CSharp3ClassBuilder);
         }
 
         public TemplateEngine TemplateEngine

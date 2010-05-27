@@ -6,6 +6,7 @@ using System.CodeDom.Compiler;
 using NHaml.Core.Ast;
 using System.IO;
 using NHaml.Core.Template;
+using System.Text.RegularExpressions;
 
 namespace NHaml.Core.Visitors
 {
@@ -44,6 +45,7 @@ namespace NHaml.Core.Visitors
         private string _writerName;
         private int _blockCount;
         private IPartialRenderMethod _partialMethod;
+        private Stack<CodeObject> _endBlockStatements;
 
         private CodeMemberMethod CreateNewMethod(string name)
         {
@@ -60,7 +62,7 @@ namespace NHaml.Core.Visitors
 
             var containsCode = new CodeConditionStatement(
                 new CodeBinaryOperatorExpression(
-                    new CodeVariableReferenceExpression("name"),
+                    new CodeArgumentReferenceExpression("name"),
                     CodeBinaryOperatorType.ValueEquality,
                     new CodePrimitiveExpression(name)
                 ),
@@ -70,7 +72,7 @@ namespace NHaml.Core.Visitors
 
             var runCode = new CodeConditionStatement(
                 new CodeBinaryOperatorExpression(
-                    new CodeVariableReferenceExpression("name"),
+                    new CodeArgumentReferenceExpression("name"),
                     CodeBinaryOperatorType.ValueEquality,
                     new CodePrimitiveExpression(name)
                 ),
@@ -78,7 +80,7 @@ namespace NHaml.Core.Visitors
                     new CodeMethodInvokeExpression(
                         new CodeThisReferenceExpression(),
                         "Render"+name,
-                        new CodeVariableReferenceExpression("textWriter")
+                        new CodeArgumentReferenceExpression("textWriter")
                     )
                 ),
                 new CodeMethodReturnStatement()
@@ -123,6 +125,8 @@ namespace NHaml.Core.Visitors
             _runContent.Attributes = MemberAttributes.Public | MemberAttributes.Override;
 
             _partialMethod = Options.GetPartialRenderMethod();
+
+            _endBlockStatements = new Stack<CodeObject>();
         }
 
         public CodeDomVisitor(TemplateOptions options) : this()
@@ -151,9 +155,10 @@ namespace NHaml.Core.Visitors
                     Method = new CodeMethodReferenceExpression
                     {
                         MethodName = "RunContent",
-                        TargetObject = new CodeVariableReferenceExpression
+                        TargetObject = new CodePropertyReferenceExpression
                         {
-                            VariableName = "Child"
+                            PropertyName = "Child",
+                            TargetObject = new CodeThisReferenceExpression()
                         }
                     }
                 };
@@ -175,7 +180,7 @@ namespace NHaml.Core.Visitors
 
                     var ifStatement = new CodeConditionStatement(
                             new CodeMethodInvokeExpression(
-                                new CodeVariableReferenceExpression("Child"),
+                                new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Child"),
                                 "ContainsContent",
                                 new CodePrimitiveExpression(node.Value)
                             )
@@ -185,8 +190,8 @@ namespace NHaml.Core.Visitors
 
                     var safeIfInvoke = new CodeConditionStatement(
                         new CodeBinaryOperatorExpression(
-                            new CodeVariableReferenceExpression("Child"),
-                            CodeBinaryOperatorType.ValueEquality,
+                            new CodePropertyReferenceExpression(new CodeThisReferenceExpression(),"Child"),
+                            CodeBinaryOperatorType.IdentityEquality,
                             new CodePrimitiveExpression(null)
                         ),
                         new CodeStatement[] {
@@ -218,8 +223,8 @@ namespace NHaml.Core.Visitors
                 {
                     var safeChildInvoke = new CodeConditionStatement(
                         new CodeBinaryOperatorExpression(
-                            new CodeVariableReferenceExpression("Child"),
-                            CodeBinaryOperatorType.ValueEquality,
+                            new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Child"),
+                            CodeBinaryOperatorType.IdentityEquality,
                             new CodePrimitiveExpression(null)
                         ),
                         new CodeStatement[] {
@@ -285,8 +290,8 @@ namespace NHaml.Core.Visitors
             _runContent.Statements.Add(
                 new CodeConditionStatement(
                     new CodeBinaryOperatorExpression(
-                        new CodeVariableReferenceExpression("Child"),
-                        CodeBinaryOperatorType.ValueEquality,
+                        new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Child"),
+                        CodeBinaryOperatorType.IdentityEquality,
                         new CodePrimitiveExpression(null)
                     ),
                 new CodeStatement[] {
@@ -297,7 +302,7 @@ namespace NHaml.Core.Visitors
                                     new CodeBinaryOperatorExpression(
                                         new CodePrimitiveExpression("Template Entry Point "),
                                         CodeBinaryOperatorType.Add,
-                                        new CodeVariableReferenceExpression("name")
+                                        new CodeArgumentReferenceExpression("name")
                                     ),
                                     CodeBinaryOperatorType.Add,
                                     new CodePrimitiveExpression(" is missing")
@@ -308,10 +313,10 @@ namespace NHaml.Core.Visitors
                 new CodeStatement[] {new CodeExpressionStatement(
                         new CodeMethodInvokeExpression(
                             new CodeMethodReferenceExpression(
-                                new CodeVariableReferenceExpression("Child"),
+                                new CodePropertyReferenceExpression(new CodeThisReferenceExpression(),"Child"),
                                 "RunContent"),
-                            new CodeVariableReferenceExpression("textWriter"),
-                            new CodeVariableReferenceExpression("name")
+                            new CodeArgumentReferenceExpression("textWriter"),
+                            new CodeArgumentReferenceExpression("name")
                         )
                     )
                 }
@@ -319,17 +324,17 @@ namespace NHaml.Core.Visitors
             _containsContent.Statements.Add(
                 new CodeConditionStatement(
                     new CodeBinaryOperatorExpression(
-                        new CodeVariableReferenceExpression("Child"),
-                        CodeBinaryOperatorType.ValueEquality,
+                        new CodePropertyReferenceExpression(new CodeThisReferenceExpression(), "Child"),
+                        CodeBinaryOperatorType.IdentityEquality,
                         new CodePrimitiveExpression(null)
                     ),
                 new CodeStatement[] {new CodeMethodReturnStatement(new CodePrimitiveExpression(false))},
                 new CodeStatement[] {new CodeMethodReturnStatement(
                         new CodeMethodInvokeExpression(
                             new CodeMethodReferenceExpression(
-                                new CodeVariableReferenceExpression("Child"),
+                                new CodePropertyReferenceExpression(new CodeThisReferenceExpression(),"Child"),
                                 "ContainsContent"),
-                            new CodeVariableReferenceExpression("name")
+                            new CodeArgumentReferenceExpression("name")
                         )
                     )
                 }
@@ -411,18 +416,46 @@ namespace NHaml.Core.Visitors
         protected override void WriteStartBlock(string code, bool hasChild)
         {
             PopString();
-            _actualCode.Statements.Add(new CodeSnippetStatement(code));
-            if (hasChild) _actualCode.Statements.Add(new CodeSnippetStatement(StartBlock));
+            Match lambdaMatch;
+            if (hasChild && SupportLambda && (lambdaMatch = LambdaRegex.Match(code)).Success) {
+                code = TranslateLambda(code,lambdaMatch);
+                _actualCode.Statements.Add(new CodeSnippetExpression(code));
+                _endBlockStatements.Push(LambdaEndBlock);
+            } else {
+                if (hasChild)
+                {
+                    _actualCode.Statements.Add(new CodeSnippetExpression(code + Comment));
+                    if (StartBlock is CodeStatement)
+                    {
+                        _actualCode.Statements.Add((CodeStatement)StartBlock);
+                    }
+                    else if (StartBlock is CodeExpression)
+                    {
+                        _actualCode.Statements.Add((CodeExpression)StartBlock);
+                    }
+                    _endBlockStatements.Push(EndBlock);
+                }
+                else
+                {
+                    _actualCode.Statements.Add(new CodeSnippetExpression(code));
+                }
+            }
         }
 
         protected override void WriteEndBlock()
         {
             PopString();
-            _actualCode.Statements.Add(new CodeSnippetStatement(EndBlock));
+            CodeObject statement = _endBlockStatements.Pop();
+            if (statement is CodeStatement)
+            {
+                _actualCode.Statements.Add((CodeStatement)statement);
+            }
+            else if (statement is CodeExpression)
+            {
+                _actualCode.Statements.Add((CodeExpression)statement);
+            }
+        
         }
-
-        protected abstract string StartBlock { get; }
-        protected abstract string EndBlock { get; }
 
         protected override void WriteData(object data, string filter)
         {
@@ -612,5 +645,14 @@ namespace NHaml.Core.Visitors
                 }
             });
         }
+
+        protected abstract CodeObject StartBlock { get; }
+        protected abstract CodeObject EndBlock { get; }
+        protected abstract string Comment { get; }
+
+        protected abstract CodeObject LambdaEndBlock { get; }
+        protected abstract bool SupportLambda { get; }
+        protected abstract Regex LambdaRegex { get; }
+        protected abstract string TranslateLambda(string codeLine, Match lambdaMatch);
     }
 }

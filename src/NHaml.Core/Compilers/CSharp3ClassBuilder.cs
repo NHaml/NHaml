@@ -7,27 +7,45 @@ using System.CodeDom;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace NHaml.Core.Compilers
 {
     public class CSharp3ClassBuilder : CodeDomVisitorClassBuilder
     {
-        internal class CSharpVisitor : CodeDomVisitor
+        internal class CSharp3Visitor : CodeDomVisitor
         {
-            protected override string StartBlock
+            private Regex _lambdaRegex;
+
+            protected override CodeObject StartBlock { get { return new CodeSnippetExpression("{//"); } }
+            protected override CodeObject EndBlock { get { return new CodeSnippetExpression("}//"); } }
+            protected override CodeObject LambdaEndBlock { get { return new CodeSnippetExpression("})"); } }
+            protected override bool SupportLambda { get { return true; } }
+
+            protected override Regex LambdaRegex
             {
                 get
                 {
-                    return "{//";
+                    if (_lambdaRegex == null)
+                    {
+                        _lambdaRegex = new Regex(@"^(.+)(\(.*\))\s*=>\s*$", RegexOptions.Compiled | RegexOptions.Singleline);
+                    }
+                    return _lambdaRegex;
                 }
             }
 
-            protected override string EndBlock
+            protected override string TranslateLambda(string codeLine, Match lambdaMatch)
             {
-                get
-                {
-                    return "}//";
-                }
+                var groups = lambdaMatch.Groups;
+                var part2 = groups[2].Captures[0].Value;
+                var part0 = codeLine.Substring(0, groups[1].Length - 2);
+                var part1 = (groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ");
+                return string.Format("{0}{1}{2} => {{", part0, part1, part2);
+            }
+
+            protected override string Comment
+            {
+                get { return "//"; }
             }
         }
 
@@ -57,7 +75,7 @@ namespace NHaml.Core.Compilers
             get {
                 if (_visitor == null)
                 {
-                    _visitor = new CSharpVisitor();
+                    _visitor = new CSharp3Visitor();
                 }
                 return _visitor;
             }

@@ -1,4 +1,5 @@
 using NUnit.Framework;
+using NHaml.Core.Compilers;
 
 namespace NHaml.Tests.Functional
 {
@@ -9,6 +10,7 @@ namespace NHaml.Tests.Functional
         {
             base.SetUp();
 
+            _templateEngine.Options.TemplateCompilerType = typeof(CSharpClassBuilder);
             _templateEngine.Options.TemplateContentProvider.AddPathSource( TemplatesFolder + @"CSharp2" );
         }
 

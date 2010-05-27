@@ -36,7 +36,7 @@ namespace NHaml.Core.Template
             _indentSize = 2;
             BaseIndent = 0;
             _templateBaseType = typeof(Template);
-            _templateCompilerType = typeof(CSharpClassBuilder);
+            _templateCompilerType = typeof(CSharp3ClassBuilder);
             _partialRenderMethodType = typeof(CodeDomHtmlHelperPartialMethod);
             TemplateContentProvider = new FileTemplateContentProvider();
         }

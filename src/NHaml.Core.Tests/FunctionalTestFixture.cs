@@ -237,7 +237,7 @@ namespace NHaml.Tests
             }
         }
 
-        [Test, Ignore("Lambda support need to be added back")]
+        [Test]
         public virtual void LambdaEval()
         {
             _templateEngine.Options.TemplateBaseType = typeof( CustomTemplate1 );

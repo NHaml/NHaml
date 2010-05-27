@@ -7,6 +7,7 @@ using System.CodeDom;
 using Microsoft.CSharp;
 using System.CodeDom.Compiler;
 using System.IO;
+using System.Text.RegularExpressions;
 
 namespace NHaml.Core.Compilers
 {
@@ -14,20 +15,36 @@ namespace NHaml.Core.Compilers
     {
         internal class CSharpVisitor : CodeDomVisitor
         {
-            protected override string StartBlock
+            private Regex _lambdaRegex;
+
+            protected override CodeObject StartBlock { get { return new CodeSnippetExpression("{//"); } }
+            protected override CodeObject EndBlock { get { return new CodeSnippetExpression("}//"); } }
+            protected override CodeObject LambdaEndBlock { get { return new CodeSnippetExpression("})"); } }
+            protected override bool SupportLambda { get { return true; } }
+
+            protected override Regex LambdaRegex
             {
                 get
                 {
-                    return "{//";
+                    if (_lambdaRegex == null)
+                    {
+                        _lambdaRegex = new Regex(@"^(.+)(\(.*\))\s*=>\s*$", RegexOptions.Compiled | RegexOptions.Singleline);
+                    }
+                    return _lambdaRegex;
                 }
             }
 
-            protected override string EndBlock
+            protected override string TranslateLambda( string codeLine, Match lambdaMatch )
             {
-                get
-                {
-                    return "}//";
-                }
+                var part0 = codeLine.Substring(0, lambdaMatch.Groups[1].Length - 2);
+                var part2 = lambdaMatch.Groups[2].Captures[0].Value;
+                var part1 = (lambdaMatch.Groups[1].Captures[0].Value.Trim().EndsWith("()", StringComparison.OrdinalIgnoreCase) ? null : ", ");
+                return string.Format("{0}{1}delegate{2}{{", part0, part1, part2);
+            }
+
+            protected override string Comment
+            {
+                get { return "//"; }
             }
         }
 
@@ -42,7 +59,11 @@ namespace NHaml.Core.Compilers
             {
                 if (_provider == null)
                 {
-                    _provider = new CSharpCodeProvider();
+                    _provider = new CSharpCodeProvider(new Dictionary<string, string>()
+                        { 
+                            {"CompilerVersion", "v2.0"}
+                        }
+                    );
                 }
                 return _provider;
             }

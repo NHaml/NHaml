@@ -79,8 +79,28 @@ namespace NHaml.Core.Tests
 
         internal class DebugCodeDomVisitor : CodeDomVisitor
         {
-            protected override string StartBlock { get { return "{//"; } }
-            protected override string EndBlock { get { return "}//"; } }
+            protected override CodeObject StartBlock { get { return new CodeSnippetExpression("{//"); } }
+            protected override CodeObject EndBlock { get { return new CodeSnippetExpression("}//"); } }
+            protected override string Comment { get { return "//"; } }
+            protected override CodeObject LambdaEndBlock
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            protected override bool SupportLambda
+            {
+                get { return false; }
+            }
+
+            protected override System.Text.RegularExpressions.Regex LambdaRegex
+            {
+                get { throw new NotImplementedException(); }
+            }
+
+            protected override string TranslateLambda(string codeLine, System.Text.RegularExpressions.Match lambdaMatch)
+            {
+                throw new NotImplementedException();
+            }
         }
     }
 }

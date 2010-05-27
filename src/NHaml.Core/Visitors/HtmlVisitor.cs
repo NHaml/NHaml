@@ -196,11 +196,11 @@ namespace NHaml.Core.Visitors
         {
             if (chunk.Escape.HasValue)
             {
-                WriteCode(chunk.Code, chunk.Escape.Value);
+                WriteCode(chunk.Code.Trim(), chunk.Escape.Value);
             }
             else
             {
-                WriteCode(chunk.Code, Options.EncodeHtml);
+                WriteCode(chunk.Code.Trim(), Options.EncodeHtml);
             }
         }
 
@@ -218,13 +218,13 @@ namespace NHaml.Core.Visitors
         {
             if (node.Child != null)
             {
-                WriteStartBlock(node.Code, true);
+                WriteStartBlock(node.Code.Trim(), true);
                 VisitAndIdentAlways(node.Child,true);
                 WriteEndBlock();
             }
             else
             {
-                WriteStartBlock(node.Code, false);
+                WriteStartBlock(node.Code.Trim(), false);
             }
         }
 
@@ -289,11 +289,11 @@ namespace NHaml.Core.Visitors
         {
             if (!node.Escape.HasValue)
             {
-                WriteCode(node.Code, Options.EncodeHtml);
+                WriteCode(node.Code.Trim(), Options.EncodeHtml);
             }
             else
             {
-                WriteCode(node.Code, node.Escape.Value);
+                WriteCode(node.Code.Trim(), node.Escape.Value);
             }
         }
 

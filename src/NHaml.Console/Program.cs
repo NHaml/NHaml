@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.IO;
 using NHaml.Core.Parser;
 using NHaml.Core.Visitors;
 using NHaml.Core.Compilers;
 using NHaml.Core.Template;
-using System.IO;
+using NHaml.Compilers.FSharp;
+using NHaml.Compilers.VisualBasic;
 
 namespace NHaml.Console
 {
@@ -57,6 +59,27 @@ namespace NHaml.Console
                             System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
                             break;
                         }
+                    case "cs3":
+                        {
+                            var cf = new CSharp3ClassBuilder();
+                            cf.SetDocument(null, document, "TestClass");
+                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
+                            break;
+                        }
+                    case "fs":
+                        {
+                            var cf = new FSharpClassBuilder();
+                            cf.SetDocument(null, document, "TestClass");
+                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
+                            break;
+                        }
+                    case "vb":
+                        {
+                            var cf = new VisualBasicClassBuilder();
+                            cf.SetDocument(null, document, "TestClass");
+                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
+                            break;
+                        }
                     case "ast":
                         {
                             StringWriter sw = new StringWriter();
@@ -72,7 +95,7 @@ namespace NHaml.Console
             }
             else
             {
-                System.Console.WriteLine("Usage: NHaml.Console [-format {asp|cs|ast}] <input.haml>");
+                System.Console.WriteLine("Usage: NHaml.Console [-format {asp|ast|cs(3)|fs|vb}] <input.haml>");
             }
         }
     }

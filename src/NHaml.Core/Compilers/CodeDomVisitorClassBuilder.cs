@@ -10,6 +10,7 @@ using NHaml.Core.Ast;
 using System.Diagnostics.CodeAnalysis;
 using System.Reflection;
 using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace NHaml.Core.Compilers
 {
@@ -22,7 +23,7 @@ namespace NHaml.Core.Compilers
         protected abstract CompilerParameters CompilerOptions { get; }
         protected abstract CodeGeneratorOptions GeneratorOptions { get; }
 
-        protected CodeCompileUnit GetCompileUnit(TemplateOptions options)
+        protected virtual CodeCompileUnit GetCompileUnit(TemplateOptions options)
         {
             var compileUnit = new CodeCompileUnit();
             var testNamespace = new CodeNamespace();
@@ -51,7 +52,7 @@ namespace NHaml.Core.Compilers
             return compileUnit;
         }
 
-        public void SetDocument(TemplateOptions options, DocumentNode node, string className)
+        public virtual void SetDocument(TemplateOptions options, DocumentNode node, string className)
         {
             if (options != null)
             {
@@ -62,20 +63,20 @@ namespace NHaml.Core.Compilers
             ClassName = className;
         }
 
-        public string ClassName { get; protected set; }
+        public virtual string ClassName { get; protected set; }
 
-        public CompilerResults CompilerResults
+        public virtual CompilerResults CompilerResults
         {
             get;
             protected set;
         }
 
-        public TemplateFactory Compile(TemplateOptions options)
+        public virtual TemplateFactory Compile(TemplateOptions options)
         {
             return new TemplateFactory(GenerateType(options));
         }
 
-        public Type GenerateType(TemplateOptions options)
+        public virtual Type GenerateType(TemplateOptions options)
         {
             AddReferences(options);
             if (options.OutputDebugFiles && SupportsDebug())
@@ -132,7 +133,7 @@ namespace NHaml.Core.Compilers
             }
         }
 
-        public string GenerateSource(TemplateOptions options)
+        public virtual string GenerateSource(TemplateOptions options)
         {
             CodeCompileUnit c = GetCompileUnit(options);
             StringWriter sw = new StringWriter();
@@ -142,7 +143,7 @@ namespace NHaml.Core.Compilers
 
 
         [SuppressMessage("Microsoft.Security", "CA2122")]
-        private void AddReferences(TemplateOptions options)
+        protected virtual void AddReferences(TemplateOptions options)
         {
             CompilerOptions.ReferencedAssemblies.Clear();
 
@@ -179,7 +180,7 @@ namespace NHaml.Core.Compilers
             return fileInfo;
         }
 
-        private bool ContainsErrors()
+        protected virtual bool ContainsErrors()
         {
             foreach (CompilerError result in CompilerResults.Errors)
             {

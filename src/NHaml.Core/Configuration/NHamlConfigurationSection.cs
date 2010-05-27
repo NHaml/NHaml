@@ -159,7 +159,7 @@ namespace NHaml.Core.Configuration
 
 			if (!typeof(IClassBuilder).IsAssignableFrom(type))
 			{
-				var message = Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler);
+                var message = Utility.FormatCurrentCulture("Type '{0}' is not assignable to IClassBuilder", templateCompiler);
 				throw new ConfigurationErrorsException(message);
 			}
 

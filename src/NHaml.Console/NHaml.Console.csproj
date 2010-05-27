@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>    
+    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +51,14 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\NHaml.Compilers.FSharp\NHaml.Compilers.FSharp.csproj">
+      <Project>{CA3AB5C2-31C7-477E-93E4-196A7215BAFD}</Project>
+      <Name>NHaml.Compilers.FSharp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\NHaml.Compilers.VisualBasic\NHaml.Compilers.VisualBasic.csproj">
+      <Project>{E6CBC4EF-A6F6-4654-A384-A339371598E1}</Project>
+      <Name>NHaml.Compilers.VisualBasic</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHaml.Core\NHaml.Core.csproj">
       <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
       <Name>NHaml.Core</Name>
