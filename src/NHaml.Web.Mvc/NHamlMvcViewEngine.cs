@@ -124,7 +124,7 @@ namespace NHaml.Web.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-            return (IView)_templateEngine.Compile(VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath)).CreateInstance();
+            return (IView)_templateEngine.Compile(VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath),null,null,GetViewBaseType(controllerContext)).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
