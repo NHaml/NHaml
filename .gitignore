@@ -4,5 +4,6 @@ StyleCop.Cache
 *.resharper
 *.user
 *.suo
+*.swp
 bin/
 obj/

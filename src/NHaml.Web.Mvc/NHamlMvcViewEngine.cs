@@ -22,6 +22,8 @@ namespace NHaml.Web.Mvc
         private bool useDefault;
         public string DefaultMaster { get; set; }
 
+        private MapPathTemplateContentProvider _contentProvider;
+
         public NHamlMvcViewEngine()
         {
             InitializeTemplateEngine();
@@ -53,7 +55,8 @@ namespace NHaml.Web.Mvc
                 _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView<>);
             }
 
-            _templateEngine.Options.TemplateContentProvider = new MapPathTemplateContentProvider();
+            _contentProvider = new MapPathTemplateContentProvider();
+            _templateEngine.Options.TemplateContentProvider = _contentProvider;
         }
 
         public TemplateEngine TemplateEngine
@@ -104,6 +107,7 @@ namespace NHaml.Web.Mvc
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
+            _contentProvider.SetRequestContext(controllerContext.RequestContext);
             useDefault = true;
             if (string.IsNullOrEmpty(masterName))
             {
@@ -124,11 +128,13 @@ namespace NHaml.Web.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
+            _contentProvider.SetRequestContext(controllerContext.RequestContext);
             return (IView)_templateEngine.Compile(VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath),null,null,GetViewBaseType(controllerContext)).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
+            _contentProvider.SetRequestContext(controllerContext.RequestContext);
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
             if (useDefault)
             {

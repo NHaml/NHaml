@@ -62,7 +62,12 @@ namespace NHaml.Compilers.VisualBasic
             {
                 if (_provider == null)
                 {
-                    _provider = new VBCodeProvider();
+                    _provider = new VBCodeProvider(new Dictionary<string, string>()
+                        { 
+                            {"CompilerVersion", "v3.5"}
+                        }
+                    );
+                    
                 }
                 return _provider;
             }
