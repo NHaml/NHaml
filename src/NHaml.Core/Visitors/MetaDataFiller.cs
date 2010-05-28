@@ -50,17 +50,6 @@ namespace NHaml.Core.Visitors
                 pagedefiniton.Attributes.Add(new AttributeNode("AutoEventWireup") { Value = new TextNode(new TextChunk("true")) });
             }
 
-            if (pagedefiniton.Attributes.Find(x => x.Name == "Inherits") == null)
-            {
-                pagedefiniton.Attributes.Add(new AttributeNode("Inherits") { Value = new TextNode(new TextChunk(options.TemplateBaseType.ToString())) });
-            }
-
-            if (metadata.TryGetValue("type", out data))
-            {
-                var tc = pagedefiniton.Attributes.Find(x => x.Name == "Inherits");
-                tc.Value = new TextNode(new TextChunk(((tc.Value as TextNode).Chunks[0] as TextChunk).Text + "<" + data[0].Value + ">"));
-            }
-
             if (!metadata.ContainsKey(pagedefiniton.Name))
             {
                 metadata[pagedefiniton.Name] = new List<MetaNode> { pagedefiniton };

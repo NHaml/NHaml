@@ -58,7 +58,7 @@ namespace NHaml.Core.Template
             return Compile(template,master);
         }
 
-        public CompiledTemplate Compile(string templatePath, string masterPath, string defaultMasterPath)
+        public CompiledTemplate Compile(string templatePath, string masterPath, string defaultMasterPath, Type BaseType)
         {
             IViewSource template = Options.TemplateContentProvider.GetViewSource(templatePath);
             IViewSource master = null;
@@ -71,32 +71,36 @@ namespace NHaml.Core.Template
             {
                 defaultMaster = Options.TemplateContentProvider.GetViewSource(defaultMasterPath);
             }
-            return Compile(template,master,defaultMaster);
+            return Compile(template,master,defaultMaster, BaseType);
         }
 
         public CompiledTemplate Compile(IViewSource template, IViewSource master)
         {
-            return Compile(template, master, null);
+            return Compile(template, master, null, null);
         }
 
-        public CompiledTemplate Compile(IViewSource template, IViewSource master, IViewSource defaultMaster)
+        public CompiledTemplate Compile(IViewSource template, IViewSource master, IViewSource defaultMaster, Type BaseType)
         {
             CompiledTemplate compiledMaster = null;
             if (master != null)
-                compiledMaster = Compile(master, (IViewSource)null, null);
+                compiledMaster = Compile(master, (IViewSource)null, null, null);
 
             CompiledTemplate compiledDefaultMaster = null;
             if (defaultMaster != null)
-                compiledDefaultMaster = Compile(defaultMaster, (IViewSource)null, null);
+                compiledDefaultMaster = Compile(defaultMaster, (IViewSource)null, null, null);
 
-            return Compile(template,compiledMaster, compiledDefaultMaster, null);
+            return Compile(template,compiledMaster, compiledDefaultMaster, null, BaseType);
         }
 
-        public CompiledTemplate Compile(IViewSource template, CompiledTemplate master, CompiledTemplate defaultMaster, object context)
+        public CompiledTemplate Compile(IViewSource template, CompiledTemplate master, CompiledTemplate defaultMaster, object context, Type BaseType)
         {
             Invariant.ArgumentNotNull( template, "template" );
 
             var opts = (TemplateOptions)Options.Clone();
+            if (BaseType != null)
+            {
+                opts.TemplateBaseType = BaseType;
+            }
 
             List<MetaNode> data;
             if (template.ParseResult.Metadata.TryGetValue("assembly", out data))
@@ -114,16 +118,39 @@ namespace NHaml.Core.Template
                 }
             }
 
-            MetaNode pagedefiniton = MetaDataFiller.FillAndGetPageDefinition(template.ParseResult.Metadata, Options);
-            // inherittype will contain the @type data too
-            string inherittype = ((TextChunk)((TextNode)pagedefiniton.Attributes.Find(x => x.Name == "Inherits").Value).Chunks[0]).Text;
-            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            MetaNode pagedefiniton = MetaDataFiller.FillAndGetPageDefinition(template.ParseResult.Metadata, opts);
+
+            if (pagedefiniton.Attributes.Find(x => x.Name == "Inherits") != null)
             {
-                var modelType = assembly.GetType(inherittype, false, true);
-                if (modelType != null)
+                string inherittype = ((TextChunk)((TextNode)pagedefiniton.Attributes.Find(x => x.Name == "Inherits").Value).Chunks[0]).Text;
+                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
                 {
-                    opts.TemplateBaseType = ProxyExtractor.GetNonProxiedType(modelType);
+                    var modelType = assembly.GetType(inherittype, false, true);
+                    if (modelType != null)
+                    {
+                        opts.TemplateBaseType = ProxyExtractor.GetNonProxiedType(modelType);
+                    }
                 }
+            }
+
+            if (template.ParseResult.Metadata.TryGetValue("type", out data))
+            {
+                if (opts.TemplateBaseType.IsGenericTypeDefinition)
+                {
+                    string modeltypestring = data[0].Value;
+                    foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+                    {
+                        var modelType = assembly.GetType(modeltypestring, false, true);
+                        if (modelType != null)
+                        {
+                            opts.TemplateBaseType = opts.TemplateBaseType.MakeGenericType(ProxyExtractor.GetNonProxiedType(modelType));
+                        }
+                    }
+                }
+            }
+            if (opts.TemplateBaseType.IsGenericTypeDefinition)
+            {
+                opts.TemplateBaseType = opts.TemplateBaseType.MakeGenericType(typeof(object));
             }
             
             // check if there is a default masterpagefile definition inside the content page.
@@ -146,7 +173,7 @@ namespace NHaml.Core.Template
             }
 
             var templateCacheKey = template.Path;
-            if (master != null) templateCacheKey = templateCacheKey + master.ContentFile.Path;
+            if (master != null) templateCacheKey = templateCacheKey + master.ContentFile.Path + opts.TemplateBaseType.FullName;
 
             CompiledTemplate compiledTemplate;
 

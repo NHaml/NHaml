@@ -5,6 +5,7 @@ using NUnit.Framework;
 namespace NHaml.Tests.Functional
 {
     [TestFixture]
+    [Ignore("FSharp support is really buggy ATM")]
     public class FSharpFunctionalTests : FunctionalTestFixture
     {
         public override void SetUp()

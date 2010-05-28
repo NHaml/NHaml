@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NHaml.Core.Utils;
+using System.Web;
 
 namespace NHaml.Core.TemplateResolution
 {
@@ -39,7 +40,7 @@ namespace NHaml.Core.TemplateResolution
             throw new FileNotFoundException(string.Format("Could not find template '{0}'.", templateName));
         }
 
-        private FileInfo CreateFileInfo(string templateName)
+        protected virtual FileInfo CreateFileInfo(string templateName)
         {
 
             foreach (var pathSource in PathSources)
@@ -50,7 +51,6 @@ namespace NHaml.Core.TemplateResolution
                     return fileInfo;
                 }
             }
-
             return null;
         }
 
@@ -87,7 +87,7 @@ namespace NHaml.Core.TemplateResolution
         //    return false;
         //}
 
-        private static FileInfo CreateFileInfo(string viewRoot, string templateName)
+        protected static FileInfo CreateFileInfo(string viewRoot, string templateName)
         {
             //TODO: not sure what the purpose of this is. came from castle
             //if (Path.IsPathRooted(templateName))

@@ -50,8 +50,10 @@ namespace NHaml.Web.Mvc
 
             if (_templateEngine.Options.TemplateBaseType == typeof(Template))
             {
-                _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView);
+                _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView<>);
             }
+
+            _templateEngine.Options.TemplateContentProvider = new MapPathTemplateContentProvider();
         }
 
         public TemplateEngine TemplateEngine
@@ -131,19 +133,43 @@ namespace NHaml.Web.Mvc
             if (useDefault)
             {
                 masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-                return (IView)_templateEngine.Compile(viewPath, masterPath, null).CreateInstance();
+                return (IView)_templateEngine.Compile(viewPath, masterPath, null, GetViewBaseType(controllerContext)).CreateInstance();
             }
             else
             {
                 if (string.IsNullOrEmpty(masterPath))
                 {
-                    return (IView)_templateEngine.Compile(viewPath, null, null).CreateInstance();
+                    return (IView)_templateEngine.Compile(viewPath, null, null, GetViewBaseType(controllerContext)).CreateInstance();
                 }
                 else
                 {
                     masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-                    return (IView)_templateEngine.Compile(viewPath, null, masterPath).CreateInstance();
+                    return (IView)_templateEngine.Compile(viewPath, null, masterPath, GetViewBaseType(controllerContext)).CreateInstance();
                 }
+            }
+        }
+
+        protected virtual Type GetViewBaseType(ControllerContext controllerContext)
+        {
+            if (_templateEngine.Options.TemplateBaseType.IsGenericTypeDefinition)
+            {
+                var modelType = typeof(object);
+                var viewData = controllerContext.Controller.ViewData;
+                var viewContext = controllerContext as ViewContext;
+                if ((viewContext != null) && (viewContext.ViewData != null))
+                {
+                    viewData = viewContext.ViewData;
+                }
+                if ((viewData != null) && (viewData.Model != null))
+                {
+                    modelType = viewData.Model.GetType();
+                }
+
+                return _templateEngine.Options.TemplateBaseType.MakeGenericType(modelType);
+            }
+            else
+            {
+                return _templateEngine.Options.TemplateBaseType;
             }
         }
 

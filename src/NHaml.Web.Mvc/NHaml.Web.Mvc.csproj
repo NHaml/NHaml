@@ -73,6 +73,7 @@
     <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="MapPathTemplateContentProvider.cs" />
     <Compile Include="NHamlMvcView.cs" />
     <Compile Include="NHamlMvcViewEngine.cs">
       <SubType>Code</SubType>

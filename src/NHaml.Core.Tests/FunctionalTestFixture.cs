@@ -151,7 +151,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaModel()
         {
-            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<string> );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate("MetaModel");
@@ -171,7 +171,7 @@ namespace NHaml.Tests
         [Test]
         public virtual void MetaWithoutModel()
         {
-            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<object> );
+            _templateEngine.Options.TemplateBaseType = typeof( CustomGenericTemplate<> );
             _templateEngine.Options.AddReference( typeof( Action ).Assembly.Location );
 
             var template = CreateTemplate("MetaWithoutModel");
