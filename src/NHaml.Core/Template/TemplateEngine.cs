@@ -97,6 +97,7 @@ namespace NHaml.Core.Template
             Invariant.ArgumentNotNull( template, "template" );
 
             var opts = (TemplateOptions)Options.Clone();
+            var origtype = opts.TemplateBaseType;
             if (BaseType != null)
             {
                 opts.TemplateBaseType = BaseType;
@@ -135,7 +136,7 @@ namespace NHaml.Core.Template
 
             if (template.ParseResult.Metadata.TryGetValue("type", out data))
             {
-                if (opts.TemplateBaseType.IsGenericTypeDefinition)
+                if ((opts.TemplateBaseType.IsGenericTypeDefinition) || ((BaseType!= null) && (origtype.IsGenericTypeDefinition)))
                 {
                     string modeltypestring = data[0].Value;
                     foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
@@ -143,7 +144,16 @@ namespace NHaml.Core.Template
                         var modelType = assembly.GetType(modeltypestring, false, true);
                         if (modelType != null)
                         {
-                            opts.TemplateBaseType = opts.TemplateBaseType.MakeGenericType(ProxyExtractor.GetNonProxiedType(modelType));
+                            if (opts.TemplateBaseType.IsGenericTypeDefinition)
+                            {
+                                opts.TemplateBaseType = opts.TemplateBaseType.MakeGenericType(ProxyExtractor.GetNonProxiedType(modelType));
+                                break;
+                            }
+                            else if (origtype.IsGenericTypeDefinition)
+                            {
+                                opts.TemplateBaseType = origtype.MakeGenericType(ProxyExtractor.GetNonProxiedType(modelType));
+                                break;
+                            }
                         }
                     }
                 }
