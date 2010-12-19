@@ -8,10 +8,10 @@ namespace NHaml.TemplateResolution
     public interface IViewSource
     {
         /// <summary>
-        /// Opens the view stream.
+        /// Opens the view.
         /// </summary>
         /// <returns></returns>
-        StreamReader GetStreamReader();
+        TextReader GetReader();
 
         string Path { get;  }
 

@@ -25,7 +25,7 @@ namespace NHaml.TemplateResolution
             _lastUpdated = LastModified;
         }
 
-        public StreamReader GetStreamReader()
+        public TextReader GetReader()
         {
             _lastUpdated = LastModified;
 
