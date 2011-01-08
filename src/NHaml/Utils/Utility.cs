@@ -23,7 +23,7 @@ namespace NHaml.Utils
                     stringBuilder.Append('_');
                 }
             }
-            return stringBuilder.ToString().Replace(templatePath, "_").Trim('_');
+            return stringBuilder.ToString().Trim('_');
         }
 
         public static string MakeBaseClassName( Type baseType, string open, string close, string separator )
