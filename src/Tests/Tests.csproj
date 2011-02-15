@@ -53,7 +53,6 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\IronRuby\net2\IronRuby.Libraries.dll</HintPath>
     </Reference>
-    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Moq, Version=2.6.3127.18174, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\Moq.dll</HintPath>
@@ -624,9 +623,6 @@
     <None Include="Functional\Templates\_Welcome.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Include="HamlSpec\tests.json">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
     <None Include="Issues\GC62\Mock\Content.haml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -703,8 +699,6 @@
     <Compile Include="Functional\FSharpFunctionalTests.cs" />
     <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
     <Compile Include="Functional\ImporterTests.cs" />
-    <Compile Include="HamlSpec\HamlSpecTests.cs" />
-    <Compile Include="HamlSpec\JSON.cs" />
     <Compile Include="Issues\GC62\Fixture.cs" />
     <Compile Include="Issues\GC53\Fixture.cs" />
     <Compile Include="Issues\GC58\Fixture.cs" />
