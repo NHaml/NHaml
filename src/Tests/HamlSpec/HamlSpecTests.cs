@@ -1,5 +1,9 @@
 using System.Collections;
+using System.Collections.Generic;
+using System.Dynamic;
 using System.IO;
+using System.Linq;
+using System.Web.Script.Serialization;
 using NUnit.Framework;
 
 namespace NHaml.Tests.HamlSpec
@@ -9,26 +13,27 @@ namespace NHaml.Tests.HamlSpec
     {
         private readonly FileInfo _testFile = new FileInfo("test.haml");
 
-        [Test,Ignore]
+        [Test]
         public void ExecuteTestSuite()
         {
-            var jsonTests = File.ReadAllText(@"HamlSpec\tests.json");
-            var testGroups = (Hashtable)JSON.JsonDecode(jsonTests);
+            var json = File.ReadAllText(@"HamlSpec\tests.json");
 
-            foreach(DictionaryEntry testGroup in testGroups)
+            var serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
+            var testGroups = (IDictionary<string, object>)serializer.DeserializeObject(json);
+
+            foreach(var groupName in testGroups.Keys)
             {
-                var groupName = (string)testGroup.Key;
-                var tests = (Hashtable)testGroup.Value;
+                var tests = (IDictionary<string, object>)testGroups[groupName];
 
-                foreach(DictionaryEntry test in tests)
+                foreach (var testName in tests.Keys)
                 {
-                    var testName = (string)test.Key;
-                    var testValues = (Hashtable)test.Value;
+                    var properties = (IDictionary<string, object>)tests[testName];
 
-                    var haml = (string)testValues["haml"];
-                    var html = (string)testValues["html"];
+                    var haml = (string)properties["haml"];
+                    var html = (string)properties["html"];
 
                     ExecuteSingleTest(groupName, testName, haml, html);
+
                 }
             }
         }
