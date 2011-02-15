@@ -14,13 +14,13 @@ namespace NHaml.Tests.HamlSpec
         [Test]
         public void ExecuteTestSuite()
         {
-            var hamlSpecTests = GetTheHamlSpecTestToRun();
+            var hamlSpecTests = GetTheHamlSpecTests();
 
             foreach (var test in hamlSpecTests)
                 ExecuteSingleTest(test);
         }
 
-        private IEnumerable<dynamic> GetTheHamlSpecTestToRun()
+        private IEnumerable<dynamic> GetTheHamlSpecTests()
         {
             var hamlSpecTests = new List<dynamic>();
 
