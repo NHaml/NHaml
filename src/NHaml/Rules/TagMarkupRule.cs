@@ -67,6 +67,7 @@ namespace NHaml.Rules
             if (string.IsNullOrEmpty(content))
             {
                 builder.AppendOutput(">");
+                builder.AppendOutputLine();
                 closingTag = currentInputLine.Indent + closingTag;
             }
             else
