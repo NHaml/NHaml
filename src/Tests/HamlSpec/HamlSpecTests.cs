@@ -1,6 +1,7 @@
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Linq;
 using System.Web.Script.Serialization;
 using NUnit.Framework;
 
@@ -28,7 +29,8 @@ namespace NHaml.Tests.HamlSpec
                 foreach (var test in GetDictionary(group.Value))
                     hamlSpecTests.Add(GetTheTestToRun(group, test));
 
-            return hamlSpecTests;
+            return hamlSpecTests
+                .Where(x => x.IgnoreTestsThatHaveAConfigBlock_JustForNow == false);
         }
 
         private dynamic GetTheTestToRun(KeyValuePair<string, object> group, KeyValuePair<string, object> test)
@@ -41,6 +43,7 @@ namespace NHaml.Tests.HamlSpec
             var properties = GetDictionary(test.Value);
             testToRun.Haml = properties["haml"];
             testToRun.Html = properties["html"];
+            testToRun.IgnoreTestsThatHaveAConfigBlock_JustForNow = properties.ContainsKey("config");
             return testToRun;
         }
 
