@@ -63,7 +63,7 @@ namespace NHaml.Tests.HamlSpec
             if (testFile.Exists)
                 testFile.Delete();
 
-            test.Html = test.Html.Replace("'", "\"");
+            test.Html = test.Html.Replace("'", "\"") + "\r\n";
 
             File.WriteAllText(testFile.FullName, test.Haml);
 
