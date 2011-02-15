@@ -1,8 +1,6 @@
-using System.Collections;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
-using System.Linq;
 using System.Web.Script.Serialization;
 using NUnit.Framework;
 
@@ -11,49 +9,71 @@ namespace NHaml.Tests.HamlSpec
     [TestFixture]
     public class HamlSpecTests : TestFixtureBase
     {
-        private readonly FileInfo _testFile = new FileInfo("test.haml");
+        private readonly FileInfo testFile = new FileInfo("test.haml");
 
         [Test]
         public void ExecuteTestSuite()
         {
-            var json = File.ReadAllText(@"HamlSpec\tests.json");
+            var hamlSpecTests = GetTheHamlSpecTestToRun();
 
-            var serializer = new JavaScriptSerializer() { MaxJsonLength = int.MaxValue };
-            var testGroups = (IDictionary<string, object>)serializer.DeserializeObject(json);
-
-            foreach(var groupName in testGroups.Keys)
-            {
-                var tests = (IDictionary<string, object>)testGroups[groupName];
-
-                foreach (var testName in tests.Keys)
-                {
-                    var properties = (IDictionary<string, object>)tests[testName];
-
-                    var haml = (string)properties["haml"];
-                    var html = (string)properties["html"];
-
-                    ExecuteSingleTest(groupName, testName, haml, html);
-
-                }
-            }
+            foreach (var test in hamlSpecTests)
+                ExecuteSingleTest(test);
         }
 
-        private void ExecuteSingleTest(string groupName, string testName, string haml, string html)
+        private IEnumerable<dynamic> GetTheHamlSpecTestToRun()
         {
-            if(_testFile.Exists)
-                _testFile.Delete();
+            var hamlSpecTests = new List<dynamic>();
 
-            html = html.Replace("'", "\"");
+            foreach (var group in GetTheTestGroups())
+                foreach (var test in GetDictionary(group.Value))
+                    hamlSpecTests.Add(GetTheTestToRun(group, test));
 
-            File.WriteAllText(_testFile.FullName,haml);
+            return hamlSpecTests;
+        }
 
-            var template = CreateTemplate(_testFile.FullName);
+        private dynamic GetTheTestToRun(KeyValuePair<string, object> group, KeyValuePair<string, object> test)
+        {
+            dynamic testToRun = new ExpandoObject();
+
+            testToRun.GroupName = group.Key;
+            testToRun.TestName = test.Key;
+
+            var properties = GetDictionary(test.Value);
+            testToRun.Haml = properties["haml"];
+            testToRun.Html = properties["html"];
+            return testToRun;
+        }
+
+        private IDictionary<string, object> GetTheTestGroups()
+        {
+            var json = File.ReadAllText(@"HamlSpec\tests.json");
+
+            var serializer = new JavaScriptSerializer {MaxJsonLength = int.MaxValue};
+            var deserializedObject = serializer.DeserializeObject(json);
+            return GetDictionary(deserializedObject);
+        }
+
+        private static IDictionary<string, object> GetDictionary(object deserializedObject)
+        {
+            return (IDictionary<string, object>) deserializedObject;
+        }
+
+        private void ExecuteSingleTest(dynamic test)
+        {
+            if (testFile.Exists)
+                testFile.Delete();
+
+            test.Html = test.Html.Replace("'", "\"");
+
+            File.WriteAllText(testFile.FullName, test.Haml);
+
+            var template = CreateTemplate(testFile.FullName);
 
             var output = new StringWriter();
             template.Render(output);
 
-            var message = string.Format("{0} - {1}",groupName,testName);
-            Assert.AreEqual(html, output.ToString(),message);
+            var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
+            Assert.AreEqual(test.Html, output.ToString(), message);
         }
     }
 }
