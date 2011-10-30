@@ -228,6 +228,7 @@ namespace NHaml.Tests.HamlSpec
             EatWhitespace(json, ref index);
 			
             // "
+            index++;
 
         	var complete = false;
             while (!complete) {

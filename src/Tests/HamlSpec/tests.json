@@ -31,6 +31,11 @@
       "html" : "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Frameset//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-frameset.dtd\">"
     },
 
+    "an HTML 5 doctype with XHTML syntax" : {
+      "haml" : "!!! 5",
+      "html" : "<!DOCTYPE html>"
+    },
+
     "an HTML 5 XML prolog (silent)" : {
       "haml" : "!!! XML",
       "html" : "",
@@ -109,6 +114,19 @@
       }
     },
 
+    "a self-closing tag ('/' modifier + XHTML)" : {
+      "haml" : "%zzz/",
+      "html" : "<zzz />"
+    },
+
+    "a self-closing tag ('/' modifier + HTML5)" : {
+      "haml" : "%zzz/",
+      "html" : "<zzz>",
+      "config" : {
+        "format" : "html5"
+      }
+    },
+
     "a tag with a CSS class" : {
       "haml" : "%p.class1",
       "html" : "<p class='class1'></p>"
@@ -147,8 +165,12 @@
     "an implicit div with a CSS class" : {
       "haml" : ".class1",
       "html" : "<div class='class1'></div>"
-    }
+    },
 
+    "multiple simple Haml tags" : {
+      "haml" : "%div\n  %div\n    %p",
+      "html" : "<div>\n  <div>\n    <p></p>\n  </div>\n</div>"
+    }
   },
 
   "tags with unusual HTML characters" : {
@@ -195,55 +217,62 @@
       "haml" : ".--",
       "html" : "<div class='--'></div>"
     }
-
   },
 
   "tags with inline content" : {
 
-    "a simple tag" : {
+    "Inline content simple tag" : {
       "haml" : "%p hello",
       "html" : "<p>hello</p>"
     },
 
-    "a tag with CSS" : {
+    "Inline content tag with CSS" : {
       "haml" : "%p.class1 hello",
       "html" : "<p class='class1'>hello</p>"
-    }
+    },
 
+    "Inline content multiple simple tags" : {
+      "haml" : "%div\n  %div\n    %p text",
+      "html" : "<div>\n  <div>\n    <p>text</p>\n  </div>\n</div>"
+    }
   },
 
   "tags with nested content" : {
 
-    "a simple tag" : {
+    "Nested content simple tag" : {
       "haml" : "%p\n  hello",
       "html" : "<p>\n  hello\n</p>"
     },
 
-    "a tag with CSS" : {
+    "Nested content tag with CSS" : {
       "haml" : "%p.class1\n  hello",
       "html" : "<p class='class1'>\n  hello\n</p>"
-    }
+    },
 
+    "Nested content multiple simple tags" : {
+      "haml" : "%div\n  %div\n    %p\n      text",
+      "html" : "<div>\n  <div>\n    <p>\n      text\n    </p>\n  </div>\n</div>"
+    }
   },
 
   "tags with HTML-style attributes": {
 
-    "one attribute" : {
+    "HTML-style one attribute" : {
       "haml" : "%p(a='b')",
       "html" : "<p a='b'></p>"
     },
 
-    "multiple attributes" : {
+    "HTML-style multiple attributes" : {
       "haml" : "%p(a='b' c='d')",
       "html" : "<p a='b' c='d'></p>"
     },
 
-    "attributes separated with newlines" : {
+    "HTML-style attributes separated with newlines" : {
       "haml" : "%p(a='b'\n  c='d')",
       "html" : "<p a='b' c='d'></p>"
     },
 
-    "an interpolated attribute" : {
+    "HTML-style interpolated attribute" : {
       "haml" : "%p(a=\"#{var}\")",
       "html" : "<p a='value'></p>",
       "locals" : {
@@ -251,27 +280,27 @@
       }
     },
 
-    "'class' as an attribute" : {
+    "HTML-style 'class' as an attribute" : {
       "haml" : "%p(class='class1')",
       "html" : "<p class='class1'></p>"
     },
 
-    "a tag with a CSS class and 'class' as an attribute" : {
+    "HTML-style tag with a CSS class and 'class' as an attribute" : {
       "haml" : "%p.class2(class='class1')",
       "html" : "<p class='class1 class2'></p>"
     },
 
-    "a tag with 'id' as an attribute" : {
+    "HTML-style tag with 'id' as an attribute" : {
       "haml" : "%p(id='1')",
       "html" : "<p id='1'></p>"
     },
 
-    "a tag with a CSS id and 'id' as an attribute" : {
+    "HTML-style tag with a CSS id and 'id' as an attribute" : {
       "haml" : "%p#id(id='1')",
       "html" : "<p id='id_1'></p>"
     },
 
-    "a tag with a variable attribute" : {
+    "HTML-style tag with a variable attribute" : {
       "haml" : "%p(class=var)",
       "html" : "<p class='hello'></p>",
       "locals" : {
@@ -279,7 +308,7 @@
       }
     },
 
-    "a tag with a CSS class and 'class' as a variable attribute" : {
+    "HTML-style tag with a CSS class and 'class' as a variable attribute" : {
       "haml" : ".hello(class=var)",
       "html" : "<div class='hello world'></div>",
       "locals" : {
@@ -287,113 +316,116 @@
       }
     },
 
-    "a tag multiple CSS classes (sorted correctly)" : {
+    "HTML-style tag multiple CSS classes (sorted correctly)" : {
       "haml" : ".z(class=var)",
       "html" : "<div class='a z'></div>",
       "locals" : {
         "var" : "a"
       }
     }
-
   },
 
   "tags with Ruby-style attributes": {
 
-    "one attribute" : {
+    "Ruby-style one attribute" : {
       "haml" : "%p{:a => 'b'}",
-      "html" : "<p a='b'></p>"
+      "html" : "<p a='b'></p>",
+      "optional" : true
     },
 
-    "attributes hash with whitespace" : {
+    "Ruby-style attributes hash with whitespace" : {
       "haml" : "%p{  :a  =>  'b'  }",
-      "html" : "<p a='b'></p>"
+      "html" : "<p a='b'></p>",
+      "optional" : true
     },
 
-    "an interpolated attribute" : {
+    "Ruby-style interpolated attribute" : {
       "haml" : "%p{:a =>\"#{var}\"}",
       "html" : "<p a='value'></p>",
+      "optional" : true,
       "locals" : {
         "var" : "value"
       }
     },
 
-    "multiple attributes" : {
+    "Ruby-style multiple attributes" : {
       "haml" : "%p{ :a => 'b', 'c' => 'd' }",
-      "html" : "<p a='b' c='d'></p>"
+      "html" : "<p a='b' c='d'></p>",
+      "optional" : true
     },
 
-    "attributes separated with newlines" : {
+    "Ruby-style attributes separated with newlines" : {
       "haml" : "%p{ :a => 'b',\n  'c' => 'd' }",
-      "html" : "<p a='b' c='d'></p>"
+      "html" : "<p a='b' c='d'></p>",
+      "optional" : true
     },
 
-    "'class' as an attribute" : {
+    "Ruby-style 'class' as an attribute" : {
       "haml" : "%p{:class => 'class1'}",
-      "html" : "<p class='class1'></p>"
+      "html" : "<p class='class1'></p>",
+      "optional" : true
     },
 
-    "a tag with a CSS class and 'class' as an attribute" : {
+    "Ruby-style tag with a CSS class and 'class' as an attribute" : {
       "haml" : "%p.class2{:class => 'class1'}",
-      "html" : "<p class='class1 class2'></p>"
+      "html" : "<p class='class1 class2'></p>",
+      "optional" : true
     },
 
-    "a tag with 'id' as an attribute" : {
+    "Ruby-style tag with 'id' as an attribute" : {
       "haml" : "%p{:id => '1'}",
-      "html" : "<p id='1'></p>"
+      "html" : "<p id='1'></p>",
+      "optional" : true
     },
 
-    "a tag with a CSS id and 'id' as an attribute" : {
+    "Ruby-style tag with a CSS id and 'id' as an attribute" : {
       "haml" : "%p#id{:id => '1'}",
-      "html" : "<p id='id_1'></p>"
+      "html" : "<p id='id_1'></p>",
+      "optional" : true
     },
 
-    "a tag with a CSS id and a numeric 'id' as an attribute" : {
+    "Ruby-style tag with a CSS id and a numeric 'id' as an attribute" : {
       "haml" : "%p#id{:id => 1}",
-      "html" : "<p id='id_1'></p>"
+      "html" : "<p id='id_1'></p>",
+      "optional" : true
     },
 
-    "a tag with a variable attribute" : {
+    "Ruby-style tag with a variable attribute" : {
       "haml" : "%p{:class => var}",
       "html" : "<p class='hello'></p>",
+      "optional" : true,
       "locals" : {
         "var" : "hello"
       }
     },
 
-    "a tag with a CSS class and 'class' as a variable attribute" : {
+    "Ruby-style tag with a CSS class and 'class' as a variable attribute" : {
       "haml" : ".hello{:class => var}",
       "html" : "<div class='hello world'></div>",
+      "optional" : true,
       "locals" : {
         "var" : "world"
       }
     },
 
-    "a tag multiple CSS classes (sorted correctly)" : {
+    "Ruby-style tag multiple CSS classes (sorted correctly)" : {
       "haml" : ".z{:class => var}",
       "html" : "<div class='a z'></div>",
+      "optional" : true,
       "locals" : {
         "var" : "a"
       }
-    },
-
-    "an interpolated attribute" : {
-      "haml" : "%p{:a =>\"#{var}\"}",
-      "html" : "<p a='value'></p>",
-      "locals" : {
-        "var" : "value"
-      }
     }
-
   },
 
   "silent comments" : {
 
-    "an inline comment" : {
+    "an inline silent comment" : {
       "haml" : "-# hello",
       "html" : ""
     },
 
-    "a nested comment" : {
+    "a nested silent comment" : {
       "haml" : "-#\n  hello",
       "html" : ""
     }
@@ -402,12 +434,12 @@
 
   "markup comments" : {
 
-    "an inline comment" : {
+    "an inline markup comment" : {
       "haml" : "/ comment",
       "html" : "<!-- comment -->"
     },
 
-    "a nested comment" : {
+    "a nested markup comment" : {
       "haml" : "/\n  comment\n  comment2",
       "html" : "<!--\n  comment\n  comment2\n-->"
     }
@@ -437,6 +469,11 @@
       "html" : "hello\n<p></p>"
     },
 
+    "content in a 'css' filter" : {
+      "haml" : ":css\n  hello\n\n%p",
+      "html" : "<style type='text/css'>\n  /*<![CDATA[*/\n    hello\n  /*]]>*/\n</style>\n<p></p>"
+    },
+
     "content in a 'javascript' filter" : {
       "haml" : ":javascript\n  a();\n%p",
       "html" : "<script type='text/javascript'>\n  //<![CDATA[\n    a();\n  //]]>\n</script>\n<p></p>"
@@ -444,19 +481,12 @@
 
   },
 
-  "interpolation": {
-
-    "interpolation inside code" : {
-      "haml" : "%p= \"#{var}\"",
-      "html" : "<p>value</p>",
-      "locals" : {
-        "var" : "value"
-      }
-    },
+  "Ruby-style interpolation": {
 
     "interpolation inside inline content" : {
       "haml" : "%p #{var}",
       "html" : "<p>value</p>",
+      "optional" : true,
       "locals" : {
         "var" : "value"
       }
@@ -464,12 +494,17 @@
 
     "no interpolation when escaped" : {
       "haml" : "%p \\#{var}",
-      "html" : "<p>#{var}</p>"
+      "html" : "<p>#{var}</p>",
+      "optional" : true,
+      "locals" : {
+        "var" : "value"
+      }
     },
 
     "interpolation when the escape character is escaped" : {
       "haml" : "%p \\\\#{var}",
       "html" : "<p>\\value</p>",
+      "optional" : true,
       "locals" : {
         "var" : "value"
       }
@@ -478,11 +513,91 @@
     "interpolation inside filtered content" : {
       "haml" : ":plain\n  #{var} interpolated: #{var}",
       "html" : "value interpolated: value",
+      "optional" : true,
       "locals" : {
         "var" : "value"
       }
     }
+  },
 
+  "HTML escaping" : {
+
+    "code following '&='" : {
+      "haml" : "&= '<\"&>'",
+      "html" : "&lt;&quot;&amp;&gt;"
+    },
+
+    "code following '=' when escape_haml is set to true" : {
+      "haml" : "= '<\"&>'",
+      "html" : "&lt;&quot;&amp;&gt;",
+      "config" : {
+        "escape_html" : "true"
+      }
+    },
+
+    "code following '!=' when escape_haml is set to true" : {
+      "haml" : "!= '<\"&>'",
+      "html" : "<\"&>",
+      "config" : {
+        "escape_html" : "true"
+      }
+    }
+
+  },
+
+  "boolean attributes" : {
+
+    "boolean attribute with XHTML" : {
+      "haml" : "%input(checked=true)",
+      "html" : "<input checked='checked' />",
+      "config" : {
+        "format" : "xhtml"
+      }
+    },
+
+    "boolean attribute with HTML" : {
+      "haml" : "%input(checked=true)",
+      "html" : "<input checked>",
+      "config" : {
+        "format" : "html5"
+      }
+    }
+  },
+
+  "whitespace preservation" : {
+
+    "following the '~' operator" : {
+      "haml"     : "~ \"Foo\\n<pre>Bar\\nBaz</pre>\"",
+      "html"     : "Foo\n<pre>Bar&#x000A;Baz</pre>",
+      "optional" : true
+    },
+
+    "inside a textarea tag" : {
+      "haml" : "%textarea\n  hello\n  hello",
+      "html" : "<textarea>hello\nhello</textarea>"
+    },
+
+    "inside a pre tag" : {
+      "haml" : "%pre\n  hello\n  hello",
+      "html" : "<pre>hello\nhello</pre>"
+    }
+  },
+
+  "whitespace removal" : {
+
+    "a tag with '>' appended and inline content" : {
+      "haml" : "%li hello\n%li> world\n%li again",
+      "html" : "<li>hello</li><li>world</li><li>again</li>"
+    },
+
+    "a tag with '>' appended and nested content" : {
+      "haml" : "%li hello\n%li>\n  world\n%li again",
+      "html" : "<li>hello</li><li>\n  world\n</li><li>again</li>"
+    },
+
+    "a tag with '<' appended" : {
+      "haml" : "%p<\n  hello\n  world",
+      "html" : "<p>hello\nworld</p>"
+    }
   }
-
 }
