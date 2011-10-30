@@ -38,16 +38,19 @@ namespace NHaml
             while (viewSourceReader.CurrentNode.Next != null)
             {
                 var rule = viewSourceReader.GetRule();
+
+                // TODO - The Rule.Render method violates Command-Query Separation, is this fixable?
+
                 if (rule.PerformCloseActions)
                 {
                     CloseBlocks();
                     BlockClosingActions.Push(rule.Render(viewSourceReader, Options, builder));
-                    viewSourceReader.MoveNext();
                 }
                 else
                 {
                     rule.Render(viewSourceReader, Options, builder);
                 }
+                viewSourceReader.MoveNext();
             }
 
             CloseBlocks();

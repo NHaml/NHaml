@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Linq;
 using System.Reflection;
 using System.Web;
 using NHaml.Compilers;
@@ -47,6 +48,7 @@ namespace NHaml
             AddRule(new EvalMarkupRule());
             AddRule(new EncodedEvalMarkupRule());
             AddRule(new SilentEvalMarkupRule());
+            AddRule(new SilentCommentMarkupRule());
             AddRule(new PreambleMarkupRule());
             AddRule(new CommentMarkupRule());
             AddRule(new EscapeMarkupRule());
@@ -138,7 +140,7 @@ namespace NHaml
                 throw new ArgumentException(string.Format("A MarkupRule with the signifier '{0}' has already been added.", markupRule.Signifier));
             }
             MarkupRules.Add(markupRule);
-            MarkupRules.Sort((x, y) => x.Signifier.Length.CompareTo(y.Signifier.Length));
+            MarkupRules.Sort((x, y) => y.Signifier.Length.CompareTo(x.Signifier.Length));
         }
 
         internal MarkupRule GetRule(InputLine inputLine)
@@ -146,14 +148,9 @@ namespace NHaml
             Invariant.ArgumentNotNull(inputLine, "line");
 
             var start = inputLine.Text.TrimStart();
-            foreach (var keyValuePair in MarkupRules)
-            {
-                if (start.StartsWith(keyValuePair.Signifier))
-                {
-                    return keyValuePair;
-                }
-            }
-            return PlainTextMarkupRule.Instance;
+
+            return MarkupRules.FirstOrDefault(x => start.StartsWith(x.Signifier))
+                ?? PlainTextMarkupRule.Instance;
         }
 
         public bool IsAutoClosingTag(string tag)
