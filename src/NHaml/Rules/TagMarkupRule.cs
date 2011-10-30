@@ -117,10 +117,16 @@ namespace NHaml.Rules
                 }
             }
 
+            bool isEndOfFile = ((viewSourceReader.NextInputLine == null)
+                                || (viewSourceReader.NextInputLine.Text == EofMarkupRule.SignifierChar));
+
             return () =>
             {
                 builder.AppendOutput(closingTag);
-                builder.AppendOutputLine();
+                if (isEndOfFile == false)
+                {
+                    builder.AppendOutputLine();
+                }
             };
         }
 
