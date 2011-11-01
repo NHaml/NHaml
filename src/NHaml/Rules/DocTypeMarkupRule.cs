@@ -46,6 +46,14 @@ namespace NHaml.Rules
             {
                 builder.AppendOutput(@"<!DOCTYPE HTML PUBLIC ""-//W3C//DTD HTML 4.01 Frameset//EN"" ""http://www.w3.org/TR/html4/frameset.dtd"">");
             }
+            else if (string.Equals(content, "mobile"))
+            {
+                builder.AppendOutput("<!DOCTYPE html PUBLIC \"-//WAPFORUM//DTD XHTML Mobile 1.2//EN\" \"http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd\">");
+            }
+            else if (string.Equals(content, "basic"))
+            {
+                builder.AppendOutput("<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML Basic 1.1//EN\" \"http://www.w3.org/TR/xhtml-basic/xhtml-basic11.dtd\">");
+            }
             else
             {
                 var parts = content.Split(' ');
