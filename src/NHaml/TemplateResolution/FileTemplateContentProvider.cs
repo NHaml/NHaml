@@ -2,14 +2,16 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using NHaml.Utils;
+using System.Collections.ObjectModel;
 
 namespace NHaml.TemplateResolution
 {
     public class FileTemplateContentProvider : ITemplateContentProvider
     {
+        private List<string> _pathSources;
         public FileTemplateContentProvider()
         {
-            PathSources = new List<string> ();
+            _pathSources = new List<string> ();
             AddPathSource("Views");
         }
 
@@ -68,12 +70,17 @@ namespace NHaml.TemplateResolution
         }
 
 
-        public IList<string> PathSources { get; set; }
+        public ReadOnlyCollection<string> PathSources {
+            get
+            {
+                return new ReadOnlyCollection<string>(_pathSources);
+            }
+        }
 
         /// <remarks>The path is assumed to be relative to the AppDoamin BaseDirectory.</remarks>
         public void AddPathSource(string pathSource)
         {
-            PathSources.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathSource));
+            _pathSources.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathSource));
         }
    
 //TODO:Not sure if this is useful

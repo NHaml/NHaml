@@ -12,7 +12,7 @@ namespace NHaml.Tests.Functional
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new IronRubyTemplateCompiler();
-            _templateEngine.Options.TemplateContentProvider.PathSources.Insert(0, TemplatesFolder + @"IronRuby");
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"IronRuby");
         }
 
 		[Test]

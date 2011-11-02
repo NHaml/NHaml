@@ -13,7 +13,7 @@ namespace NHaml.Tests.Functional
             base.SetUp();
 
             _templateEngine.Options.TemplateCompiler = new FSharpTemplateCompiler();
-            _templateEngine.Options.TemplateContentProvider.PathSources.Insert(0, TemplatesFolder + @"FSharp");
+            _templateEngine.Options.TemplateContentProvider.AddPathSource(TemplatesFolder + @"FSharp");
         }
 
         [Ignore( "SwitchEval is currently not supported" )]

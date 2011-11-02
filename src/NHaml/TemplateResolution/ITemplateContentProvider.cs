@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 
 namespace NHaml.TemplateResolution
 {
@@ -23,7 +24,7 @@ namespace NHaml.TemplateResolution
         /// Gets a list of path sources
         /// </summary>
         /// <value></value>
-        IList<string> PathSources { get; set; }
+        ReadOnlyCollection<string> PathSources { get; }
 
         /// <summary>
         /// Adds the path source.
