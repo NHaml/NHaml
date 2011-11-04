@@ -361,9 +361,11 @@ namespace NHaml.Tests
                 var compiledTemplate = _templateEngine.Compile(new List<string> { "ApplicationPart1", "ApplicationPart2", "Welcome"});
                 var template = compiledTemplate.CreateInstance();
                 template.Render(output);
-                Console.WriteLine(output);
+                
+                string expected = File.ReadAllText(ExpectedFolder + "Application.xhtml").TrimEnd(new char[] { '\n', '\r' });
+                string actual = output.ToString().TrimEnd(new char[] { '\n', '\r' });
 
-                Assert.AreEqual(File.ReadAllText(ExpectedFolder + "Application.xhtml"), output.ToString());
+                Assert.AreEqual(expected, actual);
             }
         }
 

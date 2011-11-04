@@ -131,8 +131,12 @@ namespace NHaml
             if (replaceCurrentNode)
             {
                 inputLines.Remove(CurrentNode);
+                CurrentNode = previous;
             }
-            CurrentNode = previous.Next;
+            else
+            {
+                CurrentNode = previous.Next;
+            }
 
         }
 

@@ -72,7 +72,12 @@ namespace NHaml.Tests
         protected void AssertRender( StringWriter output, string expectedName )
         {
             Console.WriteLine( output );
-            Assert.AreEqual( File.ReadAllText( ExpectedFolder + expectedName + ".xhtml" ), output.ToString() );
+            string expected = File.ReadAllText(ExpectedFolder + expectedName + ".xhtml");
+            expected = expected.TrimEnd(new char[] { '\r', '\n' });
+            string actual = output.ToString();
+            actual = actual.TrimEnd(new char[] { '\r', '\n' });
+            
+            Assert.AreEqual( expected, actual );
         }
     }
 }
