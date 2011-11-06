@@ -94,7 +94,7 @@ namespace NHaml.Web.Mvc
             var path = VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath);
 
             var resources = new TemplateCompileResources(type, path);
-            return (IView)_templateEngine.Compile(resources).CreateInstance();
+            return (IView)_templateEngine.GetCompiledTemplate(resources).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
@@ -103,7 +103,7 @@ namespace NHaml.Web.Mvc
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
             masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
             var resources = new TemplateCompileResources(type, new List<string> { masterPath, viewPath });
-            return (IView)_templateEngine.Compile(resources).CreateInstance();
+            return (IView)_templateEngine.GetCompiledTemplate(resources).CreateInstance();
         }
 
         protected virtual Type ViewGenericBaseType

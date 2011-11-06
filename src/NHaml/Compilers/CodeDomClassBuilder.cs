@@ -356,7 +356,6 @@ namespace NHaml.Compilers
 
         public override string Build(IList<string> imports)
         {
-            
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
             {

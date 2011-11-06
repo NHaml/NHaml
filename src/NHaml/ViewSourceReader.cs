@@ -9,20 +9,27 @@ namespace NHaml
         private string _singleIndent;
         private LinkedList<InputLine> inputLines;
         private TemplateOptions options;
+        private Queue<IViewSource> _viewSourceQueue;
+
+        public Queue<IViewSource> ViewSourceQueue
+        {
+            get { return _viewSourceQueue; }
+            set { _viewSourceQueue = value; }
+        }
 
         public ViewSourceReader(TemplateOptions options, IList<IViewSource> viewSources)
         {
             this.options = options;
             ViewSources = viewSources;
-            ViewSourceQueue = new Queue<IViewSource>();
             ViewSourceModifiedChecks = new List<Func<bool>>();
+            _viewSourceQueue = new Queue<IViewSource>();
 
             //do a for here to avoid a modified closure
             for (var index = 0; index < viewSources.Count; index++)
             {
                 var viewSource = viewSources[index];
                 ViewSourceModifiedChecks.Add(() => viewSource.IsModified);
-                ViewSourceQueue.Enqueue(viewSource);
+                _viewSourceQueue.Enqueue(viewSource);
             }
 
 
@@ -43,9 +50,6 @@ namespace NHaml
         public IList<Func<bool>> ViewSourceModifiedChecks { get; private set; }
 
         public IList<IViewSource> ViewSources { get; set; }
-
-        public Queue<IViewSource> ViewSourceQueue { get; set; }
-
 
         public LinkedListNode<InputLine> CurrentNode { get; private set; }
 
@@ -140,6 +144,9 @@ namespace NHaml
 
         }
 
-
+        public void DeQueueViewSource()
+        {
+            MergeTemplate(_viewSourceQueue.Dequeue(), false);
+        }
     }
 }

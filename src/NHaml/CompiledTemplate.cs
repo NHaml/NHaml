@@ -3,24 +3,24 @@ using System.Collections.Generic;
 using NHaml.Exceptions;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
+using NHaml.Parser;
 
 namespace NHaml
 {
     public class CompiledTemplate
     {
-        private readonly TemplateOptions options;
-        private readonly IList<IViewSource> _layoutViewSources;
-        private readonly Type _templateBaseType;
-        private readonly object context;
+        private readonly TemplateCompileResources _resources;
+        private readonly TemplateOptions _options;
         private TemplateFactory _templateFactory;
         private readonly object _sync = new object();
-        private IList<Func<bool>> viewSourceModifiedChecks;
+        private IList<Func<bool>> _viewSourceModifiedChecks;
+        private readonly ITreeParser _treeParser;
 
-        internal CompiledTemplate(TemplateOptions options, IList<IViewSource> layoutViewSources, Type templateBaseType)
+        public CompiledTemplate(TemplateOptions options, TemplateCompileResources resources, ITreeParser treeParser)
         {
-            this.options = options;
-            _layoutViewSources = layoutViewSources;
-            _templateBaseType = templateBaseType;
+            _options = options;
+            _treeParser = treeParser;
+            _resources = resources;
         }
 
         public Template CreateInstance()
@@ -32,7 +32,7 @@ namespace NHaml
         {
             lock (_sync)
             {
-                foreach (var fileModifiedCheck in viewSourceModifiedChecks)
+                foreach (var fileModifiedCheck in _viewSourceModifiedChecks)
                 {
                     if (fileModifiedCheck())
                     {
@@ -43,32 +43,46 @@ namespace NHaml
             }
         }
 
+        public void CompileTemplateFactory()
+        {
+            var templateSource = GetTemplate();
+            //var classBuilder = new ClassBuilder();
+            //classBuilder.Build(template);
+        }
+
+        private HamlTree GetTemplate()
+        {   
+            var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
+            return _treeParser.Parse(layoutViewSources);
+        }
+
         public void Compile()
         {
-            var className = Utility.MakeClassName( ListExtensions.Last(_layoutViewSources).Path );
-            var compiler = options.TemplateCompiler;
-            var templateClassBuilder = compiler.CreateTemplateClassBuilder(className);
+            var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
+            string className = Utility.MakeClassName(ListExtensions.Last(layoutViewSources).Path);
 
-            var templateParser = new TemplateParser(options, templateClassBuilder, _layoutViewSources);
+            var viewSourceReader = new ViewSourceReader(_options, layoutViewSources);
+            var templateClassBuilder = _options.TemplateCompiler.CreateTemplateClassBuilder(className);
 
-            var viewSourceReader = templateParser.Parse();
-            viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
+            var templateParser = new TemplateParser(_options);
+            templateParser.Parse(viewSourceReader, templateClassBuilder);
 
-            if( _templateBaseType.IsGenericTypeDefinition )
+            _viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
+
+            if(_resources.TemplateBaseType.IsGenericTypeDefinition )
             {
                 var modelType = GetModelType(templateClassBuilder.Meta);
-                templateClassBuilder.BaseType = _templateBaseType.MakeGenericType( modelType );
-                options.AddReference( modelType.Assembly );
+                templateClassBuilder.BaseType = _resources.TemplateBaseType.MakeGenericType(modelType);
+                _options.AddReference( modelType.Assembly );
             }
             else
             {
-                templateClassBuilder.BaseType = _templateBaseType;
+                templateClassBuilder.BaseType = _resources.TemplateBaseType;
             }
-            templateParser.Options.AddReferences(_templateBaseType);
+            templateParser.Options.AddReferences(_resources.TemplateBaseType);
 
-            _templateFactory = compiler.Compile(viewSourceReader, templateParser.Options, templateClassBuilder);
-
-         
+            _templateFactory = _options.TemplateCompiler.Compile(
+                viewSourceReader, templateParser.Options, templateClassBuilder);
         }
 
         private static Type GetModelType(IDictionary<string, string> meta)

@@ -8,33 +8,19 @@ namespace NHaml
 
     public class TemplateParser 
     {
-        private TemplateClassBuilder builder;
-        private ViewSourceReader viewSourceReader;
-        public TemplateParser(TemplateOptions options, TemplateClassBuilder templateClassBuilder, IList<IViewSource> viewSources)
+        public TemplateParser(TemplateOptions options)
         {
             BlockClosingActions = new Stack<BlockClosingAction>();
-
-            viewSourceReader = new ViewSourceReader(options, viewSources);
             Options = options;
-            builder = templateClassBuilder;
         }
-
 
         public TemplateOptions Options { get; private set; }
 
         public Stack<BlockClosingAction> BlockClosingActions { get; private set; }
 
-      
-        public ViewSourceReader Parse()
+        public void Parse(ViewSourceReader viewSourceReader, TemplateClassBuilder builder)
         {
-            ProcessViewSource(viewSourceReader.ViewSourceQueue.Dequeue());
-            return viewSourceReader;
-        }
-
-        private void ProcessViewSource(IViewSource viewSource)
-        {
-            viewSourceReader.MergeTemplate(viewSource, false);
-
+            viewSourceReader.DeQueueViewSource();
             while (viewSourceReader.CurrentNode.Next != null)
             {
                 var rule = viewSourceReader.GetRule();
@@ -43,7 +29,7 @@ namespace NHaml
 
                 if (rule.PerformCloseActions)
                 {
-                    CloseBlocks();
+                    CloseBlocks(viewSourceReader);
                     BlockClosingActions.Push(rule.Render(viewSourceReader, Options, builder));
                 }
                 else
@@ -53,12 +39,10 @@ namespace NHaml
                 viewSourceReader.MoveNext();
             }
 
-            CloseBlocks();
+            CloseBlocks(viewSourceReader);
         }
 
-
-
-        public void CloseBlocks()
+        public void CloseBlocks(ViewSourceReader viewSourceReader)
         {
             var currentIndentCount = viewSourceReader.CurrentInputLine.IndentCount;
             var previousIndentCount = viewSourceReader.CurrentNode.Previous.Value.IndentCount;

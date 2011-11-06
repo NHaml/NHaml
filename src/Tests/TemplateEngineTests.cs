@@ -22,8 +22,8 @@ namespace NHaml.Tests
 
             var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, templatePath);
 
-            var compiledTemplate1 = _templateEngine.Compile( resources );
-            var compiledTemplate2 = _templateEngine.Compile( resources );
+            var compiledTemplate1 = _templateEngine.GetCompiledTemplate( resources );
+            var compiledTemplate2 = _templateEngine.GetCompiledTemplate( resources );
 
             Assert.AreSame( compiledTemplate1, compiledTemplate2 );
         }
@@ -37,8 +37,8 @@ namespace NHaml.Tests
             var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, 
                 new List<string> { templatePath, layoutTemplatePath });
 
-            var compiledTemplate1 = _templateEngine.Compile(resources);
-            var compiledTemplate2 = _templateEngine.Compile(resources);
+            var compiledTemplate1 = _templateEngine.GetCompiledTemplate(resources);
+            var compiledTemplate2 = _templateEngine.GetCompiledTemplate(resources);
 
             Assert.AreSame( compiledTemplate1, compiledTemplate2 );
         }
@@ -57,8 +57,8 @@ namespace NHaml.Tests
             var resources2 = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, 
                 new List<string> { templatePath, layoutTemplatePath2 });
 
-            var compiledTemplate1 = _templateEngine.Compile(resources1);
-            var compiledTemplate2 = _templateEngine.Compile(resources2);
+            var compiledTemplate1 = _templateEngine.GetCompiledTemplate(resources1);
+            var compiledTemplate2 = _templateEngine.GetCompiledTemplate(resources2);
 
             Assert.AreNotSame( compiledTemplate1, compiledTemplate2 );
         }

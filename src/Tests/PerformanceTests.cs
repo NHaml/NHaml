@@ -26,7 +26,7 @@ namespace NHaml.Tests
 
             for( var i = 0; i < 100; i++ )
             {
-                _templateEngine.Compile( resources );
+                _templateEngine.GetCompiledTemplate( resources );
             }
 
             stopwatch.Stop();
@@ -48,7 +48,7 @@ namespace NHaml.Tests
 
             for( var i = 0; i < 100; i++ )
             {
-                _templateEngine.Compile( resources );
+                _templateEngine.GetCompiledTemplate( resources );
             }
 
             stopwatch.Stop();

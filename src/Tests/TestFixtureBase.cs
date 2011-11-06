@@ -63,7 +63,7 @@ namespace NHaml.Tests
 
             var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType,
                 new List<string>(templates));
-            var compiledTemplate = _templateEngine.Compile(resources);
+            var compiledTemplate = _templateEngine.GetCompiledTemplate(resources);
             
             stopwatch.Stop();
             

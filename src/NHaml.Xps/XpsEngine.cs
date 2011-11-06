@@ -56,7 +56,7 @@ namespace NHaml.Xps
         private void Render<TData>(IList<IViewSource> viewSources, TextWriter textWriter, TData data)
         {
             var resources = new TemplateCompileResources(typeof(DataView<TData>), viewSources);
-            var view = (DataView<TData>)TemplateEngine.Compile(resources).CreateInstance();
+            var view = (DataView<TData>)TemplateEngine.GetCompiledTemplate(resources).CreateInstance();
             view.ViewData = data;
             view.Render(textWriter);
         }

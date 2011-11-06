@@ -360,7 +360,7 @@ namespace NHaml.Tests
             {
                 var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, 
                     new List<string> { "ApplicationPart1", "ApplicationPart2", "Welcome" });
-                var compiledTemplate = _templateEngine.Compile(resources);
+                var compiledTemplate = _templateEngine.GetCompiledTemplate(resources);
                 var template = compiledTemplate.CreateInstance();
                 template.Render(output);
                 
@@ -406,7 +406,7 @@ namespace NHaml.Tests
             var resources = new TemplateCompileResources(typeof(GenericTemplateView<DataSet>),
                 "EnsureBaseAndInterfaceReferenceIsAdded");
 
-            var template = _templateEngine.Compile(resources);
+            var template = _templateEngine.GetCompiledTemplate(resources);
             using (var output = new StringWriter())
             {
                 template.CreateInstance().Render(output);

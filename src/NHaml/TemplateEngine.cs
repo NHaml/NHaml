@@ -4,6 +4,7 @@ using System.Text;
 using NHaml.Configuration;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
+using NHaml.Parser;
 
 namespace NHaml
 {
@@ -41,7 +42,7 @@ namespace NHaml
             }
         }
         
-        public CompiledTemplate Compile(TemplateCompileResources resources)
+        public CompiledTemplate GetCompiledTemplate(TemplateCompileResources resources)
         {
             Invariant.ArgumentNotNull(resources.TemplateBaseType, "templateBaseType");
 
@@ -60,7 +61,7 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate(Options, resources.GetViewSources(Options.TemplateContentProvider), resources.TemplateBaseType);
+                    compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser());
                     compiledTemplate.Compile();
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;

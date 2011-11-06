@@ -80,7 +80,7 @@ namespace HamlSpec
 
             var templateEngine = GetTemplateEngine();
             var resources = new TemplateCompileResources(templateEngine.Options.TemplateBaseType, testFile.FullName);
-            var compiledTemplate = templateEngine.Compile(resources);
+            var compiledTemplate = templateEngine.GetCompiledTemplate(resources);
             return compiledTemplate.CreateInstance();
         }
 
