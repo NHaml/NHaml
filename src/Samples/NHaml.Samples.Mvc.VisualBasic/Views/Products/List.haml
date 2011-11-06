@@ -2,6 +2,6 @@
 %ul
   - Dim _product
   - For Each _product In ViewData.Model.Products
-    _ Product
+    @partialcontent=Product( model="_product" )
   - Next
 = Html.ActionLink("Add New Product", "New")

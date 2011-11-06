@@ -1,6 +1,6 @@
 %h2= ViewData.Model.Product.ProductName
 - Dim _action As string  = Url.Action("Update", New With {Key .ID=ViewData.Model.Product.ProductID})
-%form{action=_action method="post"}
+%form(action=_action method="post")
   %table
     %tr
       %td Name:
@@ -15,4 +15,4 @@
       %td Unit Price:
       %td= Html.TextBox("UnitPrice", ViewData.Model.Product.UnitPrice.ToString())
   %p
-  - Html.RenderPartial("_Button")
+  - Html.RenderPartial("Button")

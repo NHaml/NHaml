@@ -134,6 +134,10 @@
     <None Include="Views\Shared\_Button.haml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NHaml.Core\NHaml.Core.csproj">
+      <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
+      <Name>NHaml.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NHaml.Web.Mvc.VisualBasic\NHaml.Web.Mvc.VisualBasic.csproj">
       <Project>{366BFBCD-2ECE-4E9E-AED8-0D99818BD060}</Project>
       <Name>NHaml.Web.Mvc.VisualBasic</Name>

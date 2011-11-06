@@ -1,6 +1,7 @@
 ﻿using System.Security.Permissions;
 using System.Web;
 using NHaml.Compilers.VisualBasic;
+using NHaml.Web.Mvc;
 
 namespace NHaml.Web.Mvc.VisualBasic
 {
@@ -10,10 +11,8 @@ namespace NHaml.Web.Mvc.VisualBasic
     {
         public NHamlMvcVisualBasicViewEngine()
         {
-            TemplateEngine.Options.TemplateCompiler = new VisualBasicTemplateCompiler();
-
+            TemplateEngine.Options.TemplateCompilerType = typeof(VisualBasicClassBuilder);
             TemplateEngine.Options.AddReference( typeof( NHamlMvcVisualBasicViewEngine ).Assembly );
-
         }
 
     }

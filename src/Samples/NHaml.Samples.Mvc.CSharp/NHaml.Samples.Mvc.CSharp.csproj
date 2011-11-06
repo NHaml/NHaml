@@ -96,13 +96,13 @@
     <None Include="Views\Shared\_Button.haml" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\NHaml.Core\NHaml.Core.csproj">
+      <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
+      <Name>NHaml.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NHaml\NHaml.csproj">
-      <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

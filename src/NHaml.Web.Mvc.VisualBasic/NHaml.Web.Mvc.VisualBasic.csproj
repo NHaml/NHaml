@@ -13,7 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>..\NHaml.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
     <OldToolsVersion>3.5</OldToolsVersion>
@@ -56,7 +56,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="..\SharedAssemblyInfo.cs">
+    <Compile Include="..\..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="NHamlMvcVisualBasicViewEngine.cs" />
@@ -66,13 +66,13 @@
       <Project>{4184100B-81EB-4FCA-9A15-250B6BEFBC4A}</Project>
       <Name>NHaml.Compilers.VisualBasic</Name>
     </ProjectReference>
+    <ProjectReference Include="..\NHaml.Core\NHaml.Core.csproj">
+      <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
+      <Name>NHaml.Core</Name>
+    </ProjectReference>
     <ProjectReference Include="..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\NHaml\NHaml.csproj">
-      <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

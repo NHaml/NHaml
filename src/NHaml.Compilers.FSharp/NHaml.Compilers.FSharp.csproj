@@ -1,21 +1,19 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="3.5" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>9.0.30729</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{FEDE4641-1834-42E0-BD10-84D1136882E2}</ProjectGuid>
+    <ProjectGuid>{CA3AB5C2-31C7-477E-93E4-196A7215BAFD}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>NHaml.Compilers.FSharp</RootNamespace>
     <AssemblyName>NHaml.Compilers.FSharp</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <FileUpgradeFlags>
-    </FileUpgradeFlags>
-    <OldToolsVersion>3.5</OldToolsVersion>
-    <UpgradeBackupLocation />
+    <SignAssembly>true</SignAssembly>
+    <AssemblyOriginatorKeyFile>..\..\NHaml.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -35,16 +33,18 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="FSharp.Compiler">
+    <Reference Include="FSharp.Compiler, Version=1.9.7.8, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\FSharp\FSharp.Compiler.dll</HintPath>
     </Reference>
     <Reference Include="FSharp.Compiler.CodeDom, Version=1.9.7.8, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\lib\FSharp\FSharp.Compiler.CodeDom.dll</HintPath>
     </Reference>
-    <Reference Include="FSharp.Core, Version=1.9.6.2, Culture=neutral, PublicKeyToken=a19089b1c74d0809, processorArchitecture=MSIL">
+    <Reference Include="FSharp.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\lib\FSharp.Core.dll</HintPath>
+      <HintPath>..\..\lib\FSharp\FSharp.Core.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core">
@@ -60,15 +60,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="FSharpTemplateClassBuilder.cs" />
-    <Compile Include="FSharpTemplateCompiler.cs" />
-    <Compile Include="FSharpTemplateTypeBuilder.cs" />
+    <Compile Include="FSharpClassBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHaml\NHaml.csproj">
-      <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
+    <ProjectReference Include="..\NHaml.Core\NHaml.Core.csproj">
+      <Project>{3344FF2F-B326-41C5-B8EA-D18B040B2886}</Project>
+      <Name>NHaml.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

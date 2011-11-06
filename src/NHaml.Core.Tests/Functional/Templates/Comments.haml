@@ -1,0 +1,17 @@
+/ This is a comment
+%p
+  /So is this
+/ And this is a longish |
+  block comment |
+/ And this a very very long comment. So long in fact that it shouldn't be rendered on one line. But will be.
+%p
+  /
+    This one is multiline |
+    too |
+/
+  This is a normal comment
+  around a block of text
+.get_firefox
+  /[if IE]
+    %a( href="http://www.mozilla.com/en-US/firefox/" )
+      %h1 Get Firefox

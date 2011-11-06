@@ -1,0 +1,37 @@
+- Html.Tag() () =>
+  The Content for
+  the div
+
+- Html.Tag("div") () =>
+  The Content for
+  the div
+
+- Html.Tag("div") () =>
+  %p 
+    The Content for
+    the div
+
+- Html.Tag("div") () =>
+  The Content for the div
+
+- Html.Tag("div") () =>
+  - Html.Tag("div") () =>
+    The Content for the div
+
+- Html.Tag("div") () =>
+  - Html.Tag("div") () =>
+    - Html.Tag("div") () =>
+      The Content for the div
+
+- Html.Tag("body") () =>
+  Welcome
+
+- Html.Tag("body") () =>
+  - Html.Tag("div") () =>
+    Welcome
+
+- Html.Tag("div", 42) (int n) =>
+  = "N was: " + n
+
+- Html.Tag("div", 21, 21) (int i, int j) =>
+  = "N was: " + (i + j)

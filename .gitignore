@@ -1,14 +1,9 @@
-*ReSharper*
-*resharper*
-*.suo
+_ReSharper.*
+StyleCop.Cache
 *.cache
-obj
-bin
-binaries
-*.csproj.user
-* Thumbs.db
-*.cache
-*.log
+*.resharper
 *.user
-*.gpState
-TestResults
+*.suo
+*.swp
+bin/
+obj/
