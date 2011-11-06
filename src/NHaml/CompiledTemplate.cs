@@ -16,14 +16,11 @@ namespace NHaml
         private readonly object _sync = new object();
         private IList<Func<bool>> viewSourceModifiedChecks;
 
-        internal CompiledTemplate(TemplateOptions options, IList<IViewSource> layoutViewSources, Type templateBaseType, object context)
+        internal CompiledTemplate(TemplateOptions options, IList<IViewSource> layoutViewSources, Type templateBaseType)
         {
             this.options = options;
             _layoutViewSources = layoutViewSources;
             _templateBaseType = templateBaseType;
-            this.context = context;
-
-            Compile(context);
         }
 
         public Template CreateInstance()
@@ -39,14 +36,14 @@ namespace NHaml
                 {
                     if (fileModifiedCheck())
                     {
-                        Compile(context);
+                        Compile();
                         break;
                     }
                 }
             }
         }
 
-        private void Compile(object context)
+        public void Compile()
         {
             var className = Utility.MakeClassName( ListExtensions.Last(_layoutViewSources).Path );
             var compiler = options.TemplateCompiler;
@@ -68,10 +65,6 @@ namespace NHaml
                 templateClassBuilder.BaseType = _templateBaseType;
             }
             templateParser.Options.AddReferences(_templateBaseType);
-            if (options.BeforeCompile != null)
-            {
-                options.BeforeCompile(templateClassBuilder, context);
-            }
 
             _templateFactory = compiler.Compile(viewSourceReader, templateParser.Options, templateClassBuilder);
 

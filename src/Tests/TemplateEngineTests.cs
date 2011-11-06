@@ -1,5 +1,6 @@
 using System.Linq;
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace NHaml.Tests
 {
@@ -19,8 +20,10 @@ namespace NHaml.Tests
         {
             var templatePath = TemplatesFolder + @"CSharp2\AttributeEval.haml";
 
-            var compiledTemplate1 = _templateEngine.Compile( templatePath );
-            var compiledTemplate2 = _templateEngine.Compile( templatePath );
+            var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, templatePath);
+
+            var compiledTemplate1 = _templateEngine.Compile( resources );
+            var compiledTemplate2 = _templateEngine.Compile( resources );
 
             Assert.AreSame( compiledTemplate1, compiledTemplate2 );
         }
@@ -31,8 +34,11 @@ namespace NHaml.Tests
             var templatePath = TemplatesFolder + @"CSharp2\Welcome.haml";
             var layoutTemplatePath = TemplatesFolder + @"Application.haml";
 
-            var compiledTemplate1 = _templateEngine.Compile( templatePath, layoutTemplatePath );
-            var compiledTemplate2 = _templateEngine.Compile( templatePath, layoutTemplatePath );
+            var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, 
+                new List<string> { templatePath, layoutTemplatePath });
+
+            var compiledTemplate1 = _templateEngine.Compile(resources);
+            var compiledTemplate2 = _templateEngine.Compile(resources);
 
             Assert.AreSame( compiledTemplate1, compiledTemplate2 );
         }
@@ -46,8 +52,13 @@ namespace NHaml.Tests
             var layoutTemplatePath1 = TemplatesFolder + @"Application.haml";
             var layoutTemplatePath2 = TemplatesFolder + @"ApplicationSimple.haml";
 
-            var compiledTemplate1 = _templateEngine.Compile( templatePath, layoutTemplatePath1 );
-            var compiledTemplate2 = _templateEngine.Compile( templatePath, layoutTemplatePath2 );
+            var resources1 = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType,
+                new List<string> { templatePath, layoutTemplatePath1 });
+            var resources2 = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType, 
+                new List<string> { templatePath, layoutTemplatePath2 });
+
+            var compiledTemplate1 = _templateEngine.Compile(resources1);
+            var compiledTemplate2 = _templateEngine.Compile(resources2);
 
             Assert.AreNotSame( compiledTemplate1, compiledTemplate2 );
         }

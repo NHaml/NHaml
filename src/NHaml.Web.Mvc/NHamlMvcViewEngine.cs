@@ -90,16 +90,20 @@ namespace NHaml.Web.Mvc
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
-            return (IView)_templateEngine.Compile(
-                VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath),
-                GetViewBaseType(controllerContext)).CreateInstance();
+            var type = GetViewBaseType(controllerContext);
+            var path = VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath);
+
+            var resources = new TemplateCompileResources(type, path);
+            return (IView)_templateEngine.Compile(resources).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
+            var type = GetViewBaseType(controllerContext);
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
             masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-            return (IView)_templateEngine.Compile(new List<string>{ masterPath, viewPath}, GetViewBaseType(controllerContext)).CreateInstance();
+            var resources = new TemplateCompileResources(type, new List<string> { masterPath, viewPath });
+            return (IView)_templateEngine.Compile(resources).CreateInstance();
         }
 
         protected virtual Type ViewGenericBaseType

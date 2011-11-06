@@ -15,9 +15,6 @@ namespace HamlSpec
     public class HamlSpecTests
     {
         private string TemplatesFolder = @"Functional\Templates\";
-        private string ExpectedFolder = @"Functional\Expected\";
-
-        private TemplateEngine _templateEngine;
 
         // WORKING
         //[TestCase("silent comments")]
@@ -63,21 +60,15 @@ namespace HamlSpec
 
         private void ExecuteSingleTest(HamlSpec test)
         {
-            var templateOptions = new TemplateOptions {
-                    TemplateCompiler = new CSharp2TemplateCompiler(),
-                };
-            templateOptions.TemplateContentProvider.AddPathSource(TemplatesFolder);
-            _templateEngine = new TemplateEngine(templateOptions);
-
+            var template = CreateTemplate(test.Haml);
             var output = new StringWriter();
-            CreateTemplate(test.Haml).Render(output);
-
-            var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
+            template.Render(output);
 
             //TODO - Get this crappy reformatting fix out!
             string expected = test.ExpectedHtml.Replace("\n", "").Replace("\r", "");
             string actual = output.ToString().Replace("\n", "").Replace("\r", "");
 
+            var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
             Assert.AreEqual(expected, actual, message);
         }
 
@@ -87,8 +78,20 @@ namespace HamlSpec
             if (testFile.Exists) testFile.Delete();
             File.WriteAllText(testFile.FullName, hamlTemplate);
 
-            var compiledTemplate = _templateEngine.Compile(testFile.FullName);
+            var templateEngine = GetTemplateEngine();
+            var resources = new TemplateCompileResources(templateEngine.Options.TemplateBaseType, testFile.FullName);
+            var compiledTemplate = templateEngine.Compile(resources);
             return compiledTemplate.CreateInstance();
+        }
+
+        private TemplateEngine GetTemplateEngine()
+        {
+            var templateOptions = new TemplateOptions
+            {
+                TemplateCompiler = new CSharp2TemplateCompiler(),
+            };
+            templateOptions.TemplateContentProvider.AddPathSource(TemplatesFolder);
+            return new TemplateEngine(templateOptions);
         }
     }
 }

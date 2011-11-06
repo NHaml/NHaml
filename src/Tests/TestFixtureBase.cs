@@ -4,6 +4,7 @@ using System.IO;
 using NHaml.Compilers.CSharp2;
 
 using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace NHaml.Tests
 {
@@ -60,7 +61,9 @@ namespace NHaml.Tests
         {
             var stopwatch = Stopwatch.StartNew();
 
-            var compiledTemplate = _templateEngine.Compile(templates);
+            var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType,
+                new List<string>(templates));
+            var compiledTemplate = _templateEngine.Compile(resources);
             
             stopwatch.Stop();
             

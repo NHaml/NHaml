@@ -693,10 +693,11 @@
   <ItemGroup>
     <Compile Include="Functional\BooFunctionalTests.cs">
       <SubType>Code</SubType>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Compile>
     <Compile Include="AttributeParserTests.cs" />
     <Compile Include="ExpressionStringParserTests.cs" />
-    <Compile Include="Functional\FSharpFunctionalTests.cs" />
+    <None Include="Functional\FSharpFunctionalTests.cs" />
     <Compile Include="Functional\VisualBasicFunctionalTests.cs" />
     <Compile Include="Functional\ImporterTests.cs" />
     <Compile Include="Issues\GC62\Fixture.cs" />
@@ -707,8 +708,8 @@
     <Compile Include="Issues\GC51\Fixture.cs" />
     <Compile Include="MvcTests.cs" />
     <Compile Include="ProxyExtracterTests.cs" />
-    <Compile Include="TestFixtureMvcBase.cs" />
-    <Compile Include="Functional\IronRubyFunctionalTests.cs" />
+    <Compile Include="Issues\GC51\Mock\TestFixtureMvcBase.cs" />
+    <None Include="Functional\IronRubyFunctionalTests.cs" />
     <Compile Include="FunctionalTestFixture.cs" />
     <Compile Include="ConfigurationTests.cs" />
     <Compile Include="Functional\CSharp3FunctionalTests.cs" />

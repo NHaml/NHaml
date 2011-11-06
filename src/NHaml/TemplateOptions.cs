@@ -82,7 +82,6 @@ namespace NHaml
 
         //TODO: prob should not make this public
         public Set<string> Usings { get; private set; }
-        public Action<TemplateClassBuilder, Object> BeforeCompile { get; set; }
         List<RuntimeTypeHandle> ReferencedTypeHandles{ get; set; }
 
         public Set<string> References { get; private set; }

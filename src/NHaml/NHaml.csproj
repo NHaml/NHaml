@@ -99,6 +99,7 @@
     <Compile Include="ProxyExtracter.cs" />
     <Compile Include="Rules\SilentCommentMarkupRule.cs" />
     <Compile Include="Rules\NotEncodedEvalMarkupRule.cs" />
+    <Compile Include="TemplateCompileResources.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />

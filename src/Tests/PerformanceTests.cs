@@ -21,9 +21,12 @@ namespace NHaml.Tests
 
             stopwatch.Start();
 
+            var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType,
+                TemplatesFolder + @"CSharp2\AttributeEval.haml");
+
             for( var i = 0; i < 100; i++ )
             {
-                _templateEngine.Compile( TemplatesFolder + @"CSharp2\AttributeEval.haml" );
+                _templateEngine.Compile( resources );
             }
 
             stopwatch.Stop();
@@ -40,9 +43,12 @@ namespace NHaml.Tests
 
             stopwatch.Start();
 
+            var resources = new TemplateCompileResources(_templateEngine.Options.TemplateBaseType,
+                TemplatesFolder + @"CSharp2\AttributeEval.haml");
+
             for( var i = 0; i < 100; i++ )
             {
-                _templateEngine.Compile( TemplatesFolder + @"CSharp2\AttributeEval.haml" );
+                _templateEngine.Compile( resources );
             }
 
             stopwatch.Stop();
