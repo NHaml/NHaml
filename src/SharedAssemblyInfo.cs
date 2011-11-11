@@ -9,9 +9,9 @@ using System.Security.Permissions;
 
 [assembly: AssemblyProduct("NHaml")]
 [assembly: AssemblyCopyright("MIT License")]
-[assembly: ComVisible(false)]
-[assembly: AssemblyVersion("1.6.0.0")]
-[assembly: AssemblyFileVersion("1.6.0.0")]
+[assembly: ComVisible(true)]
+[assembly: AssemblyVersion("3.0.0.0")]
+[assembly: AssemblyFileVersion("3.0.0.0")]
 [assembly: NeutralResourcesLanguage("")]
 [assembly: AllowPartiallyTrustedCallers]
 [assembly: SecurityPermission(SecurityAction.RequestMinimum, Execution = true)]

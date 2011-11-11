@@ -50,14 +50,15 @@
     <Compile Include="Builders\TemplateCompileResourcesBuilder.cs" />
     <Compile Include="Builders\TemplateOptionsBuilder.cs" />
     <Compile Include="CompiledTemplate_Tests.cs" />
-    <Compile Include="Parser\HamlTreeParser.cs" />
+    <Compile Include="IO\HamlLine_Tests.cs" />
+    <Compile Include="IO\InputReader_Tests.cs" />
     <Compile Include="Parser\HamlTreeParser_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NHaml\NHaml.csproj">
+    <ProjectReference Include="..\..\src\NHaml\NHaml4.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
+      <Name>NHaml4</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

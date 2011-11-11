@@ -2,21 +2,31 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NHaml.IO;
 
 namespace NHaml.Parser
 {
     public class HamlTreeParser : ITreeParser
     {
         private readonly TemplateOptions _options;
+        private readonly HamlFileReader _hamlFileReader;
 
-        public HamlTreeParser()
+        public HamlTreeParser(HamlFileReader hamlFileReader)
         {
-            //_options = options;
+            _hamlFileReader = hamlFileReader;
         }
 
         public HamlTree Parse(IList<TemplateResolution.IViewSource> layoutViewSources)
         {
-            return new HamlTree();
+            var result = new HamlTree();
+            var hamlFile = _hamlFileReader.Read(layoutViewSources[0].GetStreamReader());
+            while (hamlFile.CurrentLine != null)
+            {
+                result.AddChild(hamlFile.CurrentLine);
+                hamlFile.MoveNext();
+            }
+
+            return result;
             //viewSourceReader.DeQueueViewSource();
             //while (viewSourceReader.CurrentNode.Next != null)
             //{

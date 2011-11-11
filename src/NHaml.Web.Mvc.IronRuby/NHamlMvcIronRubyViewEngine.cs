@@ -10,14 +10,14 @@ namespace NHaml.Web.Mvc.IronRuby
     {
         public NHamlMvcIronRubyViewEngine()
         {
-            TemplateEngine.Options.TemplateCompiler = new NHamlMvcIronRubyTemplateCompiler();
+            TemplateEngine.Options.TemplateCompilerType = typeof(NHamlMvcIronRubyTemplateCompiler);
 
             TemplateEngine.Options.AddReference( typeof( NHamlMvcIronRubyView<> ).Assembly.Location );
         }
 
-        protected override Type ViewGenericBaseType
-        {
-            get { return typeof( NHamlMvcIronRubyView<> ); }
-        }
+        //protected override Type ViewGenericBaseType
+        //{
+        //    get { return typeof( NHamlMvcIronRubyView<> ); }
+        //}
     }
 }

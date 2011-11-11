@@ -88,7 +88,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHaml\NHaml.csproj">
+    <ProjectReference Include="..\NHaml\NHaml4.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml</Name>
     </ProjectReference>

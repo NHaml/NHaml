@@ -14,7 +14,7 @@ namespace NHaml.Web.Mvc.Boo
     {
         public NHamlMvcBooViewEngine()
         {
-            TemplateEngine.Options.TemplateCompiler = new BooTemplateCompiler();
+            TemplateEngine.Options.TemplateCompilerType = typeof(BooTemplateCompiler);
 
             TemplateEngine.Options.AddReference( typeof( NHamlMvcBooViewEngine ).Assembly );
 
@@ -37,10 +37,10 @@ namespace NHaml.Web.Mvc.Boo
             TemplateEngine.Options.AddUsing( typeof( BooValidationExtensions ).FullName );
         }
 
-        protected override Type ViewGenericBaseType
-        {
-            get { return typeof( NHamlMvcBooView<> ); }
-        }
+        //protected override Type ViewGenericBaseType
+        //{
+        //    get { return typeof( NHamlMvcBooView<> ); }
+        //}
 
     }
 }

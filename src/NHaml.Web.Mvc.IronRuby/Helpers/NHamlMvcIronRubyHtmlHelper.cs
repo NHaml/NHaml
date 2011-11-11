@@ -4,7 +4,7 @@ using IronRuby.Builtins;
 
 namespace NHaml.Web.Mvc.IronRuby.Helpers
 {
-    public class NHamlMvcIronRubyHtmlHelper : HtmlHelper
+    public class NHamlMvcIronRubyHtmlHelper<TModel> : HtmlHelper<TModel>
     {
         // because IronRuby CLS method resolution is still flakey.
 

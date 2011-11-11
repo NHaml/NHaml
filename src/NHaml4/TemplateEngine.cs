@@ -5,6 +5,7 @@ using NHaml.Configuration;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
 using NHaml.Parser;
+using NHaml.IO;
 
 namespace NHaml
 {
@@ -61,7 +62,7 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser());
+                    compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser(new HamlFileReader()));
                     compiledTemplate.Compile();
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;

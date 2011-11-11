@@ -15,8 +15,8 @@ namespace NHaml.Web.Mvc.Boo
     {
         protected override void CreateHelpers( ViewContext viewContext )
         {
-            Ajax = new AjaxHelper( viewContext, this );
-            Html = new HtmlHelper( viewContext, this );
+            Ajax = new AjaxHelper<TModel>( viewContext, this );
+            Html = new HtmlHelper<TModel>( viewContext, this );
             Url = new BooUrlHelper( viewContext.RequestContext );
         }
 

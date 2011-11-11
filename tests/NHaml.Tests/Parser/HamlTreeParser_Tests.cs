@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NHaml.Parser;
 using NHaml.TemplateResolution;
 using NHaml.Tests.Builders;
+using NHaml.IO;
 
 namespace NHaml.Tests
 {
@@ -15,7 +16,7 @@ namespace NHaml.Tests
         [Test]
         public void Parse_SingleLineTemplate_ReturnsHamlTree()
         {
-            HamlTreeParser parser = new HamlTreeParser();
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileReader());
             var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(".className Test") };
             var result = parser.Parse(layoutViewSources);
             Assert.IsInstanceOf(typeof(HamlTree), result);
@@ -23,9 +24,11 @@ namespace NHaml.Tests
 
         [Test]
         [TestCase("", 0)]
+        [TestCase("Test", 1)]
+        [TestCase("%p \n  .test", 2)]
         public void Parse_ValidTemplate_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
         {
-            HamlTreeParser parser = new HamlTreeParser();
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileReader());
             var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(template) };
             var result = parser.Parse(layoutViewSources);
             Assert.AreEqual(expectedChildren, result.Children.Count);
