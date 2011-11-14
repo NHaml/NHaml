@@ -50,10 +50,10 @@ namespace NHaml
             //classBuilder.Build(template);
         }
 
-        private HamlTree GetTemplate()
+        private HamlDocument GetTemplate()
         {   
             var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
-            return _treeParser.Parse(layoutViewSources);
+            return (HamlDocument)_treeParser.ParseDocument(layoutViewSources);
         }
 
         public void Compile()

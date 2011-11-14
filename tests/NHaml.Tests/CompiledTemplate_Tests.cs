@@ -18,7 +18,7 @@ namespace NHaml.Tests
             var compiledTemplate = new CompiledTemplate(templateOptions, templateCompileResources, parserMock.Object);
             compiledTemplate.CompileTemplateFactory();
 
-            parserMock.Verify(x => x.Parse(templateCompileResources.GetViewSources(templateOptions.TemplateContentProvider)));
+            parserMock.Verify(x => x.ParseDocument(templateCompileResources.GetViewSources(templateOptions.TemplateContentProvider)));
         }
     }
 }

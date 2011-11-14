@@ -7,6 +7,6 @@ namespace NHaml.Parser
 {
     public interface ITreeParser
     {
-        HamlTree Parse(IList<TemplateResolution.IViewSource> layoutViewSources);
+        HamlDocument ParseDocument(IList<TemplateResolution.IViewSource> layoutViewSources);
     }
 }

@@ -91,7 +91,7 @@
     <Compile Include="BooTemplateTypeBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHaml\NHaml4.csproj">
+    <ProjectReference Include="..\NHaml4\NHaml4.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml</Name>
     </ProjectReference>

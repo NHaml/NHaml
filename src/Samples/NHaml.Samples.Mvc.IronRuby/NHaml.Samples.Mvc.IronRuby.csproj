@@ -112,7 +112,7 @@
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NHaml\NHaml4.csproj">
+    <ProjectReference Include="..\..\NHaml4\NHaml4.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml</Name>
     </ProjectReference>
