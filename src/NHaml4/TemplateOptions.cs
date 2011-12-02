@@ -6,7 +6,6 @@ using System.Reflection;
 using System.Web;
 using NHaml.Compilers;
 using NHaml.Compilers.CSharp3;
-using NHaml.Rules;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
 
@@ -19,7 +18,7 @@ namespace NHaml
         private int _indentSize;
 
         private Type _templateBaseType;
-        private ITemplateCompiler _templateCompiler;
+        private ITemplateFactoryCompiler _templateCompiler;
         private bool _useTabs;
 
         public TemplateOptions()
@@ -33,27 +32,27 @@ namespace NHaml
             });
             AutoClosingTags = new Set<string>(new[] { "META", "IMG", "LINK", "BR", "HR", "INPUT" });
             ReferencedTypeHandles = new List<RuntimeTypeHandle>();
-            MarkupRules = new List<MarkupRule>();
+            //MarkupRules = new List<MarkupRule>();
             _indentSize = 2;
             _templateBaseType = typeof(Template);
             _templateCompiler = new CSharp3TemplateCompiler();
             TemplateContentProvider = new FileTemplateContentProvider();
 
-            AddRule(new EofMarkupRule());
-            AddRule(new MetaMarkupRule());
-            AddRule(new DocTypeMarkupRule());
-            AddRule(new TagMarkupRule());
-            AddRule(new ClassMarkupRule());
-            AddRule(new IdMarkupRule());
-            AddRule(new EvalMarkupRule());
-            AddRule(new EncodedEvalMarkupRule());
-            AddRule(new SilentEvalMarkupRule());
-            AddRule(new SilentCommentMarkupRule());
-            AddRule(new PreambleMarkupRule());
-            AddRule(new CommentMarkupRule());
-            AddRule(new EscapeMarkupRule());
-            AddRule(new PartialMarkupRule());
-            AddRule(new NotEncodedEvalMarkupRule());
+            //AddRule(new EofMarkupRule());
+            //AddRule(new MetaMarkupRule());
+            //AddRule(new DocTypeMarkupRule());
+            //AddRule(new TagMarkupRule());
+            //AddRule(new ClassMarkupRule());
+            //AddRule(new IdMarkupRule());
+            //AddRule(new EvalMarkupRule());
+            //AddRule(new EncodedEvalMarkupRule());
+            //AddRule(new SilentEvalMarkupRule());
+            //AddRule(new SilentCommentMarkupRule());
+            //AddRule(new PreambleMarkupRule());
+            //AddRule(new CommentMarkupRule());
+            //AddRule(new EscapeMarkupRule());
+            //AddRule(new PartialMarkupRule());
+            //AddRule(new NotEncodedEvalMarkupRule());
         }
 
         public Set<string> AutoClosingTags { get; private set; }
@@ -91,9 +90,9 @@ namespace NHaml
         /// <remarks>
         /// Use <see cref="AddRule"/> to add new rules
         /// </remarks>
-        public List<MarkupRule> MarkupRules { get; private set; }
+        //public List<MarkupRule> MarkupRules { get; private set; }
 
-        public ITemplateCompiler TemplateCompiler
+        public ITemplateFactoryCompiler TemplateCompiler
         {
             get { return _templateCompiler; }
             set
@@ -131,26 +130,26 @@ namespace NHaml
         public event EventHandler TemplateCompilerChanged;
         public event EventHandler TemplateBaseTypeChanged;
 
-        public void AddRule(MarkupRule markupRule)
-        {
-            Invariant.ArgumentNotNull(markupRule, "markupRule");
-            if (MarkupRules.Find(x => x.Signifier == markupRule.Signifier) != null)
-            {
-                throw new ArgumentException(string.Format("A MarkupRule with the signifier '{0}' has already been added.", markupRule.Signifier));
-            }
-            MarkupRules.Add(markupRule);
-            MarkupRules.Sort((x, y) => y.Signifier.Length.CompareTo(x.Signifier.Length));
-        }
+        //public void AddRule(MarkupRule markupRule)
+        //{
+        //    Invariant.ArgumentNotNull(markupRule, "markupRule");
+        //    if (MarkupRules.Find(x => x.Signifier == markupRule.Signifier) != null)
+        //    {
+        //        throw new ArgumentException(string.Format("A MarkupRule with the signifier '{0}' has already been added.", markupRule.Signifier));
+        //    }
+        //    MarkupRules.Add(markupRule);
+        //    MarkupRules.Sort((x, y) => y.Signifier.Length.CompareTo(x.Signifier.Length));
+        //}
 
-        internal MarkupRule GetRule(InputLine inputLine)
-        {
-            Invariant.ArgumentNotNull(inputLine, "line");
+        //internal MarkupRule GetRule(InputLine inputLine)
+        //{
+        //    Invariant.ArgumentNotNull(inputLine, "line");
 
-            var start = inputLine.Text.TrimStart();
+        //    var start = inputLine.Text.TrimStart();
 
-            return MarkupRules.FirstOrDefault(x => start.StartsWith(x.Signifier))
-                ?? PlainTextMarkupRule.Instance;
-        }
+        //    return MarkupRules.FirstOrDefault(x => start.StartsWith(x.Signifier))
+        //        ?? PlainTextMarkupRule.Instance;
+        //}
 
         public bool IsAutoClosingTag(string tag)
         {

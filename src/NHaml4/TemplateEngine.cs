@@ -62,17 +62,17 @@ namespace NHaml
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser(new HamlFileReader()));
-                    compiledTemplate.Compile();
+                    //compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser(new HamlFileReader()));
+                    //compiledTemplate.Compile();
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;
                 }
             }
 
-            if( Options.AutoRecompile )
-            {
-                compiledTemplate.Recompile();
-            }
+            //if( Options.AutoRecompile )
+            //{
+            //    compiledTemplate.Recompile();
+            //}
 
             return compiledTemplate;
         }

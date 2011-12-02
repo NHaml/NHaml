@@ -15,7 +15,7 @@ namespace NHaml.Tests.Builders
             return Create("Test");
         }
 
-        internal static IViewSource Create(string content)
+        public static IViewSource Create(string content)
         {
             var streamReader = new StreamReader(new MemoryStream(new System.Text.UTF8Encoding().GetBytes(content)   ));
             var stubViewSource = new Mock<IViewSource>();

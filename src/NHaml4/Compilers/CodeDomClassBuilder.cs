@@ -17,8 +17,8 @@ namespace NHaml.Compilers
 
         protected int PreambleCount{ get; set; }
 
-    	public CodeDomClassBuilder(string className)
-            : base(className)
+    	public CodeDomClassBuilder()
+            : base()
         {
             Members = new List<CodeTypeMember>();
             RenderMethod = new CodeMemberMethod
@@ -354,18 +354,16 @@ namespace NHaml.Compilers
             PreambleCount++;
         }
 
-        public override string Build(IList<string> imports)
+        public override string Build(string className, IList<string> imports)
         {
+            ClassName = className;
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
             {
 
                 var compileUnit = new CodeCompileUnit();
 
-                // Declares a namespace named TestNamespace.
                 var testNamespace = new CodeNamespace();
-                //testNamespace.Name = "TempNHamlNamespace";
-                // Adds the namespace to the namespace collection of the compile unit.
                 compileUnit.Namespaces.Add(testNamespace);
 
                 foreach (var import in imports)
@@ -380,15 +378,13 @@ namespace NHaml.Compilers
                 var options = new CodeGeneratorOptions();
                 var declaration = new CodeTypeDeclaration
                                       {
-                                          Name = ClassName, IsClass = true
+                                          Name = className, IsClass = true
                                       };
                
                 declaration.BaseTypes.Add(BaseType);
                 declaration.Members.Add(RenderMethod);
                 declaration.Members.AddRange(Members.ToArray());
 
-
-//                var codeNamespace = new CodeNamespace();
                 testNamespace.Types.Add(declaration);
                 generator.GenerateCodeFromNamespace(testNamespace, writer, options);
 

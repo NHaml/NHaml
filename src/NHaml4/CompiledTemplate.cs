@@ -4,23 +4,38 @@ using NHaml.Exceptions;
 using NHaml.TemplateResolution;
 using NHaml.Utils;
 using NHaml.Parser;
+using NHaml.Compilers;
+using NHaml4;
+using NHaml4.Walkers;
 
 namespace NHaml
 {
     public class CompiledTemplate
     {
-        private readonly TemplateCompileResources _resources;
-        private readonly TemplateOptions _options;
-        private TemplateFactory _templateFactory;
-        private readonly object _sync = new object();
-        private IList<Func<bool>> _viewSourceModifiedChecks;
+        private readonly ITemplateContentProvider _templateContentProvider;
         private readonly ITreeParser _treeParser;
+        private readonly IWalker _templateClassBuilder;
+        private readonly ITemplateFactoryCompiler _templateFactoryCompiler;
+        private TemplateFactory _templateFactory;
 
-        public CompiledTemplate(TemplateOptions options, TemplateCompileResources resources, ITreeParser treeParser)
+        public CompiledTemplate(ITreeParser treeParser,
+            IWalker templateClassBuilder, ITemplateFactoryCompiler templateCompiler)
         {
-            _options = options;
             _treeParser = treeParser;
-            _resources = resources;
+            _templateClassBuilder = templateClassBuilder;
+            _templateFactoryCompiler = templateCompiler;
+        }
+
+        public void CompileTemplateFactory(IViewSource viewSource)
+        {
+            CompileTemplateFactory(new List<IViewSource> { viewSource });
+        }
+
+        public void CompileTemplateFactory(IList<IViewSource> viewSourceList)
+        {
+            HamlDocument hamlDocument = _treeParser.ParseDocument(viewSourceList);
+            string templateCode = _templateClassBuilder.ParseHamlDocument(hamlDocument);
+            _templateFactoryCompiler.Compile(templateCode);
         }
 
         public Template CreateInstance()
@@ -28,81 +43,69 @@ namespace NHaml
             return _templateFactory.CreateTemplate();
         }
 
-        public void Recompile()
-        {
-            lock (_sync)
-            {
-                foreach (var fileModifiedCheck in _viewSourceModifiedChecks)
-                {
-                    if (fileModifiedCheck())
-                    {
-                        Compile();
-                        break;
-                    }
-                }
-            }
-        }
+        //public void Recompile()
+        //{
+        //    lock (_sync)
+        //    {
+        //        foreach (var fileModifiedCheck in _viewSourceModifiedChecks)
+        //        {
+        //            if (fileModifiedCheck())
+        //            {
+        //                Compile();
+        //                break;
+        //            }
+        //        }
+        //    }
+        //}
 
-        public void CompileTemplateFactory()
-        {
-            var templateSource = GetTemplate();
-            //var classBuilder = new ClassBuilder();
-            //classBuilder.Build(template);
-        }
+        //public void Compile()
+        //{
+        //    var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
+        //    string className = Utility.MakeClassName(ListExtensions.Last(layoutViewSources).Path);
 
-        private HamlDocument GetTemplate()
-        {   
-            var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
-            return (HamlDocument)_treeParser.ParseDocument(layoutViewSources);
-        }
+        //    var viewSourceReader = new ViewSourceReader(_options, layoutViewSources);
+        //    var templateClassBuilder = _options.TemplateCompiler.CreateTemplateClassBuilder(className);
 
-        public void Compile()
-        {
-            var layoutViewSources = _resources.GetViewSources(_options.TemplateContentProvider);
-            string className = Utility.MakeClassName(ListExtensions.Last(layoutViewSources).Path);
+        //    var templateParser = new TemplateParser(_options);
+        //    templateParser.Parse(viewSourceReader, templateClassBuilder);
 
-            var viewSourceReader = new ViewSourceReader(_options, layoutViewSources);
-            var templateClassBuilder = _options.TemplateCompiler.CreateTemplateClassBuilder(className);
+        //    _viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
 
-            var templateParser = new TemplateParser(_options);
-            templateParser.Parse(viewSourceReader, templateClassBuilder);
+        //    if(_resources.TemplateBaseType.IsGenericTypeDefinition )
+        //    {
+        //        var modelType = GetModelType(templateClassBuilder.Meta);
+        //        templateClassBuilder.BaseType = _resources.TemplateBaseType.MakeGenericType(modelType);
+        //        _options.AddReference( modelType.Assembly );
+        //    }
+        //    else
+        //    {
+        //        templateClassBuilder.BaseType = _resources.TemplateBaseType;
+        //    }
+        //    templateParser.Options.AddReferences(_resources.TemplateBaseType);
 
-            _viewSourceModifiedChecks = viewSourceReader.ViewSourceModifiedChecks;
+        //    _templateFactory = _options.TemplateCompiler.Compile(
+        //        viewSourceReader, templateParser.Options, templateClassBuilder);
+        //}
 
-            if(_resources.TemplateBaseType.IsGenericTypeDefinition )
-            {
-                var modelType = GetModelType(templateClassBuilder.Meta);
-                templateClassBuilder.BaseType = _resources.TemplateBaseType.MakeGenericType(modelType);
-                _options.AddReference( modelType.Assembly );
-            }
-            else
-            {
-                templateClassBuilder.BaseType = _resources.TemplateBaseType;
-            }
-            templateParser.Options.AddReferences(_resources.TemplateBaseType);
+    //    private static Type GetModelType(IDictionary<string, string> meta)
+    //    {
+    //        string model;
+    //        if (meta.TryGetValue("model", out model))
+    //        {
+    //            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+    //            {
+    //                var modelType = assembly.GetType(model, false, true);
+    //                if (modelType != null)
+    //                {
+    //                    return modelType;
+    //                }
+    //            }
 
-            _templateFactory = _options.TemplateCompiler.Compile(
-                viewSourceReader, templateParser.Options, templateClassBuilder);
-        }
+    //            var message = string.Format("The given model type '{0}' was not found.", model);
+    //            throw new TemplateCompilationException(message);
+    //        }
+    //        return typeof (object);
+    //    }
 
-        private static Type GetModelType(IDictionary<string, string> meta)
-        {
-            string model;
-            if (meta.TryGetValue("model", out model))
-            {
-                foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
-                {
-                    var modelType = assembly.GetType(model, false, true);
-                    if (modelType != null)
-                    {
-                        return modelType;
-                    }
-                }
-
-                var message = string.Format("The given model type '{0}' was not found.", model);
-                throw new TemplateCompilationException(message);
-            }
-            return typeof (object);
-        }
     }
 }

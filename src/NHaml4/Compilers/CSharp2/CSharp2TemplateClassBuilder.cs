@@ -2,9 +2,9 @@ using System.CodeDom;
 
 namespace NHaml.Compilers.CSharp2
 {
-    internal class CSharp2TemplateClassBuilder : CodeDomClassBuilder
+    public class CSharp2TemplateClassBuilder : CodeDomClassBuilder
     {
-        public CSharp2TemplateClassBuilder(string className) : base(className)
+        public CSharp2TemplateClassBuilder() : base()
         {
         }
 

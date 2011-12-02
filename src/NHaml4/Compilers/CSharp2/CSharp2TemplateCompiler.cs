@@ -13,9 +13,9 @@ namespace NHaml.Compilers.CSharp2
         {
         }
 
-        public override TemplateClassBuilder CreateTemplateClassBuilder(string className)
+        public override TemplateClassBuilder CreateTemplateClassBuilder()
         {
-            return new CSharp2TemplateClassBuilder(className);
+            return new CSharp2TemplateClassBuilder();
         }
 
         protected override CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary)

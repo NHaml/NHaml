@@ -8,12 +8,11 @@ namespace NHaml.Compilers
     {
 
 		public const string DefaultTextWriterVariableName = "textWriter";
-        protected TemplateClassBuilder(string className)
+        protected TemplateClassBuilder()
         {
 			CurrentTextWriterVariableName = DefaultTextWriterVariableName; 
             Output = new StringBuilder();
             Preamble = new StringBuilder();
-            ClassName = className;
             Meta = new Dictionary<string, string>();
         }
 
@@ -29,7 +28,7 @@ namespace NHaml.Compilers
         public int Depth { get; set; }
         public int BlockDepth { get; set; }
 
-        public string ClassName { get; private set; }
+        public string ClassName { get; internal set; }
 
         public abstract void AppendOutput(string value);
 
@@ -64,7 +63,7 @@ namespace NHaml.Compilers
         public abstract void AppendPreambleCode(string code);
         public abstract void AppendChangeOutputDepth(int depth);
 
-        public abstract string Build(IList<string> imports);
+        public abstract string Build(string className, IList<string> imports);
         public abstract void AppendAttributeTokens( string schema, string name, IList<ExpressionStringToken> values );
     }
 }
