@@ -16,7 +16,7 @@ namespace NHaml.Tests
         [Test]
         public void Parse_SingleLineTemplate_ReturnsHamlTree()
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileReader());
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
             var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(".className Test") };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.IsInstanceOf(typeof(HamlDocument), result);
@@ -28,7 +28,7 @@ namespace NHaml.Tests
         [TestCase("Test\nTest", 2)]
         public void Parse_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileReader());
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
             var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(template) };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.AreEqual(expectedChildren, result.Children.Count);
@@ -36,9 +36,12 @@ namespace NHaml.Tests
 
         [Test]
         [TestCase("Test\n  Test", 1)]
+        [TestCase("Test\n  Test\n  Test", 1)]
+        [TestCase("Test\n  Test\n    Test", 1)]
+        [TestCase("Test\n  Test\nTest", 2)]
         public void Parse_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileReader());
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
             var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(template) };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.AreEqual(expectedChildren, result.Children.Count);

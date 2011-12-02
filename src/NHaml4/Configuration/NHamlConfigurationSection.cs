@@ -161,7 +161,7 @@ namespace NHaml.Configuration
 			get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
 		}
 
-		public ITemplateCompiler CreateTemplateCompiler()
+		public ITemplateFactoryCompiler CreateTemplateCompiler()
 		{
 			var templateCompiler = TemplateCompiler;
 
@@ -206,13 +206,13 @@ namespace NHaml.Configuration
 				throw new ConfigurationErrorsException(message);
 			}
 
-			if (!typeof(ITemplateCompiler).IsAssignableFrom(type))
+			if (!typeof(ITemplateFactoryCompiler).IsAssignableFrom(type))
 			{
 				var message = Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler);
 				throw new ConfigurationErrorsException(message);
 			}
 
-			return (ITemplateCompiler)Activator.CreateInstance(type);
+			return (ITemplateFactoryCompiler)Activator.CreateInstance(type);
 		}
 	}
 }

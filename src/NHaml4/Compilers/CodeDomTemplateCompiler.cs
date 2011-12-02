@@ -2,13 +2,12 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
-using NHaml.Rules;
+using NHaml.Parser;
 
 namespace NHaml.Compilers
 {
-    public abstract class CodeDomTemplateCompiler : ITemplateCompiler
+    public abstract class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {
-
         private readonly Regex lambdaRegex;
 
         protected CodeDomTemplateCompiler(string lambdaRegex)
@@ -17,65 +16,70 @@ namespace NHaml.Compilers
                 RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
-        public abstract TemplateClassBuilder CreateTemplateClassBuilder(string className);
-
-        public TemplateFactory Compile(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public void Compile(string templateCode)
         {
-            var typeBuilder = CreateTemplateTypeBuilder(options);
-            //TODO: leaky abstraction 
-            var classBuilder = (CodeDomClassBuilder) builder;
-            var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
-            classBuilder.CodeDomProvider = provider;
-            typeBuilder.CodeDomProvider = provider;
-            var templateSource = classBuilder.Build(options.Usings);
+        }
+
+
+        public abstract TemplateClassBuilder CreateTemplateClassBuilder();
+
+        public TemplateFactory Compile(HamlNode node, TemplateOptions options, TemplateClassBuilder builder)
+        {
+            //var typeBuilder = CreateTemplateTypeBuilder(options);
+            ////TODO: leaky abstraction 
+            //var classBuilder = (CodeDomClassBuilder) builder;
+            //var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
+            //classBuilder.CodeDomProvider = provider;
+            //typeBuilder.CodeDomProvider = provider;
+            //var templateSource = classBuilder.Build(options.Usings);
             
-            var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
+            //var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
 
-            if( templateType == null )
-            {
-                var viewSources = viewSourceReader.ViewSources;
-                TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
-            }
+            //if( templateType == null )
+            //{
+            //    var viewSources = viewSourceReader.ViewSources;
+            //    TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
+            //}
 
-            return new TemplateFactory( templateType );
+            //return new TemplateFactory( templateType );
+            return null;
         }
 
         protected abstract CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary);
 
-        public BlockClosingAction RenderSilentEval(ViewSourceReader viewSourceReader, TemplateClassBuilder builder)
-        {
-            var code = viewSourceReader.CurrentInputLine.NormalizedText;
+        //public BlockClosingAction RenderSilentEval(HamlNode node, TemplateClassBuilder builder)
+        //{
+        //    var code = viewSourceReader.CurrentInputLine.NormalizedText;
 
-            var lambdaMatch = lambdaRegex.Match( code );
+        //    var lambdaMatch = lambdaRegex.Match(code);
 
-            if( !lambdaMatch.Success )
-            {
-                builder.AppendSilentCode(code, !viewSourceReader.IsBlock);
+        //    if (!lambdaMatch.Success)
+        //    {
+        //        builder.AppendSilentCode(code, !viewSourceReader.IsBlock);
 
-                if( viewSourceReader.IsBlock )
-                {
-                    builder.BeginCodeBlock();
+        //        if (viewSourceReader.IsBlock)
+        //        {
+        //            builder.BeginCodeBlock();
 
-                    return builder.EndCodeBlock;
-                }
+        //            return builder.EndCodeBlock;
+        //        }
 
-                return MarkupRule.EmptyClosingAction;
-            }
+        //        return MarkupRule.EmptyClosingAction;
+        //    }
 
-            var depth = viewSourceReader.CurrentInputLine.IndentCount;
-            code = TranslateLambda( code, lambdaMatch );
+        //    var depth = viewSourceReader.CurrentInputLine.IndentCount;
+        //    code = TranslateLambda(code, lambdaMatch);
 
-            builder.AppendChangeOutputDepth(depth);
-            builder.AppendSilentCode(code, true);
+        //    builder.AppendChangeOutputDepth(depth);
+        //    builder.AppendSilentCode(code, true);
 
-            return () =>
-                       {
-                           builder.AppendChangeOutputDepth(depth);
-                           builder.AppendSilentCode("})", true);
-                       };
-        }
-
-
+        //    return () =>
+        //               {
+        //                   builder.AppendChangeOutputDepth(depth);
+        //                   builder.AppendSilentCode("})", true);
+        //               };
+        //    return null;
+        //}
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
 

@@ -10,13 +10,13 @@ using NHaml4.IO;
 namespace NHaml.Tests.IO
 {
     [TestFixture]
-    public class InputReader_Tests
+    public class HamlFileLexer_Tests
     {
         [Test]
         public void Read_NormalUse_ReturnsHamlFile()
         {
             var textReader = new StringReader("");
-            var result = new HamlFileReader().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader);
             Assert.IsInstanceOf<HamlFile>(result);
         }
 
@@ -29,7 +29,7 @@ namespace NHaml.Tests.IO
         public void Read_ReturnsHamlFileWithCorrectLineCount(string template, int expectedLineCount)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileReader().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader);
             Assert.AreEqual(expectedLineCount, result.LineCount);
         }
 
@@ -42,7 +42,7 @@ namespace NHaml.Tests.IO
         public void Read_ReturnsLineWithCorrectIndent(string template, int expectedIndentCount)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileReader().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader);
             Assert.AreEqual(expectedIndentCount, result.CurrentLine.IndentCount);
         }
 
@@ -51,7 +51,7 @@ namespace NHaml.Tests.IO
         {
             string template = "test";
             var textReader = new StringReader(template);
-            var result = new HamlFileReader().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader);
             result.MoveNext();
             Assert.IsNull(result.CurrentLine);
         }
@@ -61,7 +61,7 @@ namespace NHaml.Tests.IO
         {
             string template = "test\ntest2";
             var textReader = new StringReader(template);
-            var result = new HamlFileReader().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader);
             result.MoveNext();
             Assert.AreEqual("test2", result.CurrentLine.Content);
         }

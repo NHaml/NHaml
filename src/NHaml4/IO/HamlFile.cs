@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.IO;
+using System.Collections.ObjectModel;
 
 namespace NHaml.IO
 {
@@ -41,6 +42,14 @@ namespace NHaml.IO
         public void MoveNext()
         {
             _currentLineIndex++;
+        }
+
+        public bool EndOfFile
+        {
+            get
+            {
+                return _currentLineIndex >= _hamlLines.Count;
+            }
         }
     }
 }

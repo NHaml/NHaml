@@ -11,7 +11,6 @@ namespace NHaml4.IO
         enum ParseState { WhiteSpace, Content };
         private int _indentCount;
         private HamlRuleEnum _hamlRule;
-        private static Dictionary<string, HamlRuleEnum> _ruleList;
         private string _content;
 
         public HamlLine(string currentLine)

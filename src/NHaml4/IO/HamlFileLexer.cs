@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace NHaml.IO
 {
-    public class HamlFileReader
+    public class HamlFileLexer
     {
         bool _eof;
 

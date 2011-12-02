@@ -1,7 +1,6 @@
 using System.Text.RegularExpressions;
 
 using NHaml.Exceptions;
-using NHaml.Rules;
 
 namespace NHaml
 {
@@ -88,12 +87,12 @@ namespace NHaml
             return string.Format("{0}: {1}", LineNumber, Text);
         }
 
-        public bool IsEof
-        {
-            get
-            {
-                return (Text == EofMarkupRule.SignifierChar);
-            }
-        }
+        //public bool IsEof
+        //{
+        //    get
+        //    {
+        //        return (Text == EofMarkupRule.SignifierChar);
+        //    }
+        //}
     }
 }
