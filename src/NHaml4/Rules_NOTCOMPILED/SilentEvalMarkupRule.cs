@@ -1,4 +1,5 @@
 using NHaml.Compilers;
+using NHaml.Parser;
 
 namespace NHaml.Rules
 {
@@ -11,9 +12,10 @@ namespace NHaml.Rules
             get { return SignifierChar; }
         }
 
-        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(HamlNode hamlNode, TemplateOptions options, TemplateClassBuilder builder)
         {
-            return options.TemplateCompiler.RenderSilentEval(viewSourceReader, builder);
+            //return options.TemplateCompiler.RenderSilentEval(viewSourceReader, builder);
+            return null;
         }
     }
 }

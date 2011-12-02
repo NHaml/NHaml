@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using NHaml.Compilers;
+using NHaml.Parser;
 
 namespace NHaml.Rules
 {
@@ -18,14 +19,14 @@ namespace NHaml.Rules
             get { return string.Empty; }
         }
 
-        public override BlockClosingAction Render(ViewSourceReader viewSourceReader, TemplateOptions options, TemplateClassBuilder builder)
+        public override BlockClosingAction Render(HamlNode node, TemplateOptions options, TemplateClassBuilder builder)
         {
-            var inputLine = viewSourceReader.CurrentInputLine;
-            builder.AppendOutput(inputLine.Indent);
+            //var inputLine = viewSourceReader.CurrentInputLine;
+            //builder.AppendOutput(inputLine.Indent);
             
-            AppendText(inputLine.NormalizedText, builder, options);
+            //AppendText(inputLine.NormalizedText, builder, options);
 
-            builder.AppendOutputLine();
+            //builder.AppendOutputLine();
 
             return EmptyClosingAction;
         }
