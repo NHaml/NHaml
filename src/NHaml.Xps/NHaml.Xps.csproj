@@ -90,7 +90,7 @@
   <ItemGroup>
     <ProjectReference Include="..\NHaml4\NHaml4.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
+      <Name>NHaml4</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

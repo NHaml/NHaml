@@ -74,7 +74,6 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="AttributeParser.cs" />
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -94,11 +93,11 @@
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
-    <Compile Include="IO\HamlFileReader.cs" />
+    <Compile Include="IO\HamlFileLexer.cs" />
+    <Compile Include="Walkers\IWalker.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
     <Compile Include="Parser\HamlTreeParser.cs" />
-    <Compile Include="ListExtensions.cs" />
     <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="ExpressionStringParser.cs" />
@@ -106,18 +105,17 @@
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
-    <Compile Include="Rules\SilentCommentMarkupRule.cs" />
-    <Compile Include="Rules\NotEncodedEvalMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\SilentCommentMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\NotEncodedEvalMarkupRule.cs" />
     <Compile Include="TemplateCompileResources.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="ParsedAttributeType.cs" />
-    <Compile Include="Rules\EncodedEvalMarkupRule.cs" />
-    <Compile Include="Rules\MetaMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\EncodedEvalMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\MetaMarkupRule.cs" />
     <Compile Include="TemplateOptions.cs" />
-    <Compile Include="TemplateParser.cs" />
     <Compile Include="Configuration\AssembliesConfigurationCollection.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />
@@ -133,29 +131,27 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="OutputWriter.cs" />
-    <Compile Include="Rules\MarkupRule.cs" />
-    <Compile Include="Rules\ClassMarkupRule.cs" />
-    <Compile Include="Rules\CommentMarkupRule.cs" />
-    <Compile Include="Rules\PreambleMarkupRule.cs" />
-    <Compile Include="Rules\DocTypeMarkupRule.cs" />
-    <Compile Include="Rules\EofMarkupRule.cs" />
-    <Compile Include="Rules\EscapeMarkupRule.cs" />
-    <Compile Include="Rules\EvalMarkupRule.cs" />
-    <Compile Include="Rules\IdMarkupRule.cs" />
-    <Compile Include="Rules\PlainTextMarkupRule.cs" />
-    <Compile Include="Rules\PartialMarkupRule.cs" />
-    <Compile Include="Rules\SilentEvalMarkupRule.cs" />
-    <Compile Include="Rules\TagMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\MarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\ClassMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\CommentMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\PreambleMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\DocTypeMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\EofMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\EscapeMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\EvalMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\IdMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\PlainTextMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\PartialMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\SilentEvalMarkupRule.cs" />
+    <Content Include="Rules_NOTCOMPILED\TagMarkupRule.cs" />
     <Compile Include="TemplateEngine.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
-    <Compile Include="Token.cs" />
-    <Compile Include="TokenReader.cs" />
     <Compile Include="Utils\Invariant.cs" />
     <Compile Include="Utils\Utility.cs" />
     <Compile Include="Utils\StringSet.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
-    <Compile Include="ViewSourceReader.cs" />
+    <Compile Include="Walkers\CodeDomWalker.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">
@@ -182,6 +178,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

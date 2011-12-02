@@ -100,14 +100,6 @@
     <None Include="Views\Shared\_Button.haml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NHaml.Compilers.IronRuby\NHaml.Compilers.IronRuby.csproj">
-      <Project>{ACB2E0A4-C775-4294-9626-8F042C009CE1}</Project>
-      <Name>NHaml.Compilers.IronRuby</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NHaml.Web.Mvc.IronRuby\NHaml.Web.Mvc.IronRuby.csproj">
-      <Project>{44CA66BE-FBB0-43FF-828E-5F2A5FAF52DB}</Project>
-      <Name>NHaml.Web.Mvc.IronRuby</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>

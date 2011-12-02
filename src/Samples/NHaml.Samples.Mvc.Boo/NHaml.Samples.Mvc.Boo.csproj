@@ -77,14 +77,6 @@
     <Content Include="Content\Site.css" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NHaml.Compilers.Boo\NHaml.Compilers.Boo.csproj">
-      <Project>{E9AFFBF2-A4E1-459A-9BB7-80A59D4AA8FD}</Project>
-      <Name>NHaml.Compilers.Boo</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\NHaml.Web.Mvc.Boo\NHaml.Web.Mvc.Boo.csproj">
-      <Project>{B781AF72-23C6-435A-A7B9-2496427D0F96}</Project>
-      <Name>NHaml.Web.Mvc.Boo</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc</Name>

@@ -7,8 +7,6 @@ using NHaml.Core.Parser;
 using NHaml.Core.Visitors;
 using NHaml.Core.Compilers;
 using NHaml.Core.Template;
-using NHaml.Compilers.FSharp;
-using NHaml.Compilers.VisualBasic;
 
 namespace NHaml.Console
 {
@@ -62,20 +60,6 @@ namespace NHaml.Console
                     case "cs3":
                         {
                             var cf = new CSharp3ClassBuilder();
-                            cf.SetDocument(null, document, "TestClass");
-                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
-                            break;
-                        }
-                    case "fs":
-                        {
-                            var cf = new FSharpClassBuilder();
-                            cf.SetDocument(null, document, "TestClass");
-                            System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
-                            break;
-                        }
-                    case "vb":
-                        {
-                            var cf = new VisualBasicClassBuilder();
                             cf.SetDocument(null, document, "TestClass");
                             System.Console.WriteLine(cf.GenerateSource(new TemplateOptions()));
                             break;
