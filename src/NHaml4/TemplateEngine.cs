@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using NHaml.Configuration;
-using NHaml.TemplateResolution;
+using NHaml4.TemplateResolution;
 using NHaml.Utils;
-using NHaml.Parser;
+using NHaml4.Parser;
 using NHaml.IO;
 
 namespace NHaml

@@ -1,4 +1,4 @@
-﻿using NHaml.TemplateResolution;
+﻿using NHaml4.TemplateResolution;
 using Moq;
 
 namespace NHaml.Tests.Builders

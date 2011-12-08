@@ -1,4 +1,5 @@
-namespace NHaml.Compilers.CSharp3
+using NHaml;
+namespace NHaml4.Compilers.CSharp3
 {
     internal class CSharp3TemplateTypeBuilder : CodeDomTemplateTypeBuilder
     {

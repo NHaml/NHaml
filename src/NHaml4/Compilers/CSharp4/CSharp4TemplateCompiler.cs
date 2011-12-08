@@ -1,6 +1,7 @@
-using NHaml.Compilers.CSharp3;
+using NHaml4.Compilers.CSharp3;
+using NHaml;
 
-namespace NHaml.Compilers.CSharp4
+namespace NHaml4.Compilers.CSharp4
 {
     public class CSharp4TemplateCompiler : CSharp3TemplateCompiler
     {

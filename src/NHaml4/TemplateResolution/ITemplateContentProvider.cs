@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
-namespace NHaml.TemplateResolution
+namespace NHaml4.TemplateResolution
 {
     public interface ITemplateContentProvider
     {

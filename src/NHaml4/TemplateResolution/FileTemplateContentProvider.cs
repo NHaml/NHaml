@@ -4,7 +4,7 @@ using System.IO;
 using NHaml.Utils;
 using System.Collections.ObjectModel;
 
-namespace NHaml.TemplateResolution
+namespace NHaml4.TemplateResolution
 {
     public class FileTemplateContentProvider : ITemplateContentProvider
     {

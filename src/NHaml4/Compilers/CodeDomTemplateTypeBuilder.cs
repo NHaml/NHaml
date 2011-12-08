@@ -5,8 +5,9 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using NHaml;
 
-namespace NHaml.Compilers
+namespace NHaml4.Compilers
 {
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {

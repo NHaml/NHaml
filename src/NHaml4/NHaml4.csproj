@@ -89,11 +89,14 @@
     <Compile Include="Compilers\CSharp3\CSharp3TemplateTypeBuilder.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
+    <Compile Include="Parser\HamlNodeText.cs" />
+    <Compile Include="Parser\HamlUnknownRuleException.cs" />
     <Compile Include="Walkers\IWalker.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />

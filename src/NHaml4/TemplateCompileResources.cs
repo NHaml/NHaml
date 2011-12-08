@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.TemplateResolution;
+using NHaml4.TemplateResolution;
 
 namespace NHaml
 {
@@ -10,7 +10,7 @@ namespace NHaml
     {
         private TemplateOptions _templateOptions;
         private Type _templateBaseType;
-        private IList<TemplateResolution.IViewSource> _templateViewSources;
+        private IList<IViewSource> _templateViewSources;
         private IList<string> _templatePaths;
         
         public Type TemplateBaseType {

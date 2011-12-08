@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Moq;
-using NHaml.TemplateResolution;
+using NHaml4.TemplateResolution;
 using System.IO;
 
 namespace NHaml.Tests.Builders

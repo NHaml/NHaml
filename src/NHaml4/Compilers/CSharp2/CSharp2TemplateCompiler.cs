@@ -3,8 +3,9 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using Microsoft.CSharp;
+using NHaml;
 
-namespace NHaml.Compilers.CSharp2
+namespace NHaml4.Compilers.CSharp2
 {
     public class CSharp2TemplateCompiler : CodeDomTemplateCompiler
     {

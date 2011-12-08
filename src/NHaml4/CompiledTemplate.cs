@@ -1,12 +1,13 @@
 using System;
 using System.Collections.Generic;
 using NHaml.Exceptions;
-using NHaml.TemplateResolution;
+using NHaml4.TemplateResolution;
 using NHaml.Utils;
-using NHaml.Parser;
-using NHaml.Compilers;
+using NHaml4.Parser;
+using NHaml4.Compilers;
 using NHaml4;
 using NHaml4.Walkers;
+using System.Linq;
 
 namespace NHaml
 {
@@ -14,15 +15,15 @@ namespace NHaml
     {
         private readonly ITemplateContentProvider _templateContentProvider;
         private readonly ITreeParser _treeParser;
-        private readonly IWalker _templateClassBuilder;
+        private readonly IHamlTreeWalker _treeWalker;
         private readonly ITemplateFactoryCompiler _templateFactoryCompiler;
         private TemplateFactory _templateFactory;
 
         public CompiledTemplate(ITreeParser treeParser,
-            IWalker templateClassBuilder, ITemplateFactoryCompiler templateCompiler)
+            IHamlTreeWalker treeWalker, ITemplateFactoryCompiler templateCompiler)
         {
             _treeParser = treeParser;
-            _templateClassBuilder = templateClassBuilder;
+            _treeWalker = treeWalker;
             _templateFactoryCompiler = templateCompiler;
         }
 
@@ -34,12 +35,14 @@ namespace NHaml
         public void CompileTemplateFactory(IList<IViewSource> viewSourceList)
         {
             HamlDocument hamlDocument = _treeParser.ParseDocument(viewSourceList);
-            string templateCode = _templateClassBuilder.ParseHamlDocument(hamlDocument);
+            string templateCode = _treeWalker.Walk(hamlDocument, Utility.MakeClassName(viewSourceList.Last().Path));
             _templateFactoryCompiler.Compile(templateCode);
         }
 
         public Template CreateInstance()
         {
+            if (_templateFactory == null)
+                throw new NullReferenceException("Attempting to create an instance of a compiled template using a NULL templateFactory.");
             return _templateFactory.CreateTemplate();
         }
 

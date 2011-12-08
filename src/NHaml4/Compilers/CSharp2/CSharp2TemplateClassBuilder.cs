@@ -1,6 +1,6 @@
 using System.CodeDom;
 
-namespace NHaml.Compilers.CSharp2
+namespace NHaml4.Compilers.CSharp2
 {
     public class CSharp2TemplateClassBuilder : CodeDomClassBuilder
     {
@@ -8,7 +8,7 @@ namespace NHaml.Compilers.CSharp2
         {
         }
 
-    	protected override string Comment
+    	protected override string CommentMarkup
     	{
 			get
 			{

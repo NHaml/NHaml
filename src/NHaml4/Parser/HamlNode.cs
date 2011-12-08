@@ -3,29 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.IO;
+using System.Collections.ObjectModel;
 
-namespace NHaml.Parser
+namespace NHaml4.Parser
 {
-    public class HamlNode
+    public abstract class HamlNode
     {
         private IList<HamlNode> _children = new List<HamlNode>();
-        private HamlLine currentLine;
 
-        public HamlNode(HamlLine currentLine)
+        public ReadOnlyCollection<HamlNode> Children
         {
-            // TODO: Complete member initialization
-            this.currentLine = currentLine;
+            get { return new ReadOnlyCollection<HamlNode>(_children); }
         }
 
-        public IList<HamlNode> Children
-        {
-            get
-            {
-                return _children;
-            }
-        }
-
-        internal void AddChild(HamlNode hamlNode)
+        public void AddChild(HamlNode hamlNode)
         {
             _children.Add(hamlNode);
         }

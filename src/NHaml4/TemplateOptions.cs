@@ -4,9 +4,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Web;
-using NHaml.Compilers;
-using NHaml.Compilers.CSharp3;
-using NHaml.TemplateResolution;
+using NHaml4.Compilers;
+using NHaml4.Compilers.CSharp3;
+using NHaml4.TemplateResolution;
 using NHaml.Utils;
 
 namespace NHaml

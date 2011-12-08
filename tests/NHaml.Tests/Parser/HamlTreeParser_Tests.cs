@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NHaml.Parser;
-using NHaml.TemplateResolution;
+using NHaml4.Parser;
+using NHaml4.TemplateResolution;
 using NHaml.Tests.Builders;
 using NHaml.IO;
 
@@ -17,9 +17,19 @@ namespace NHaml.Tests
         public void Parse_SingleLineTemplate_ReturnsHamlTree()
         {
             HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(".className Test") };
+            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create("Test") };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.IsInstanceOf(typeof(HamlDocument), result);
+        }
+
+        [Test]
+        [TestCase("Test content", typeof(HamlNodeText))]
+        public void Parse_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string source, Type nodeType)
+        {
+            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
+            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(source) };
+            var result = parser.ParseDocument(layoutViewSources);
+            Assert.IsInstanceOf(nodeType, result.Children[0]);
         }
 
         [Test]

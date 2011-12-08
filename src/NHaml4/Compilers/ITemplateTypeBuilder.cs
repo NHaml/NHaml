@@ -1,7 +1,7 @@
 using System;
 using System.CodeDom.Compiler;
 
-namespace NHaml.Compilers
+namespace NHaml4.Compilers
 {
     public interface ITemplateTypeBuilder
     {

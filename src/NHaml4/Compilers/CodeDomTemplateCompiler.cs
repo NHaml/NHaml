@@ -2,9 +2,10 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml.Exceptions;
-using NHaml.Parser;
+using NHaml4.Parser;
+using NHaml;
 
-namespace NHaml.Compilers
+namespace NHaml4.Compilers
 {
     public abstract class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {

@@ -1,5 +1,5 @@
 
-namespace NHaml.Compilers
+namespace NHaml4.Compilers
 {
     public interface ITemplateFactoryCompiler
     {

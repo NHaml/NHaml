@@ -1,6 +1,7 @@
 using System.Diagnostics.CodeAnalysis;
+using NHaml;
 
-namespace NHaml.Compilers.CSharp2
+namespace NHaml4.Compilers.CSharp2
 {
     public class CSharp2TemplateTypeBuilder : CodeDomTemplateTypeBuilder
     {

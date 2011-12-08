@@ -1,7 +1,9 @@
-﻿namespace NHaml4.Walkers
+﻿using NHaml4.Parser;
+
+namespace NHaml4.Walkers
 {
-    public interface IWalker
+    public interface IHamlTreeWalker
     {
-        string ParseHamlDocument(NHaml.Parser.HamlDocument hamlDocument);
+        string Walk(HamlDocument hamlDocument, string className);
     }
 }

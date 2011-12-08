@@ -1,8 +1,9 @@
 using System;
 using System.Text.RegularExpressions;
-using NHaml.Compilers.CSharp2;
+using NHaml4.Compilers.CSharp2;
+using NHaml;
 
-namespace NHaml.Compilers.CSharp3
+namespace NHaml4.Compilers.CSharp3
 {
     public  class CSharp3TemplateCompiler : CSharp2TemplateCompiler
     {

@@ -1,6 +1,6 @@
 using System.IO;
 
-namespace NHaml.TemplateResolution
+namespace NHaml4.TemplateResolution
 {
     /// <summary>
     /// Represents a view template source on the file system.

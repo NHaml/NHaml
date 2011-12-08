@@ -54,8 +54,10 @@
     <Compile Include="CompiledTemplate_Tests.cs" />
     <Compile Include="IO\HamlLine_Tests.cs" />
     <Compile Include="IO\HamlFileLexer_Tests.cs" />
+    <Compile Include="Parser\HamlNode_Tests.cs" />
     <Compile Include="Parser\HamlTreeParser_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Walkers\CodeDomWalker_Tests.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\src\NHaml4\NHaml4.csproj">
@@ -63,6 +65,7 @@
       <Name>NHaml4</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

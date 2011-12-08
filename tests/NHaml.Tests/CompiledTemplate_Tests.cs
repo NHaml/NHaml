@@ -1,12 +1,13 @@
 ﻿using NUnit.Framework;
-using NHaml.Parser;
+using NHaml4.Parser;
 using Moq;
 using NHaml.Tests.Builders;
-using NHaml.Compilers;
-using NHaml.TemplateResolution;
+using NHaml4.Compilers;
+using NHaml4.TemplateResolution;
 using System.Collections.Generic;
 using NHaml4;
 using NHaml4.Walkers;
+using NHaml.Utils;
 
 namespace NHaml.Tests
 {
@@ -15,14 +16,14 @@ namespace NHaml.Tests
     {
         private Mock<ITreeParser> _parserMock;
         private Mock<ITemplateFactoryCompiler> _compilerMock;
-        private Mock<IWalker> _templateClassBuilderMock;
+        private Mock<IHamlTreeWalker> _templateClassBuilderMock;
 
         [SetUp]
         public void SetUp()
         {
             _parserMock = new Mock<ITreeParser>();
             _compilerMock = new Mock<ITemplateFactoryCompiler>();
-            _templateClassBuilderMock = new Mock<IWalker>();
+            _templateClassBuilderMock = new Mock<IHamlTreeWalker>();
         }
 
         [Test]
@@ -37,7 +38,7 @@ namespace NHaml.Tests
             compiledTemplate.CompileTemplateFactory(fakeHamlSource);
 
             // Assert
-            _parserMock.Verify(x => x.ParseDocument(It.Is<IList<IViewSource>>(y => y.Contains(fakeHamlSource))));
+            _parserMock.Verify(x => x.ParseDocument(It.Is<IList<IViewSource>>(param => param.Contains(fakeHamlSource))));
         }
 
         [Test]
@@ -47,14 +48,16 @@ namespace NHaml.Tests
             var fakeHamlDocument = new HamlDocument();
             _parserMock.Setup(x => x.ParseDocument(It.IsAny<IList<IViewSource>>()))
                 .Returns(fakeHamlDocument);
+            var viewSource = ViewSourceBuilder.Create();
 
             // Act
             var compiledTemplate = new CompiledTemplate(_parserMock.Object,
                 _templateClassBuilderMock.Object, _compilerMock.Object);
-            compiledTemplate.CompileTemplateFactory(ViewSourceBuilder.Create());
+            compiledTemplate.CompileTemplateFactory(viewSource);
 
             // Assert
-            _templateClassBuilderMock.Verify(x => x.ParseHamlDocument(fakeHamlDocument));
+            string expectedPathName = Utility.MakeClassName(viewSource.Path);
+            _templateClassBuilderMock.Verify(x => x.Walk(fakeHamlDocument, expectedPathName));
         }
 
         [Test]
@@ -62,7 +65,7 @@ namespace NHaml.Tests
         {
             // Arrange
             var fakeTemplateSource = "FakeTemplateSource";
-            _templateClassBuilderMock.Setup(x => x.ParseHamlDocument(It.IsAny<HamlDocument>()))
+            _templateClassBuilderMock.Setup(x => x.Walk(It.IsAny<HamlDocument>(), It.IsAny<string>()))
                 .Returns(fakeTemplateSource);
 
             // Act

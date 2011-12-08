@@ -28,7 +28,7 @@ namespace NHaml4.IO
             get { return _hamlRule; }
         }
 
-        public object Content
+        public string Content
         {
             get { return _content; }
         }
