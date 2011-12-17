@@ -113,7 +113,7 @@ namespace NHaml
 
             var lineNumber = 0;
 
-            using (var reader = viewSource.GetStreamReader())
+            using (var reader = viewSource.GetReader())
             {
                 string line;
 
