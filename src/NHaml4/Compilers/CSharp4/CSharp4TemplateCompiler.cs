@@ -6,9 +6,9 @@ namespace NHaml4.Compilers.CSharp4
     public class CSharp4TemplateCompiler : CSharp3TemplateCompiler
     {
       
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder()
         {
-            return new CSharp4TemplateTypeBuilder( options );
+            return new CSharp4TemplateTypeBuilder();
         }
 
     }

@@ -12,7 +12,6 @@ namespace NHaml4.Parser
 {
     public class HamlTreeParser : ITreeParser
     {
-        private readonly TemplateOptions _options;
         private readonly HamlFileLexer _hamlFileReader;
 
         public HamlTreeParser(HamlFileLexer hamlFileReader)
@@ -20,7 +19,7 @@ namespace NHaml4.Parser
             _hamlFileReader = hamlFileReader;
         }
 
-        public HamlDocument ParseDocument(IList<IViewSource> layoutViewSources)
+        public HamlDocument ParseDocument(IViewSourceList layoutViewSources)
         {
             return ParseDocument(layoutViewSources[0].GetStreamReader());
         }

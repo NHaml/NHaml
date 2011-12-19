@@ -14,11 +14,11 @@ namespace NHaml
         private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache;
 
         public TemplateEngine()
-            : this( new TemplateOptions() )
+            : this()
         {
         }
 
-        public TemplateEngine( TemplateOptions options )
+        public TemplateEngine()
         {
             Invariant.ArgumentNotNull( options, "options" );
 

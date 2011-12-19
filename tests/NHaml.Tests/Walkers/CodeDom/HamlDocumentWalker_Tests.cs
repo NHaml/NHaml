@@ -3,29 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NHaml4.Walkers;
 using Moq;
 using NHaml4.Compilers;
 using NHaml4.Parser;
+using NHaml4.Walkers.CodeDom;
 
 namespace NHaml4.Tests.Walkers
 {
     [TestFixture]
-    public class CodeDomWalker_Tests
+    public class HamlDocumentWalker_Tests
     {
         [Test]
-        public void Walk_SingleLineFile_AppendsCorrectTag()
+        public void Walk_SimpleFile_AppendsCorrectTag()
         {
             // Arrange
+            const string content = "Simple content";
             var classBuilder = new Mock<ITemplateClassBuilder>();
-            CodeDomWalker walker = new CodeDomWalker(classBuilder.Object);
-            var document = new HamlTreeParser(new NHaml.IO.HamlFileLexer()).ParseDocument("Simple content");
-            
+            HamlDocumentWalker walker = new HamlDocumentWalker(classBuilder.Object);
+            var document = new HamlDocument();
+            document.AddChild(new HamlNodeText(content));
+
             // Act
-            var code = walker.Walk(document, "ClassName");
+            var code = walker.Walk(document, content);
 
             // Assert
-            classBuilder.Verify(x => x.AppendLine("<div>Simple content</div>"));
+            classBuilder.Verify(x => x.AppendLine(content));
         }
 
         [Test]
@@ -34,7 +36,7 @@ namespace NHaml4.Tests.Walkers
             // Arrange
             const string className = "ClassName";
             var classBuilder = new Mock<ITemplateClassBuilder>();
-            CodeDomWalker walker = new CodeDomWalker(classBuilder.Object);
+            HamlDocumentWalker walker = new HamlDocumentWalker(classBuilder.Object);
             var document = new HamlTreeParser(new NHaml.IO.HamlFileLexer()).ParseDocument("Simple content");
             
             // Act

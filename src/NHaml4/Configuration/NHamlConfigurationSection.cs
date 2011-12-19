@@ -23,7 +23,7 @@ namespace NHaml.Configuration
 			return (NHamlConfigurationSection)ConfigurationManager.GetSection("nhaml");
 		}
 
-		public static void UpdateTemplateOptions(TemplateOptions options)
+		public static void UpdateTemplateOptions()
 		{
 			if (options == null)
 				throw new ArgumentNullException("options");

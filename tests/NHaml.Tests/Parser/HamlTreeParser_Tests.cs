@@ -7,6 +7,7 @@ using NHaml4.Parser;
 using NHaml4.TemplateResolution;
 using NHaml.Tests.Builders;
 using NHaml.IO;
+using NHaml4;
 
 namespace NHaml.Tests
 {
@@ -17,7 +18,7 @@ namespace NHaml.Tests
         public void Parse_SingleLineTemplate_ReturnsHamlTree()
         {
             HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create("Test") };
+            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create("Test") };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.IsInstanceOf(typeof(HamlDocument), result);
         }
@@ -27,7 +28,7 @@ namespace NHaml.Tests
         public void Parse_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string source, Type nodeType)
         {
             HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(source) };
+            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(source) };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.IsInstanceOf(nodeType, result.Children[0]);
         }
@@ -39,7 +40,7 @@ namespace NHaml.Tests
         public void Parse_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
         {
             HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(template) };
+            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(template) };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.AreEqual(expectedChildren, result.Children.Count);
         }
@@ -52,7 +53,7 @@ namespace NHaml.Tests
         public void Parse_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
             HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new List<IViewSource> { ViewSourceBuilder.Create(template) };
+            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(template) };
             var result = parser.ParseDocument(layoutViewSources);
             Assert.AreEqual(expectedChildren, result.Children.Count);
         }

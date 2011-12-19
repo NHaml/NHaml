@@ -2,7 +2,7 @@
 
 namespace NHaml4.Walkers
 {
-    public interface IHamlTreeWalker
+    public interface IDocumentWalker
     {
         string Walk(HamlDocument hamlDocument, string className);
     }

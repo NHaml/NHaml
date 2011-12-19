@@ -1,7 +1,6 @@
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using NHaml.Exceptions;
 using NHaml4.Parser;
 using NHaml;
 
@@ -17,16 +16,12 @@ namespace NHaml4.Compilers
                 RegexOptions.Compiled | RegexOptions.Singleline);
         }
 
-        public void Compile(string templateCode)
-        {
-        }
-
-
         public abstract TemplateClassBuilder CreateTemplateClassBuilder();
 
-        public TemplateFactory Compile(HamlNode node, TemplateOptions options, TemplateClassBuilder builder)
+        public TemplateFactory Compile(string template)
         {
-            //var typeBuilder = CreateTemplateTypeBuilder(options);
+
+            var typeBuilder = CreateTemplateTypeBuilder();
             ////TODO: leaky abstraction 
             //var classBuilder = (CodeDomClassBuilder) builder;
             //var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
@@ -84,6 +79,6 @@ namespace NHaml4.Compilers
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
 
-        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options);
+        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder();
     }
 }

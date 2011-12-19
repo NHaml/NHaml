@@ -8,7 +8,6 @@ namespace NHaml
 {
     public class TemplateCompileResources
     {
-        private TemplateOptions _templateOptions;
         private Type _templateBaseType;
         private IList<IViewSource> _templateViewSources;
         private IList<string> _templatePaths;

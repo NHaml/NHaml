@@ -32,9 +32,9 @@ namespace NHaml4.Compilers.CSharp2
             return string.Format("{0}{1}delegate{2}{{", part0, part1, part2);
         }
 
-        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder(TemplateOptions options)
+        public override CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder()
         {
-            return new CSharp2TemplateTypeBuilder( options);
+            return new CSharp2TemplateTypeBuilder();
         }
     }
 }

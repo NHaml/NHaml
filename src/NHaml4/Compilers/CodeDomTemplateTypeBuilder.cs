@@ -12,18 +12,15 @@ namespace NHaml4.Compilers
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
 
-        public TemplateOptions Options { get; private set; }
         public CodeDomProvider CodeDomProvider { get; set; }
         public string Source { get; protected set; }
         public CompilerResults CompilerResults { get; private set; }
         public Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public CodeDomTemplateTypeBuilder( TemplateOptions options )
+        public CodeDomTemplateTypeBuilder()
         {
             ProviderOptions = new Dictionary<string, string>();
-            Options = options;
-            Options.AddReference(GetType().Assembly);
 
         }
 
@@ -36,8 +33,8 @@ namespace NHaml4.Compilers
             BuildSource(source);
 
             var compilerParams = new CompilerParameters();
-            AddReferences(compilerParams);
-            if (Options.OutputDebugFiles && SupportsDebug())
+            // AddReferences(compilerParams);
+            if (SupportsDebug())
             {
                 compilerParams.GenerateInMemory = false;
                 compilerParams.IncludeDebugInformation = true;
@@ -137,16 +134,16 @@ namespace NHaml4.Compilers
 
 
 
-        [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        private void AddReferences(CompilerParameters parameters)
-        {
-            parameters.ReferencedAssemblies.Clear();
+        //[SuppressMessage( "Microsoft.Security", "CA2122" )]
+        //private void AddReferences(CompilerParameters parameters)
+        //{
+        //    parameters.ReferencedAssemblies.Clear();
 
-            foreach( var assembly in Options.References )
-            {
-                parameters.ReferencedAssemblies.Add( assembly );
-            }
-        }
+        //    foreach( var assembly in Options.References )
+        //    {
+        //        parameters.ReferencedAssemblies.Add( assembly );
+        //    }
+        //}
 
         protected virtual void BuildSource( string source )
         {

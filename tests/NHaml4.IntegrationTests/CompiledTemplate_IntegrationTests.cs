@@ -1,17 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
-using NHaml4.Parser;
+using NHaml.Tests.Builders;
+using Moq;
+using System.IO;
+using NHaml4.TemplateResolution;
 using NHaml.IO;
+using NHaml4.Parser;
+using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
 using NHaml4.Compilers.CSharp2;
-using NHaml.Tests.Builders;
-using NHaml4.Walkers;
-using Moq;
-using NHaml4.TemplateResolution;
-using System.IO;
 
 namespace NHaml.IntegrationTests
 {
@@ -24,7 +22,7 @@ namespace NHaml.IntegrationTests
         {
             // Arrange
             var parser = new HamlTreeParser(new HamlFileLexer());
-            var walker = new CodeDomWalker(new CSharp2TemplateClassBuilder());
+            var walker = new HamlDocumentWalker(new CSharp2TemplateClassBuilder());
             var compilerMock = new Mock<ITemplateFactoryCompiler>();
             string templateContent = @"This is a test";
 

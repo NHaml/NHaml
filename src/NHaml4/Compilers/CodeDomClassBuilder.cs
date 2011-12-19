@@ -291,7 +291,6 @@ namespace NHaml4.Compilers
                                           Name = className, IsClass = true
                                       };
                
-                declaration.BaseTypes.Add(BaseType);
                 declaration.Members.Add(RenderMethod);
 
                 testNamespace.Types.Add(declaration);

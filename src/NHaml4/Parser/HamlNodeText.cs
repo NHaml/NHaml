@@ -7,16 +7,20 @@ namespace NHaml4.Parser
 {
     public class HamlNodeText : HamlNode
     {
-        private IO.HamlLine _nodeLine;
+        private string _text;
 
         public HamlNodeText(IO.HamlLine nodeLine)
+            : this(nodeLine.Content)
+        { }
+
+        public HamlNodeText(string nodeText)
         {
-            _nodeLine = nodeLine;
+            _text = nodeText;
         }
 
         public string Text
         {
-            get { return _nodeLine.Content; }
+            get { return _text; }
         }
     }
 }

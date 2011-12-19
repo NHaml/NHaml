@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using NHaml.Exceptions;
 using NHaml4.TemplateResolution;
 using NHaml.Utils;
 using NHaml4.Parser;
@@ -15,12 +14,12 @@ namespace NHaml
     {
         private readonly ITemplateContentProvider _templateContentProvider;
         private readonly ITreeParser _treeParser;
-        private readonly IHamlTreeWalker _treeWalker;
+        private readonly IDocumentWalker _treeWalker;
         private readonly ITemplateFactoryCompiler _templateFactoryCompiler;
         private TemplateFactory _templateFactory;
 
         public CompiledTemplate(ITreeParser treeParser,
-            IHamlTreeWalker treeWalker, ITemplateFactoryCompiler templateCompiler)
+            IDocumentWalker treeWalker, ITemplateFactoryCompiler templateCompiler)
         {
             _treeParser = treeParser;
             _treeWalker = treeWalker;
@@ -29,14 +28,14 @@ namespace NHaml
 
         public void CompileTemplateFactory(IViewSource viewSource)
         {
-            CompileTemplateFactory(new List<IViewSource> { viewSource });
+            CompileTemplateFactory(new ViewSourceList { viewSource });
         }
 
-        public void CompileTemplateFactory(IList<IViewSource> viewSourceList)
+        public void CompileTemplateFactory(IViewSourceList viewSourceList)
         {
             HamlDocument hamlDocument = _treeParser.ParseDocument(viewSourceList);
-            string templateCode = _treeWalker.Walk(hamlDocument, Utility.MakeClassName(viewSourceList.Last().Path));
-            _templateFactoryCompiler.Compile(templateCode);
+            string templateCode = _treeWalker.Walk(hamlDocument, viewSourceList.GetPathName());
+            _templateFactory = _templateFactoryCompiler.Compile(templateCode);
         }
 
         public Template CreateInstance()

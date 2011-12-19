@@ -1,13 +1,13 @@
 ﻿using NHaml4.Compilers;
 using NHaml4.Parser;
 
-namespace NHaml4.Walkers
+namespace NHaml4.Walkers.CodeDom
 {
-    public class CodeDomWalker : IHamlTreeWalker
+    public class HamlDocumentWalker : IDocumentWalker
     {
         private readonly ITemplateClassBuilder _classBuilder;
 
-        public CodeDomWalker(ITemplateClassBuilder classBuilder)
+        public HamlDocumentWalker(ITemplateClassBuilder classBuilder)
         {   
             _classBuilder = classBuilder;
         }
@@ -17,7 +17,7 @@ namespace NHaml4.Walkers
             foreach (var child in hamlDocument.Children)
             {
                 if (child is HamlNodeText)
-                    WalkText((HamlNodeText)child);
+                    new HamlNodeTextWalker().Walk(child, _classBuilder);
             }
             return _classBuilder.Build(className);
         }

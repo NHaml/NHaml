@@ -1,8 +1,9 @@
+using NHaml;
 
 namespace NHaml4.Compilers
 {
     public interface ITemplateFactoryCompiler
     {
-        void Compile(string templateCode);
+        TemplateFactory Compile(string templateCode);
     }
 }
