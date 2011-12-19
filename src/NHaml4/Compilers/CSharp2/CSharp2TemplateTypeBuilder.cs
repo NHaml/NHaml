@@ -1,5 +1,6 @@
 using System.Diagnostics.CodeAnalysis;
 using NHaml;
+using Microsoft.CSharp;
 
 namespace NHaml4.Compilers.CSharp2
 {
@@ -8,7 +9,7 @@ namespace NHaml4.Compilers.CSharp2
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         public CSharp2TemplateTypeBuilder()
-            : base()
+            : base(new CSharpCodeProvider())
         {
             ProviderOptions.Add( "CompilerVersion", "v2.0" );
         }

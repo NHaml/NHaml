@@ -5,6 +5,7 @@ using System.Text;
 using NHaml4.TemplateResolution;
 using System.IO;
 using Moq;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml.Tests.Builders
 {
@@ -18,11 +19,9 @@ namespace NHaml.Tests.Builders
         public static IViewSource Create(string content)
         {
             var streamReader = new StreamReader(new MemoryStream(new System.Text.UTF8Encoding().GetBytes(content)));
-            var stubViewSource = new Mock<IViewSource>();
-            stubViewSource.Setup(x => x.GetStreamReader()).Returns(streamReader);
-            stubViewSource.SetupGet(x => x.Path).Returns("c:\test.haml");
+            var stubViewSource = new ViewSourceMock(streamReader, @"c:\test.haml");
 
-            return stubViewSource.Object;
+            return stubViewSource;
         }
     }
 }

@@ -12,28 +12,25 @@ namespace NHaml4.Compilers
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
 
-        public CodeDomProvider CodeDomProvider { get; set; }
-        public string Source { get; protected set; }
+        private CodeDomProvider _codeDomProvider;
         public CompilerResults CompilerResults { get; private set; }
         public Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public CodeDomTemplateTypeBuilder()
+        public CodeDomTemplateTypeBuilder(CodeDomProvider codeDomProvider)
         {
+            _codeDomProvider = codeDomProvider;
             ProviderOptions = new Dictionary<string, string>();
-
         }
-
 
         [SuppressMessage("Microsoft.Security", "CA2122")]
         [SuppressMessage("Microsoft.Portability", "CA1903")]
-        public Type Build(string source, string typeName)
+        public Type Build(string source, string typeName, IList<Type> references)
         {
         	//Debug.WriteLine(source);
-            BuildSource(source);
 
             var compilerParams = new CompilerParameters();
-            // AddReferences(compilerParams);
+            AddReferences(compilerParams, references);
             if (SupportsDebug())
             {
                 compilerParams.GenerateInMemory = false;
@@ -42,7 +39,7 @@ namespace NHaml4.Compilers
                 var classFileInfo = GetClassFileInfo(directoryInfo, typeName);
                 using (var writer = classFileInfo.CreateText())
                 {
-                    writer.Write(Source);
+                    writer.Write(source);
                 }
 
                 //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for an in memory assembly.
@@ -52,7 +49,7 @@ namespace NHaml4.Compilers
                 try
                 {
                     compilerParams.OutputAssembly = tempAssemblyName.FullName;
-                    CompilerResults = CodeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
+                    CompilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
                     if (ContainsErrors())
                     {
                         return null;
@@ -77,7 +74,7 @@ namespace NHaml4.Compilers
             {
                 compilerParams.GenerateInMemory = true;
                 compilerParams.IncludeDebugInformation = false;
-                CompilerResults = CodeDomProvider.CompileAssemblyFromSource(compilerParams, Source);
+                CompilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
                 if (ContainsErrors())
                 {
                     return null;
@@ -88,9 +85,19 @@ namespace NHaml4.Compilers
 
         }
 
+        private void AddReferences(CompilerParameters parameters, IList<Type> references)
+        {
+            parameters.ReferencedAssemblies.Clear();
+
+            foreach (var type in references)
+            {
+                parameters.ReferencedAssemblies.Add(type.Assembly.Location);
+            }
+        }
+
         private FileInfo GetClassFileInfo(DirectoryInfo directoryInfo, string typeName)
         {
-            var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, CodeDomProvider.FileExtension));
+            var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, _codeDomProvider.FileExtension));
             if (fileInfo.Exists)
             {
                 fileInfo.Delete();
@@ -144,10 +151,5 @@ namespace NHaml4.Compilers
         //        parameters.ReferencedAssemblies.Add( assembly );
         //    }
         //}
-
-        protected virtual void BuildSource( string source )
-        {
-            Source = source;
-        }
     }
 }

@@ -1,5 +1,6 @@
 using System;
 using System.Reflection.Emit;
+using NHaml4.TemplateBase;
 
 namespace NHaml
 {

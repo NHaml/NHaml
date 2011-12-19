@@ -87,7 +87,6 @@
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
-    <Compile Include="IViewSourceList.cs" />
     <Compile Include="Parser\HamlNodeText.cs" />
     <Compile Include="Parser\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
@@ -98,6 +97,7 @@
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
+    <Compile Include="TemplateBase\Template.cs" />
     <Compile Include="ViewSourceList.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
       <SubType>Code</SubType>
@@ -115,7 +115,6 @@
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
     <Compile Include="ParsedAttribute.cs" />
     <Compile Include="ParsedAttributeType.cs" />
-    <Compile Include="Template.cs" />
     <Compile Include="TemplateFactory.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -3,33 +3,27 @@ using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml4.Parser;
 using NHaml;
+using System;
 
 namespace NHaml4.Compilers
 {
     public abstract class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {
         private readonly Regex lambdaRegex;
+        private readonly CodeDomClassBuilder _classBuilder;
+        private readonly CodeDomTemplateTypeBuilder _typeBuilder;
 
-        protected CodeDomTemplateCompiler(string lambdaRegex)
+        protected CodeDomTemplateCompiler(string lambdaRegex, CodeDomClassBuilder classBuilder, CodeDomTemplateTypeBuilder typeBuilder)
         {
             this.lambdaRegex = new Regex(lambdaRegex,
                 RegexOptions.Compiled | RegexOptions.Singleline);
+            _classBuilder = classBuilder;
+            _typeBuilder = typeBuilder;
         }
 
-        public abstract TemplateClassBuilder CreateTemplateClassBuilder();
-
-        public TemplateFactory Compile(string template)
+        public TemplateFactory Compile(string templateSource, string className, IList<Type> references)
         {
-
-            var typeBuilder = CreateTemplateTypeBuilder();
-            ////TODO: leaky abstraction 
-            //var classBuilder = (CodeDomClassBuilder) builder;
-            //var provider = GetCodeDomProvider(typeBuilder.ProviderOptions);
-            //classBuilder.CodeDomProvider = provider;
-            //typeBuilder.CodeDomProvider = provider;
-            //var templateSource = classBuilder.Build(options.Usings);
-            
-            //var templateType = typeBuilder.Build( templateSource, classBuilder.ClassName );
+            var templateType = _typeBuilder.Build( templateSource, className, references);
 
             //if( templateType == null )
             //{
@@ -37,11 +31,8 @@ namespace NHaml4.Compilers
             //    TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
             //}
 
-            //return new TemplateFactory( templateType );
-            return null;
+            return new TemplateFactory( templateType );
         }
-
-        protected abstract CodeDomProvider GetCodeDomProvider(Dictionary<string, string> dictionary);
 
         //public BlockClosingAction RenderSilentEval(HamlNode node, TemplateClassBuilder builder)
         //{
@@ -78,7 +69,5 @@ namespace NHaml4.Compilers
         //}
 
         public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
-
-        public abstract CodeDomTemplateTypeBuilder CreateTemplateTypeBuilder();
     }
 }

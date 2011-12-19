@@ -10,7 +10,7 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeText == null)
                 throw new System.InvalidCastException("HamlNodeTextWalker requires that HamlNode object be of type HamlNodeText.");
 
-            classBuilder.AppendLine(nodeText.Text);
+            classBuilder.Append(nodeText.Text);
         }
     }
 }

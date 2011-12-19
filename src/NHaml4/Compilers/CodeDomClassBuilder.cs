@@ -31,67 +31,63 @@ namespace NHaml4.Compilers
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
 
-        public override void AppendSilentCode(string code)
+        //public override void AppendSilentCode(string code)
+        //{
+        //    if (code == null) return;
+
+        //    code = CommentMarkup + code.Trim();
+
+        //    RenderMethod.Statements.Add(
+        //        new CodeSnippetExpression { Value = code, });
+        //}
+
+        public override void Append(string line)
         {
-            if (code == null) return;
-
-            code = CommentMarkup + code.Trim();
-
-            RenderMethod.Statements.Add(
-                new CodeSnippetExpression { Value = code, });
-        }
-
-    	public override void AppendOutput(string value)
-        {
-            if (value == null) return;
-
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
-                .WithPrimitiveParameter(value);
-
-            RenderMethod.Statements.Add(
-                new CodeExpressionStatement { Expression = writeInvoke });
-
-        }
-
-        public override void AppendLine(string line)
-        {
-            var writeInvoke = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("WriteLine", CurrentTextWriterVariableName)
                 .WithPrimitiveParameter(line);
 
             RenderMethod.Statements.Add(
                 new CodeExpressionStatement { Expression = writeInvoke });
-
         }
 
-        public override void AppendCode(string code, bool escapeHtml)
+        public override void AppendNewLine()
         {
-            if (code == null) return;
-
-            var write = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName);
-            var toStringInvoke = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("ToString", "Convert")
-                .WithCodeSnippetParameter(code);
-
-            if (escapeHtml)
-            {
-                var htmlEncodeInvoke = CodeDomFluentBuilder
-                    .GetCodeMethodInvokeExpression("HtmlEncode", "HttpUtility")
-                    .WithCodeMethodParameter(toStringInvoke);
-
-                write.Parameters.Add(htmlEncodeInvoke);
-            }
-            else
-            {
-                write.Parameters.Add(toStringInvoke);
-            }
+            var writeInvoke = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
+                .WithPrimitiveParameter("");
 
             RenderMethod.Statements.Add(
-                new CodeExpressionStatement { Expression = write });
-            
+                new CodeExpressionStatement { Expression = writeInvoke });
         }
+
+        //public override void AppendCode(string code, bool escapeHtml)
+        //{
+        //    if (code == null) return;
+
+        //    var write = CodeDomFluentBuilder
+        //        .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName);
+        //    var toStringInvoke = CodeDomFluentBuilder
+        //        .GetCodeMethodInvokeExpression("ToString", "Convert")
+        //        .WithCodeSnippetParameter(code);
+
+        //    if (escapeHtml)
+        //    {
+        //        var htmlEncodeInvoke = CodeDomFluentBuilder
+        //            .GetCodeMethodInvokeExpression("HtmlEncode", "HttpUtility")
+        //            .WithCodeMethodParameter(toStringInvoke);
+
+        //        write.Parameters.Add(htmlEncodeInvoke);
+        //    }
+        //    else
+        //    {
+        //        write.Parameters.Add(toStringInvoke);
+        //    }
+
+        //    RenderMethod.Statements.Add(
+        //        new CodeExpressionStatement { Expression = write });
+            
+        //}
 
         //public override void AppendChangeOutputDepth(int depth)
         //{
@@ -288,8 +284,10 @@ namespace NHaml4.Compilers
                 var options = new CodeGeneratorOptions();
                 var declaration = new CodeTypeDeclaration
                                       {
-                                          Name = className, IsClass = true
+                                          Name = className,
+                                          IsClass = true
                                       };
+                declaration.BaseTypes.Add(new CodeTypeReference(typeof(NHaml4.TemplateBase.Template)));
                
                 declaration.Members.Add(RenderMethod);
 

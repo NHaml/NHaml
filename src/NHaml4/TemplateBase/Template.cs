@@ -1,8 +1,9 @@
 using System;
 using System.IO;
 using NHaml.Utils;
+using NHaml;
 
-namespace NHaml
+namespace NHaml4.TemplateBase
 {
     public abstract class Template
     {

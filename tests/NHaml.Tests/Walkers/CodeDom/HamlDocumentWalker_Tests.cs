@@ -27,7 +27,7 @@ namespace NHaml4.Tests.Walkers
             var code = walker.Walk(document, content);
 
             // Assert
-            classBuilder.Verify(x => x.AppendLine(content));
+            classBuilder.Verify(x => x.Append(content));
         }
 
         [Test]

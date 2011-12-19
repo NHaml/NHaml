@@ -7,7 +7,8 @@ namespace NHaml4.Compilers
 {
     public interface ITemplateClassBuilder
     {
-        void AppendLine(string content);
+        void Append(string content);
+        void AppendNewLine();
         string Build(string className);
     }
 }

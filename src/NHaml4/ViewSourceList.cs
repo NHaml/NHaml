@@ -7,7 +7,7 @@ using NHaml.Utils;
 
 namespace NHaml4
 {
-    public class ViewSourceList : List<IViewSource>, IViewSourceList
+    public class ViewSourceList : List<IViewSource>
     {
         public string GetPathName()
         {
@@ -16,18 +16,10 @@ namespace NHaml4
             for (int c = 0; c < templatePath.Length; c++)
             {
                 char ch = templatePath[c];
-
-                if ((ch >= 97 && ch <= 122) || (ch >= 65 && ch <= 90) || (ch >= 0 && ch <= 9))
-                {
-                    stringBuilder.Append(ch);
-                }
-                else
-                {
-                    stringBuilder.Append('_');
-                }
+                stringBuilder.Append(Char.IsLetter(ch) ? ch : '_');
             }
 
-            return stringBuilder.ToString().Replace(templatePath, "_").Trim('_');
+            return stringBuilder.ToString();
         }
     }
 }

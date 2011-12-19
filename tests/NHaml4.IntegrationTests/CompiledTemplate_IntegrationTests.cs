@@ -10,6 +10,7 @@ using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
 using NHaml4.Compilers.CSharp2;
+using NHaml4.TemplateBase;
 
 namespace NHaml.IntegrationTests
 {
@@ -23,13 +24,13 @@ namespace NHaml.IntegrationTests
             // Arrange
             var parser = new HamlTreeParser(new HamlFileLexer());
             var walker = new HamlDocumentWalker(new CSharp2TemplateClassBuilder());
-            var compilerMock = new Mock<ITemplateFactoryCompiler>();
+            var compiler = new CSharp2TemplateCompiler();
             string templateContent = @"This is a test";
 
             var viewSource = ViewSourceBuilder.Create(templateContent);
 
             // Act
-            var compiledTemplate = new CompiledTemplate(parser, walker, compilerMock.Object);
+            var compiledTemplate = new CompiledTemplate(parser, walker, compiler);
             compiledTemplate.CompileTemplateFactory(viewSource);
             Template template = compiledTemplate.CreateInstance();
             var textWriter = new StringWriter();

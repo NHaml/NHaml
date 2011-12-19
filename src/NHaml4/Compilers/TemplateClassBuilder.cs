@@ -27,8 +27,8 @@ namespace NHaml4.Compilers
             Meta = new Dictionary<string, string>();
         }
 
-        public abstract void AppendOutput(string value);
-        public abstract void AppendLine(string line);
+        public abstract void Append(string value);
+        public abstract void AppendNewLine();
 
         public virtual void BeginCodeBlock()
         {
@@ -49,8 +49,8 @@ namespace NHaml4.Compilers
             Depth++;
         }
 
-        public abstract void AppendCode(string code, bool escapeHtml);
-        public abstract void AppendSilentCode(string code);
+        //public abstract void AppendCode(string code, bool escapeHtml);
+        //public abstract void AppendSilentCode(string code);
         public abstract string Build(string className);
 
         //public abstract void AppendPreambleCode(string code);

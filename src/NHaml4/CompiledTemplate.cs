@@ -7,6 +7,7 @@ using NHaml4.Compilers;
 using NHaml4;
 using NHaml4.Walkers;
 using System.Linq;
+using NHaml4.TemplateBase;
 
 namespace NHaml
 {
@@ -31,11 +32,20 @@ namespace NHaml
             CompileTemplateFactory(new ViewSourceList { viewSource });
         }
 
-        public void CompileTemplateFactory(IViewSourceList viewSourceList)
+        public void CompileTemplateFactory(ViewSourceList viewSourceList)
         {
+            string className = viewSourceList.GetPathName();
             HamlDocument hamlDocument = _treeParser.ParseDocument(viewSourceList);
-            string templateCode = _treeWalker.Walk(hamlDocument, viewSourceList.GetPathName());
-            _templateFactory = _templateFactoryCompiler.Compile(templateCode);
+            string templateCode = _treeWalker.Walk(hamlDocument, className);
+            _templateFactory = _templateFactoryCompiler.Compile(templateCode, className, GetCompileTypes() );
+        }
+
+        private IList<Type> GetCompileTypes()
+        {
+            return new List<Type> {
+                typeof(NHaml4.TemplateBase.Template),
+                typeof(System.Web.HttpUtility)
+            };
         }
 
         public Template CreateInstance()

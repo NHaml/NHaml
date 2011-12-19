@@ -19,7 +19,7 @@ namespace NHaml4.Parser
             _hamlFileReader = hamlFileReader;
         }
 
-        public HamlDocument ParseDocument(IViewSourceList layoutViewSources)
+        public HamlDocument ParseDocument(ViewSourceList layoutViewSources)
         {
             return ParseDocument(layoutViewSources[0].GetStreamReader());
         }
