@@ -2,7 +2,7 @@ using System;
 using System.Reflection.Emit;
 using NHaml4.TemplateBase;
 
-namespace NHaml
+namespace NHaml4
 {
 
     public delegate T Func<T>();

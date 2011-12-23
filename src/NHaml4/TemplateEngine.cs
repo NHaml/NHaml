@@ -1,33 +1,33 @@
 using System;
 using System.Collections.Generic;
-using System.Text;
-using NHaml4.TemplateResolution;
+using NHaml;
 using NHaml.Utils;
 using NHaml4.Parser;
-using NHaml.IO;
+using NHaml4.IO;
 using NHaml4;
 using NHaml4.Compilers;
 using NHaml4.Compilers.CSharp2;
+using NHaml4.Walkers.CodeDom;
 
-namespace NHaml
+namespace NHaml4
 {
     public  class TemplateEngine
     {
         private readonly Dictionary<string, TemplateFactory> _compiledTemplateCache;
-        private TemplateFactoryFactory _templateFactoryFactory;
+        private readonly TemplateFactoryFactory _templateFactoryFactory;
 
         public TemplateEngine()
         {
             _templateFactoryFactory = new TemplateFactoryFactory(
                 new HamlTreeParser(new HamlFileLexer()),
-                new NHaml4.Walkers.CodeDom.HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
+                new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
             _compiledTemplateCache = new Dictionary<string, TemplateFactory>();
         }
 
         public TemplateFactory GetCompiledTemplate(ViewSourceList viewSourceList)
         {
-            return GetCompiledTemplate(viewSourceList, typeof(NHaml4.TemplateBase.Template));
+            return GetCompiledTemplate(viewSourceList, typeof(TemplateBase.Template));
         }
 
         public TemplateFactory GetCompiledTemplate(ViewSourceList viewSourceList, Type templateBaseType)
@@ -45,7 +45,6 @@ namespace NHaml
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
                     compiledTemplate = _templateFactoryFactory.CompileTemplateFactory(viewSourceList);
-                    //compiledTemplate.Compile();
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;
                 }

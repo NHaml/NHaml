@@ -1,11 +1,8 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using NHaml4;
 using NUnit.Framework;
 using NHaml.Tests.Builders;
-using Moq;
 using System.IO;
-using NHaml4.TemplateResolution;
-using NHaml.IO;
+using NHaml4.IO;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;

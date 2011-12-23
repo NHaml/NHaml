@@ -21,9 +21,15 @@ namespace NHaml.Tests.IO
         }
 
         [Test]
-        [TestCase("", 0, Description = "Empty Line")]
+        public void Read_NullArgument_ThrowsArgumentNullException()
+        {
+            Assert.Throws<ArgumentNullException>(() => new HamlFileLexer().Read(null));
+        }
+
+        [Test]
+        [TestCase("", 1, Description = "Empty Line")]
         [TestCase("Line", 1, Description = "Single Line")]
-        [TestCase("Line1\n", 1, Description = "Single Line Followed By Line Break")]
+        [TestCase("Line1\n", 2, Description = "Single Line Followed By Line Break")]
         [TestCase("Line1\nLine2", 2, Description = "Two Lines")]
         [TestCase("Line1\n\nLine2", 3, Description = "Two Lines Separated With Blank Line")]
         public void Read_ReturnsHamlFileWithCorrectLineCount(string template, int expectedLineCount)
@@ -32,6 +38,26 @@ namespace NHaml.Tests.IO
             var result = new HamlFileLexer().Read(textReader);
             Assert.AreEqual(expectedLineCount, result.LineCount);
         }
+
+        [TestCase("Line1\n", 2, "Line1", "", Description = "Single Line Followed By Line Break")]
+        [TestCase("Line1\nLine2", 2, "Line1", "Line2", Description = "Single Line Followed By Line Break")]
+        [TestCase("Line1\rLine2", 2, "Line1", "Line2", Description = "Single Line Followed By Line Break")]
+        [TestCase("Line1\r\nLine2", 2, "Line1", "Line2", Description = "Single Line Followed By Line Break")]
+        [TestCase("Line1\n\rLine2", 3, "Line1", "", Description = "Single Line Followed By Line Break")]
+        public void Read_HandlesNonStandardLineBreaksCorrectly(string template, int expectedLineCount, string expectedLine1, string expectedLine2)
+        {
+            var textReader = new StringReader(template);
+            var result = new HamlFileLexer().Read(textReader);
+
+            // Assert
+            Assert.AreEqual(expectedLineCount, result.LineCount);
+            Assert.AreEqual(expectedLine1, result.CurrentLine.Content);
+            if (!result.EndOfFile)
+            {
+                result.MoveNext();
+                Assert.AreEqual(expectedLine2, result.CurrentLine.Content);
+            }
+        }    
 
         [Test]
         [TestCase("Test", 0, Description = "No indent")]

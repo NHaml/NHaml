@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using Moq;
 using NHaml4.Compilers;
 using NHaml4.Parser;
@@ -13,21 +9,29 @@ namespace NHaml4.Tests.Walkers
     [TestFixture]
     public class HamlDocumentWalker_Tests
     {
+        private Mock<ITemplateClassBuilder> _classBuilder;
+        private HamlDocumentWalker _walker;
+
+        [SetUp]
+        public void SetUp()
+        {
+            _classBuilder = new Mock<ITemplateClassBuilder>();
+            _walker = new HamlDocumentWalker(_classBuilder.Object);
+        }
+
         [Test]
         public void Walk_SimpleFile_AppendsCorrectTag()
         {
             // Arrange
             const string content = "Simple content";
-            var classBuilder = new Mock<ITemplateClassBuilder>();
-            HamlDocumentWalker walker = new HamlDocumentWalker(classBuilder.Object);
             var document = new HamlDocument();
             document.AddChild(new HamlNodeText(content));
 
             // Act
-            var code = walker.Walk(document, content);
+            _walker.Walk(document, content);
 
             // Assert
-            classBuilder.Verify(x => x.Append(content));
+            _classBuilder.Verify(x => x.Append(content));
         }
 
         [Test]
@@ -35,15 +39,13 @@ namespace NHaml4.Tests.Walkers
         {
             // Arrange
             const string className = "ClassName";
-            var classBuilder = new Mock<ITemplateClassBuilder>();
-            HamlDocumentWalker walker = new HamlDocumentWalker(classBuilder.Object);
-            var document = new HamlTreeParser(new NHaml.IO.HamlFileLexer()).ParseDocument("Simple content");
+            var document = new HamlTreeParser(new NHaml4.IO.HamlFileLexer()).ParseDocumentSource("Simple content");
             
             // Act
-            var code = walker.Walk(document, className);
+            _walker.Walk(document, className);
 
             // Assert
-            classBuilder.Verify(x => x.Build(className));
+            _classBuilder.Verify(x => x.Build(className));
         }
     }
 }

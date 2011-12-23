@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace NHaml
+namespace NHaml4
 {
     public static class ProxyExtracter
     {

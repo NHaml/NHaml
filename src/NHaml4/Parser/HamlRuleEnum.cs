@@ -10,34 +10,28 @@ namespace NHaml4.Parser
     {
         Unknown = 0,
 
-        [Signifier("")]
+        //[Signifier("")]
         PlainText,
 
-        [Signifier("%")]
+        //[Signifier("%")]
         Tag,
 
-        [Signifier("#")]
+        //[Signifier("#")]
         DivId,
 
-        [Signifier(".")]
+        //[Signifier(".")]
         DivClass,
 
-        [Signifier("!!!")]
+        //[Signifier("!!!")]
         DocType,
 
-        [Signifier("/")]
+        //[Signifier("/")]
         HtmlComment,
 
-        [Signifier("-#")]
+        //[Signifier("-#")]
         HamlComment,
 
-        [Signifier("=")]
+        //[Signifier("=")]
         Evaluation,
-    }
-
-    public class SignifierAttribute : DescriptionAttribute
-    {
-        public SignifierAttribute(string signifier) : base(signifier)
-        { }
     }
 }

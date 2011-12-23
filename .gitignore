@@ -7,3 +7,5 @@ StyleCop.Cache
 *.swp
 bin/
 obj/
+
+*.dotCover

@@ -47,8 +47,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Builders\TemplateContentProviderBuilder.cs" />
     <Compile Include="Builders\ViewSourceBuilder.cs" />
+    <Compile Include="ViewSourceList_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeTextWalker_Tests.cs" />
     <None Include="Builders\TemplateOptionsBuilder.cs" />
     <Compile Include="CompiledTemplate_Tests.cs" />
     <Compile Include="IO\HamlLine_Tests.cs" />

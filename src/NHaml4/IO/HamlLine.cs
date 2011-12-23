@@ -8,9 +8,8 @@ namespace NHaml4.IO
 {
     public class HamlLine
     {
-        enum ParseState { WhiteSpace, Content };
         private int _indentCount;
-        private HamlRuleEnum _hamlRule;
+        protected HamlRuleEnum _hamlRule;
         private string _content;
 
         public HamlLine(string currentLine)
@@ -36,28 +35,22 @@ namespace NHaml4.IO
         private void ParseHamlLine(string currentLine)
         {
             _indentCount = 0;
-            int curIndex = 0;
+            int whiteSpaceIndex = 0;
 
-            while (curIndex < currentLine.Length)
+            while (whiteSpaceIndex < currentLine.Length)
             {
-                if (currentLine[curIndex] == ' ')
+                if (currentLine[whiteSpaceIndex] == ' ')
                     _indentCount++;
-                else if (currentLine[curIndex] == '\t')
+                else if (currentLine[whiteSpaceIndex] == '\t')
                     _indentCount += 2;
                 else
                     break;
-                curIndex++;
+                whiteSpaceIndex++;
             }
 
-            if (curIndex == currentLine.Length)
-            {
-                _indentCount = 0;
-                _hamlRule = HamlRuleEnum.PlainText;
-                _content = "";
-                return;
-            }
+            _content = (whiteSpaceIndex == currentLine.Length) ? "" : currentLine.Substring(whiteSpaceIndex);
 
-            _content = currentLine.Substring(curIndex);
+            if (string.IsNullOrEmpty(_content)) _indentCount = 0;
 
             _hamlRule = ParseHamlRule();
         }
@@ -68,39 +61,39 @@ namespace NHaml4.IO
 
             if (_content.StartsWith("!!!"))
             {
-                _content = (_content.Length > 3 ?_content.Substring(3) : "");
+                _content = (_content.Length > 3 ? _content.Substring(3) : "");
                 return HamlRuleEnum.DocType;
             }
-            if (_content.StartsWith("-#"))
+            else if (_content.StartsWith("-#"))
             {
                 _content = (_content.Length > 2 ? _content.Substring(2) : "");
                 return HamlRuleEnum.HamlComment;
             }
-            if (_content.StartsWith("%"))
+            else if (_content.StartsWith("%"))
             {
                 _content = (_content.Length > 1 ? _content.Substring(1) : "");
                 return HamlRuleEnum.Tag;
             }
-            if (_content.StartsWith("#"))
-            {
-                _content = (_content.Length > 1 ? _content.Substring(1) : "");
-                return HamlRuleEnum.DivId;
-            }
-            if (_content.StartsWith("."))
-            {
-                _content = (_content.Length > 1 ? _content.Substring(1) : "");
-                return HamlRuleEnum.DivClass;
-            }
-            if (_content.StartsWith("/"))
+            //if (_content.StartsWith("#"))
+            //{
+            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
+            //    return HamlRuleEnum.DivId;
+            //}
+            //if (_content.StartsWith("."))
+            //{
+            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
+            //    return HamlRuleEnum.DivClass;
+            //}
+            else if (_content.StartsWith("/"))
             {
                 _content = (_content.Length > 1 ? _content.Substring(1) : "");
                 return HamlRuleEnum.HtmlComment;
             }
-            if (_content.StartsWith("="))
-            {
-                _content = (_content.Length > 1 ? _content.Substring(1) : "");
-                return HamlRuleEnum.Evaluation;
-            }
+            //if (_content.StartsWith("="))
+            //{
+            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
+            //    return HamlRuleEnum.Evaluation;
+            //}
             return HamlRuleEnum.PlainText;
         }
     }

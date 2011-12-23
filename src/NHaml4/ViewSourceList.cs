@@ -18,7 +18,7 @@ namespace NHaml4
             this.Add(new FileViewSource(fileInfo));
         }
 
-        public string GetPathName()
+        public string GetClassNameFromPathName()
         {
             string templatePath = this.Last().Path;
             var stringBuilder = new StringBuilder();
@@ -31,7 +31,7 @@ namespace NHaml4
             return stringBuilder.ToString();
         }
 
-        internal string GetCacheKey()
+        public string GetCacheKey()
         {
             return string.Join(",", this.Select(x => x.Path).ToArray());
         }

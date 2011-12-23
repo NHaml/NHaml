@@ -12,28 +12,33 @@ namespace NHaml4.Parser
 {
     public class HamlTreeParser : ITreeParser
     {
-        private readonly HamlFileLexer _hamlFileReader;
+        private readonly HamlFileLexer _hamlFileLexer;
 
-        public HamlTreeParser(HamlFileLexer hamlFileReader)
+        public HamlTreeParser(HamlFileLexer hamlFileLexer)
         {
-            _hamlFileReader = hamlFileReader;
+            _hamlFileLexer = hamlFileLexer;
         }
 
-        public HamlDocument ParseDocument(ViewSourceList layoutViewSources)
+        public HamlDocument ParseViewSources(ViewSourceList layoutViewSources)
         {
-            return ParseDocument(layoutViewSources[0].GetStreamReader());
+            return ParseStreamReader(layoutViewSources[0].GetStreamReader());
         }
 
-        public HamlDocument ParseDocument(string documentSource)
+        public HamlDocument ParseDocumentSource(string documentSource)
         {
             var streamReader = new StreamReader(
-                new MemoryStream(new System.Text.UTF8Encoding().GetBytes(documentSource)));
-            return ParseDocument(streamReader);
+                new MemoryStream(new UTF8Encoding().GetBytes(documentSource)));
+            return ParseStreamReader(streamReader);
         }
 
-        private HamlDocument ParseDocument(StreamReader reader)
+        public HamlDocument ParseStreamReader(StreamReader reader)
         {
-            var hamlFile = _hamlFileReader.Read(reader);
+            var hamlFile = _hamlFileLexer.Read(reader);
+            return ParseHamlFile(hamlFile);
+        }
+
+        public HamlDocument ParseHamlFile(HamlFile hamlFile)
+        {
             var result = new HamlDocument();
             while (!hamlFile.EndOfFile)
             {
@@ -62,7 +67,7 @@ namespace NHaml4.Parser
                 case HamlRuleEnum.PlainText:
                     return new HamlNodeText(nodeLine);
                 default:
-                    throw new HamlUnknownRuleException(nodeLine.HamlRule.ToString());
+                    throw new HamlUnknownRuleException(nodeLine.Content);
             }
         }
     }

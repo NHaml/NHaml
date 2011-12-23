@@ -1,12 +1,8 @@
-using System.Collections.Generic;
-using System.Dynamic;
 using System.IO;
 using System.Linq;
-using System.Web.Script.Serialization;
 using NUnit.Framework;
 using System;
-using NHaml;
-using System.Diagnostics;
+using NHaml4;
 using NHaml4.TemplateBase;
 
 namespace HamlSpec

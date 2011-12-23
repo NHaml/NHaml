@@ -124,6 +124,9 @@
       <Link>Properties\NHaml.snk</Link>
     </None>
     <Compile Include="TemplateEngine.cs" />
+    <None Include="test.haml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />

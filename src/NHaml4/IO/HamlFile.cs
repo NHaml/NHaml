@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.IO;
-using System.Collections.ObjectModel;
+﻿using System.Collections.Generic;
 
-namespace NHaml.IO
+namespace NHaml4.IO
 {
     public class HamlFile
     {
@@ -20,11 +15,6 @@ namespace NHaml.IO
             }
         }
 
-        public object Read()
-        {
-            throw new NotImplementedException();
-        }
-
         public HamlLine CurrentLine
         {
             get {
@@ -34,11 +24,11 @@ namespace NHaml.IO
             }
         }
 
-        internal void AddLine(string currentLine)
+        public void AddLine(HamlLine line)
         {
-            _hamlLines.Add(new HamlLine(currentLine));
+            _hamlLines.Add(line);
         }
-
+        
         public void MoveNext()
         {
             _currentLineIndex++;

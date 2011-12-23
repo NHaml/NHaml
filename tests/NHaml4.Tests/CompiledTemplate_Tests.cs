@@ -38,7 +38,7 @@ namespace NHaml.Tests
             compiledTemplate.CompileTemplateFactory(fakeHamlSource);
 
             // Assert
-            _parserMock.Verify(x => x.ParseDocument(It.Is<ViewSourceList>(param => param.Contains(fakeHamlSource))));
+            _parserMock.Verify(x => x.ParseViewSources(It.Is<ViewSourceList>(param => param.Contains(fakeHamlSource))));
         }
 
         [Test]
@@ -46,7 +46,7 @@ namespace NHaml.Tests
         {
             // Arrange
             var fakeHamlDocument = new HamlDocument();
-            _parserMock.Setup(x => x.ParseDocument(It.IsAny<ViewSourceList>()))
+            _parserMock.Setup(x => x.ParseViewSources(It.IsAny<ViewSourceList>()))
                 .Returns(fakeHamlDocument);
             var viewSource = ViewSourceBuilder.Create();
 
@@ -74,7 +74,7 @@ namespace NHaml.Tests
             compiledTemplate.CompileTemplateFactory(list);
 
             // Assert
-            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, list.GetPathName(), It.IsAny<IList<System.Type>>()));
+            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, list.GetClassNameFromPathName(), It.IsAny<IList<System.Type>>()));
         }
     }
 }

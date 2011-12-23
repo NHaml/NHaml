@@ -1,47 +1,46 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using NHaml4.IO;
 using NUnit.Framework;
 using NHaml4.Parser;
-using NHaml4.TemplateResolution;
 using NHaml.Tests.Builders;
 using NHaml.IO;
-using NHaml4;
 
-namespace NHaml.Tests
+namespace NHaml4.Tests.Parser
 {
     [TestFixture]
     public class HamlTreeParser_Tests
     {
-        [Test]
-        public void Parse_SingleLineTemplate_ReturnsHamlTree()
+        private HamlTreeParser _parser;
+
+        [SetUp]
+        public void Setup()
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
+            _parser = new HamlTreeParser(new HamlFileLexer());
+        }
+
+        [Test]
+        public void ParseViewSources_SingleLineTemplate_ReturnsHamlTree()
+        {
             var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create("Test") };
-            var result = parser.ParseDocument(layoutViewSources);
+            var result = _parser.ParseViewSources(layoutViewSources);
             Assert.IsInstanceOf(typeof(HamlDocument), result);
         }
 
         [Test]
         [TestCase("Test content", typeof(HamlNodeText))]
-        public void Parse_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string source, Type nodeType)
+        public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(source) };
-            var result = parser.ParseDocument(layoutViewSources);
+            var result = _parser.ParseDocumentSource(template);
             Assert.IsInstanceOf(nodeType, result.Children[0]);
         }
 
         [Test]
-        [TestCase("", 0)]
+        [TestCase("", 1)]
         [TestCase("Test", 1)]
         [TestCase("Test\nTest", 2)]
-        public void Parse_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
+        public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(template) };
-            var result = parser.ParseDocument(layoutViewSources);
+            var result = _parser.ParseDocumentSource(template);
             Assert.AreEqual(expectedChildren, result.Children.Count);
         }
 
@@ -50,12 +49,31 @@ namespace NHaml.Tests
         [TestCase("Test\n  Test\n  Test", 1)]
         [TestCase("Test\n  Test\n    Test", 1)]
         [TestCase("Test\n  Test\nTest", 2)]
-        public void Parse_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
+        public void ParseDocumentSource_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
-            HamlTreeParser parser = new HamlTreeParser(new HamlFileLexer());
-            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create(template) };
-            var result = parser.ParseDocument(layoutViewSources);
+            var result = _parser.ParseDocumentSource(template);
             Assert.AreEqual(expectedChildren, result.Children.Count);
         }
+
+        [Test]
+        public void ParseHamlFile_UnknownRuleType_ThrowsUnknownRuleException()
+        {
+            var fakeLine = new HamlLineFake("") {HamlRule = HamlRuleEnum.Unknown};
+
+            var file = new HamlFile();
+            file.AddLine(fakeLine);
+            Assert.Throws<HamlUnknownRuleException>(() => _parser.ParseHamlFile(file));           
+        }
+
+        class HamlLineFake : HamlLine
+        {
+            public HamlLineFake(string line) : base(line) { }
+
+            public new HamlRuleEnum HamlRule
+            {
+                set { _hamlRule = value;  }
+            }
+        }
+
     }
 }

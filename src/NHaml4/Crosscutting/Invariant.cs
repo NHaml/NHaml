@@ -7,8 +7,6 @@ namespace NHaml.Utils
     [System.Diagnostics.DebuggerStepThrough]
     public static class Invariant
     {
-    
-
         public static void ArgumentNotNull( object argument, string argumentName )
         {
             if( argument == null )
@@ -29,16 +27,6 @@ namespace NHaml.Utils
                 throw new ArgumentOutOfRangeException(
                     string.Format(System.Globalization.CultureInfo.InvariantCulture,
                         "The provided string argument '{0}' cannot be empty", argumentName));
-            }
-        }
-
-        public static void FileExists( string path )
-        {
-            ArgumentNotEmpty( path, "path" );
-
-            if( !File.Exists( path ) )
-            {
-                throw new FileNotFoundException( path );
             }
         }
     }
