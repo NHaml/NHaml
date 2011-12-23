@@ -4,11 +4,20 @@ using System.Linq;
 using System.Text;
 using NHaml4.TemplateResolution;
 using NHaml.Utils;
+using System.IO;
 
 namespace NHaml4
 {
     public class ViewSourceList : List<IViewSource>
     {
+        public ViewSourceList()
+        { }
+
+        public ViewSourceList(FileInfo fileInfo)
+        {
+            this.Add(new FileViewSource(fileInfo));
+        }
+
         public string GetPathName()
         {
             string templatePath = this.Last().Path;
@@ -20,6 +29,11 @@ namespace NHaml4
             }
 
             return stringBuilder.ToString();
+        }
+
+        internal string GetCacheKey()
+        {
+            return string.Join(",", this.Select(x => x.Path).ToArray());
         }
     }
 }

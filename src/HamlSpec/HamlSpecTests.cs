@@ -6,8 +6,8 @@ using System.Web.Script.Serialization;
 using NUnit.Framework;
 using System;
 using NHaml;
-using NHaml.Compilers.CSharp2;
 using System.Diagnostics;
+using NHaml4.TemplateBase;
 
 namespace HamlSpec
 {
@@ -17,6 +17,7 @@ namespace HamlSpec
         private string TemplatesFolder = @"Functional\Templates\";
 
         // WORKING
+        [TestCase("plain text templates")]
         //[TestCase("silent comments")]
         //[TestCase("markup comments")]
         //[TestCase("tags with unusual HTML characters")]
@@ -79,19 +80,13 @@ namespace HamlSpec
             File.WriteAllText(testFile.FullName, hamlTemplate);
 
             var templateEngine = GetTemplateEngine();
-            var resources = new TemplateCompileResources(templateEngine.Options.TemplateBaseType, testFile.FullName);
-            var compiledTemplate = templateEngine.GetCompiledTemplate(resources);
-            return compiledTemplate.CreateInstance();
+            var compiledTemplate = templateEngine.GetCompiledTemplate(new NHaml4.ViewSourceList(testFile));
+            return compiledTemplate.CreateTemplate();
         }
 
         private TemplateEngine GetTemplateEngine()
         {
-            var templateOptions = new TemplateOptions
-            {
-                TemplateCompiler = new CSharp2TemplateCompiler(),
-            };
-            templateOptions.TemplateContentProvider.AddPathSource(TemplatesFolder);
-            return new TemplateEngine(templateOptions);
+            return new TemplateEngine();
         }
     }
 }

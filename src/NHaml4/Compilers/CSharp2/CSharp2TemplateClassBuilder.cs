@@ -1,10 +1,12 @@
 using System.CodeDom;
+using Microsoft.CSharp;
 
 namespace NHaml4.Compilers.CSharp2
 {
     public class CSharp2TemplateClassBuilder : CodeDomClassBuilder
     {
-        public CSharp2TemplateClassBuilder() : base()
+        public CSharp2TemplateClassBuilder()
+            : base(new CSharpCodeProvider())
         {
         }
 

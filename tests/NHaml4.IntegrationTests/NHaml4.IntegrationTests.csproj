@@ -54,7 +54,7 @@
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>NHaml4</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHaml.Tests\NHaml4.Tests.csproj">
+    <ProjectReference Include="..\NHaml4.Tests\NHaml4.Tests.csproj">
       <Project>{92236FD2-3C06-4487-A6ED-E3E89511665B}</Project>
       <Name>NHaml4.Tests</Name>
     </ProjectReference>

@@ -11,15 +11,15 @@ using NHaml4.TemplateBase;
 
 namespace NHaml
 {
-    public class CompiledTemplate
+    public class TemplateFactoryFactory
     {
         private readonly ITemplateContentProvider _templateContentProvider;
         private readonly ITreeParser _treeParser;
         private readonly IDocumentWalker _treeWalker;
         private readonly ITemplateFactoryCompiler _templateFactoryCompiler;
-        private TemplateFactory _templateFactory;
+        //private TemplateFactory _templateFactory;
 
-        public CompiledTemplate(ITreeParser treeParser,
+        public TemplateFactoryFactory(ITreeParser treeParser,
             IDocumentWalker treeWalker, ITemplateFactoryCompiler templateCompiler)
         {
             _treeParser = treeParser;
@@ -27,17 +27,18 @@ namespace NHaml
             _templateFactoryCompiler = templateCompiler;
         }
 
-        public void CompileTemplateFactory(IViewSource viewSource)
+        public TemplateFactory CompileTemplateFactory(IViewSource viewSource)
         {
-            CompileTemplateFactory(new ViewSourceList { viewSource });
+            return CompileTemplateFactory(new ViewSourceList { viewSource });
         }
 
-        public void CompileTemplateFactory(ViewSourceList viewSourceList)
+        public TemplateFactory CompileTemplateFactory(ViewSourceList viewSourceList)
         {
             string className = viewSourceList.GetPathName();
             HamlDocument hamlDocument = _treeParser.ParseDocument(viewSourceList);
             string templateCode = _treeWalker.Walk(hamlDocument, className);
-            _templateFactory = _templateFactoryCompiler.Compile(templateCode, className, GetCompileTypes() );
+            var templateFactory = _templateFactoryCompiler.Compile(templateCode, className, GetCompileTypes() );
+            return templateFactory;
         }
 
         private IList<Type> GetCompileTypes()
@@ -48,12 +49,12 @@ namespace NHaml
             };
         }
 
-        public Template CreateInstance()
-        {
-            if (_templateFactory == null)
-                throw new NullReferenceException("Attempting to create an instance of a compiled template using a NULL templateFactory.");
-            return _templateFactory.CreateTemplate();
-        }
+        //public Template CreateInstance()
+        //{
+        //    if (_templateFactory == null)
+        //        throw new NullReferenceException("Attempting to create an instance of a compiled template using a NULL templateFactory.");
+        //    return _templateFactory.CreateTemplate();
+        //}
 
         //public void Recompile()
         //{

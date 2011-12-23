@@ -77,12 +77,12 @@
     <Compile Include="CompiledTemplate.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compilers\CodeDomClassBuilder.cs" />
+    <Compile Include="Compilers\Abstract\CodeDomClassBuilder.cs" />
     <Compile Include="Compilers\CodeDomTemplateCompiler.cs" />
-    <Compile Include="Compilers\CodeDomTemplateTypeBuilder.cs" />
-    <Compile Include="Compilers\CSharp2\CSharp2TemplateCompiler.cs" />
+    <Compile Include="Compilers\Abstract\CodeDomTemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
+    <Compile Include="Crosscutting\Invariant.cs" />
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
@@ -92,11 +92,11 @@
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
     <Compile Include="Parser\HamlTreeParser.cs" />
-    <Compile Include="Compilers\TemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
+    <Compile Include="TemplateBase\OutputWriter.cs" />
     <Compile Include="TemplateBase\Template.cs" />
     <Compile Include="ViewSourceList.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
@@ -109,27 +109,21 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Walkers\INodeWalker.cs" />
-    <Compile Include="TemplateCompileResources.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
-    <Compile Include="ParsedAttribute.cs" />
-    <Compile Include="ParsedAttributeType.cs" />
     <Compile Include="TemplateFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="OutputWriter.cs" />
-    <None Include="TemplateEngine.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
-    <Compile Include="Utils\Invariant.cs" />
-    <Compile Include="Utils\Utility.cs" />
     <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">
       <Link>Properties\NHaml.snk</Link>
     </None>
+    <Compile Include="TemplateEngine.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />

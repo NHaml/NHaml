@@ -1,7 +1,7 @@
 using System;
 using System.IO;
 
-namespace NHaml
+namespace NHaml4.TemplateBase
 {
     public class OutputWriter
     {

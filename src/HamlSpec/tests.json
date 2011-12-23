@@ -1,4 +1,11 @@
 {
+  "plain text templates" : {
+    "a single plaintext line" : {
+	  "haml" : "Single plaintext line",
+	  "html" : "Single plaintext line"
+	}
+  },
+
   "headers" : {
 
     "an XHTML XML prolog" : {

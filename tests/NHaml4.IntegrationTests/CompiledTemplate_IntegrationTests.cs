@@ -22,17 +22,18 @@ namespace NHaml.IntegrationTests
         public void SimpleIntegrationTest()
         {
             // Arrange
-            var parser = new HamlTreeParser(new HamlFileLexer());
-            var walker = new HamlDocumentWalker(new CSharp2TemplateClassBuilder());
-            var compiler = new CSharp2TemplateCompiler();
             string templateContent = @"This is a test";
 
             var viewSource = ViewSourceBuilder.Create(templateContent);
 
             // Act
-            var compiledTemplate = new CompiledTemplate(parser, walker, compiler);
-            compiledTemplate.CompileTemplateFactory(viewSource);
-            Template template = compiledTemplate.CreateInstance();
+            var compiledTemplate = new TemplateFactoryFactory(
+                new HamlTreeParser(new HamlFileLexer()),
+                new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
+                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
+
+            var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource);
+            Template template = templateFactory.CreateTemplate();
             var textWriter = new StringWriter();
             template.Render(textWriter);
 

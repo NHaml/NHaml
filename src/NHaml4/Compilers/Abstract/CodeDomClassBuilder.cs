@@ -9,8 +9,12 @@ using Microsoft.CSharp;
 
 namespace NHaml4.Compilers
 {
-    public abstract class CodeDomClassBuilder : TemplateClassBuilder
+    public abstract class CodeDomClassBuilder : ITemplateClassBuilder
     {
+        public const string DefaultTextWriterVariableName = "textWriter";
+        protected StringBuilder Output { get; private set; }
+        protected StringBuilder Preamble { get; private set; }
+
         private readonly CodeDomProvider _codeDomProvider;
         public CodeMemberMethod RenderMethod{ get; set; }
 
@@ -18,10 +22,18 @@ namespace NHaml4.Compilers
         protected abstract void RenderEndBlock();
         protected abstract void RenderBeginBlock();
 
-        public CodeDomClassBuilder()
-            : base()
+        public string CurrentTextWriterVariableName { get; set; }
+        public Type BaseType { get; set; }
+        public int Depth { get; set; }
+        public int BlockDepth { get; set; }
+        public string ClassName { get; internal set; }
+
+        public CodeDomClassBuilder(CodeDomProvider codeDomProvider)
         {
-            _codeDomProvider = new CSharpCodeProvider();
+            _codeDomProvider = codeDomProvider;
+            CurrentTextWriterVariableName = DefaultTextWriterVariableName;
+            Output = new StringBuilder();
+            Preamble = new StringBuilder();
 
             RenderMethod = new CodeMemberMethod
                                {
@@ -41,7 +53,7 @@ namespace NHaml4.Compilers
         //        new CodeSnippetExpression { Value = code, });
         //}
 
-        public override void Append(string line)
+        public void Append(string line)
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
@@ -51,7 +63,7 @@ namespace NHaml4.Compilers
                 new CodeExpressionStatement { Expression = writeInvoke });
         }
 
-        public override void AppendNewLine()
+        public void AppendNewLine()
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
@@ -234,14 +246,15 @@ namespace NHaml4.Compilers
         //    concatExpression.Parameters.Add(arrayExpression);
         //    return concatExpression;
         //}
-        public override void BeginCodeBlock()
+
+        public void BeginCodeBlock()
         {
             Depth++;
 
             RenderBeginBlock();
         }
 
-        public override void EndCodeBlock()
+        public void EndCodeBlock()
         {
             RenderEndBlock();
             Depth--;
@@ -261,7 +274,7 @@ namespace NHaml4.Compilers
         //    PreambleCount++;
         //}
 
-        public override string Build(string className)
+        public string Build(string className)
         {
             ClassName = className;
             var builder = new StringBuilder();

@@ -33,7 +33,7 @@ namespace NHaml.Tests
             var fakeHamlSource = ViewSourceBuilder.Create();
 
             // Act
-            var compiledTemplate = new CompiledTemplate(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
                 _templateClassBuilderMock.Object, _compilerMock.Object);
             compiledTemplate.CompileTemplateFactory(fakeHamlSource);
 
@@ -51,7 +51,7 @@ namespace NHaml.Tests
             var viewSource = ViewSourceBuilder.Create();
 
             // Act
-            var compiledTemplate = new CompiledTemplate(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
                 _templateClassBuilderMock.Object, _compilerMock.Object);
             compiledTemplate.CompileTemplateFactory(viewSource);
 
@@ -69,7 +69,7 @@ namespace NHaml.Tests
             var list = new ViewSourceList { ViewSourceBuilder.Create() };
 
             // Act
-            var compiledTemplate = new CompiledTemplate(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
                 _templateClassBuilderMock.Object, _compilerMock.Object);
             compiledTemplate.CompileTemplateFactory(list);
 

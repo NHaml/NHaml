@@ -1,78 +1,55 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using NHaml.Configuration;
 using NHaml4.TemplateResolution;
 using NHaml.Utils;
 using NHaml4.Parser;
 using NHaml.IO;
+using NHaml4;
+using NHaml4.Compilers;
+using NHaml4.Compilers.CSharp2;
 
 namespace NHaml
 {
     public  class TemplateEngine
     {
-        private readonly Dictionary<string, CompiledTemplate> _compiledTemplateCache;
-
-        public TemplateEngine()
-            : this()
-        {
-        }
+        private readonly Dictionary<string, TemplateFactory> _compiledTemplateCache;
+        private TemplateFactoryFactory _templateFactoryFactory;
 
         public TemplateEngine()
         {
-            Invariant.ArgumentNotNull( options, "options" );
-
-            Options = options;
-
-            _compiledTemplateCache = new Dictionary<string, CompiledTemplate>();
-
-            NHamlConfigurationSection.UpdateTemplateOptions( Options );
-            Options.TemplateBaseTypeChanged += (sender, args) => ClearCompiledTemplatesCache();
-            Options.TemplateCompilerChanged += (sender, args) => ClearCompiledTemplatesCache();
+            _templateFactoryFactory = new TemplateFactoryFactory(
+                new HamlTreeParser(new HamlFileLexer()),
+                new NHaml4.Walkers.CodeDom.HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
+                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
+            _compiledTemplateCache = new Dictionary<string, TemplateFactory>();
         }
 
-        public TemplateOptions Options { get; private set; }
-
-
-        private void ClearCompiledTemplatesCache()
+        public TemplateFactory GetCompiledTemplate(ViewSourceList viewSourceList)
         {
-            lock( _compiledTemplateCache )
-            {
-                _compiledTemplateCache.Clear();
-                //TODO: perhaps update usings here
-            }
+            return GetCompiledTemplate(viewSourceList, typeof(NHaml4.TemplateBase.Template));
         }
-        
-        public CompiledTemplate GetCompiledTemplate(TemplateCompileResources resources)
+
+        public TemplateFactory GetCompiledTemplate(ViewSourceList viewSourceList, Type templateBaseType)
         {
-            Invariant.ArgumentNotNull(resources.TemplateBaseType, "templateBaseType");
+            Invariant.ArgumentNotNull(templateBaseType, "templateBaseType");
 
-            var templateBaseType = ProxyExtracter.GetNonProxiedType(resources.TemplateBaseType);
-            var templateCacheKey = new StringBuilder();
-
-            foreach (var layoutTemplatePath in resources.GetViewSources(Options.TemplateContentProvider))
-            {
-                templateCacheKey.AppendFormat( "{0}, ", layoutTemplatePath.Path );
-            }
-
-            CompiledTemplate compiledTemplate;
+            templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
+            var templateCacheKey = viewSourceList.GetCacheKey();
+                
+            TemplateFactory compiledTemplate;
 
             lock( _compiledTemplateCache )
             {
                 var key = templateCacheKey.ToString();
                 if( !_compiledTemplateCache.TryGetValue( key, out compiledTemplate ) )
                 {
-                    //compiledTemplate = new CompiledTemplate(Options, resources, new HamlTreeParser(new HamlFileReader()));
+                    compiledTemplate = _templateFactoryFactory.CompileTemplateFactory(viewSourceList);
                     //compiledTemplate.Compile();
                     _compiledTemplateCache.Add( key, compiledTemplate );
                     return compiledTemplate;
                 }
             }
-
-            //if( Options.AutoRecompile )
-            //{
-            //    compiledTemplate.Recompile();
-            //}
 
             return compiledTemplate;
         }

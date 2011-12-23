@@ -49,7 +49,6 @@
   <ItemGroup>
     <Compile Include="Builders\TemplateContentProviderBuilder.cs" />
     <Compile Include="Builders\ViewSourceBuilder.cs" />
-    <Compile Include="Builders\TemplateCompileResourcesBuilder.cs" />
     <None Include="Builders\TemplateOptionsBuilder.cs" />
     <Compile Include="CompiledTemplate_Tests.cs" />
     <Compile Include="IO\HamlLine_Tests.cs" />

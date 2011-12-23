@@ -27,7 +27,8 @@ namespace NHaml.Utils
             if( argument.Length == 0 )
             {
                 throw new ArgumentOutOfRangeException(
-                  Utility.FormatCurrentCulture( "The provided string argument '{0}' cannot be empty", argumentName ) );
+                    string.Format(System.Globalization.CultureInfo.InvariantCulture,
+                        "The provided string argument '{0}' cannot be empty", argumentName));
             }
         }
 

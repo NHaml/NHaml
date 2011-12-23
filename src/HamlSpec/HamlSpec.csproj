@@ -47,7 +47,6 @@
     <Compile Include="HamlSpec.cs" />
     <Compile Include="HamlSpecLoader.cs" />
     <Compile Include="HamlSpecTests.cs" />
-    <Compile Include="JSON.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

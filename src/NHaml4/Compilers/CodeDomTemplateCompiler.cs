@@ -4,20 +4,19 @@ using System.Text.RegularExpressions;
 using NHaml4.Parser;
 using NHaml;
 using System;
+using NHaml4.Compilers.Abstract;
 
 namespace NHaml4.Compilers
 {
-    public abstract class CodeDomTemplateCompiler : ITemplateFactoryCompiler
+    public class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {
-        private readonly Regex lambdaRegex;
-        private readonly CodeDomClassBuilder _classBuilder;
+        //private readonly Regex lambdaRegex;
         private readonly CodeDomTemplateTypeBuilder _typeBuilder;
 
-        protected CodeDomTemplateCompiler(string lambdaRegex, CodeDomClassBuilder classBuilder, CodeDomTemplateTypeBuilder typeBuilder)
+        public CodeDomTemplateCompiler(CodeDomTemplateTypeBuilder typeBuilder)
         {
-            this.lambdaRegex = new Regex(lambdaRegex,
-                RegexOptions.Compiled | RegexOptions.Singleline);
-            _classBuilder = classBuilder;
+            //this.lambdaRegex = new Regex(lambdaRegex,
+            //    RegexOptions.Compiled | RegexOptions.Singleline);
             _typeBuilder = typeBuilder;
         }
 
@@ -68,6 +67,6 @@ namespace NHaml4.Compilers
         //    return null;
         //}
 
-        public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
+        //public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
     }
 }
