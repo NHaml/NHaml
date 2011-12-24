@@ -7,7 +7,7 @@ using NHaml4.Walkers;
 
 namespace NHaml4
 {
-    public class TemplateFactoryFactory
+    public class TemplateFactoryFactory : ITemplateFactoryFactory
     {
         private readonly ITreeParser _treeParser;
         private readonly IDocumentWalker _treeWalker;

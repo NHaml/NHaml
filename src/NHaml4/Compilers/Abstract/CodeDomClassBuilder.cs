@@ -43,16 +43,6 @@ namespace NHaml4.Compilers
             RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
         }
 
-        //public override void AppendSilentCode(string code)
-        //{
-        //    if (code == null) return;
-
-        //    code = CommentMarkup + code.Trim();
-
-        //    RenderMethod.Statements.Add(
-        //        new CodeSnippetExpression { Value = code, });
-        //}
-
         public void Append(string line)
         {
             var writeInvoke = CodeDomFluentBuilder
@@ -72,6 +62,71 @@ namespace NHaml4.Compilers
             RenderMethod.Statements.Add(
                 new CodeExpressionStatement { Expression = writeInvoke });
         }
+
+        public void BeginCodeBlock()
+        {
+            Depth++;
+
+            RenderBeginBlock();
+        }
+
+        public void EndCodeBlock()
+        {
+            RenderEndBlock();
+            Depth--;
+        }
+
+        public string Build(string className)
+        {
+            ClassName = className;
+            var builder = new StringBuilder();
+            using (var writer = new StringWriter(builder))
+            {
+
+                var compileUnit = new CodeCompileUnit();
+
+                var testNamespace = new CodeNamespace();
+                compileUnit.Namespaces.Add(testNamespace);
+
+                //foreach (var import in imports)
+                //{
+                //    var namespaceImport = new CodeNamespaceImport(import);
+                //    testNamespace.Imports.Add(namespaceImport);
+
+                //}
+
+                var generator = _codeDomProvider.CreateGenerator(writer);
+                var options = new CodeGeneratorOptions();
+                var declaration = new CodeTypeDeclaration
+                {
+                    Name = className,
+                    IsClass = true
+                };
+                declaration.BaseTypes.Add(new CodeTypeReference(typeof(NHaml4.TemplateBase.Template)));
+
+                declaration.Members.Add(RenderMethod);
+
+                testNamespace.Types.Add(declaration);
+                generator.GenerateCodeFromNamespace(testNamespace, writer, options);
+
+                //TODO: implement IDisposable
+                writer.Close();
+            }
+
+            return builder.ToString();
+        }
+
+        #region Will need this stuff one day!
+
+        //public override void AppendSilentCode(string code)
+        //{
+        //    if (code == null) return;
+
+        //    code = CommentMarkup + code.Trim();
+
+        //    RenderMethod.Statements.Add(
+        //        new CodeSnippetExpression { Value = code, });
+        //}
 
         //public override void AppendCode(string code, bool escapeHtml)
         //{
@@ -161,7 +216,6 @@ namespace NHaml4.Compilers
         //        }
         //        else
         //        {
-
         //            _invoke1.Parameters.Add(new CodePrimitiveExpression
         //                                        {
         //                                            Value = expressionStringToken.Value
@@ -173,18 +227,13 @@ namespace NHaml4.Compilers
         //        var concatExpression = GetConcatExpression(values);
         //        _invoke1.Parameters.Add(concatExpression);
         //    }
-
-
-
-
-
+        //
         //    _invoke1.Method = new CodeMethodReferenceExpression
         //                          {
         //                              MethodName = "RenderAttributeIfValueNotNull",
         //                              TargetObject = new CodeThisReferenceExpression()
         //                          };
         //    RenderMethod.Statements.Add(new CodeExpressionStatement { Expression = _invoke1 });
-
         //}
 
         //public static CodeMethodInvokeExpression GetConcatExpression(IList<ExpressionStringToken> values)
@@ -246,21 +295,6 @@ namespace NHaml4.Compilers
         //    concatExpression.Parameters.Add(arrayExpression);
         //    return concatExpression;
         //}
-
-        public void BeginCodeBlock()
-        {
-            Depth++;
-
-            RenderBeginBlock();
-        }
-
-        public void EndCodeBlock()
-        {
-            RenderEndBlock();
-            Depth--;
-        }
-
-
         //public override void AppendPreambleCode(string code)
         //{
 
@@ -273,49 +307,10 @@ namespace NHaml4.Compilers
         //    RenderMethod.Statements.Insert(PreambleCount, new CodeExpressionStatement(expression));
         //    PreambleCount++;
         //}
-
-        public string Build(string className)
-        {
-            ClassName = className;
-            var builder = new StringBuilder();
-            using (var writer = new StringWriter(builder))
-            {
-
-                var compileUnit = new CodeCompileUnit();
-
-                var testNamespace = new CodeNamespace();
-                compileUnit.Namespaces.Add(testNamespace);
-
-                //foreach (var import in imports)
-                //{
-                //    var namespaceImport = new CodeNamespaceImport(import);
-                //    testNamespace.Imports.Add(namespaceImport);
-    
-                //}
-
-                var generator = _codeDomProvider.CreateGenerator(writer);
-                var options = new CodeGeneratorOptions();
-                var declaration = new CodeTypeDeclaration
-                                      {
-                                          Name = className,
-                                          IsClass = true
-                                      };
-                declaration.BaseTypes.Add(new CodeTypeReference(typeof(NHaml4.TemplateBase.Template)));
-               
-                declaration.Members.Add(RenderMethod);
-
-                testNamespace.Types.Add(declaration);
-                generator.GenerateCodeFromNamespace(testNamespace, writer, options);
-
-                //TODO: implement IDisposable
-                writer.Close();
-            }
-
-            return builder.ToString();
-        }
+        #endregion
     }
 
-    public static class CodeDomFluentBuilder
+    internal static class CodeDomFluentBuilder
     {
         public static CodeMethodInvokeExpression GetCodeMethodInvokeExpression(string methodName, string targetObject)
         {

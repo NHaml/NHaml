@@ -4,19 +4,17 @@ using NHaml4.TemplateBase;
 
 namespace NHaml4
 {
-
-    public delegate T Func<T>();
-
-    public delegate TResult Func<T, TResult>(T arg);
+    [Serializable]
+    public class InvalidTemplateTypeException : Exception
+    {
+        public InvalidTemplateTypeException(Type t)
+            : base("Attempted to create a template factory using an invalid type " + t.FullName)
+        { }
+    }
 
     public class TemplateFactory
     {
-
         private readonly Func<Template> _fastActivator;
-
-        protected TemplateFactory()
-        {
-        }
 
         public TemplateFactory( Type templateType )
         {
@@ -30,15 +28,14 @@ namespace NHaml4
 
         private static Func<Template> CreateFastActivator(Type type)
         {
-            var dynamicMethod = new DynamicMethod( "activatefast__", type, null, type );
-
-            var ilGenerator = dynamicMethod.GetILGenerator();
             var constructor = type.GetConstructor( new Type[] { } );
-
-            if( constructor == null )
+            if (constructor == null)
             {
-                return null;
+                throw new InvalidTemplateTypeException(type);
             }
+
+            var dynamicMethod = new DynamicMethod( "activatefast__", type, null, type );
+            var ilGenerator = dynamicMethod.GetILGenerator();
 
             ilGenerator.Emit( OpCodes.Newobj, constructor );
             ilGenerator.Emit( OpCodes.Ret );

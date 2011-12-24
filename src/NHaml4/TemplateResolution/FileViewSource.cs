@@ -1,21 +1,17 @@
 using System.IO;
+using System;
 
 namespace NHaml4.TemplateResolution
 {
-    /// <summary>
-    /// Represents a view template source on the file system.
-    /// </summary>
     public class FileViewSource : IViewSource
     {
         private readonly FileInfo _fileInfo;
         private long _lastUpdated;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="FileViewSource"/> class.
-        /// </summary>
-        /// <param name="fileInfo">The file info.</param>
         public FileViewSource(FileInfo fileInfo)
         {
+            if (fileInfo == null) throw new ArgumentNullException("fileInfo");
+
             fileInfo.Refresh();
             if (!fileInfo.Exists)
             {

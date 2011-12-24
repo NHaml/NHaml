@@ -14,14 +14,18 @@ namespace NHaml4
     public  class TemplateEngine
     {
         private readonly Dictionary<string, TemplateFactory> _compiledTemplateCache;
-        private readonly TemplateFactoryFactory _templateFactoryFactory;
+        private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
         public TemplateEngine()
-        {
-            _templateFactoryFactory = new TemplateFactoryFactory(
+            : this(new TemplateFactoryFactory(
                 new HamlTreeParser(new HamlFileLexer()),
                 new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
-                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
+                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
+        { }
+
+        public TemplateEngine(ITemplateFactoryFactory templateFactoryFactory)
+        {
+            _templateFactoryFactory = templateFactoryFactory;
             _compiledTemplateCache = new Dictionary<string, TemplateFactory>();
         }
 
@@ -32,6 +36,7 @@ namespace NHaml4
 
         public TemplateFactory GetCompiledTemplate(ViewSourceList viewSourceList, Type templateBaseType)
         {
+            Invariant.ArgumentNotNull(viewSourceList, "viewSourceList");
             Invariant.ArgumentNotNull(templateBaseType, "templateBaseType");
 
             templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
