@@ -16,5 +16,7 @@ namespace NHaml4.TemplateResolution
         string Path { get;  }
 
         bool IsModified { get; }
+
+        string GetClassName();
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web;
-using System.Web.Hosting;
-using System.Web.Routing;
+﻿using System.Web.Routing;
 using NHaml4.TemplateResolution;
 using System.IO;
 
@@ -13,10 +7,6 @@ namespace NHaml.Web.Mvc
     public class MapPathTemplateContentProvider : FileTemplateContentProvider
     {
         private RequestContext _context;
-
-        public MapPathTemplateContentProvider()
-        {
-        }
 
         public void SetRequestContext(RequestContext context)
         {

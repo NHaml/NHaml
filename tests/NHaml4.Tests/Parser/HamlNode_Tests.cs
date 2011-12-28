@@ -18,7 +18,7 @@ namespace NHaml4.Tests.Parser
         {
             var node = new HamlNodeDummy();
             var childNode = new HamlNodeDummy();
-            node.AddChild(childNode);
+            node.Add(childNode);
             Assert.AreSame(childNode, node.Children[0]);
         }
     }

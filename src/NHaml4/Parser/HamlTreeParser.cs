@@ -19,9 +19,14 @@ namespace NHaml4.Parser
             _hamlFileLexer = hamlFileLexer;
         }
 
-        public HamlDocument ParseViewSources(ViewSourceList layoutViewSources)
+        public HamlDocument ParseViewSource(IViewSource layoutViewSource)
         {
-            return ParseStreamReader(layoutViewSources[0].GetStreamReader());
+            HamlDocument result = null;
+            using (var streamReader = layoutViewSource.GetStreamReader())
+            {
+                result = ParseStreamReader(streamReader);
+            }
+            return result;
         }
 
         public HamlDocument ParseDocumentSource(string documentSource)
@@ -42,7 +47,7 @@ namespace NHaml4.Parser
             var result = new HamlDocument();
             while (!hamlFile.EndOfFile)
             {
-                result.AddChild(ParseNode(hamlFile));
+                result.Add(ParseNode(hamlFile));
             }
             return result;
         }
@@ -55,7 +60,7 @@ namespace NHaml4.Parser
             hamlFile.MoveNext();
             while (hamlFile.CurrentLine != null && hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
             {
-                node.AddChild(ParseNode(hamlFile));
+                node.Add(ParseNode(hamlFile));
             }
             return node;
         }
@@ -66,6 +71,8 @@ namespace NHaml4.Parser
             {
                 case HamlRuleEnum.PlainText:
                     return new HamlNodeText(nodeLine);
+                case HamlRuleEnum.Tag:
+                    return new HamlNodeTag(nodeLine);
                 default:
                     throw new HamlUnknownRuleException(nodeLine.Content);
             }

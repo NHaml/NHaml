@@ -1,8 +1,6 @@
 using System;
-using System.IO;
 
-
-namespace NHaml.Utils
+namespace NHaml4.Crosscutting
 {
     [System.Diagnostics.DebuggerStepThrough]
     public static class Invariant

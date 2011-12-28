@@ -6,7 +6,7 @@ using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser;
 
-namespace NHaml.Tests.IO
+namespace NHaml4.Tests.IO
 {
     [TestFixture]
     public class HamlLine_Tests
@@ -29,6 +29,8 @@ namespace NHaml.Tests.IO
         [TestCase("", HamlRuleEnum.PlainText, Description = "Empty string")]
         [TestCase(" ", HamlRuleEnum.PlainText, Description = "Single space")]
         [TestCase("%", HamlRuleEnum.Tag, Description = "Plain tag")]
+        [TestCase(".className", HamlRuleEnum.Tag, Description = "Plain tag")]
+        [TestCase("#id", HamlRuleEnum.Tag, Description = "Plain tag")]
         [TestCase("%Tag", HamlRuleEnum.Tag, Description = "Plain tag")]
         [TestCase(" /Tag", HamlRuleEnum.HtmlComment, Description = "HTML Comment")]
         [TestCase("  -#Tag", HamlRuleEnum.HamlComment, Description = "Haml Comment")]
@@ -43,6 +45,8 @@ namespace NHaml.Tests.IO
         [TestCase("", "", Description = "Empty string")]
         [TestCase(" ", "", Description = "Single space")]
         [TestCase("%", "", Description = "Plain tag")]
+        [TestCase(".className", ".className", Description = "Plain tag")]
+        [TestCase("#id", "#id", Description = "Plain tag")]
         [TestCase("%Tag", "Tag", Description = "Plain tag")]
         [TestCase(" /Tag", "Tag", Description = "HTML Comment")]
         [TestCase("  -#Tag", "Tag", Description = "Haml Comment")]

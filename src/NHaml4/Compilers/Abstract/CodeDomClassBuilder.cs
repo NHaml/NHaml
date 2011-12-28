@@ -7,7 +7,7 @@ using System.Text;
 using NHaml;
 using Microsoft.CSharp;
 
-namespace NHaml4.Compilers
+namespace NHaml4.Compilers.Abstract
 {
     public abstract class CodeDomClassBuilder : ITemplateClassBuilder
     {
@@ -51,6 +51,11 @@ namespace NHaml4.Compilers
 
             RenderMethod.Statements.Add(
                 new CodeExpressionStatement { Expression = writeInvoke });
+        }
+
+        public void AppendFormat(string content, params object[] args)
+        {
+            Append(string.Format(content, args));
         }
 
         public void AppendNewLine()

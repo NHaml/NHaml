@@ -43,7 +43,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <CodeAnalysisRules>-Microsoft.Design#CA1020</CodeAnalysisRules>
     <DocumentationFile>
     </DocumentationFile>
@@ -82,12 +82,14 @@
     <Compile Include="Compilers\Abstract\CodeDomTemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
+    <Compile Include="Crosscutting\HtmlCharHelper.cs" />
     <Compile Include="Crosscutting\Invariant.cs" />
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
+    <Compile Include="Parser\HamlNodeTag.cs" />
     <Compile Include="Parser\HamlNodeText.cs" />
     <Compile Include="Parser\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
@@ -97,7 +99,6 @@
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
-    <Compile Include="TemplateBase\OutputWriter.cs" />
     <Compile Include="TemplateBase\Template.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs">
       <SubType>Code</SubType>
@@ -105,10 +106,10 @@
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="ViewSourceList.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeTagWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTextWalker.cs">
       <SubType>Code</SubType>
     </Compile>

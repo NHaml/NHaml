@@ -9,7 +9,7 @@ namespace NHaml4.IO
     public class HamlLine
     {
         private int _indentCount;
-        protected HamlRuleEnum _hamlRule;
+        private HamlRuleEnum _hamlRule;
         private string _content;
 
         public HamlLine(string currentLine)
@@ -25,6 +25,7 @@ namespace NHaml4.IO
         public HamlRuleEnum HamlRule
         {
             get { return _hamlRule; }
+            protected set { _hamlRule = value; }
         }
 
         public string Content
@@ -52,7 +53,16 @@ namespace NHaml4.IO
 
             if (string.IsNullOrEmpty(_content)) _indentCount = 0;
 
+            AddImplicitDivTag();
+
             _hamlRule = ParseHamlRule();
+        }
+
+        private void AddImplicitDivTag()
+        {
+            if (_content.Length == 0) return;
+            if (_content[0] == '.' || _content[0] == '#')
+                _content = "%" + _content;
         }
 
         private HamlRuleEnum ParseHamlRule()

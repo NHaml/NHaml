@@ -31,5 +31,10 @@ namespace NHaml4.Tests.Mocks
         {
             get { return true; }
         }
+
+        public string GetClassName()
+        {
+            return "mockClassName";
+        }
     }
 }

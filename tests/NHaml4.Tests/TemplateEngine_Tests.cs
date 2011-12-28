@@ -1,7 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using NHaml.Tests.Builders;
+using NHaml4.TemplateBase;
+using NHaml4.TemplateResolution;
 using NUnit.Framework;
 using Moq;
 
@@ -13,7 +13,7 @@ namespace NHaml4.Tests
         private Mock<ITemplateFactoryFactory> _templateFactoryFactoryMock;
         private TemplateEngine _templateEngine;
 
-        class DummyTemplate : TemplateBase.Template
+        class DummyTemplate : Template
         { }
 
         [SetUp]
@@ -23,17 +23,36 @@ namespace NHaml4.Tests
             _templateEngine = new TemplateEngine(_templateFactoryFactoryMock.Object);
         }
 
+        #region GetCompiledTemplate(IViewSource) Tests
+        [Test]
+        public void GetCompiledTemplateIViewSource_NormalUse_ReturnsCompiledTemplateFactory()
+        {
+            // Arrange
+            var viewSource = ViewSourceBuilder.Create();
+            var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
+            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<IViewSource>()))
+                .Returns(expectedTemplateFactory);
+
+            // Act
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource);
+
+            // Assert
+            Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
+        }
+        #endregion
+
+        #region GetCompiledTemplate(IViewSource, Type) Tests
         [Test]
         public void GetCompiledTemplate_NormalUse_ReturnsCompiledTemplateFactory()
         {
             // Arrange
-            var viewSourceList = new ViewSourceList(new System.IO.FileInfo("test.haml"));
+            var viewSource = ViewSourceBuilder.Create();
             var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
-            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<ViewSourceList>()))
+            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<IViewSource>()))
                 .Returns(expectedTemplateFactory);
 
             // Act
-            var templateFactory = _templateEngine.GetCompiledTemplate(viewSourceList);
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource, typeof(DummyTemplate));
 
             // Assert
             Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
@@ -43,30 +62,29 @@ namespace NHaml4.Tests
         public void GetCompiledTemplate_NormalUse_CallsTemplateFactoryFactoryCompileTemplateFactory()
         {
             // Arrange
-            var viewSourceList = new ViewSourceList(new System.IO.FileInfo("test.haml"));
+            var viewSource = ViewSourceBuilder.Create();
 
             // Act
-            _templateEngine.GetCompiledTemplate(viewSourceList);
+            _templateEngine.GetCompiledTemplate(viewSource, typeof(DummyTemplate));
 
             // Assert
-            _templateFactoryFactoryMock.Verify(x => x.CompileTemplateFactory(viewSourceList));
+            _templateFactoryFactoryMock.Verify(x => x.CompileTemplateFactory(viewSource.GetClassName(), viewSource));
         }
 
         [Test]
         public void GetCompiledTemplate_MultipleCalls_OnlyCompilesTemplateOnce()
         {
             // Arrange
-            var viewSourceList = new ViewSourceList(new System.IO.FileInfo("test.haml"));
+            var viewSource = ViewSourceBuilder.Create();
 
             // Act
-            _templateEngine.GetCompiledTemplate(viewSourceList);
-            _templateEngine.GetCompiledTemplate(viewSourceList);
+            _templateEngine.GetCompiledTemplate(viewSource, typeof(DummyTemplate));
+            _templateEngine.GetCompiledTemplate(viewSource, typeof(DummyTemplate));
 
             // Assert
-            _templateFactoryFactoryMock.Verify(x => x.CompileTemplateFactory(viewSourceList), Times.Once());
+            _templateFactoryFactoryMock.Verify(x => x.CompileTemplateFactory(viewSource.GetClassName(), viewSource), Times.Once());
         }
 
-        [Test]
         public void GetCompiledTemplate_NullViewSourceList_ThrowsArgumentNullException()
         {
             // Act
@@ -79,7 +97,51 @@ namespace NHaml4.Tests
         {
             // Act
             Assert.Throws<ArgumentNullException>(
-                () => _templateEngine.GetCompiledTemplate(new ViewSourceList(new System.IO.FileInfo("test.haml")), null));
+                () => _templateEngine.GetCompiledTemplate(ViewSourceBuilder.Create(), null));
         }
+        #endregion
+
+        #region GetCompiledTemplate(ITemplateContentProvider, string, Type) Tests
+        [Test]
+        public void GetCompiledTemplateITemplateContentProvider_NullContentProvider_ThrowsArgumentNullException()
+        {
+            // Act
+            Assert.Throws<ArgumentNullException>(() => _templateEngine.GetCompiledTemplate(null, "", typeof(DummyTemplate)));
+        }
+
+        [Test]
+        public void GetCompiledTemplateITemplateContentProvider_NormalUse_CallsGetViewSource()
+        {
+            // Arrange
+            const string templatePath = "test.haml";
+            var contentProviderMock = new Mock<ITemplateContentProvider>();
+            contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
+
+            // Act
+            _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
+
+            // Assert
+            contentProviderMock.Verify(x => x.GetViewSource(templatePath));
+        }
+
+        [Test]
+        public void GetCompiledTemplateITemplateContentProvider_NormalUse_ReturnsCorrectTemplateFactory()
+        {
+            // Arrange
+            const string templatePath = "test.haml";
+            var contentProviderMock = new Mock<ITemplateContentProvider>();
+            contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
+
+            var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
+            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<IViewSource>()))
+                .Returns(expectedTemplateFactory);
+
+            // Act
+            var templateFactory = _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
+
+            // Assert
+            Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
+        }
+        #endregion
     }
 }

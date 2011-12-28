@@ -21,15 +21,9 @@ namespace NHaml4
             _templateFactoryCompiler = templateCompiler;
         }
 
-        public TemplateFactory CompileTemplateFactory(IViewSource viewSource)
+        public TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource)
         {
-            return CompileTemplateFactory(new ViewSourceList { viewSource });
-        }
-
-        public TemplateFactory CompileTemplateFactory(ViewSourceList viewSourceList)
-        {
-            string className = viewSourceList.GetClassNameFromPathName();
-            var hamlDocument = _treeParser.ParseViewSources(viewSourceList);
+            var hamlDocument = _treeParser.ParseViewSource(viewSource);
             string templateCode = _treeWalker.Walk(hamlDocument, className);
             var templateFactory = _templateFactoryCompiler.Compile(templateCode, className, GetCompileTypes() );
             return templateFactory;

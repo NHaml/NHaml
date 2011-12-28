@@ -1,31 +1,30 @@
 using System;
 using System.IO;
-using NHaml.Utils;
-using NHaml;
+using NHaml4.Crosscutting;
 
 namespace NHaml4.TemplateBase
 {
     public abstract class Template
     {
-        protected Template()
-        {
-            Output = new OutputWriter();
-        }
+        //protected Template()
+        //{
+        //    Output = new OutputWriter();
+        //}
 
-        public OutputWriter Output { get; private set; }
+        // public OutputWriter Output { get; private set; }
 
         public void Render(TextWriter textWriter)
         {
             Invariant.ArgumentNotNull(textWriter, "textWriter");
 
-            Output.TextWriter = textWriter;
+            // Output.TextWriter = textWriter;
 
-            PreRender(Output);
+            PreRender(textWriter);
             CoreRender(textWriter);
-            PostRender(Output);
+            PostRender(textWriter);
         }
 
-        protected virtual void PreRender(OutputWriter outputWriter)
+        protected virtual void PreRender(TextWriter outputWriter)
         {
         }
 
@@ -33,29 +32,21 @@ namespace NHaml4.TemplateBase
         {
         }
 
-        protected virtual void PostRender(OutputWriter outputWriter)
+        protected virtual void PostRender(TextWriter outputWriter)
         {
         }
 
         protected void RenderAttributeIfValueNotNull(TextWriter textWriter, string attributeSchema, string attributeName, object attributeValue)
         {
-            if (attributeValue == null)
+            if (string.IsNullOrEmpty(attributeName) || attributeValue == null)
             {
                 return;
             }
+
+            if (!string.IsNullOrEmpty(attributeSchema)) attributeSchema += ":";
             var asString = Convert.ToString(attributeValue);
 
-            if (string.IsNullOrEmpty(attributeSchema))
-            {
-                textWriter.Write(" {0}=\"", attributeName);
-            }
-            else
-            {
-                textWriter.Write(" {0}:{1}=\"", attributeSchema, attributeName);
-            }
-
-            textWriter.Write(asString);
-            textWriter.Write("\"");
+            textWriter.Write(" {0}{1}=\"{2}\"", attributeSchema, attributeName, asString);            
         }
     }
 }

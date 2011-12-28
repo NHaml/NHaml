@@ -21,11 +21,11 @@ namespace NHaml.Web.Mvc
         private readonly TemplateEngine _templateEngine;
         private readonly IList<string> _usings;
         private readonly IList<string> _references;
+        private readonly MapPathTemplateContentProvider _contentProvider;
+        private readonly Type _baseType = typeof(NHamlMvcView<>);
+        private bool _isMasterConfigured;
+        public string DefaultMaster { get; set; }
 
-        private bool useDefault;
-        // public string DefaultMaster { get; set; }
-
-        private MapPathTemplateContentProvider _contentProvider;
 
         public NHamlMvcViewEngine()
         {
@@ -33,9 +33,8 @@ namespace NHaml.Web.Mvc
             _usings = GetDefaultUsings();
             _references = GetDefaultReferences();
             _templateEngine = new TemplateEngine();
-            // DefaultMaster = "Application";
-            
             InitializeBaseViewLocations();
+            DefaultMaster = "Application";
         }
 
         private IList<string> GetDefaultUsings()
@@ -106,57 +105,68 @@ namespace NHaml.Web.Mvc
 
         public override ViewEngineResult FindView(ControllerContext controllerContext, string viewName, string masterName, bool useCache)
         {
-            _contentProvider.SetRequestContext(controllerContext.RequestContext);
-            useDefault = true;
-            if (string.IsNullOrEmpty(masterName))
+            if (!string.IsNullOrEmpty(masterName))
             {
-                useDefault = false;
-                var controllerName = controllerContext.RouteData.GetRequiredString("controller");
-                var result = base.FindView(controllerContext, viewName, controllerName, useCache);
-
-                if (result.View == null)
-                {
-                    result = base.FindView(controllerContext, viewName, DefaultMaster, useCache);
-                }
-
-                return result.View == null ? base.FindView(controllerContext, viewName, null, useCache) : result;
+                _isMasterConfigured = true;
+                return base.FindView(controllerContext, viewName, masterName, useCache);
             }
 
-            return base.FindView(controllerContext, viewName, masterName, useCache);
+            _isMasterConfigured = false;
+            _contentProvider.SetRequestContext(controllerContext.RequestContext);
+            var controllerName = controllerContext.RouteData.GetRequiredString("controller");
+            var result = base.FindView(controllerContext, viewName, controllerName, useCache);
+
+            if (result.View == null)
+            {
+                result = base.FindView(controllerContext, viewName, DefaultMaster, useCache);
+            }
+
+            return result.View == null ? base.FindView(controllerContext, viewName, null, useCache) : result;
         }
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
         {
             _contentProvider.SetRequestContext(controllerContext.RequestContext);
-            return (IView)_templateEngine.Compile(VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath),null,null,GetViewBaseType(controllerContext)).CreateInstance();
+            string templatePath = VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath);
+            var templateFactory = _templateEngine.GetCompiledTemplate(_contentProvider, templatePath, GetViewBaseType(controllerContext));
+            return (IView)templateFactory.CreateTemplate();
+
+            //return (IView)_templateEngine.Compile(
+            //    VirtualPathToPhysicalPath(controllerContext.RequestContext,partialPath), // templatePath
+            //    null, // master
+            //    null, // defaultMaster
+            //    GetViewBaseType(controllerContext) // BaseType
+            //    ).CreateInstance();
         }
 
         protected override IView CreateView(ControllerContext controllerContext, string viewPath, string masterPath)
         {
             _contentProvider.SetRequestContext(controllerContext.RequestContext);
             viewPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, viewPath);
-            if (useDefault)
+
+            if (_isMasterConfigured)
             {
-                masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-                return (IView)_templateEngine.Compile(viewPath, masterPath, null, GetViewBaseType(controllerContext)).CreateInstance();
+            //    masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
+            //    return (IView)_templateEngine.Compile(viewPath, masterPath, null, GetViewBaseType(controllerContext)).CreateInstance();
             }
-            else
-            {
-                if (string.IsNullOrEmpty(masterPath))
-                {
-                    return (IView)_templateEngine.Compile(viewPath, null, null, GetViewBaseType(controllerContext)).CreateInstance();
-                }
-                else
-                {
-                    masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
-                    return (IView)_templateEngine.Compile(viewPath, null, masterPath, GetViewBaseType(controllerContext)).CreateInstance();
-                }
-            }
+            //else
+            //{
+            //    if (string.IsNullOrEmpty(masterPath))
+            //    {
+            return (IView)_templateEngine.GetCompiledTemplate(_contentProvider, viewPath, GetViewBaseType(controllerContext)).
+                    CreateTemplate();
+            //    }
+            //    else
+            //    {
+            //        masterPath = VirtualPathToPhysicalPath(controllerContext.RequestContext, masterPath);
+            //        return (IView)_templateEngine.Compile(viewPath, null, masterPath, GetViewBaseType(controllerContext)).CreateInstance();
+            //    }
+            //}
         }
 
         protected virtual Type GetViewBaseType(ControllerContext controllerContext)
         {
-            if (_templateEngine.Options.TemplateBaseType.IsGenericTypeDefinition)
+            if (_baseType.IsGenericTypeDefinition)
             {
                 var modelType = typeof(object);
                 var viewData = controllerContext.Controller.ViewData;
@@ -170,11 +180,11 @@ namespace NHaml.Web.Mvc
                     modelType = viewData.Model.GetType();
                 }
 
-                return _templateEngine.Options.TemplateBaseType.MakeGenericType(modelType);
+                return _baseType.MakeGenericType(modelType);
             }
             else
             {
-                return _templateEngine.Options.TemplateBaseType;
+                return _baseType;
             }
         }
 

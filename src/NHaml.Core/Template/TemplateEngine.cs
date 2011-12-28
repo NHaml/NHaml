@@ -61,16 +61,15 @@ namespace NHaml.Core.Template
         public CompiledTemplate Compile(string templatePath, string masterPath, string defaultMasterPath, Type BaseType)
         {
             IViewSource template = Options.TemplateContentProvider.GetViewSource(templatePath);
-            IViewSource master = null;
-            if (masterPath != null)
-            {
-                master = Options.TemplateContentProvider.GetViewSource(masterPath);
-            }
-            IViewSource defaultMaster = null;
-            if (defaultMasterPath != null)
-            {
-                defaultMaster = Options.TemplateContentProvider.GetViewSource(defaultMasterPath);
-            }
+
+            IViewSource master = masterPath != null
+                                     ? Options.TemplateContentProvider.GetViewSource(masterPath)
+                                     : null;
+
+            IViewSource defaultMaster = defaultMasterPath != null
+                                            ? Options.TemplateContentProvider.GetViewSource(defaultMasterPath)
+                                            : null;
+
             return Compile(template,master,defaultMaster, BaseType);
         }
 

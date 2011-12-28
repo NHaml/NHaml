@@ -7,7 +7,7 @@ using NHaml.IO;
 using System.IO;
 using NHaml4.IO;
 
-namespace NHaml.Tests.IO
+namespace NHaml4.Tests.IO
 {
     [TestFixture]
     public class HamlFileLexer_Tests

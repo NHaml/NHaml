@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 
 namespace NHaml4.Parser
 {
-    public abstract class HamlNode
+    public abstract class HamlNode : IEnumerable<HamlNode>
     {
         private IList<HamlNode> _children = new List<HamlNode>();
 
@@ -16,9 +16,20 @@ namespace NHaml4.Parser
             get { return new ReadOnlyCollection<HamlNode>(_children); }
         }
 
-        public void AddChild(HamlNode hamlNode)
+        public void Add(HamlNode hamlNode)
         {
             _children.Add(hamlNode);
+        }
+
+
+        public IEnumerator<HamlNode> GetEnumerator()
+        {
+            return _children.GetEnumerator();
+        }
+
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
+        {
+            return _children.GetEnumerator();
         }
     }
 }

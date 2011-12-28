@@ -3,6 +3,7 @@ using Moq;
 using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
+using NHaml4.Tests.Walkers.CodeDom;
 
 namespace NHaml4.Tests.Walkers
 {
@@ -20,12 +21,11 @@ namespace NHaml4.Tests.Walkers
         }
 
         [Test]
-        public void Walk_SimpleFile_AppendsCorrectTag()
+        public void Walk_TextNode_AppendsCorrectTag()
         {
             // Arrange
             const string content = "Simple content";
-            var document = new HamlDocument();
-            document.AddChild(new HamlNodeText(content));
+            var document = new HamlDocument { new HamlNodeText(content) };
 
             // Act
             _walker.Walk(document, content);
