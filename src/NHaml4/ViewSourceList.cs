@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using NHaml4.TemplateResolution;
-using NHaml.Utils;
 using System.IO;
 
 namespace NHaml4
@@ -15,25 +11,6 @@ namespace NHaml4
 
         public ViewSourceList(FileInfo fileInfo)
         {
-            this.Add(new FileViewSource(fileInfo));
-        }
-
-        public string GetClassNameFromPathName()
-        {
-            string templatePath = this.Last().Path;
-            var stringBuilder = new StringBuilder();
-            for (int c = 0; c < templatePath.Length; c++)
-            {
-                char ch = templatePath[c];
-                stringBuilder.Append(Char.IsLetter(ch) ? ch : '_');
-            }
-
-            return stringBuilder.ToString();
-        }
-
-        public string GetCacheKey()
-        {
-            return string.Join(",", this.Select(x => x.Path).ToArray());
-        }
+            this.Add(new FileViewSource(fileInfo));}
     }
 }

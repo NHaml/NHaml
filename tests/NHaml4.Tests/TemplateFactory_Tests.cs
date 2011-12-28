@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using NHaml4.TemplateBase;
 using NUnit.Framework;
 
 namespace NHaml4.Tests
@@ -9,7 +7,7 @@ namespace NHaml4.Tests
     [TestFixture]
     public class TemplateFactory_Tests
     {
-        public class DummyTemplate : TemplateBase.Template { }
+        public class DummyTemplate : Template { }
 
         [Test]
         public void CreateTemplate_SimpleType_CreatesInstanceOfType()

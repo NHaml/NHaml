@@ -1,8 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
-using NHaml.Utils;
 using System.Collections.ObjectModel;
+using NHaml4.Crosscutting;
 
 namespace NHaml4.TemplateResolution
 {

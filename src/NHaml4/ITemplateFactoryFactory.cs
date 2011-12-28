@@ -1,9 +1,9 @@
-﻿using System;
+﻿using NHaml4.TemplateResolution;
 
 namespace NHaml4
 {
     public interface ITemplateFactoryFactory
     {
-        TemplateFactory CompileTemplateFactory(ViewSourceList viewSourceList);
+        TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource);
     }
 }

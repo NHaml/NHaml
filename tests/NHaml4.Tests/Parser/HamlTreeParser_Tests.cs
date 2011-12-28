@@ -19,15 +19,16 @@ namespace NHaml4.Tests.Parser
         }
 
         [Test]
-        public void ParseViewSources_SingleLineTemplate_ReturnsHamlTree()
+        public void ParseViewSource_SingleLineTemplate_ReturnsHamlTree()
         {
-            var layoutViewSources = new ViewSourceList { ViewSourceBuilder.Create("Test") };
-            var result = _parser.ParseViewSources(layoutViewSources);
+            var viewSource = ViewSourceBuilder.Create("Test");
+            var result = _parser.ParseViewSource(viewSource);
             Assert.IsInstanceOf(typeof(HamlDocument), result);
         }
 
         [Test]
         [TestCase("Test content", typeof(HamlNodeText))]
+        [TestCase("%p", typeof(HamlNodeTag))]
         public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
             var result = _parser.ParseDocumentSource(template);
@@ -71,7 +72,7 @@ namespace NHaml4.Tests.Parser
 
             public new HamlRuleEnum HamlRule
             {
-                set { _hamlRule = value;  }
+                set { base.HamlRule = value;  }
             }
         }
 

@@ -18,6 +18,8 @@ namespace NHaml4.Walkers.CodeDom
             {
                 if (child is HamlNodeText)
                     new HamlNodeTextWalker().Walk(child, _classBuilder);
+                if (child is HamlNodeTag)
+                    new HamlNodeTagWalker().Walk(child, _classBuilder);
             }
             return _classBuilder.Build(className);
         }

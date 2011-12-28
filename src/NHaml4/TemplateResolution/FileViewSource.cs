@@ -1,5 +1,6 @@
 using System.IO;
 using System;
+using System.Text;
 
 namespace NHaml4.TemplateResolution
 {
@@ -41,6 +42,18 @@ namespace NHaml4.TemplateResolution
         public bool IsModified
         {
             get { return _lastUpdated < LastModified; }
+        }
+
+        public string GetClassName()
+        {
+            string templatePath = this.Path;
+            var stringBuilder = new StringBuilder();
+            foreach (char ch in templatePath)
+            {
+                stringBuilder.Append(Char.IsLetter(ch) ? ch : '_');
+            }
+
+            return stringBuilder.ToString();
         }
     }
 }

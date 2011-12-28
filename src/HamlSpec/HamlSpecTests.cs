@@ -1,5 +1,6 @@
 using System.IO;
 using System.Linq;
+using NHaml4.TemplateResolution;
 using NUnit.Framework;
 using System;
 using NHaml4;
@@ -71,18 +72,12 @@ namespace HamlSpec
 
         private Template CreateTemplate(string hamlTemplate)
         {
-            FileInfo testFile = new FileInfo("test.haml");
+            var testFile = new FileInfo("test.haml");
             if (testFile.Exists) testFile.Delete();
             File.WriteAllText(testFile.FullName, hamlTemplate);
-
-            var templateEngine = GetTemplateEngine();
-            var compiledTemplate = templateEngine.GetCompiledTemplate(new NHaml4.ViewSourceList(testFile));
+            var templateEngine = new TemplateEngine();
+            var compiledTemplate = templateEngine.GetCompiledTemplate(new FileViewSource(testFile));
             return compiledTemplate.CreateTemplate();
-        }
-
-        private TemplateEngine GetTemplateEngine()
-        {
-            return new TemplateEngine();
         }
     }
 }

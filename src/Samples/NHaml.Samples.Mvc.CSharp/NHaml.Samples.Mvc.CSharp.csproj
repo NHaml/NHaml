@@ -16,6 +16,7 @@
     </FileUpgradeFlags>
     <OldToolsVersion>4.0</OldToolsVersion>
     <UpgradeBackupLocation />
+    <UseIISExpress>false</UseIISExpress>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -123,7 +124,7 @@
         <WebProjectProperties>
           <UseIIS>False</UseIIS>
           <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>49529</DevelopmentServerPort>
+          <DevelopmentServerPort>60122</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
           <IISUrl>http://localhost/TestApp</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
@@ -139,7 +140,7 @@
     <PostBuildEvent>
     </PostBuildEvent>
     <PreBuildEvent>del /q/f "$(TargetDir)*.*"
-copy /Y "$(SolutionDir)Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
+copy /Y "$(SolutionDir)tests\Northwind-Template.sdf" "$(ProjectDir)App_Data\Northwind.sdf" 
 </PreBuildEvent>
   </PropertyGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v10.0\WebApplications\Microsoft.WebApplication.targets" />

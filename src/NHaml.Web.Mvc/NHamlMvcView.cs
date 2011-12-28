@@ -3,8 +3,8 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
+using NHaml4.Crosscutting;
 using NHaml4.TemplateBase;
-using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
 {

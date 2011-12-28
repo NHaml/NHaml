@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using Moq;
+using NUnit.Framework;
 using NHaml4.TemplateResolution;
 using System;
 using System.IO;
@@ -38,6 +39,29 @@ namespace NHaml4.Tests.TemplateResolution
 
             Assert.That(path.Length, Is.GreaterThan(fileName.Length));
             Assert.That(path, Is.StringContaining(fileName));
+        }
+        
+        [Test]
+        public void GetClassNameFromPathName_ValidPath_ReturnsValidClass()
+        {
+            // Arrange
+            const string expectedClassName = "test_haml";
+
+            const string fileName = "test.haml";
+            var viewSource = new FileViewSource(new FileInfo(fileName));
+
+            // Act
+            string actual = viewSource.GetClassName();
+
+            // Assert
+            Assert.That(actual, Is.StringEnding(expectedClassName));
+        }
+
+        private static Mock<IViewSource> ViewSourceWithPath(string pathName1)
+        {
+            var viewSourceMock1 = new Mock<IViewSource>();
+            viewSourceMock1.SetupGet(x => x.Path).Returns(pathName1);
+            return viewSourceMock1;
         }
     }
 }

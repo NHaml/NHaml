@@ -29,7 +29,7 @@ namespace NHaml.IntegrationTests
                 new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
 
-            var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource);
+            var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);
             Template template = templateFactory.CreateTemplate();
             var textWriter = new StringWriter();
             template.Render(textWriter);

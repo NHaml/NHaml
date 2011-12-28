@@ -8,6 +8,6 @@ namespace NHaml4.Parser
 {
     public interface ITreeParser
     {
-        HamlDocument ParseViewSources(ViewSourceList layoutViewSources);
+        HamlDocument ParseViewSource(IViewSource layoutViewSources);
     }
 }

@@ -5,7 +5,6 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
-using NHaml;
 
 namespace NHaml4.Compilers.Abstract
 {
