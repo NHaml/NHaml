@@ -8,8 +8,10 @@ namespace NHaml4.Parser
     {
         private readonly string _tagName = string.Empty;
         private readonly IList<KeyValuePair<string, string>> _attributes = new List<KeyValuePair<string, string>>();
-        private string _tagClass;
-        private string _tagId;
+        private string _tagClass = string.Empty;
+        private string _tagId = string.Empty;
+        private bool _isSelfClosing = false;
+        private string _namespace = string.Empty;
 
         public HamlNodeTag(IO.HamlLine nodeLine)
             : this(nodeLine.Content)
@@ -33,10 +35,29 @@ namespace NHaml4.Parser
             get { return _tagName; }
         }
 
+        public bool IsSelfClosing
+        {
+            get { return _isSelfClosing; }
+        }
+
+        public string Namespace
+        {
+            get { return _namespace; }
+        }
+
         public HamlNodeTag(string content)
         {
             int pos = 0;
+
             _tagName = GetTagName(content, ref pos);
+            if (pos < content.Length
+                && content[pos] == ':'
+                && _isSelfClosing == false)
+            {
+                pos++;
+                _namespace = _tagName;
+                _tagName = GetTagName(content, ref pos);
+            }
 
             while (pos < content.Length)
             {
@@ -52,6 +73,16 @@ namespace NHaml4.Parser
         private string GetTagName(string content, ref int pos)
         {
             string result = GetHtmlToken(content, ref pos);
+            if (pos < content.Length && content[pos] == '/')
+            {
+                _isSelfClosing = true;
+                pos++;
+            }
+            else
+            {
+                _isSelfClosing = false;
+            }
+
             return string.IsNullOrEmpty(result) ? "div" : result;
         }
 
@@ -88,6 +119,15 @@ namespace NHaml4.Parser
                 }
             }
             return content.Substring(startIndex, pos - startIndex);
+        }
+
+        public string NamespaceQualifiedTagName {
+            get
+            {
+                return string.IsNullOrEmpty(_namespace)
+                    ? _tagName
+                    : _namespace + ":" + _tagName;
+            }
         }
     }
 }

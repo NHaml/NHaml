@@ -11,6 +11,7 @@ using System.Web.Routing;
 using System.Web.UI;
 using System.IO;
 using NHaml4;
+using NHaml4.Walkers.CodeDom;
 
 namespace NHaml.Web.Mvc
 {
@@ -32,7 +33,7 @@ namespace NHaml.Web.Mvc
             _contentProvider = new MapPathTemplateContentProvider();
             _usings = GetDefaultUsings();
             _references = GetDefaultReferences();
-            _templateEngine = new TemplateEngine();
+            _templateEngine = new TemplateEngine(new HamlOptions());
             InitializeBaseViewLocations();
             DefaultMaster = "Application";
         }

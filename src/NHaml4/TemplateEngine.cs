@@ -15,11 +15,11 @@ namespace NHaml4
         private readonly Dictionary<string, TemplateFactory> _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
-        public TemplateEngine()
+        public TemplateEngine(HamlOptions hamlOptions)
             : this(new TemplateFactoryFactory(
-                new HamlTreeParser(new HamlFileLexer()),
-                new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
-                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
+                    new HamlTreeParser(new HamlFileLexer()),
+                    new HamlDocumentWalker(new CSharp2TemplateClassBuilder(), hamlOptions),
+                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
         { }
 
         public TemplateEngine(ITemplateFactoryFactory templateFactoryFactory)

@@ -113,6 +113,7 @@
     <Compile Include="Walkers\CodeDom\HamlNodeTextWalker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlOptions.cs" />
     <Compile Include="Walkers\IDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>

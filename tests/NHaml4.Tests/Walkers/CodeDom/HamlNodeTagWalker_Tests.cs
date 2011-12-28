@@ -13,37 +13,64 @@ namespace NHaml4.Tests.Walkers.CodeDom
     [TestFixture]
     public class HamlNodeTagWalker_Tests
     {
-        [Test]
-        public void Walk_TagNode_AppendsCorrectTag()
+        Mock<ITemplateClassBuilder> _classBuilderMock;
+        private HamlNodeTagWalker _tagWalker;
+        private HamlOptions _hamlOptions;
+
+        [SetUp]
+        public void SetUp()
         {
-            // Arrange
-            const string tagName = "p";
-            var tagNode = new HamlNodeTag(tagName);
-            var classBuilderMock = new Mock<ITemplateClassBuilder>();
-
-            // Act
-            new HamlNodeTagWalker().Walk(tagNode, classBuilderMock.Object);
-
-            // Assert
-            classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}></{0}>", tagName, ""));
+            _classBuilderMock = new Mock<ITemplateClassBuilder>();
+            _hamlOptions = new HamlOptions();
+            _tagWalker = new HamlNodeTagWalker(_classBuilderMock.Object, _hamlOptions);
         }
 
-
         [Test]
-        public void Walk_TagNodeWithId_AppendsCorrectTag()
+        [TestCase("p", "p", "")]
+        [TestCase("p#id", "p", " id='id'")]
+        [TestCase("ns:id", "ns:id", "")]
+        public void Walk_NonSelfClosingTags_AppendsCorrectTag(string templateLine, string expectedTagName, string expectedAttributes)
         {
             // Arrange
-            const string tagLine = "p#id";
-            var tagNode = new HamlNodeTag(tagLine);
-            var classBuilderMock = new Mock<ITemplateClassBuilder>();
+            var tagNode = new HamlNodeTag(templateLine);
 
             // Act
-            new HamlNodeTagWalker().Walk(tagNode, classBuilderMock.Object);
+            _tagWalker.Walk(tagNode);
 
             // Assert
-            const string expectedTag = "p";
-            const string expectedAttributes = " id='id'";
-            classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}></{0}>", expectedTag, expectedAttributes));
+            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}></{0}>", expectedTagName, expectedAttributes));
+        }
+
+        [Test]
+        public void Walk_SelfClosingTag_AppendsCorrectTag()
+        {
+            // Arrange
+            const string tagName = "foo/";
+            var tagNode = new HamlNodeTag(tagName);
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            const string expectedTagName = "foo";
+            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1} />", expectedTagName, ""));
+        }
+
+        [Test]
+        [TestCase(HtmlVersion.Html4, "<{0}{1}>")]
+        [TestCase(HtmlVersion.Html5, "<{0}{1}>")]
+        [TestCase(HtmlVersion.XHtml, "<{0}{1} />")]
+        public void Walk_AutoSelfClosingTag_AppendsCorrectTag(HtmlVersion htmlVersion, string expectedFormat)
+        {
+            // Arrange
+            var tagNode = new HamlNodeTag("br");
+
+            // Act
+            _hamlOptions.HtmlVersion = htmlVersion;
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            _classBuilderMock.Verify(x => x.AppendFormat(expectedFormat, "br", ""));
         }
     }
 }

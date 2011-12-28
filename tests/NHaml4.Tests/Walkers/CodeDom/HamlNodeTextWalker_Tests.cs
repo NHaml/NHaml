@@ -5,6 +5,8 @@ using System.Text;
 using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
 using NHaml4.Parser;
+using NHaml4.Compilers;
+using Moq;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -20,7 +22,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NodeIsWrongType_ThrowsException()
         {
             var node = new BogusHamlNode();
-            Assert.Throws<InvalidCastException>(() => new HamlNodeTextWalker().Walk(node, null));
+            var mockClassBuilder = new Mock<ITemplateClassBuilder>();
+            Assert.Throws<InvalidCastException>(
+                () => new HamlNodeTextWalker(mockClassBuilder.Object, new HamlOptions()).Walk(node));
         }
     }
 }

@@ -29,14 +29,20 @@ namespace HamlSpec
         private HamlSpec GetHamlSpec(string groupName, KeyValuePair<string, object> test)
         {
             var properties = GetDictionary(test.Value);
-            return new HamlSpec
+            var result = new HamlSpec
             {
                 GroupName = groupName,
                 TestName = test.Key,
                 Haml = properties["haml"].ToString(),
-                ExpectedHtml = properties["html"].ToString(),
-                HasAConfigBlock = properties.ContainsKey("config")
+                ExpectedHtml = properties["html"].ToString()
             };
+
+            if (properties.ContainsKey("config"))
+            {
+                result.Format = GetDictionary(properties["config"])["format"].ToString();
+            }
+
+            return result;
         }
 
         private static IDictionary<string, object> GetDictionary(object deserializedObject)

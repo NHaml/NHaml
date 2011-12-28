@@ -5,6 +5,6 @@ namespace NHaml4.Walkers
 {
     public interface INodeWalker
     {
-        void Walk(HamlNode hamlDocument, ITemplateClassBuilder classBuilder);
+        void Walk(HamlNode hamlDocument);
     }
 }
