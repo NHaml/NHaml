@@ -45,7 +45,7 @@ namespace NHaml4.TemplateResolution
             throw new FileNotFoundException(string.Format("Could not find template '{0}'.", templateName));
         }
 
-        private FileInfo CreateFileInfo(string templateName)
+        protected virtual FileInfo CreateFileInfo(string templateName)
         {
 
             foreach (var pathSource in PathSources)

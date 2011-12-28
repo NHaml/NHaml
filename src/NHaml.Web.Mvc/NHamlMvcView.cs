@@ -3,8 +3,8 @@ using System.IO;
 using System.Security.Permissions;
 using System.Web;
 using System.Web.Mvc;
-using NHaml.Core.Utils;
-using NHaml.Core.Template;
+using NHaml4.TemplateBase;
+using NHaml.Utils;
 
 namespace NHaml.Web.Mvc
 {
@@ -33,20 +33,20 @@ namespace NHaml.Web.Mvc
             Ajax = new AjaxHelper<TModel>( viewContext, this );
             Html = new HtmlHelper<TModel>( viewContext, this );
             Url = new UrlHelper( viewContext.RequestContext );
-            if (Master!=null) {
-                if (Master is NHamlMvcView<TModel>)
-                {
-                    ((NHamlMvcView<TModel>)Master).ViewContext = viewContext;
-                    ((NHamlMvcView<TModel>)Master).SetViewData(viewContext.ViewData);
-                    ((NHamlMvcView<TModel>)Master).CreateHelpers(viewContext);
-                }
-                else if (Master is NHamlMvcView<object>)
-                {
-                    ((NHamlMvcView<object>)Master).ViewContext = viewContext;
-                    ((NHamlMvcView<object>)Master).SetViewData(viewContext.ViewData);
-                    ((NHamlMvcView<object>)Master).CreateHelpers(viewContext);
-                }
-            }
+            //if (Master!=null) {
+            //    if (Master is NHamlMvcView<TModel>)
+            //    {
+            //        ((NHamlMvcView<TModel>)Master).ViewContext = viewContext;
+            //        ((NHamlMvcView<TModel>)Master).SetViewData(viewContext.ViewData);
+            //        ((NHamlMvcView<TModel>)Master).CreateHelpers(viewContext);
+            //    }
+            //    else if (Master is NHamlMvcView<object>)
+            //    {
+            //        ((NHamlMvcView<object>)Master).ViewContext = viewContext;
+            //        ((NHamlMvcView<object>)Master).SetViewData(viewContext.ViewData);
+            //        ((NHamlMvcView<object>)Master).CreateHelpers(viewContext);
+            //    }
+            //}
         }
 
         public AjaxHelper<TModel> Ajax { get; protected set; }

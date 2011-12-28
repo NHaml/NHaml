@@ -99,6 +99,12 @@
     <Compile Include="ProxyExtracter.cs" />
     <Compile Include="TemplateBase\OutputWriter.cs" />
     <Compile Include="TemplateBase\Template.cs" />
+    <Compile Include="TemplateResolution\FileTemplateContentProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="TemplateResolution\ITemplateContentProvider.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="ViewSourceList.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
       <SubType>Code</SubType>
@@ -110,9 +116,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Walkers\INodeWalker.cs" />
-    <Compile Include="TemplateResolution\FileTemplateContentProvider.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
-    <Compile Include="TemplateResolution\ITemplateContentProvider.cs" />
     <Compile Include="TemplateFactory.cs">
       <SubType>Code</SubType>
     </Compile>

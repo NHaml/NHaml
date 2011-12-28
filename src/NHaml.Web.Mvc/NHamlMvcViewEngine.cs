@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Data.Linq;
+using System.Linq;
 using System.Reflection;
 using System.Security.Permissions;
 using System.Web;
@@ -8,9 +9,8 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using System.Web.UI;
-using NHaml.Core.Template;
 using System.IO;
-using NHaml.Core.Compilers;
+using NHaml4;
 
 namespace NHaml.Web.Mvc
 {
@@ -18,53 +18,52 @@ namespace NHaml.Web.Mvc
     [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
     {
-        private readonly TemplateEngine _templateEngine = new TemplateEngine();
+        private readonly TemplateEngine _templateEngine;
+        private readonly IList<string> _usings;
+        private readonly IList<string> _references;
+
         private bool useDefault;
-        public string DefaultMaster { get; set; }
+        // public string DefaultMaster { get; set; }
 
         private MapPathTemplateContentProvider _contentProvider;
 
         public NHamlMvcViewEngine()
         {
-            InitializeTemplateEngine();
-            InitializeViewLocations();
-        }
-
-        private void InitializeTemplateEngine()
-        {
-            DefaultMaster = "Application";
-
-            _templateEngine.Options.AddUsing( "System.Web" );
-            _templateEngine.Options.AddUsing( "System.Web.Mvc" );
-            _templateEngine.Options.AddUsing( "System.Web.Mvc.Html" );
-            _templateEngine.Options.AddUsing( "System.Web.Routing" );
-            _templateEngine.Options.AddUsing( "NHaml.Web.Mvc" );
-
-            foreach (var referencedAssembly in typeof(MvcHandler).Assembly.GetReferencedAssemblies())
-            {
-                _templateEngine.Options.AddReference(Assembly.Load(referencedAssembly).Location);
-            } 
-            _templateEngine.Options.AddReference( typeof( UserControl ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( RouteValueDictionary ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( DataContext ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( LinkExtensions ).Assembly.Location );
-            _templateEngine.Options.AddReference( typeof( IView ).Assembly.Location );
-
-            if (_templateEngine.Options.TemplateBaseType == typeof(Template))
-            {
-                _templateEngine.Options.TemplateBaseType = typeof(NHamlMvcView<>);
-            }
-
             _contentProvider = new MapPathTemplateContentProvider();
-            _templateEngine.Options.TemplateContentProvider = _contentProvider;
+            _usings = GetDefaultUsings();
+            _references = GetDefaultReferences();
+            _templateEngine = new TemplateEngine();
+            // DefaultMaster = "Application";
+            
+            InitializeBaseViewLocations();
         }
 
-        public TemplateEngine TemplateEngine
+        private IList<string> GetDefaultUsings()
         {
-            get { return _templateEngine; }
+            return new List<string> {
+                "System.Web",
+                "System.Web.Mvc",
+                "System.Web.Mvc.Html",
+                "System.Web.Routing",
+                "NHaml.Web.Mvc" };
         }
 
-        private void InitializeViewLocations()
+        private IList<string> GetDefaultReferences()
+        {
+            var result = new List<string> {
+                typeof(UserControl).Assembly.Location,
+                typeof(RouteValueDictionary).Assembly.Location,
+                typeof(DataContext).Assembly.Location,
+                typeof(LinkExtensions).Assembly.Location,
+                typeof(IView).Assembly.Location };
+
+            var referencedAssemblies = typeof(MvcHandler).Assembly.GetReferencedAssemblies();
+            result.AddRange(referencedAssemblies.Select(x => Assembly.Load(x).Location));
+
+            return result;
+        }
+
+        private void InitializeBaseViewLocations()
         {
             ViewLocationFormats = new[]
             {

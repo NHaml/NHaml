@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.Core.TemplateResolution;
 using System.Web;
 using System.Web.Hosting;
 using System.Web.Routing;
+using NHaml4.TemplateResolution;
+using System.IO;
 
 namespace NHaml.Web.Mvc
 {
@@ -22,7 +23,7 @@ namespace NHaml.Web.Mvc
             _context = context;
         }
 
-        protected override System.IO.FileInfo CreateFileInfo(string templateName)
+        protected override FileInfo CreateFileInfo(string templateName)
         {
             var info = base.CreateFileInfo(templateName);
             if ((info == null) && (_context != null))
