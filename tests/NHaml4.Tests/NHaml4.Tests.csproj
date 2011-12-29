@@ -49,14 +49,17 @@
   <ItemGroup>
     <Compile Include="Builders\ViewSourceBuilder.cs" />
     <Compile Include="Crosscutting\Invariant_Tests.cs" />
+    <Compile Include="Parser\HamlNodeHtmlComment_Tests.cs" />
     <Compile Include="Parser\HamlNodeTag_Tests.cs" />
     <Compile Include="ProxyExtractor_Tests.cs" />
     <Compile Include="TemplateBase\Template_Tests.cs" />
     <Compile Include="TemplateEngine_Tests.cs" />
     <Compile Include="TemplateFactory_Tests.cs" />
     <Compile Include="TemplateResolution\FileViewSource_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTagWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTextWalker_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeWalker_Tests.cs" />
     <None Include="Builders\TemplateOptionsBuilder.cs" />
     <Compile Include="CompiledTemplate_Tests.cs" />
     <Compile Include="IO\HamlLine_Tests.cs" />

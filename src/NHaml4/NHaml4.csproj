@@ -89,7 +89,8 @@
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
-    <Compile Include="Parser\HamlNodeComment.cs" />
+    <Compile Include="Parser\HamlNodeHtmlComment.cs" />
+    <Compile Include="Parser\HamlNodeHamlComment.cs" />
     <Compile Include="Parser\HamlNodeTag.cs" />
     <Compile Include="Parser\HamlNodeText.cs" />
     <Compile Include="Parser\HamlUnknownRuleException.cs" />
@@ -107,6 +108,8 @@
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeHamlCommentWalker.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -114,6 +117,7 @@
     <Compile Include="Walkers\CodeDom\HamlNodeTextWalker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlOptions.cs" />
     <Compile Include="Walkers\IDocumentWalker.cs">
       <SubType>Code</SubType>

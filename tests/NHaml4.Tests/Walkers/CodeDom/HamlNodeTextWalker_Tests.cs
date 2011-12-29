@@ -23,8 +23,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             var node = new BogusHamlNode();
             var mockClassBuilder = new Mock<ITemplateClassBuilder>();
-            Assert.Throws<InvalidCastException>(
-                () => new HamlNodeTextWalker(mockClassBuilder.Object, new HamlOptions()).Walk(node));
+            var walker = new HamlNodeTextWalker(mockClassBuilder.Object, new HamlOptions());
+            Assert.Throws<InvalidCastException>(() => walker.Walk(node));
         }
     }
 }

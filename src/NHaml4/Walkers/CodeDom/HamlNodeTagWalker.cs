@@ -8,36 +8,37 @@ using NHaml4.Crosscutting;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeTagWalker : INodeWalker
+    public class HamlNodeTagWalker : HamlNodeWalker, INodeWalker
     {
-        private readonly HamlOptions _options;
-        private readonly ITemplateClassBuilder _classBuilder;
-
         public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
-        {
-            Invariant.ArgumentNotNull(options, "options");
-            Invariant.ArgumentNotNull(classBuilder, "classBuilder");
-            _options = options;
-            _classBuilder = classBuilder;
-        }
+            : base(classBuilder, options)
+        { }
 
-        public void Walk(HamlNode node)
+        public override void Walk(HamlNode node)
         {
             var nodeTag = node as HamlNodeTag;
             if (nodeTag == null)
                 throw new InvalidCastException("HamlNodeTagWalker requires that HamlNode object be of type HamlNodeTag.");
 
-            string attributes = GetAttributes(nodeTag.Attributes);
-            string tagFormat = GetTagFormat(nodeTag);
-            _classBuilder.AppendFormat(tagFormat, nodeTag.NamespaceQualifiedTagName, attributes);
+            string attributesMarkup = GetAttributes(nodeTag.Attributes);
+            if (nodeTag.IsSelfClosing || _options.IsAutoClosingTag(nodeTag.TagName))
+                RenderSelfClosingTag(nodeTag, attributesMarkup);
+            else
+                RenderStandardTag(nodeTag, attributesMarkup);
         }
 
-        private string GetTagFormat(HamlNodeTag nodeTag)
+        private void RenderSelfClosingTag(HamlNodeTag nodeTag, string attributesMarkup)
         {
-            if (nodeTag.IsSelfClosing || _options.IsAutoClosingTag(nodeTag.TagName))
-                return _options.HtmlVersion == HtmlVersion.XHtml ? "<{0}{1} />" : "<{0}{1}>";
-            else
-                return "<{0}{1}></{0}>";
+            string tagFormat = (_options.HtmlVersion == HtmlVersion.XHtml ? "<{0}{1} />" : "<{0}{1}>");
+            _classBuilder.AppendFormat(tagFormat, nodeTag.NamespaceQualifiedTagName, attributesMarkup);
+
+        }
+
+        private void RenderStandardTag(HamlNodeTag nodeTag, string attributesMarkup)
+        {
+            _classBuilder.AppendFormat("<{0}{1}>", nodeTag.NamespaceQualifiedTagName, attributesMarkup);
+            base.Walk(nodeTag);
+            _classBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
         }
 
         private string GetAttributes(IEnumerable<KeyValuePair<string, string>> attributes)

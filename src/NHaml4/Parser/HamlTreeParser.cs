@@ -77,6 +77,8 @@ namespace NHaml4.Parser
                     return new HamlNodeTag(nodeLine);
                 case HamlRuleEnum.HamlComment:
                     return new HamlNodeHamlComment(nodeLine);
+                case HamlRuleEnum.HtmlComment:
+                    return new HamlNodeHtmlComment(nodeLine);
                 default:
                     throw new HamlUnknownRuleException(nodeLine.Content);
             }

@@ -13,21 +13,36 @@ namespace HamlSpec
     public class HamlSpecTests
     {
         private string TemplatesFolder = @"Functional\Templates\";
+        private int _totalNoTests;
+        private int _totalNoTestsFailed;
+
+        [TestFixtureSetUp]
+        public void TestFixtureSetup()
+        {
+            _totalNoTests = 0;
+            _totalNoTestsFailed = 0;
+        }
+        
+        [TestFixtureTearDown]
+        public void TestFixtureTearDown()
+        {
+            Console.WriteLine(string.Format("{0} OF {1} TESTS FAILED.", _totalNoTestsFailed, _totalNoTests));            
+        }
 
         // WORKING
-        //[TestCase("plain text templates")]
-        //[TestCase("tags with unusual HTML characters")]
-        //[TestCase("tags with unusual CSS identifiers")]
-        //[TestCase("basic Haml tags and CSS")]
-        //[TestCase("silent comments")]
-
-        // IN PROGRESS
+        [TestCase("plain text templates")]
+        [TestCase("tags with unusual HTML characters")]
+        [TestCase("tags with unusual CSS identifiers")]
+        [TestCase("basic Haml tags and CSS")]
+        [TestCase("silent comments")]
         [TestCase("tags with inline content")]
 
-        // TODO
-        //[TestCase("markup comments")]
-        //[TestCase("headers")]
+        // IN PROGRESS
+        [TestCase("markup comments")]
         //[TestCase("tags with nested content")]
+
+        // TODO
+        //[TestCase("headers")]
         //[TestCase("tags with HTML-style attributes")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
@@ -57,7 +72,13 @@ namespace HamlSpec
                     Console.WriteLine(ex.Message);
                 }
             }
-            Assert.AreEqual(0, errorCount, errorCount + " of " + hamlSpecTests.Count() + " scenarios failed!");
+            int totalCount = hamlSpecTests.Count();
+            Assert.AreEqual(0, errorCount, errorCount + " of " + totalCount + " scenarios failed.");
+            Console.WriteLine(errorCount + " of " + totalCount + " scenarios failed.");
+
+            _totalNoTests += totalCount;
+            _totalNoTestsFailed += errorCount;
+
         }
 
         private void ExecuteSingleTest(HamlSpec test)
@@ -65,9 +86,6 @@ namespace HamlSpec
             var template = CreateTemplate(test.Haml, test.Format);
             var output = new StringWriter();
             template.Render(output);
-
-            //TODO - Get this crappy reformatting fix out!
-            string expected = test.ExpectedHtml.Replace("\n", "").Replace("\r", "");
 
             var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
             Assert.That(output.ToString(), Is.EqualTo(test.ExpectedHtml), message);

@@ -38,7 +38,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}></{0}>", expectedTagName, expectedAttributes));
+            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}>", expectedTagName, expectedAttributes));
+            _classBuilderMock.Verify(x => x.AppendFormat("</{0}>", expectedTagName));
         }
 
         [Test]
@@ -71,6 +72,25 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
             // Assert
             _classBuilderMock.Verify(x => x.AppendFormat(expectedFormat, "br", ""));
+        }
+
+        [Test]
+        public void Walk_NestedTags_AppendsCorrectTags()
+        {
+            // Arrange
+            const string tagName = "p";
+            const string nestedText = "Hello world";
+            var tagNode = new HamlNodeTag(tagName)
+                              {
+                                  new HamlNodeText(nestedText)
+                              };
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}>", tagName, ""));
+            _classBuilderMock.Verify(x => x.Append(nestedText));
+            _classBuilderMock.Verify(x => x.AppendFormat("</{0}>", tagName));
         }
     }
 }

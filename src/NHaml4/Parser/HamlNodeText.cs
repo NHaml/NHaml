@@ -7,7 +7,7 @@ namespace NHaml4.Parser
 {
     public class HamlNodeText : HamlNode
     {
-        private string _text;
+        private readonly string _text;
 
         public HamlNodeText(IO.HamlLine nodeLine)
             : this(nodeLine.Content)

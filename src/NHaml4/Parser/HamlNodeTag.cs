@@ -69,6 +69,11 @@ namespace NHaml4.Parser
                     break;
             }
 
+            if (pos < content.Length)
+            {
+                Add(new HamlNodeText(content.Substring(pos).TrimStart()));
+            }
+
             //TODO - stuff for inline content goes here
         }
 

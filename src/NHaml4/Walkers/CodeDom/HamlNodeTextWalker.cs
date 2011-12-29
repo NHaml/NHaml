@@ -3,20 +3,13 @@ using NHaml4.Compilers;
 using NHaml4.Crosscutting;
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeTextWalker : INodeWalker
+    public class HamlNodeTextWalker : HamlNodeWalker, INodeWalker
     {
-        private readonly HamlOptions _options;
-        private readonly ITemplateClassBuilder _classBuilder;
-
         public HamlNodeTextWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
-        {
-            Invariant.ArgumentNotNull(options, "options");
-            Invariant.ArgumentNotNull(classBuilder, "classBuilder");
-            _options = options;
-            _classBuilder = classBuilder;
-        }
+            : base(classBuilder, options)
+        { }
 
-        public void Walk(HamlNode node)
+        public override void Walk(HamlNode node)
         {
             var nodeText = node as HamlNodeText;
             if (nodeText == null)

@@ -88,5 +88,16 @@ namespace NHaml4.Tests.Parser
             if (!string.IsNullOrEmpty(att2))
                 Assert.That(tag.Attributes[2].Key, Is.EqualTo(att2));
         }
+
+        [Test]
+        public void Constructor_InlineContent_GeneratesCorrectChildTag()
+        {
+            const string templateLine = "p Hello world";
+            var tag = new HamlNodeTag(templateLine);
+
+            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeText>());
+            const string expectedText = "Hello world";
+            Assert.That(((HamlNodeText)tag.Children[0]).Text, Is.EqualTo(expectedText));
+        }
     }
 }
