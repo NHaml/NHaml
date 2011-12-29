@@ -31,9 +31,11 @@ namespace NHaml4.Parser
 
         public HamlDocument ParseDocumentSource(string documentSource)
         {
-            var streamReader = new StreamReader(
-                new MemoryStream(new UTF8Encoding().GetBytes(documentSource)));
-            return ParseStreamReader(streamReader);
+            using (var streamReader = new StreamReader(
+                new MemoryStream(new UTF8Encoding().GetBytes(documentSource))))
+            {
+                return ParseStreamReader(streamReader);
+            }
         }
 
         public HamlDocument ParseStreamReader(StreamReader reader)
@@ -73,6 +75,8 @@ namespace NHaml4.Parser
                     return new HamlNodeText(nodeLine);
                 case HamlRuleEnum.Tag:
                     return new HamlNodeTag(nodeLine);
+                case HamlRuleEnum.HamlComment:
+                    return new HamlNodeHamlComment(nodeLine);
                 default:
                     throw new HamlUnknownRuleException(nodeLine.Content);
             }

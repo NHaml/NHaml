@@ -29,6 +29,7 @@ namespace NHaml4.Tests.Parser
         [Test]
         [TestCase("Test content", typeof(HamlNodeText))]
         [TestCase("%p", typeof(HamlNodeTag))]
+        [TestCase("-#comment", typeof(HamlNodeHamlComment))]
         public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
             var result = _parser.ParseDocumentSource(template);

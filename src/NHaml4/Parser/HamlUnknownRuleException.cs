@@ -10,7 +10,7 @@ namespace NHaml4.Parser
         { }
 
         public HamlUnknownRuleException(string ruleValue, Exception ex)
-            : base(string.Format("Unable to create node for unknown rule {0}", ruleValue), ex)
+            : base(string.Format("Unable to create node for unknown rule '{0}'", ruleValue), ex)
         { }
     }
 }

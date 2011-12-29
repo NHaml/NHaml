@@ -13,10 +13,6 @@ namespace NHaml4.Parser
         private bool _isSelfClosing = false;
         private string _namespace = string.Empty;
 
-        public HamlNodeTag(IO.HamlLine nodeLine)
-            : this(nodeLine.Content)
-        { }
-
         public IList<KeyValuePair<string, string>> Attributes
         {
             get
@@ -24,7 +20,7 @@ namespace NHaml4.Parser
                 var result = new List<KeyValuePair<string, string>>();
                 if (!string.IsNullOrEmpty(_tagClass)) result.Add(new KeyValuePair<string, string>("class", _tagClass));
                 if (!string.IsNullOrEmpty(_tagId)) result.Add(new KeyValuePair<string, string>("id", _tagId));
-                                 
+
                 result.AddRange(_attributes);
                 return result;
             }
@@ -44,6 +40,10 @@ namespace NHaml4.Parser
         {
             get { return _namespace; }
         }
+
+        public HamlNodeTag(IO.HamlLine nodeLine)
+            : this(nodeLine.Content)
+        { }
 
         public HamlNodeTag(string content)
         {
@@ -68,6 +68,8 @@ namespace NHaml4.Parser
                 else
                     break;
             }
+
+            //TODO - stuff for inline content goes here
         }
 
         private string GetTagName(string content, ref int pos)

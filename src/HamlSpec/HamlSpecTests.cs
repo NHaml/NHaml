@@ -15,15 +15,18 @@ namespace HamlSpec
         private string TemplatesFolder = @"Functional\Templates\";
 
         // WORKING
-        [TestCase("plain text templates")]
+        //[TestCase("plain text templates")]
+        //[TestCase("tags with unusual HTML characters")]
+        //[TestCase("tags with unusual CSS identifiers")]
+        //[TestCase("basic Haml tags and CSS")]
         //[TestCase("silent comments")]
-        //[TestCase("markup comments")]
-        [TestCase("tags with unusual HTML characters")]
-        [TestCase("tags with unusual CSS identifiers")]
+
+        // IN PROGRESS
+        [TestCase("tags with inline content")]
+
         // TODO
+        //[TestCase("markup comments")]
         //[TestCase("headers")]
-        [TestCase("basic Haml tags and CSS")]
-        //[TestCase("tags with inline content")]
         //[TestCase("tags with nested content")]
         //[TestCase("tags with HTML-style attributes")]
         //[TestCase("tags with Ruby-style attributes")]
@@ -67,7 +70,7 @@ namespace HamlSpec
             string expected = test.ExpectedHtml.Replace("\n", "").Replace("\r", "");
 
             var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
-            Assert.That(test.ExpectedHtml, Is.EqualTo(output.ToString()), message);
+            Assert.That(output.ToString(), Is.EqualTo(test.ExpectedHtml), message);
         }
 
         private Template CreateTemplate(string hamlTemplate, string htmlFormat)
