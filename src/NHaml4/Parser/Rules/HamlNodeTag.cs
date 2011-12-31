@@ -1,17 +1,64 @@
 ﻿using System;
 using System.Collections.Generic;
 using NHaml4.Crosscutting;
+using NHaml4.IO;
 
-namespace NHaml4.Parser
+namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTag : HamlNode
     {
-        private readonly string _tagName = string.Empty;
-        private readonly IList<KeyValuePair<string, string>> _attributes = new List<KeyValuePair<string, string>>();
+        private string _tagName = string.Empty;
+        private string _namespace = string.Empty;
         private string _tagClass = string.Empty;
         private string _tagId = string.Empty;
+        private readonly IList<KeyValuePair<string, string>> _attributes = new List<KeyValuePair<string, string>>();
         private bool _isSelfClosing = false;
-        private string _namespace = string.Empty;
+
+        public HamlNodeTag(IO.HamlLine nodeLine)
+            : base(nodeLine)
+        {
+            int pos = 0;
+
+            SetNamespaceAndTagName(nodeLine.Content, ref pos);
+            SetClassAndId(nodeLine.Content, ref pos);
+            HandleInlineContent(nodeLine.Content, ref pos);
+        }
+
+        private void SetNamespaceAndTagName(string content, ref int pos)
+        {
+            _tagName = GetTagName(content, ref pos);
+            
+            if (pos < content.Length
+                && content[pos] == ':'
+                && _isSelfClosing == false)
+            {
+                pos++;
+                _namespace = _tagName;
+                _tagName = GetTagName(content, ref pos);
+            }
+        }
+
+
+        private void SetClassAndId(string content, ref int pos)
+        {
+            while (pos < content.Length)
+            {
+                if (content[pos] == '#')
+                    SetTagId(content, ref pos);
+                else if (content[pos] == '.')
+                    SetClassName(content, ref pos);
+                else
+                    break;
+            }
+        }
+
+        private void HandleInlineContent(string content, ref int pos)
+        {
+            if (pos >= content.Length) return;
+
+            var contentLine = new HamlLine(content.Substring(pos).TrimStart());
+            Add(new HamlNodeText(contentLine));
+        }
 
         public IList<KeyValuePair<string, string>> Attributes
         {
@@ -39,42 +86,6 @@ namespace NHaml4.Parser
         public string Namespace
         {
             get { return _namespace; }
-        }
-
-        public HamlNodeTag(IO.HamlLine nodeLine)
-            : this(nodeLine.Content)
-        { }
-
-        public HamlNodeTag(string content)
-        {
-            int pos = 0;
-
-            _tagName = GetTagName(content, ref pos);
-            if (pos < content.Length
-                && content[pos] == ':'
-                && _isSelfClosing == false)
-            {
-                pos++;
-                _namespace = _tagName;
-                _tagName = GetTagName(content, ref pos);
-            }
-
-            while (pos < content.Length)
-            {
-                if (content[pos] == '#')
-                    SetTagId(content, ref pos);
-                else if (content[pos] == '.')
-                    SetClassName(content, ref pos);
-                else
-                    break;
-            }
-
-            if (pos < content.Length)
-            {
-                Add(new HamlNodeText(content.Substring(pos).TrimStart()));
-            }
-
-            //TODO - stuff for inline content goes here
         }
 
         private string GetTagName(string content, ref int pos)

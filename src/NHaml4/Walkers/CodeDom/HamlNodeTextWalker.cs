@@ -1,6 +1,8 @@
 ﻿using NHaml4.Parser;
 using NHaml4.Compilers;
 using NHaml4.Crosscutting;
+using NHaml4.Parser.Rules;
+
 namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeTextWalker : HamlNodeWalker, INodeWalker
@@ -15,7 +17,9 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeText == null)
                 throw new System.InvalidCastException("HamlNodeTextWalker requires that HamlNode object be of type HamlNodeText.");
 
-            _classBuilder.Append(nodeText.Text);
+            _classBuilder.Append(nodeText.Indent);
+            _classBuilder.Append(nodeText.Content);
+            base.Walk(node);
         }
     }
 }

@@ -4,6 +4,7 @@ using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml.Tests.Builders;
 using NHaml.IO;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Tests.Parser
 {
@@ -41,10 +42,18 @@ namespace NHaml4.Tests.Parser
         [TestCase("", 1)]
         [TestCase("Test", 1)]
         [TestCase("Test\nTest", 2)]
-        public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildren)
+        public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildrenCount)
         {
             var result = _parser.ParseDocumentSource(template);
-            Assert.AreEqual(expectedChildren, result.Children.Count);
+            Assert.That(result.Children.Count, Is.EqualTo(expectedChildrenCount));
+        }
+
+        [Test]
+        public void ParseDocumentSource_MultiLineTemplates_AddsLineBreakNode()
+        {
+            string template = "Line1\nLine2";
+            var result = _parser.ParseDocumentSource(template);
+            Assert.That(result.Children[0].Children[0].Content, Is.EqualTo("\n"));
         }
 
         [Test]

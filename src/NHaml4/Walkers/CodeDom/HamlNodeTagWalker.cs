@@ -5,6 +5,7 @@ using System.Text;
 using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Crosscutting;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -21,6 +22,8 @@ namespace NHaml4.Walkers.CodeDom
                 throw new InvalidCastException("HamlNodeTagWalker requires that HamlNode object be of type HamlNodeTag.");
 
             string attributesMarkup = GetAttributes(nodeTag.Attributes);
+            
+            _classBuilder.Append(nodeTag.Indent);
             if (nodeTag.IsSelfClosing || _options.IsAutoClosingTag(nodeTag.TagName))
                 RenderSelfClosingTag(nodeTag, attributesMarkup);
             else
@@ -38,7 +41,16 @@ namespace NHaml4.Walkers.CodeDom
         {
             _classBuilder.AppendFormat("<{0}{1}>", nodeTag.NamespaceQualifiedTagName, attributesMarkup);
             base.Walk(nodeTag);
-            _classBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
+
+            if (nodeTag.IsMultiLine)
+            {
+                _classBuilder.AppendNewLine();
+                _classBuilder.AppendFormat(nodeTag.Indent + "</{0}>", nodeTag.NamespaceQualifiedTagName);
+            }
+            else
+            {
+                _classBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
+            }
         }
 
         private string GetAttributes(IEnumerable<KeyValuePair<string, string>> attributes)

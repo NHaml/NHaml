@@ -89,10 +89,10 @@
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
-    <Compile Include="Parser\HamlNodeHtmlComment.cs" />
-    <Compile Include="Parser\HamlNodeHamlComment.cs" />
-    <Compile Include="Parser\HamlNodeTag.cs" />
-    <Compile Include="Parser\HamlNodeText.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHtmlComment.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHamlComment.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTag.cs" />
+    <Compile Include="Parser\Rules\HamlNodeText.cs" />
     <Compile Include="Parser\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />

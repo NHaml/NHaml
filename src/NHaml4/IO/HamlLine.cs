@@ -11,6 +11,7 @@ namespace NHaml4.IO
         private int _indentCount;
         private HamlRuleEnum _hamlRule;
         private string _content;
+        private string _indent;
 
         public HamlLine(string currentLine)
         {
@@ -33,6 +34,11 @@ namespace NHaml4.IO
             get { return _content; }
         }
 
+        public string Indent
+        {
+            get { return _indent; }
+        }
+
         private void ParseHamlLine(string currentLine)
         {
             _indentCount = 0;
@@ -49,6 +55,7 @@ namespace NHaml4.IO
                 whiteSpaceIndex++;
             }
 
+            _indent = currentLine.Substring(0, whiteSpaceIndex);
             _content = (whiteSpaceIndex == currentLine.Length) ? "" : currentLine.Substring(whiteSpaceIndex);
 
             if (string.IsNullOrEmpty(_content)) _indentCount = 0;

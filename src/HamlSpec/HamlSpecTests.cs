@@ -12,7 +12,6 @@ namespace HamlSpec
     [TestFixture]
     public class HamlSpecTests
     {
-        private string TemplatesFolder = @"Functional\Templates\";
         private int _totalNoTests;
         private int _totalNoTestsFailed;
 
@@ -36,10 +35,8 @@ namespace HamlSpec
         [TestCase("basic Haml tags and CSS")]
         [TestCase("silent comments")]
         [TestCase("tags with inline content")]
-
-        // IN PROGRESS
         [TestCase("markup comments")]
-        //[TestCase("tags with nested content")]
+        [TestCase("tags with nested content")]
 
         // TODO
         //[TestCase("headers")]
@@ -73,18 +70,19 @@ namespace HamlSpec
                 }
             }
             int totalCount = hamlSpecTests.Count();
-            Assert.AreEqual(0, errorCount, errorCount + " of " + totalCount + " scenarios failed.");
             Console.WriteLine(errorCount + " of " + totalCount + " scenarios failed.");
 
             _totalNoTests += totalCount;
             _totalNoTestsFailed += errorCount;
 
+            Assert.AreEqual(0, errorCount, errorCount + " of " + totalCount + " scenarios failed.");
         }
 
         private void ExecuteSingleTest(HamlSpec test)
         {
             var template = CreateTemplate(test.Haml, test.Format);
             var output = new StringWriter();
+            output.NewLine = "\n";
             template.Render(output);
 
             var message = string.Format("{0} - {1}", test.GroupName, test.TestName);

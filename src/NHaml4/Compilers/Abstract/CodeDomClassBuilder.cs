@@ -61,7 +61,7 @@ namespace NHaml4.Compilers.Abstract
         public void AppendNewLine()
         {
             var writeInvoke = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
+                .GetCodeMethodInvokeExpression("WriteLine", CurrentTextWriterVariableName)
                 .WithPrimitiveParameter("");
 
             RenderMethod.Statements.Add(

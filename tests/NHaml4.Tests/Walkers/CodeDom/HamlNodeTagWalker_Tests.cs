@@ -7,6 +7,8 @@ using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
+using NHaml4.IO;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -32,7 +34,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NonSelfClosingTags_AppendsCorrectTag(string templateLine, string expectedTagName, string expectedAttributes)
         {
             // Arrange
-            var tagNode = new HamlNodeTag(templateLine);
+            var tagNode = new HamlNodeTag(new HamlLine(templateLine));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -47,7 +49,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             const string tagName = "foo/";
-            var tagNode = new HamlNodeTag(tagName);
+            var tagNode = new HamlNodeTag(new HamlLine(tagName));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -64,7 +66,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_AutoSelfClosingTag_AppendsCorrectTag(HtmlVersion htmlVersion, string expectedFormat)
         {
             // Arrange
-            var tagNode = new HamlNodeTag("br");
+            var tagNode = new HamlNodeTag(new HamlLine("br"));
 
             // Act
             _hamlOptions.HtmlVersion = htmlVersion;
@@ -75,14 +77,28 @@ namespace NHaml4.Tests.Walkers.CodeDom
         }
 
         [Test]
+        public void Walk_IndentedTag_AppendsIndent()
+        {
+            // Arrange
+            const string indent = "  ";
+            var tagNode = new HamlNodeTag(new HamlLine(indent + "p"));
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            _classBuilderMock.Verify(x => x.Append(indent));
+        }
+
+        [Test]
         public void Walk_NestedTags_AppendsCorrectTags()
         {
             // Arrange
             const string tagName = "p";
             const string nestedText = "Hello world";
-            var tagNode = new HamlNodeTag(tagName)
+            var tagNode = new HamlNodeTag(new HamlLine(tagName))
                               {
-                                  new HamlNodeText(nestedText)
+                                  new HamlNodeText(new HamlLine(nestedText))
                               };
             // Act
             _tagWalker.Walk(tagNode);

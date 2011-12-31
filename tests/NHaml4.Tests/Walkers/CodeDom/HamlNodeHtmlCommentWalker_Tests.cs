@@ -7,6 +7,8 @@ using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml4.Compilers;
 using Moq;
+using NHaml4.IO;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -41,13 +43,32 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             string comment = "Comment";
-            var node = new HamlNodeHtmlComment(comment);
+            var node = new HamlNodeHtmlComment(new HamlLine(comment));
 
             // Act
             _walker.Walk(node);
 
             // Assert
             _classBuilderMock.Verify(x => x.Append("<!--" + comment));
+            _classBuilderMock.Verify(x => x.Append(" -->"));
+        }
+
+        [Test]
+        public void Walk_NestedTags_AppendsCorrectTags()
+        {
+            // Arrange
+            HamlLine nestedText = new HamlLine("  Hello world");
+            var tagNode = new HamlNodeHtmlComment(new HamlLine(""))
+                              {
+                                  new HamlNodeText(nestedText)
+                              };
+            // Act
+            _walker.Walk(tagNode);
+
+            // Assert
+            _classBuilderMock.Verify(x => x.Append("<!--"));
+            _classBuilderMock.Verify(x => x.Append(nestedText.Indent));
+            _classBuilderMock.Verify(x => x.Append(nestedText.Content));
             _classBuilderMock.Verify(x => x.Append(" -->"));
         }
     }

@@ -7,6 +7,7 @@ using NHaml4.IO;
 using NHaml;
 using System.IO;
 using NHaml4.TemplateResolution;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Parser
 {
@@ -47,24 +48,31 @@ namespace NHaml4.Parser
         public HamlDocument ParseHamlFile(HamlFile hamlFile)
         {
             var result = new HamlDocument();
-            while (!hamlFile.EndOfFile)
-            {
-                result.Add(ParseNode(hamlFile));
-            }
+
+            ParseNode(result, hamlFile);
+
             return result;
         }
 
-        private HamlNode ParseNode(HamlFile hamlFile)
+        private void ParseNode(HamlNode node, HamlFile hamlFile)
         {
-            HamlLine nodeLine = hamlFile.CurrentLine;
-            HamlNode node = GetHamlNode(nodeLine);
-
-            hamlFile.MoveNext();
-            while (hamlFile.CurrentLine != null && hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
+            node.IsMultiLine = true;
+            while ((!hamlFile.EndOfFile) && (hamlFile.CurrentLine.IndentCount > node.IndentCount))
             {
-                node.Add(ParseNode(hamlFile));
+                HamlLine nodeLine = hamlFile.CurrentLine;
+                HamlNode childNode = GetHamlNode(nodeLine);
+                node.Add(childNode);
+
+                hamlFile.MoveNext();
+                if (hamlFile.EndOfFile == false)
+                {
+                    childNode.Add(new HamlNodeText(new HamlLine("\n")));
+                    if (hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
+                    {
+                        ParseNode(childNode, hamlFile);
+                    }
+                }
             }
-            return node;
         }
 
         private HamlNode GetHamlNode(HamlLine nodeLine)

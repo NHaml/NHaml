@@ -4,8 +4,10 @@ using System.Linq;
 using System.Text;
 using NHaml4.Parser;
 using NUnit.Framework;
+using NHaml4.IO;
+using NHaml4.Parser.Rules;
 
-namespace NHaml4.Tests.Parser
+namespace NHaml4.Tests.Parser.Rules
 {
     [TestFixture]
     public class HamlNodeTag_Tests
@@ -19,7 +21,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("br/", "br")]
         public void Constructor_SimpleTags_GeneratesCorrectTagName(string templateLine, string expectedTagName)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
             Assert.That(tag.TagName, Is.EqualTo(expectedTagName));
         }
 
@@ -30,7 +32,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("p#id.className", "id")]
         public void Constructor_SimpleTags_GeneratesCorrectId(string templateLine, string expectedTagId)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
 
             string att = tag.Attributes.Any(x => x.Key == "id")
                 ? tag.Attributes.First(x => x.Key == "id").Value
@@ -45,7 +47,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("p.test#id", "test")]
         public void Constructor_SimpleTags_GeneratesCorrectClassName(string templateLine, string expectedClassNames)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
             
             string att = tag.Attributes.Any(x => x.Key == "class")
                 ? tag.Attributes.First(x => x.Key == "class").Value
@@ -58,7 +60,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("br/", true)]
         public void Constructor_SimpleTags_DeterminesSelfClosingCorrectly(string templateLine, bool expectedSelfClosing)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
             Assert.That(tag.IsSelfClosing, Is.EqualTo(expectedSelfClosing));
         }
 
@@ -68,7 +70,7 @@ namespace NHaml4.Tests.Parser
         public void Constructor_TagWithNamespace_DeterminesTagAndNamespaceCorrectly(string templateLine,
             string expectedNamespace, string expectedTag)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
             Assert.That(tag.Namespace, Is.EqualTo(expectedNamespace));
             Assert.That(tag.TagName, Is.EqualTo(expectedTag));
 
@@ -81,7 +83,7 @@ namespace NHaml4.Tests.Parser
         //[TestCase(".className#id{att => value}", "class", "id", "att")]
         public void Constructor_MultipleAttributes_OrderedCorrectly(string templateLine, string att0, string att1, string att2)
         {
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
 
             Assert.That(tag.Attributes[0].Key, Is.EqualTo(att0));
             Assert.That(tag.Attributes[1].Key, Is.EqualTo(att1));
@@ -93,11 +95,11 @@ namespace NHaml4.Tests.Parser
         public void Constructor_InlineContent_GeneratesCorrectChildTag()
         {
             const string templateLine = "p Hello world";
-            var tag = new HamlNodeTag(templateLine);
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
 
             Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeText>());
             const string expectedText = "Hello world";
-            Assert.That(((HamlNodeText)tag.Children[0]).Text, Is.EqualTo(expectedText));
+            Assert.That(((HamlNodeText)tag.Children[0]).Content, Is.EqualTo(expectedText));
         }
     }
 }

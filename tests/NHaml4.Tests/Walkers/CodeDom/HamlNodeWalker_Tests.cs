@@ -7,6 +7,8 @@ using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
+using NHaml4.IO;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -16,9 +18,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
         private class DummyWalker : HamlNodeWalker
         {
-            public DummyWalker(ITemplateClassBuilder classBuilder, HamlOptions options) : base(classBuilder, options)
-            {
-            }
+            public DummyWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+                : base(classBuilder, options)
+            { }
         }
 
         [SetUp]
@@ -30,7 +32,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         public void WalkChildren_TextNode_WalksTextNode()
         {
-            var document = new HamlDocument { new HamlNodeText("test") };
+            var document = new HamlDocument { new HamlNodeText(new HamlLine("test")) };
             var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
             walker.Walk(document);
 
@@ -40,7 +42,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         public void WalkChildren_TagNode_WalksTagNode()
         {
-            var document = new HamlDocument { new HamlNodeTag("test") };
+            var document = new HamlDocument { new HamlNodeTag(new HamlLine("test")) };
             var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
             walker.Walk(document);
 
@@ -50,7 +52,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         public void WalkChildren_HtmlCommentNode_WalksHtmlCommentNode()
         {
-            var document = new HamlDocument { new HamlNodeHtmlComment("test") };
+            var document = new HamlDocument {
+                new HamlNodeHtmlComment(new HamlLine("test"))
+            };
             var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
             walker.Walk(document);
 

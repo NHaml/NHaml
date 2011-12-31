@@ -4,6 +4,8 @@ using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Tests.Walkers.CodeDom;
+using NHaml4.Parser.Rules;
+using NHaml4.IO;
 
 namespace NHaml4.Tests.Walkers
 {
@@ -24,14 +26,14 @@ namespace NHaml4.Tests.Walkers
         public void Walk_TextNode_AppendsCorrectTag()
         {
             // Arrange
-            const string content = "Simple content";
+            var content = new HamlLine("Simple content");
             var document = new HamlDocument { new HamlNodeText(content) };
 
             // Act
-            _walker.Walk(document, content);
+            _walker.Walk(document, "");
 
             // Assert
-            _classBuilder.Verify(x => x.Append(content));
+            _classBuilder.Verify(x => x.Append(content.Content));
         }
 
         [Test]

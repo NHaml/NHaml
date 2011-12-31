@@ -11,7 +11,7 @@ namespace NHaml4.Parser
         public HamlDocument()
             : base()
         {
-            // TODO: Complete member initialization
+            IndentCount = -1;
         }
 
     }
