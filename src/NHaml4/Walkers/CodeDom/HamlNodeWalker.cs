@@ -40,12 +40,14 @@ namespace NHaml4.Walkers.CodeDom
             foreach (var child in node.Children)
             {
                 var nodeWalker = GetNodeWalker(child.GetType());
-                nodeWalker.Walk(child);
+                if (nodeWalker != null) nodeWalker.Walk(child);
             }
         }
 
         private HamlNodeWalker GetNodeWalker(Type type)
         {
+            if (type == typeof(HamlNodeTagId)
+                || type == typeof(HamlNodeTagClass)) return null;
             if (type == typeof(HamlNodeText))
                 return new HamlNodeTextWalker(_classBuilder, _options);
             else if (type == typeof(HamlNodeTag))
@@ -55,7 +57,7 @@ namespace NHaml4.Walkers.CodeDom
             else if (type == typeof(HamlNodeHamlComment))
                 return new HamlNodeHamlCommentWalker(_classBuilder, _options);
             else
-                throw new HamlUnknownRuleException("");
+                throw new HamlUnknownRuleException(type.FullName);
         }
     }
 }

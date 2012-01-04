@@ -9,7 +9,7 @@ namespace NHaml4.Parser
 {
     public abstract class HamlNode : IEnumerable<HamlNode>
     {
-        private readonly string _content;
+        private string _content;
         private readonly string _indent;
         private int _indentCount;
         private IList<HamlNode> _children = new List<HamlNode>();
@@ -29,6 +29,7 @@ namespace NHaml4.Parser
         public string Content
         {
             get { return _content; }
+            protected set { _content = value; }
         }
 
         public string Indent

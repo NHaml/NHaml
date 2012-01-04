@@ -46,7 +46,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
             walker.Walk(document);
 
-            _classBuilderMock.Verify(x => x.AppendFormat("<{0}{1}>", "test", ""));
+            _classBuilderMock.Verify(x => x.Append("<test"));
         }
 
         [Test]

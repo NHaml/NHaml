@@ -38,9 +38,10 @@ namespace HamlSpec
         [TestCase("markup comments")]
         [TestCase("tags with nested content")]
 
+        [TestCase("tags with HTML-style attributes")]
+
         // TODO
         //[TestCase("headers")]
-        //[TestCase("tags with HTML-style attributes")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         //[TestCase("Ruby-style interpolation")]

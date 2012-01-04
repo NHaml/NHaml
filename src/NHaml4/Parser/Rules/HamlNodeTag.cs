@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Collections.Generic;
 using NHaml4.Crosscutting;
 using NHaml4.IO;
@@ -9,9 +10,6 @@ namespace NHaml4.Parser.Rules
     {
         private string _tagName = string.Empty;
         private string _namespace = string.Empty;
-        private string _tagClass = string.Empty;
-        private string _tagId = string.Empty;
-        private readonly IList<KeyValuePair<string, string>> _attributes = new List<KeyValuePair<string, string>>();
         private bool _isSelfClosing = false;
 
         public HamlNodeTag(IO.HamlLine nodeLine)
@@ -20,7 +18,7 @@ namespace NHaml4.Parser.Rules
             int pos = 0;
 
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
-            SetClassAndId(nodeLine.Content, ref pos);
+            ParseClassAndIdNodes(nodeLine.Content, ref pos);
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
@@ -39,14 +37,14 @@ namespace NHaml4.Parser.Rules
         }
 
 
-        private void SetClassAndId(string content, ref int pos)
+        private void ParseClassAndIdNodes(string content, ref int pos)
         {
             while (pos < content.Length)
             {
                 if (content[pos] == '#')
-                    SetTagId(content, ref pos);
+                    ParseTagIdNode(content, ref pos);
                 else if (content[pos] == '.')
-                    SetClassName(content, ref pos);
+                    ParseClassNode(content, ref pos);
                 else
                     break;
             }
@@ -58,19 +56,6 @@ namespace NHaml4.Parser.Rules
 
             var contentLine = new HamlLine(content.Substring(pos).TrimStart());
             Add(new HamlNodeText(contentLine));
-        }
-
-        public IList<KeyValuePair<string, string>> Attributes
-        {
-            get
-            {
-                var result = new List<KeyValuePair<string, string>>();
-                if (!string.IsNullOrEmpty(_tagClass)) result.Add(new KeyValuePair<string, string>("class", _tagClass));
-                if (!string.IsNullOrEmpty(_tagId)) result.Add(new KeyValuePair<string, string>("id", _tagId));
-
-                result.AddRange(_attributes);
-                return result;
-            }
         }
 
         public string TagName
@@ -104,22 +89,20 @@ namespace NHaml4.Parser.Rules
             return string.IsNullOrEmpty(result) ? "div" : result;
         }
 
-        private void SetTagId(string content, ref int pos)
+        private void ParseTagIdNode(string content, ref int pos)
         {
             pos++;
-            _tagId = GetHtmlToken(content, ref pos);
+            string tagId = GetHtmlToken(content, ref pos);
+            var newTag = new HamlNodeTagId(tagId);
+            Add(newTag);
         }
 
-        private void SetClassName(string content, ref int pos)
+        private void ParseClassNode(string content, ref int pos)
         {
             pos++;
             string className = GetHtmlToken(content, ref pos);
-            if (!string.IsNullOrEmpty(className))
-            {
-                _tagClass = string.IsNullOrEmpty(_tagClass)
-                                ? className
-                                : _tagClass + " " + className;
-            }
+            var newTag = new HamlNodeTagClass(className);
+            Add(newTag);
         }
 
         private string GetHtmlToken(string content, ref int pos)

@@ -26,33 +26,36 @@ namespace NHaml4.Tests.Parser.Rules
         }
 
         [Test]
-        [TestCase("p", "")]
-        [TestCase("p#id", "id")]
-        [TestCase("p#id1#id2", "id2")]
-        [TestCase("p#id.className", "id")]
-        public void Constructor_SimpleTags_GeneratesCorrectId(string templateLine, string expectedTagId)
+        [TestCase("p", "", 0)]
+        [TestCase("p#id", "id", 1)]
+        [TestCase("p#id1#id2", "id1", 2)]
+        [TestCase("p#id.className", "id", 1)]
+        public void Constructor_SimpleTags_GeneratesCorrectIdChildNodes(string templateLine, string expectedFirstTagId, int expectedCount)
         {
             var tag = new HamlNodeTag(new HamlLine(templateLine));
 
-            string att = tag.Attributes.Any(x => x.Key == "id")
-                ? tag.Attributes.First(x => x.Key == "id").Value
-                : "";
-            Assert.That(att, Is.EqualTo(expectedTagId));
+            var idTags = tag.Children.OfType<HamlNodeTagId>();
+
+            Assert.That(idTags.Count(), Is.EqualTo(expectedCount));
+            string att = idTags.FirstOrDefault() != null ? idTags.First().Content : "";
+            Assert.That(att, Is.EqualTo(expectedFirstTagId));
         }
 
         [Test]
-        [TestCase("p", "")]
-        [TestCase("p.test", "test")]
-        [TestCase("p#id.test", "test")]
-        [TestCase("p.test#id", "test")]
-        public void Constructor_SimpleTags_GeneratesCorrectClassName(string templateLine, string expectedClassNames)
+        [TestCase("p", "", 0)]
+        [TestCase("p.test", "test", 1)]
+        [TestCase("p#id.test", "test", 1)]
+        [TestCase("p.test#id", "test", 1)]
+        [TestCase("p.test#id.test2", "test", 2)]
+        public void Constructor_SimpleTags_GeneratesCorrectClassChildNodes(string templateLine, string expectedFirstClass, int expectedCount)
         {
             var tag = new HamlNodeTag(new HamlLine(templateLine));
-            
-            string att = tag.Attributes.Any(x => x.Key == "class")
-                ? tag.Attributes.First(x => x.Key == "class").Value
-                : "";
-            Assert.That(att, Is.EqualTo(expectedClassNames));
+
+            var classChildren = tag.Children.OfType<HamlNodeTagClass>();
+
+            Assert.That(classChildren.Count(), Is.EqualTo(expectedCount));
+            string att = classChildren.FirstOrDefault() != null ? classChildren.First().Content : "";
+            Assert.That(att, Is.EqualTo(expectedFirstClass));
         }
 
         [Test]
@@ -74,21 +77,6 @@ namespace NHaml4.Tests.Parser.Rules
             Assert.That(tag.Namespace, Is.EqualTo(expectedNamespace));
             Assert.That(tag.TagName, Is.EqualTo(expectedTag));
 
-        }
-
-        [Test]
-        [TestCase("#id.className", "class", "id", "")]
-        [TestCase(".className#id", "class", "id", "")]
-        //[TestCase(".className#id(att=value)", "class", "id", "att")]
-        //[TestCase(".className#id{att => value}", "class", "id", "att")]
-        public void Constructor_MultipleAttributes_OrderedCorrectly(string templateLine, string att0, string att1, string att2)
-        {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
-
-            Assert.That(tag.Attributes[0].Key, Is.EqualTo(att0));
-            Assert.That(tag.Attributes[1].Key, Is.EqualTo(att1));
-            if (!string.IsNullOrEmpty(att2))
-                Assert.That(tag.Attributes[2].Key, Is.EqualTo(att2));
         }
 
         [Test]
