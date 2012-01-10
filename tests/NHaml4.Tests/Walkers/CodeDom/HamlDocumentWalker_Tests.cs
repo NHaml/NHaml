@@ -6,22 +6,13 @@ using NHaml4.Walkers.CodeDom;
 using NHaml4.Tests.Walkers.CodeDom;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml4.Tests.Walkers
 {
     [TestFixture]
     public class HamlDocumentWalker_Tests
     {
-        private Mock<ITemplateClassBuilder> _classBuilder;
-        private HamlDocumentWalker _walker;
-
-        [SetUp]
-        public void SetUp()
-        {
-            _classBuilder = new Mock<ITemplateClassBuilder>();
-            _walker = new HamlDocumentWalker(_classBuilder.Object);
-        }
-
         [Test]
         public void Walk_TextNode_AppendsCorrectTag()
         {
@@ -30,10 +21,11 @@ namespace NHaml4.Tests.Walkers
             var document = new HamlDocument { new HamlNodeText(content) };
 
             // Act
-            _walker.Walk(document, "");
+            var builder = new ClassBuilderMock();
+            new HamlDocumentWalker(builder).Walk(document, "");
 
             // Assert
-            _classBuilder.Verify(x => x.Append(content.Content));
+            Assert.That(builder.Build(""), Is.EqualTo(content.Content));
         }
 
         [Test]
@@ -44,10 +36,12 @@ namespace NHaml4.Tests.Walkers
             var document = new HamlTreeParser(new NHaml4.IO.HamlFileLexer()).ParseDocumentSource("Simple content");
             
             // Act
-            _walker.Walk(document, className);
+            var builder = new Mock<ITemplateClassBuilder>();
+            
+            new HamlDocumentWalker(builder.Object).Walk(document, className);
 
             // Assert
-            _classBuilder.Verify(x => x.Build(className));
+            builder.Verify(x => x.Build(className));
         }
     }
 }

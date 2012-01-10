@@ -9,6 +9,7 @@ using NHaml4.Compilers;
 using Moq;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -19,16 +20,16 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
 
         }
-        Mock<ITemplateClassBuilder> _classBuilderMock;
+        ClassBuilderMock _classBuilderMock;
         private HamlNodeHtmlCommentWalker _walker;
         private HamlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
-            _classBuilderMock = new Mock<ITemplateClassBuilder>();
+            _classBuilderMock = new ClassBuilderMock();
             _hamlOptions = new HamlOptions();
-            _walker = new HamlNodeHtmlCommentWalker(_classBuilderMock.Object, _hamlOptions);
+            _walker = new HamlNodeHtmlCommentWalker(_classBuilderMock, _hamlOptions);
         }
 
         [Test]
@@ -49,8 +50,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _walker.Walk(node);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append("<!--" + comment));
-            _classBuilderMock.Verify(x => x.Append(" -->"));
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo("<!--" + comment + " -->"));
         }
 
         [Test]
@@ -66,10 +66,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _walker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append("<!--"));
-            _classBuilderMock.Verify(x => x.Append(nestedText.Indent));
-            _classBuilderMock.Verify(x => x.Append(nestedText.Content));
-            _classBuilderMock.Verify(x => x.Append(" -->"));
+            string expectedComment = "<!--" + nestedText.Indent + nestedText.Content + " -->";
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedComment));
         }
     }
 }

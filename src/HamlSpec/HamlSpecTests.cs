@@ -38,6 +38,7 @@ namespace HamlSpec
         [TestCase("markup comments")]
         [TestCase("tags with nested content")]
 
+        // IN PROGRESS
         [TestCase("tags with HTML-style attributes")]
 
         // TODO

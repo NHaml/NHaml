@@ -6,6 +6,7 @@ using NHaml4.Parser;
 using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Tests.Parser.Rules
 {
@@ -88,6 +89,49 @@ namespace NHaml4.Tests.Parser.Rules
             Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeText>());
             const string expectedText = "Hello world";
             Assert.That(((HamlNodeText)tag.Children[0]).Content, Is.EqualTo(expectedText));
+        }
+
+        [Test]
+        public void Constructor_HtmlStyleAttribute_GeneratesHtmlAttributeCollectionTag()
+        {
+            const string templateLine = "p(a='b')";
+            var tag = new HamlNodeTag(new HamlLine(templateLine));
+
+            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeHtmlAttributeCollection>());
+        }
+
+        [Test]
+        [TestCase("p(a='b')", "(a='b')", 1)]
+        [TestCase("p(a='b)')", "(a='b)')", 1)]
+        [TestCase("p(a=\"b\")", "(a=\"b\")", 1)]
+        [TestCase("p(a='b\"')", "(a='b\"')", 1)]
+        [TestCase("p(a='b')Content", "(a='b')", 2)]
+        public void Constructor_HtmlStyleAttribute_AttributeCollectionContainsCorrectContent(
+            string hamlLine, string expectedAttributeContent, int expectedaAttrCount)
+        {
+            var tag = new HamlNodeTag(new HamlLine(hamlLine));
+
+            Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttributeContent));
+            Assert.That(tag.Children.Count, Is.EqualTo(expectedaAttrCount));
+        }
+
+        [Test]
+        public void Constructor_HtmlStyleAttributeWithContent_GeneratesCorrectChildren()
+        {
+            const string hamlLine = "p(a='b')Content";
+            var tag = new HamlNodeTag(new HamlLine(hamlLine));
+
+            const string expectedAttrContent = "(a='b')";
+            Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttrContent));
+            const string expectedStringContent = "Content";
+            Assert.That(tag.Children[1].Content, Is.EqualTo(expectedStringContent));
+        }
+
+        [Test]
+        public void Constructor_MalformedHtmlStyleAttributes_ThrowsMalformedTagException()
+        {
+            const string templateLine = "p(a='b'";
+            Assert.Throws<HamlMalformedTagException>(() => new HamlNodeTag(new HamlLine(templateLine)));
         }
     }
 }

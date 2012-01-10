@@ -82,20 +82,23 @@
     <Compile Include="Compilers\Abstract\CodeDomTemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
-    <Compile Include="Crosscutting\HtmlCharHelper.cs" />
+    <Compile Include="Crosscutting\HtmlStringHelper.cs" />
     <Compile Include="Crosscutting\Invariant.cs" />
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
+    <Compile Include="Parser\Exceptions\HamlMalformedTagException.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHtmlAttribute.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHtmlAttributeCollection.cs" />
     <Compile Include="Parser\Rules\HamlNodeTagClass.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlComment.cs" />
     <Compile Include="Parser\Rules\HamlNodeHamlComment.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag.cs" />
     <Compile Include="Parser\Rules\HamlNodeTagId.cs" />
     <Compile Include="Parser\Rules\HamlNodeText.cs" />
-    <Compile Include="Parser\HamlUnknownRuleException.cs" />
+    <Compile Include="Parser\Exceptions\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
     <Compile Include="Parser\HamlTreeParser.cs" />
@@ -121,6 +124,7 @@
     </Compile>
     <Compile Include="Walkers\CodeDom\HamlNodeWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlOptions.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker.cs" />
     <Compile Include="Walkers\IDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>

@@ -9,30 +9,31 @@ using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
     [TestFixture]
     public class HamlNodeTagWalker_Tests
     {
-        Mock<ITemplateClassBuilder> _classBuilderMock;
+        private ClassBuilderMock _classBuilderMock;
         private HamlNodeTagWalker _tagWalker;
         private HamlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
-            _classBuilderMock = new Mock<ITemplateClassBuilder>();
+            _classBuilderMock = new ClassBuilderMock();
             _hamlOptions = new HamlOptions();
-            _tagWalker = new HamlNodeTagWalker(_classBuilderMock.Object, _hamlOptions);
+            _tagWalker = new HamlNodeTagWalker(_classBuilderMock, _hamlOptions);
         }
 
         [Test]
-        [TestCase("p", "p", "", "")]
-        [TestCase("p#id", "p", "id", "")]
-        [TestCase("p.class", "p", "", "class")]
-        [TestCase("ns:id", "ns:id", "", "")]
-        public void Walk_NonSelfClosingTags_AppendsCorrectTag(string templateLine, string expectedTagName, string expectedId, string expectedClassName)
+        [TestCase("p", "<p></p>")]
+        [TestCase("p#id", "<p id='id'></p>")]
+        [TestCase("p.class", "<p class='class'></p>")]
+        [TestCase("ns:id", "<ns:id></ns:id>")]
+        public void Walk_NonSelfClosingTags_AppendsCorrectTag(string templateLine, string expectedOutput)
         {
             // Arrange
             var tagNode = new HamlNodeTag(new HamlLine(templateLine));
@@ -41,12 +42,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append("<" + expectedTagName));
-            if (!string.IsNullOrEmpty(expectedId))
-                _classBuilderMock.Verify(x => x.AppendFormat(" id='{0}'", expectedId));
-            if (!string.IsNullOrEmpty(expectedClassName))
-                _classBuilderMock.Verify(x => x.AppendFormat(" class='{0}'", expectedClassName));
-            _classBuilderMock.Verify(x => x.AppendFormat("</{0}>", expectedTagName));
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedOutput));
         }
 
         [Test]
@@ -60,9 +56,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            const string expectedTagName = "foo";
-            _classBuilderMock.Verify(x => x.Append("<" + expectedTagName));
-            _classBuilderMock.Verify(x => x.Append(" />"));
+            const string expectedTag = "<foo />";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedTag));
         }
 
         [Test]
@@ -79,7 +74,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append(expectedFormat));
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedFormat));
         }
 
         [Test]
@@ -93,7 +88,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append(indent));
+            Assert.That(_classBuilderMock.Build(""), Is.StringStarting(indent));
         }
 
         [Test]
@@ -110,10 +105,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.Append("<" + tagName));
-            _classBuilderMock.Verify(x => x.Append(">"));
-            _classBuilderMock.Verify(x => x.Append(nestedText));
-            _classBuilderMock.Verify(x => x.AppendFormat("</{0}>", tagName));
+            string expectedTag = string.Format("<{0}>{1}</{0}>", tagName, nestedText);
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedTag));
         }
 
         [Test]
@@ -127,17 +120,12 @@ namespace NHaml4.Tests.Walkers.CodeDom
                                   new HamlNodeTagId(tagId),
                                   new HamlNodeTagClass(tagClass)
                               };
-
-            int instrIndex = 0;
-            _classBuilderMock.Setup(x => x.AppendFormat(" class='{0}'", It.IsAny<string>()))
-                .Callback(() => Assert.That(instrIndex++ == 0));
-            _classBuilderMock.Setup(x => x.AppendFormat(" id='{0}'", It.IsAny<string>()))
-                .Callback(() => Assert.That(instrIndex++ == 1));
-
             // Act
             _tagWalker.Walk(tagNode);
 
-            // Assert - See Setup
+            // Assert
+            const string expectedTag = @"<p class='class' id='id'></p>";
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedTag));
         }
 
         [Test]
@@ -152,16 +140,12 @@ namespace NHaml4.Tests.Walkers.CodeDom
                                   new HamlNodeTagId(tagId)
                               };
 
-            int instrIndex = 0;
-            _classBuilderMock.Setup(x => x.AppendFormat(" class='{0}'", It.IsAny<string>()))
-                .Callback(() => Assert.That(instrIndex++ == 0));
-            _classBuilderMock.Setup(x => x.AppendFormat(" id='{0}'", It.IsAny<string>()))
-                .Callback(() => Assert.That(instrIndex++ == 1));
-
             // Act
             _tagWalker.Walk(tagNode);
 
-            // Assert - See setup
+            // Assert
+            const string expectedTag = @"<p class='class' id='id'></p>";
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedTag));
         }
 
         [Test]
@@ -178,7 +162,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.AppendFormat(It.IsAny<string>(), "class1 class2"));
+            const string expectedClassAttr = @"class='class1 class2'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedClassAttr));
         }
 
         [Test]
@@ -195,8 +180,95 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            _classBuilderMock.Verify(x => x.AppendFormat(It.IsAny<string>(), "id2"));
+            const string expectedIdAttr = @"id='id2'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
         }
 
+        [Test]
+        public void Walk_IdHtmlAttribute_WritesCorrectIdAttribute()
+        {
+            // Arrange
+            var tagNode = new HamlNodeTag(new HamlLine("p"))
+                              {
+                                  new HamlNodeHtmlAttributeCollection("(id='id')")
+                              };
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            const string expectedIdAttr = @"id='id'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
+        }
+
+
+        [Test]
+        public void Walk_ClassHtmlAttribute_WritesCorrectIdAttribute()
+        {
+            // Arrange
+            var tagNode = new HamlNodeTag(new HamlLine("p"))
+                              {
+                                  new HamlNodeHtmlAttributeCollection("(class='class')")
+                              };
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            const string expectedIdAttr = @"class='class'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
+        }
+
+        [Test]
+        public void Walk_IdNoteAndIdHtmlAttribute_WritesCorrectIdAttribute()
+        {
+            // Arrange
+            var tagNode = new HamlNodeTag(new HamlLine("p"))
+                              {
+                                  new HamlNodeTagId("id1"),
+                                  new HamlNodeHtmlAttributeCollection("(id='id2')")
+                              };
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            const string expectedIdAttr = "id='id1_id2'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
+        }
+
+        [Test]
+        public void Walk_ClassNoteAndClassHtmlAttribute_WritesCorrectIdAttribute()
+        {
+            // Arrange
+            var tagNode = new HamlNodeTag(new HamlLine("p"))
+                              {
+                                  new HamlNodeTagClass("class2"),
+                                  new HamlNodeHtmlAttributeCollection("(class='class1')")
+                              };
+
+            // Act
+            _tagWalker.Walk(tagNode);
+
+            // Assert
+            const string expectedIdAttr = @"class='class1 class2'";
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
+        }
+
+        [Test]
+        [TestCase("p", "()", "<p></p>")]
+        [TestCase("p/", "()", "<p />")]
+        [TestCase("p", "(a='b')", "<p a='b'></p>")]
+        public void Walk_EmptyAttributeCollectionNode_WritesCorrectAttributes(string tag, string attributes, string expectedOutput)
+        {
+            var tagNode = new HamlNodeTag(new HamlLine(tag))
+            {
+                new HamlNodeHtmlAttributeCollection(attributes)
+            };
+
+            _tagWalker.Walk(tagNode);
+
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
+        }
     }
 }

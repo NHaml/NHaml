@@ -9,12 +9,14 @@ using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
     internal class HamlNodeWalker_Tests
     {
-        private Mock<ITemplateClassBuilder> _classBuilderMock;
+        private ClassBuilderMock _classBuilderMock;
+        private DummyWalker _walker;
 
         private class DummyWalker : HamlNodeWalker
         {
@@ -26,39 +28,40 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [SetUp]
         public void SetUp()
         {
-            _classBuilderMock = new Mock<ITemplateClassBuilder>();
+            _classBuilderMock = new ClassBuilderMock();
+            _walker = new DummyWalker(_classBuilderMock, new HamlOptions());
         }
 
         [Test]
         public void WalkChildren_TextNode_WalksTextNode()
         {
-            var document = new HamlDocument { new HamlNodeText(new HamlLine("test")) };
-            var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
-            walker.Walk(document);
+            const string testText = "Hello world";
+            var document = new HamlDocument { new HamlNodeText(new HamlLine(testText)) };
+            _walker.Walk(document);
 
-            _classBuilderMock.Verify(x => x.Append("test"));
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(testText));
         }
 
         [Test]
         public void WalkChildren_TagNode_WalksTagNode()
         {
-            var document = new HamlDocument { new HamlNodeTag(new HamlLine("test")) };
-            var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
-            walker.Walk(document);
+            const string tagName = "div";
+            var document = new HamlDocument { new HamlNodeTag(new HamlLine(tagName)) };
+            _walker.Walk(document);
 
-            _classBuilderMock.Verify(x => x.Append("<test"));
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(tagName));
         }
 
         [Test]
         public void WalkChildren_HtmlCommentNode_WalksHtmlCommentNode()
         {
+            const string comment = "test";
             var document = new HamlDocument {
-                new HamlNodeHtmlComment(new HamlLine("test"))
+                new HamlNodeHtmlComment(new HamlLine(comment))
             };
-            var walker = new DummyWalker(_classBuilderMock.Object, new HamlOptions());
-            walker.Walk(document);
+            _walker.Walk(document);
 
-            _classBuilderMock.Verify(x => x.Append("<!--test"));
+            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(comment));
         }
     }
 }

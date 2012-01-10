@@ -21,37 +21,65 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeTag == null)
                 throw new InvalidCastException("HamlNodeTagWalker requires that HamlNode object be of type HamlNodeTag.");
 
-            RenderTagStart(nodeTag);
-            WalkAttributes(nodeTag);
-            RenderTagBodyAndClose(nodeTag);
+            AppendTagStart(nodeTag);
+            AppendAttributes(nodeTag);
+            AppendTagBodyAndClose(nodeTag);
         }
 
-        private void RenderTagStart(HamlNodeTag nodeTag)
+        private void AppendTagStart(HamlNodeTag nodeTag)
         {
             _classBuilder.Append(nodeTag.Indent);
             _classBuilder.Append("<" + nodeTag.NamespaceQualifiedTagName);
         }
 
-        private void WalkAttributes(HamlNodeTag nodeTag)
+        private void AppendAttributes(HamlNodeTag nodeTag)
         {
-            var classTags = nodeTag.Children.Where(x => x.GetType() == typeof(HamlNodeTagClass));
-            if (classTags.Count() > 0)
-            {
-                _classBuilder.AppendFormat(" class='{0}'",
-                    string.Join(" ", classTags.Select(x => x.Content).ToArray()));
-            }
-
-            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
-            if (idTag != null) _classBuilder.AppendFormat(" id='{0}'", idTag.Content);
-
-            //var attributes = nodeTag.Children.Where(x => x.GetType() == typeof(HamlNodeTagAttribute));
-            //foreach (var child in nodeTag.Children)
-            //{
-            //    if (child.GetType() == typeof())
-            //}
+            _classBuilder.Append(MakeClassAttribute(nodeTag));
+            _classBuilder.Append(MakeIdAttribute(nodeTag));
+            WalkHtmlStyleAttributes(nodeTag);
         }
 
-        private void RenderTagBodyAndClose(HamlNodeTag nodeTag)
+        private string MakeClassAttribute(HamlNodeTag nodeTag)
+        {
+            var classes = (from collection in nodeTag.Children
+                           from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                           where ((HamlNodeHtmlAttribute)attr).Name == "class"
+                           select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
+
+            var classNodes = nodeTag.Children.OfType<HamlNodeTagClass>()
+                .Select(x => x.Content).ToList();
+
+            classes.AddRange(classNodes);
+
+            return (classNodes.Any())
+                ? string.Format(" class='{0}'", string.Join(" ", classes.ToArray()))
+                : "";
+        }
+
+        private string MakeIdAttribute(HamlNodeTag nodeTag)
+        {
+            var idAttributes = (from collection in nodeTag.Children
+                                from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                                where ((HamlNodeHtmlAttribute)attr).Name == "id"
+                                select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
+
+            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
+            if (idTag != null) idAttributes.Insert(0, idTag.Content);
+
+            return idAttributes.Any() ? " id='" + string.Join("_", idAttributes.ToArray()) + "'" : "";
+        }
+
+        private void WalkHtmlStyleAttributes(HamlNodeTag nodeTag)
+        {
+            var attributeTags = nodeTag.Children.Where(x => x.GetType() == typeof(HamlNodeHtmlAttributeCollection));
+            foreach (var child in attributeTags)
+            {
+                new HamlNodeHtmlAttributeCollectionWalker(_classBuilder, _options)
+                    .Walk(child);
+            }
+        }
+
+        private void AppendTagBodyAndClose(HamlNodeTag nodeTag)
         {
             if (nodeTag.IsSelfClosing || _options.IsAutoClosingTag(nodeTag.TagName))
                 _classBuilder.Append(_options.HtmlVersion == HtmlVersion.XHtml ?

@@ -49,6 +49,9 @@
   <ItemGroup>
     <Compile Include="Builders\ViewSourceBuilder.cs" />
     <Compile Include="Crosscutting\Invariant_Tests.cs" />
+    <Compile Include="Mocks\ClassBuilderMock.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHtmlAttributeCollection_Tests.cs" />
+    <Compile Include="Parser\Rules\HamlNodeHtmlAttribute_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlComment_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag_Tests.cs" />
     <Compile Include="ProxyExtractor_Tests.cs" />
@@ -56,6 +59,7 @@
     <Compile Include="TemplateEngine_Tests.cs" />
     <Compile Include="TemplateFactory_Tests.cs" />
     <Compile Include="TemplateResolution\FileViewSource_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTagWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTextWalker_Tests.cs" />

@@ -9,24 +9,33 @@ using NHaml4.Compilers;
 using Moq;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
+using NHaml4.Tests.Mocks;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
     [TestFixture]
     public class HamlNodeTextWalker_Tests
     {
+        private ClassBuilderMock _mockClassBuilder;
+        private HamlNodeTextWalker _walker;
+
         private class BogusHamlNode : HamlNode
         {
 
+        }
+
+        [SetUp]
+        public void SetUp()
+        {
+            _mockClassBuilder = new ClassBuilderMock();
+            _walker = new HamlNodeTextWalker(_mockClassBuilder, new HamlOptions());
         }
 
         [Test]
         public void Walk_NodeIsWrongType_ThrowsException()
         {
             var node = new BogusHamlNode();
-            var mockClassBuilder = new Mock<ITemplateClassBuilder>();
-            var walker = new HamlNodeTextWalker(mockClassBuilder.Object, new HamlOptions());
-            Assert.Throws<InvalidCastException>(() => walker.Walk(node));
+            Assert.Throws<InvalidCastException>(() => _walker.Walk(node));
         }
 
         [Test]
@@ -35,11 +44,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
             const string indent = "  ";
             var node = new HamlNodeText(new HamlLine(indent + "Content"));
 
-            var mockClassBuilder = new Mock<ITemplateClassBuilder>();
-            var walker = new HamlNodeTextWalker(mockClassBuilder.Object, new HamlOptions());
-            walker.Walk(node);
+            _walker.Walk(node);
 
-            mockClassBuilder.Verify(x => x.Append(indent));
+            Assert.That(_mockClassBuilder.Build(""), Is.StringStarting(indent));
         }
     }
 }

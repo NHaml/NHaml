@@ -5,6 +5,7 @@ using NHaml4.Parser;
 using NHaml.Tests.Builders;
 using NHaml.IO;
 using NHaml4.Parser.Rules;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Tests.Parser
 {

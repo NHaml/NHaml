@@ -3,6 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using NHaml4.Crosscutting;
 using NHaml4.IO;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
 {
@@ -19,6 +20,7 @@ namespace NHaml4.Parser.Rules
 
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
             ParseClassAndIdNodes(nodeLine.Content, ref pos);
+            ParseAttributes(nodeLine.Content, ref pos);
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
@@ -36,7 +38,6 @@ namespace NHaml4.Parser.Rules
             }
         }
 
-
         private void ParseClassAndIdNodes(string content, ref int pos)
         {
             while (pos < content.Length)
@@ -50,12 +51,29 @@ namespace NHaml4.Parser.Rules
             }
         }
 
+        private void ParseAttributes(string content, ref int pos)
+        {
+            if (pos < content.Length)
+            {
+                if (content[pos] == '(')
+                {
+                    string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { ')' });
+                    if (attributes[attributes.Length - 1] != ')')
+                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".");
+                    pos++;
+                    var attributesNode = new HamlNodeHtmlAttributeCollection(attributes);
+                    Add(attributesNode);
+                }
+            }
+        }
+       
         private void HandleInlineContent(string content, ref int pos)
         {
-            if (pos >= content.Length) return;
-
-            var contentLine = new HamlLine(content.Substring(pos).TrimStart());
-            Add(new HamlNodeText(contentLine));
+            if (pos < content.Length)
+            {
+                var contentLine = new HamlLine(content.Substring(pos).TrimStart());
+                Add(new HamlNodeText(contentLine));
+            }
         }
 
         public string TagName
@@ -110,7 +128,7 @@ namespace NHaml4.Parser.Rules
             int startIndex = pos;
             while (pos < content.Length)
             {
-                if (HtmlCharHelper.IsHtmlIdentifierChar(content[pos]))
+                if (HtmlStringHelper.IsHtmlIdentifierChar(content[pos]))
                 {
                     pos++;
                 }

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace NHaml4.Parser
+namespace NHaml4.Parser.Exceptions
 {
     [Serializable]
     public class HamlUnknownRuleException : Exception

@@ -6,6 +6,7 @@ using NHaml4.Compilers;
 using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.Parser.Rules;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -22,19 +23,7 @@ namespace NHaml4.Walkers.CodeDom
             _classBuilder = classBuilder;
             _options = options;
         }
-
-        //public abstract void Walk(HamlNode child);
-
-        //protected void WalkChildren(HamlNode hamlNode)
-        //{
-        //    foreach (var child in hamlNode.Children)
-        //    {
-        //        var nodeWalker = GetNodeWalker(child.GetType());
-        //        nodeWalker.Walk(child);
-        //    }
-        //}
-
-
+       
         public virtual void Walk(HamlNode node)
         {
             foreach (var child in node.Children)
@@ -47,8 +36,9 @@ namespace NHaml4.Walkers.CodeDom
         private HamlNodeWalker GetNodeWalker(Type type)
         {
             if (type == typeof(HamlNodeTagId)
-                || type == typeof(HamlNodeTagClass)) return null;
-            if (type == typeof(HamlNodeText))
+                || type == typeof(HamlNodeTagClass)
+                || type == typeof(HamlNodeHtmlAttributeCollection)) return null;
+            else if (type == typeof(HamlNodeText))
                 return new HamlNodeTextWalker(_classBuilder, _options);
             else if (type == typeof(HamlNodeTag))
                 return new HamlNodeTagWalker(_classBuilder, _options);

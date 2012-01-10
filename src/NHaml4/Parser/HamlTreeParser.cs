@@ -8,6 +8,7 @@ using NHaml;
 using System.IO;
 using NHaml4.TemplateResolution;
 using NHaml4.Parser.Rules;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser
 {
