@@ -28,5 +28,22 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
             Assert.That(builder.Build(""), Is.EqualTo(expectedTag));
         }
+
+        [Test]
+        [TestCase("(checked=true)", " checked='checked'", HtmlVersion.XHtml)]
+        [TestCase("(checked)", " checked='checked'", HtmlVersion.XHtml)]
+        [TestCase("(checked=false)", "", HtmlVersion.XHtml)]
+        [TestCase("(checked=true)", " checked", HtmlVersion.Html5)]
+        [TestCase("(checked)", " checked", HtmlVersion.Html5)]
+        public void Walk_BooleanAttribute_WritesCorrectAttributes(string hamlLine, string expectedTag, HtmlVersion htmlVersion)
+        {
+            var node = new HamlNodeHtmlAttributeCollection(hamlLine);
+
+            var builder = new ClassBuilderMock();
+            var options = new HamlOptions { HtmlVersion = htmlVersion };
+            new HamlNodeHtmlAttributeCollectionWalker(builder, options).Walk(node);
+
+            Assert.That(builder.Build(""), Is.EqualTo(expectedTag));
+        }
     }
 }

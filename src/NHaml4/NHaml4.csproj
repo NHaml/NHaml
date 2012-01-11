@@ -86,7 +86,6 @@
     <Compile Include="Crosscutting\Invariant.cs" />
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
-    <Compile Include="IO\InputLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedTagException.cs" />

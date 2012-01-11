@@ -203,7 +203,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
 
         [Test]
-        public void Walk_ClassHtmlAttribute_WritesCorrectIdAttribute()
+        public void Walk_ClassHtmlAttribute_WritesCorrectClassAttribute()
         {
             // Arrange
             var tagNode = new HamlNodeTag(new HamlLine("p"))

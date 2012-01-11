@@ -262,49 +262,13 @@
     }
   },
 
-  "tags with HTML-style attributes": {
-
-    "HTML-style one attribute" : {
-      "haml" : "%p(a='b')",
-      "html" : "<p a='b'></p>"
-    },
-
-    "HTML-style multiple attributes" : {
-      "haml" : "%p(a='b' c='d')",
-      "html" : "<p a='b' c='d'></p>"
-    },
-
-    "HTML-style attributes separated with newlines" : {
-      "haml" : "%p(a='b'\n  c='d')",
-      "html" : "<p a='b' c='d'></p>"
-    },
-
+  "tags with HTML-style attributes and variables": {
     "HTML-style interpolated attribute" : {
       "haml" : "%p(a=\"#{var}\")",
       "html" : "<p a='value'></p>",
       "locals" : {
         "var" : "value"
       }
-    },
-
-    "HTML-style 'class' as an attribute" : {
-      "haml" : "%p(class='class1')",
-      "html" : "<p class='class1'></p>"
-    },
-
-    "HTML-style tag with a CSS class and 'class' as an attribute" : {
-      "haml" : "%p.class2(class='class1')",
-      "html" : "<p class='class1 class2'></p>"
-    },
-
-    "HTML-style tag with 'id' as an attribute" : {
-      "haml" : "%p(id='1')",
-      "html" : "<p id='1'></p>"
-    },
-
-    "HTML-style tag with a CSS id and 'id' as an attribute" : {
-      "haml" : "%p#id(id='1')",
-      "html" : "<p id='id_1'></p>"
     },
 
     "HTML-style tag with a variable attribute" : {
@@ -329,6 +293,44 @@
       "locals" : {
         "var" : "a"
       }
+    }
+  },
+
+  "tags with HTML-style attributes": {
+
+    "HTML-style one attribute" : {
+      "haml" : "%p(a='b')",
+      "html" : "<p a='b'></p>"
+    },
+
+    "HTML-style multiple attributes" : {
+      "haml" : "%p(a='b' c='d')",
+      "html" : "<p a='b' c='d'></p>"
+    },
+
+    "HTML-style attributes separated with newlines" : {
+      "haml" : "%p(a='b'\n  c='d')",
+      "html" : "<p a='b' c='d'></p>"
+    },
+
+    "HTML-style 'class' as an attribute" : {
+      "haml" : "%p(class='class1')",
+      "html" : "<p class='class1'></p>"
+    },
+
+    "HTML-style tag with a CSS class and 'class' as an attribute" : {
+      "haml" : "%p.class2(class='class1')",
+      "html" : "<p class='class1 class2'></p>"
+    },
+
+    "HTML-style tag with 'id' as an attribute" : {
+      "haml" : "%p(id='1')",
+      "html" : "<p id='1'></p>"
+    },
+
+    "HTML-style tag with a CSS id and 'id' as an attribute" : {
+      "haml" : "%p#id(id='1')",
+      "html" : "<p id='id_1'></p>"
     }
   },
 

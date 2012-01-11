@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NUnit.Framework;
-using NHaml.IO;
 using System.IO;
 using NHaml4.IO;
 
@@ -90,6 +89,17 @@ namespace NHaml4.Tests.IO
             var result = new HamlFileLexer().Read(textReader);
             result.MoveNext();
             Assert.AreEqual("test2", result.CurrentLine.Content);
+        }
+
+        [Test]
+        [TestCase("%p(a='b'\nc='d')content", "p(a='b' c='d')content")]
+        [TestCase("%p(a=')b'\nc='d')content", "p(a=')b' c='d')content")]
+        [TestCase("%p(a=\")b\"\nc='d')content", "p(a=\")b\" c='d')content")]
+        public void Read_SplitLineTag_ReturnsSingleLine(string template, string expectedLine)
+        {
+            var textReader = new StringReader(template);
+            var result = new HamlFileLexer().Read(textReader);
+            Assert.That(result.CurrentLine.Content, Is.EqualTo(expectedLine));
         }
 
     }

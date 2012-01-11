@@ -37,17 +37,18 @@ namespace HamlSpec
         [TestCase("tags with inline content")]
         [TestCase("markup comments")]
         [TestCase("tags with nested content")]
+        [TestCase("tags with HTML-style attributes")]
+        [TestCase("boolean attributes")]
 
         // IN PROGRESS
-        [TestCase("tags with HTML-style attributes")]
 
         // TODO
+        //[TestCase("tags with HTML-style attributes and variables")]
         //[TestCase("headers")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         //[TestCase("Ruby-style interpolation")]
         //[TestCase("HTML escaping")]
-        //[TestCase("boolean attributes")]
         //[TestCase("whitespace preservation")]
         //[TestCase("whitespace removal")]
         public void ExecuteTestSuite(string groupName)

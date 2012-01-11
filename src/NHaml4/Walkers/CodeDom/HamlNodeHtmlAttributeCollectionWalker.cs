@@ -22,16 +22,26 @@ namespace NHaml4.Walkers.CodeDom
             {
                 if (childNode.Content.StartsWith("class=")
                     || childNode.Content.StartsWith("id=")) continue;
-                _classBuilder.Append(MakeAttributes(childNode));
+                _classBuilder.Append(MakeAttribute(childNode));
             }
         }
 
-        private string MakeAttributes(HamlNode childNode)
+        private string MakeAttribute(HamlNode childNode)
         {
             var attributeNode = childNode as HamlNodeHtmlAttribute;
             if (attributeNode == null)
                 throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node");
-            return childNode.Content.Length > 0 ? " " + childNode.Content : "";
+
+            if ((string.IsNullOrEmpty(attributeNode.Name)) || (attributeNode.Value == "false"))
+                return "";
+            if ((attributeNode.Value == "true") || (attributeNode.Value == ""))
+            {
+                if (_options.HtmlVersion == HtmlVersion.XHtml)
+                    return " " + attributeNode.Name + "='" + attributeNode.Name + "'";
+                else
+                    return " " + attributeNode.Name;
+            }
+            return " " + attributeNode.Name + "=" + attributeNode.Value;
         }
     }
 }

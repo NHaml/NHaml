@@ -3,7 +3,6 @@ using NHaml4.IO;
 using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml.Tests.Builders;
-using NHaml.IO;
 using NHaml4.Parser.Rules;
 using NHaml4.Parser.Exceptions;
 

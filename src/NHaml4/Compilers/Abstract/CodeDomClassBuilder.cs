@@ -4,7 +4,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
-using NHaml;
 using Microsoft.CSharp;
 
 namespace NHaml4.Compilers.Abstract

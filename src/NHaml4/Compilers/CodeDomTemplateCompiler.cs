@@ -2,7 +2,6 @@ using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using NHaml4.Parser;
-using NHaml;
 using System;
 using NHaml4.Compilers.Abstract;
 

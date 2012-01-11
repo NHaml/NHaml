@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.Crosscutting;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
 {
@@ -16,6 +17,9 @@ namespace NHaml4.Parser.Rules
 
         private void ParseChildren(string attributeCollection)
         {
+            if (Content[0] != '(')
+                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.");
+
             int index = 1;
             while (index < attributeCollection.Length)
             {

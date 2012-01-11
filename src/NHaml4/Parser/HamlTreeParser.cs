@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.IO;
 using NHaml4.IO;
-using NHaml;
 using System.IO;
 using NHaml4.TemplateResolution;
 using NHaml4.Parser.Rules;

@@ -46,12 +46,12 @@ namespace NHaml4.Walkers.CodeDom
                            where ((HamlNodeHtmlAttribute)attr).Name == "class"
                            select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
 
-            var classNodes = nodeTag.Children.OfType<HamlNodeTagClass>()
+            var classesToAdd = nodeTag.Children.OfType<HamlNodeTagClass>()
                 .Select(x => x.Content).ToList();
 
-            classes.AddRange(classNodes);
+            classes.AddRange(classesToAdd);
 
-            return (classNodes.Any())
+            return (classes.Any())
                 ? string.Format(" class='{0}'", string.Join(" ", classes.ToArray()))
                 : "";
         }

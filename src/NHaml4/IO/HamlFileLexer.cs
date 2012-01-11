@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.IO
 {
@@ -18,11 +19,56 @@ namespace NHaml4.IO
             while (_eof == false)
             {
                 string currentLine = ReadLine(reader);
-                //if ((!string.IsNullOrEmpty(currentLine)) || (_eof == false))
+                while (IsPartialTag(currentLine))
+                {
+                    if (_eof)
+                        throw new HamlMalformedTagException("Multi-line tag found with no end token.");
+                    currentLine += " " + ReadLine(reader);
+                }
+
                 result.AddLine(new HamlLine(currentLine));
             }
 
             return result;
+        }
+
+        private bool IsPartialTag(string currentLine)
+        {
+            bool inHtmlAttributes = false;
+            bool inSingleQuote = false;
+            bool inDoubleQuote = false;
+
+            foreach (char curChar in currentLine)
+            {
+                if (inSingleQuote)
+                {
+                    if (curChar == '\'') inSingleQuote = false;
+                }
+                else if (inDoubleQuote)
+                {
+                    if (curChar == '\"') inDoubleQuote = false;
+                }
+                else if (inHtmlAttributes)
+                {
+                    if (curChar == '\'')
+                        inSingleQuote = true;
+                    else if (curChar == '\"')
+                        inDoubleQuote = true;
+                    else if (curChar == ')')
+                    {
+                        inHtmlAttributes = false;
+                        break;
+                    }
+                }
+                else
+                {
+                    if (curChar == '(')
+                        inHtmlAttributes = true;
+                    else if (Char.IsWhiteSpace(curChar))
+                        break;
+                }
+            }
+            return inHtmlAttributes;
         }
 
         private string ReadLine(TextReader reader)
