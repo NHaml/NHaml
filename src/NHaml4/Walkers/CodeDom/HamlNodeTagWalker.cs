@@ -28,8 +28,24 @@ namespace NHaml4.Walkers.CodeDom
 
         private void AppendTagStart(HamlNodeTag nodeTag)
         {
-            _classBuilder.Append(nodeTag.Indent);
+            AppendLeadingWhitespace(nodeTag);
             _classBuilder.Append("<" + nodeTag.NamespaceQualifiedTagName);
+        }
+
+        private void AppendLeadingWhitespace(HamlNodeTag nodeTag)
+        {
+            if (nodeTag.WhitespaceRemoval == WhitespaceRemoval.Surrounding)
+                return;
+
+            var previousTag = nodeTag.Previous as HamlNodeTag;
+            if (previousTag != null && previousTag.WhitespaceRemoval == WhitespaceRemoval.Surrounding)
+                return;
+
+            var parentTag = nodeTag.Parent as HamlNodeTag;
+            if (parentTag != null && parentTag.WhitespaceRemoval == WhitespaceRemoval.Internal)
+                return;
+
+            _classBuilder.Append(nodeTag.Indent);
         }
 
         private void AppendAttributes(HamlNodeTag nodeTag)

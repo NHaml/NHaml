@@ -122,6 +122,7 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Walkers\CodeDom\HamlNodeWalker.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeWalkerException.cs" />
     <Compile Include="Walkers\CodeDom\HamlOptions.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker.cs" />
     <Compile Include="Walkers\IDocumentWalker.cs">
@@ -162,7 +163,9 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Folder Include="Walkers\Exceptions\" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

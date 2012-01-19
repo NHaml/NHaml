@@ -22,7 +22,7 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("br/", "br")]
         public void Constructor_SimpleTags_GeneratesCorrectTagName(string templateLine, string expectedTagName)
         {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
             Assert.That(tag.TagName, Is.EqualTo(expectedTagName));
         }
 
@@ -33,7 +33,7 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("p#id.className", "id", 1)]
         public void Constructor_SimpleTags_GeneratesCorrectIdChildNodes(string templateLine, string expectedFirstTagId, int expectedCount)
         {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
             var idTags = tag.Children.OfType<HamlNodeTagId>();
 
@@ -50,7 +50,7 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("p.test#id.test2", "test", 2)]
         public void Constructor_SimpleTags_GeneratesCorrectClassChildNodes(string templateLine, string expectedFirstClass, int expectedCount)
         {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
             var classChildren = tag.Children.OfType<HamlNodeTagClass>();
 
@@ -64,7 +64,7 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("br/", true)]
         public void Constructor_SimpleTags_DeterminesSelfClosingCorrectly(string templateLine, bool expectedSelfClosing)
         {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
             Assert.That(tag.IsSelfClosing, Is.EqualTo(expectedSelfClosing));
         }
 
@@ -74,7 +74,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_TagWithNamespace_DeterminesTagAndNamespaceCorrectly(string templateLine,
             string expectedNamespace, string expectedTag)
         {
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
             Assert.That(tag.Namespace, Is.EqualTo(expectedNamespace));
             Assert.That(tag.TagName, Is.EqualTo(expectedTag));
 
@@ -84,7 +84,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_InlineContent_GeneratesCorrectChildTag()
         {
             const string templateLine = "p Hello world";
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
             Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeText>());
             const string expectedText = "Hello world";
@@ -95,7 +95,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_HtmlStyleAttribute_GeneratesHtmlAttributeCollectionTag()
         {
             const string templateLine = "p(a='b')";
-            var tag = new HamlNodeTag(new HamlLine(templateLine));
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
             Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeHtmlAttributeCollection>());
         }
@@ -109,7 +109,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_HtmlStyleAttribute_AttributeCollectionContainsCorrectContent(
             string hamlLine, string expectedAttributeContent, int expectedaAttrCount)
         {
-            var tag = new HamlNodeTag(new HamlLine(hamlLine));
+            var tag = new HamlNodeTag(new HamlLine(hamlLine, 0));
 
             Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttributeContent));
             Assert.That(tag.Children.Count, Is.EqualTo(expectedaAttrCount));
@@ -119,7 +119,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_HtmlStyleAttributeWithContent_GeneratesCorrectChildren()
         {
             const string hamlLine = "p(a='b')Content";
-            var tag = new HamlNodeTag(new HamlLine(hamlLine));
+            var tag = new HamlNodeTag(new HamlLine(hamlLine, 0));
 
             const string expectedAttrContent = "(a='b')";
             Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttrContent));
@@ -131,7 +131,18 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_MalformedHtmlStyleAttributes_ThrowsMalformedTagException()
         {
             const string templateLine = "p(a='b'";
-            Assert.Throws<HamlMalformedTagException>(() => new HamlNodeTag(new HamlLine(templateLine)));
+            Assert.Throws<HamlMalformedTagException>(() => new HamlNodeTag(new HamlLine(templateLine, 0)));
+        }
+
+        [Test]
+        [TestCase("%p>", WhitespaceRemoval.Surrounding)]
+        [TestCase("%p<", WhitespaceRemoval.Internal)]
+        [TestCase("%p", WhitespaceRemoval.None)]
+        public void Walk_TagWithWhitespaceSupression_SetsCorrectFlag(string tag, WhitespaceRemoval expectedSetting)
+        {
+            var tagNode = new HamlNodeTag(new HamlLine(tag, 0));
+
+            Assert.That(tagNode.WhitespaceRemoval, Is.EqualTo(expectedSetting));
         }
     }
 }

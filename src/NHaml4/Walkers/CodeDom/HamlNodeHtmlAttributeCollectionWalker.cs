@@ -30,7 +30,8 @@ namespace NHaml4.Walkers.CodeDom
         {
             var attributeNode = childNode as HamlNodeHtmlAttribute;
             if (attributeNode == null)
-                throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node");
+                throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node",
+                    childNode.SourceFileLineNo);
 
             if ((string.IsNullOrEmpty(attributeNode.Name)) || (attributeNode.Value == "false"))
                 return "";

@@ -12,10 +12,9 @@ namespace NHaml4.Parser.Rules
         private string _name = string.Empty;
         private string _value = string.Empty;
 
-        public HamlNodeHtmlAttribute(string nameValuePair)
+        public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
+            : base(sourceFileLineNo, nameValuePair)
         {
-            Content = nameValuePair;
-
             int index = 0;
             _name = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
             if (_name.EndsWith("=")) _name = _name.Substring(0, _name.Length - 1);
@@ -27,7 +26,7 @@ namespace NHaml4.Parser.Rules
             }
             else
             {
-                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"");
+                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"", SourceFileLineNo);
             }
         }
 

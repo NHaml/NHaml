@@ -21,7 +21,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
         private class BogusHamlNode : HamlNode
         {
-
+            public BogusHamlNode() : base(0, "") { }
         }
 
         [SetUp]
@@ -42,7 +42,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IndentedNode_WritesIndent()
         {
             const string indent = "  ";
-            var node = new HamlNodeText(new HamlLine(indent + "Content"));
+            var node = new HamlNodeText(new HamlLine(indent + "Content", 0));
 
             _walker.Walk(node);
 

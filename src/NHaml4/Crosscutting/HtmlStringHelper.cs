@@ -45,7 +45,7 @@ namespace NHaml4.Crosscutting
                 }
             }
 
-            return inputString;
+            return inputString.Substring(startIndex);
         }
     }
 }

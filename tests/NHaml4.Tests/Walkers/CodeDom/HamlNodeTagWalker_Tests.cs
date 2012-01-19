@@ -36,7 +36,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NonSelfClosingTags_AppendsCorrectTag(string templateLine, string expectedOutput)
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine(templateLine));
+            var tagNode = new HamlNodeTag(new HamlLine(templateLine, 0));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -50,7 +50,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             const string tagName = "foo/";
-            var tagNode = new HamlNodeTag(new HamlLine(tagName));
+            var tagNode = new HamlNodeTag(new HamlLine(tagName, 0));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -67,7 +67,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_AutoSelfClosingTag_AppendsCorrectTag(HtmlVersion htmlVersion, string expectedFormat)
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("br"));
+            var tagNode = new HamlNodeTag(new HamlLine("br", 0));
 
             // Act
             _hamlOptions.HtmlVersion = htmlVersion;
@@ -82,7 +82,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             const string indent = "  ";
-            var tagNode = new HamlNodeTag(new HamlLine(indent + "p"));
+            var tagNode = new HamlNodeTag(new HamlLine(indent + "p", 0));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -97,10 +97,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Arrange
             const string tagName = "p";
             const string nestedText = "Hello world";
-            var tagNode = new HamlNodeTag(new HamlLine(tagName))
-                              {
-                                  new HamlNodeText(new HamlLine(nestedText))
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine(tagName, 0));
+            tagNode.AddChild(new HamlNodeText(new HamlLine(nestedText, 0)));
             // Act
             _tagWalker.Walk(tagNode);
 
@@ -115,11 +113,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Arrange
             const string tagId = "id";
             const string tagClass = "class";
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagId(tagId),
-                                  new HamlNodeTagClass(tagClass)
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagId(0, tagId));
+            tagNode.AddChild(new HamlNodeTagClass(0, tagClass));
+
             // Act
             _tagWalker.Walk(tagNode);
 
@@ -134,11 +131,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Arrange
             const string tagId = "id";
             const string tagClass = "class";
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagClass(tagClass),
-                                  new HamlNodeTagId(tagId)
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagClass(0, tagClass));
+            tagNode.AddChild(new HamlNodeTagId(0, tagId));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -152,11 +147,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleClassNodes_WritesCorrectClassAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagClass("class1"),
-                                  new HamlNodeTagClass("class2")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagClass(0, "class1"));
+            tagNode.AddChild(new HamlNodeTagClass(0, "class2"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -170,11 +163,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleIdNodes_WritesCorrectIdAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagId("id1"),
-                                  new HamlNodeTagId("id2")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagId(0, "id1"));
+            tagNode.AddChild(new HamlNodeTagId(0, "id2"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -188,10 +179,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IdHtmlAttribute_WritesCorrectIdAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeHtmlAttributeCollection("(id='id')")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeHtmlAttributeCollection(0, "(id='id')"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -206,10 +195,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_ClassHtmlAttribute_WritesCorrectClassAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeHtmlAttributeCollection("(class='class')")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeHtmlAttributeCollection(0, "(class='class')"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -223,11 +210,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IdNoteAndIdHtmlAttribute_WritesCorrectIdAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagId("id1"),
-                                  new HamlNodeHtmlAttributeCollection("(id='id2')")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagId(0, "id1"));
+            tagNode.AddChild(new HamlNodeHtmlAttributeCollection(0, "(id='id2')"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -241,11 +226,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_ClassNoteAndClassHtmlAttribute_WritesCorrectIdAttribute()
         {
             // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("p"))
-                              {
-                                  new HamlNodeTagClass("class2"),
-                                  new HamlNodeHtmlAttributeCollection("(class='class1')")
-                              };
+            var tagNode = new HamlNodeTag(new HamlLine("p", 0));
+            tagNode.AddChild(new HamlNodeTagClass(0, "class2"));
+            tagNode.AddChild(new HamlNodeHtmlAttributeCollection(0, "(class='class1')"));
 
             // Act
             _tagWalker.Walk(tagNode);
@@ -261,10 +244,21 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [TestCase("p", "(a='b')", "<p a='b'></p>")]
         public void Walk_EmptyAttributeCollectionNode_WritesCorrectAttributes(string tag, string attributes, string expectedOutput)
         {
-            var tagNode = new HamlNodeTag(new HamlLine(tag))
-            {
-                new HamlNodeHtmlAttributeCollection(attributes)
-            };
+            var tagNode = new HamlNodeTag(new HamlLine(tag, 0));
+            tagNode.AddChild(new HamlNodeHtmlAttributeCollection(0, attributes));
+
+            _tagWalker.Walk(tagNode);
+
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        [TestCase("%p", "   %p>", "<p><p></p></p>")]
+        [TestCase("%p<", "   %p", "<p><p></p></p>")]
+        public void Walk_WhitespaceRemoval_GeneratesCorrectOutput(string line1, string line2, string expectedOutput)
+        {
+            var tagNode = new HamlNodeTag(new HamlLine(line1, 0));
+            tagNode.AddChild(new HamlNodeTag(new HamlLine(line2, 0)));
 
             _tagWalker.Walk(tagNode);
 

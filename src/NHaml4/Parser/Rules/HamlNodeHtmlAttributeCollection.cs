@@ -9,23 +9,24 @@ namespace NHaml4.Parser.Rules
 {
     public class HamlNodeHtmlAttributeCollection : HamlNode
     {
-        public HamlNodeHtmlAttributeCollection(string attributeCollection)
+        public HamlNodeHtmlAttributeCollection(int sourceFileLineNo, string attributeCollection)
+            : base(sourceFileLineNo, attributeCollection)
+            
         {
-            Content = attributeCollection;
             ParseChildren(attributeCollection);
         }
 
         private void ParseChildren(string attributeCollection)
         {
             if (Content[0] != '(')
-                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.");
+                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.", SourceFileLineNo);
 
             int index = 1;
             while (index < attributeCollection.Length)
             {
                 string nameValuePair = GetNextAttributeToken(attributeCollection, ref index);
                 if (!string.IsNullOrEmpty(nameValuePair))
-                    Add(new HamlNodeHtmlAttribute(nameValuePair));
+                    AddChild(new HamlNodeHtmlAttribute(SourceFileLineNo, nameValuePair));
                 index++;
             }
         }

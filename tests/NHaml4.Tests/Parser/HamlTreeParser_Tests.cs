@@ -39,9 +39,10 @@ namespace NHaml4.Tests.Parser
         }
 
         [Test]
-        [TestCase("", 1)]
+        [TestCase("", 0)]
         [TestCase("Test", 1)]
-        [TestCase("Test\nTest", 2)]
+        [TestCase("Test\nTest", 3)]
+        [TestCase("Test\n  Test", 1)]
         public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildrenCount)
         {
             var result = _parser.ParseDocumentSource(template);
@@ -53,7 +54,7 @@ namespace NHaml4.Tests.Parser
         {
             string template = "Line1\nLine2";
             var result = _parser.ParseDocumentSource(template);
-            Assert.That(result.Children[0].Children[0].Content, Is.EqualTo("\n"));
+            Assert.That(result.Children[1].Content, Is.EqualTo("\n"));
         }
 
         [Test]
@@ -79,7 +80,7 @@ namespace NHaml4.Tests.Parser
 
         class HamlLineFake : HamlLine
         {
-            public HamlLineFake(string line) : base(line) { }
+            public HamlLineFake(string line) : base(line, 0) { }
 
             public new HamlRuleEnum HamlRule
             {

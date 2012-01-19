@@ -21,7 +21,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\t Test", 3, Description = "Tab + Space followed by plain text")]
         public void Constructor_CalculatesIndentCountCorrectly(string testString, int expectedIndent)
         {
-            var line = new HamlLine(testString);
+            var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedIndent, line.IndentCount);
         }
 
@@ -35,7 +35,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\t Test", "\t ", Description = "Tab + Space followed by plain text")]
         public void Constructor_CalculatesIndentCorrectly(string testString, string expectedIndent)
         {
-            var line = new HamlLine(testString);
+            var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedIndent, line.Indent);
         }
 
@@ -51,7 +51,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\t\t!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
         public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
         {
-            var line = new HamlLine(testString);
+            var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedRule, line.HamlRule);
         }
 
@@ -67,7 +67,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\t\t!!!Tag", "Tag", Description = "DocType")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
         {
-            var line = new HamlLine(testString);
+            var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedContent, line.Content);
         }
     }

@@ -7,11 +7,17 @@ using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
 {
+    public enum WhitespaceRemoval
+    {
+        None = 0, Surrounding, Internal
+    }
+
     public class HamlNodeTag : HamlNode
     {
         private string _tagName = string.Empty;
         private string _namespace = string.Empty;
         private bool _isSelfClosing = false;
+        private WhitespaceRemoval _whitespaceRemoval = WhitespaceRemoval.None;
 
         public HamlNodeTag(IO.HamlLine nodeLine)
             : base(nodeLine)
@@ -21,6 +27,7 @@ namespace NHaml4.Parser.Rules
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
             ParseClassAndIdNodes(nodeLine.Content, ref pos);
             ParseAttributes(nodeLine.Content, ref pos);
+            ParseWhitespaceRemoval(nodeLine.Content, ref pos);
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
@@ -59,20 +66,38 @@ namespace NHaml4.Parser.Rules
                 {
                     string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { ')' });
                     if (attributes[attributes.Length - 1] != ')')
-                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".");
+                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNo);
                     pos++;
-                    var attributesNode = new HamlNodeHtmlAttributeCollection(attributes);
-                    Add(attributesNode);
+                    var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNo, attributes);
+                    AddChild(attributesNode);
                 }
             }
         }
-       
+
+        private void ParseWhitespaceRemoval(string p, ref int pos)
+        {
+            if (pos >= p.Length) return;
+
+            if (p[pos] == '>')
+            {
+                _whitespaceRemoval = WhitespaceRemoval.Surrounding;
+                pos++;
+            }
+            else if (p[pos] == '<')
+            {
+                _whitespaceRemoval = WhitespaceRemoval.Internal;
+                pos++;
+            }
+            else
+                _whitespaceRemoval = WhitespaceRemoval.None;
+        }
+
         private void HandleInlineContent(string content, ref int pos)
         {
             if (pos < content.Length)
             {
-                var contentLine = new HamlLine(content.Substring(pos).TrimStart());
-                Add(new HamlNodeText(contentLine));
+                var contentLine = new HamlLine(content.Substring(pos).TrimStart(), SourceFileLineNo);
+                AddChild(new HamlNodeText(contentLine));
             }
         }
 
@@ -84,6 +109,11 @@ namespace NHaml4.Parser.Rules
         public bool IsSelfClosing
         {
             get { return _isSelfClosing; }
+        }
+
+        public WhitespaceRemoval WhitespaceRemoval
+        {
+            get { return _whitespaceRemoval; }
         }
 
         public string Namespace
@@ -111,16 +141,16 @@ namespace NHaml4.Parser.Rules
         {
             pos++;
             string tagId = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagId(tagId);
-            Add(newTag);
+            var newTag = new HamlNodeTagId(SourceFileLineNo, tagId);
+            AddChild(newTag);
         }
 
         private void ParseClassNode(string content, ref int pos)
         {
             pos++;
             string className = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagClass(className);
-            Add(newTag);
+            var newTag = new HamlNodeTagClass(SourceFileLineNo, className);
+            AddChild(newTag);
         }
 
         private string GetHtmlToken(string content, ref int pos)

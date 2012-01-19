@@ -18,8 +18,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
     {
         private class BogusHamlNode : HamlNode
         {
-
+            public BogusHamlNode() : base(0, "") { }
         }
+
         ClassBuilderMock _classBuilderMock;
         private HamlNodeHtmlCommentWalker _walker;
         private HamlOptions _hamlOptions;
@@ -44,7 +45,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             string comment = "Comment";
-            var node = new HamlNodeHtmlComment(new HamlLine(comment));
+            var node = new HamlNodeHtmlComment(new HamlLine(comment, 0));
 
             // Act
             _walker.Walk(node);
@@ -57,11 +58,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NestedTags_AppendsCorrectTags()
         {
             // Arrange
-            HamlLine nestedText = new HamlLine("  Hello world");
-            var tagNode = new HamlNodeHtmlComment(new HamlLine(""))
-                              {
-                                  new HamlNodeText(nestedText)
-                              };
+            HamlLine nestedText = new HamlLine("  Hello world", 0);
+            var tagNode = new HamlNodeHtmlComment(new HamlLine("", 0));
+            tagNode.AddChild(new HamlNodeText(nestedText));
+
             // Act
             _walker.Walk(tagNode);
 

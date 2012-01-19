@@ -7,23 +7,30 @@ using System.Collections.ObjectModel;
 
 namespace NHaml4.Parser
 {
-    public abstract class HamlNode : IEnumerable<HamlNode>
+    public abstract class HamlNode
     {
         private string _content;
-        private readonly string _indent;
-        private int _indentCount;
         private IList<HamlNode> _children = new List<HamlNode>();
         private bool _multiLine;
+        private HamlLine _line;
+        private int _sourceFileLineNo;
 
-        public HamlNode()
-        {
-        }
+        //public HamlLine HamlLine
+        //{
+        //    get { return _line; }
+        //}
 
         public HamlNode(HamlLine nodeLine)
         {
+            _line = nodeLine;
             _content = nodeLine.Content;
-            _indent = nodeLine.Indent;
-            _indentCount = nodeLine.IndentCount;
+            _sourceFileLineNo = _line.SourceFileLineNo;
+        }
+
+        public HamlNode(int sourceFileLineNo, string content)
+        {
+            _sourceFileLineNo = sourceFileLineNo;
+            _content = content;
         }
 
         public string Content
@@ -34,7 +41,12 @@ namespace NHaml4.Parser
 
         public string Indent
         {
-            get { return _indent; }
+            get
+            {
+                return _line == null
+                    ? ""
+                    : _line.Indent;
+            }
         }
 
         public bool IsMultiLine {
@@ -44,8 +56,24 @@ namespace NHaml4.Parser
 
         public int IndentCount
         {
-            get { return _indentCount; }
-            protected set { _indentCount = value; }
+            get
+            {
+                return _line == null
+                    ? -1
+                    : _line.IndentCount;
+            }
+        }
+
+        public int SourceFileLineNo
+        {
+            protected set
+            {
+                _sourceFileLineNo = value;
+            }
+            get
+            {
+                return _sourceFileLineNo;
+            }
         }
 
         public ReadOnlyCollection<HamlNode> Children
@@ -53,20 +81,20 @@ namespace NHaml4.Parser
             get { return new ReadOnlyCollection<HamlNode>(_children); }
         }
 
-        public void Add(HamlNode hamlNode)
+        public void AddChild(HamlNode hamlNode)
         {
+            hamlNode.Parent = this;
+            hamlNode.Previous = _children.LastOrDefault();
+            if (hamlNode.Previous != null)
+            {
+                hamlNode.Previous.Next = hamlNode;
+            }
+
             _children.Add(hamlNode);
         }
 
-        public IEnumerator<HamlNode> GetEnumerator()
-        {
-            return _children.GetEnumerator();
-        }
-
-        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-        {
-            return _children.GetEnumerator();
-        }
-
+        public HamlNode Previous { get; set; }
+        public HamlNode Next { get; set; }
+        public HamlNode Parent { get; set; }
     }
 }

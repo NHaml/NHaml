@@ -20,7 +20,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [TestCase("(id='id1')", "")]
         public void Walk_EmptyAttributeCollection_WritesCorrectAttributes(string hamlLine, string expectedTag)
         {
-            var node = new HamlNodeHtmlAttributeCollection(hamlLine);
+            var node = new HamlNodeHtmlAttributeCollection(0, hamlLine);
 
             var builder = new ClassBuilderMock();
             new HamlNodeHtmlAttributeCollectionWalker(builder, new HamlOptions())
@@ -37,7 +37,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [TestCase("(checked)", " checked", HtmlVersion.Html5)]
         public void Walk_BooleanAttribute_WritesCorrectAttributes(string hamlLine, string expectedTag, HtmlVersion htmlVersion)
         {
-            var node = new HamlNodeHtmlAttributeCollection(hamlLine);
+            var node = new HamlNodeHtmlAttributeCollection(0, hamlLine);
 
             var builder = new ClassBuilderMock();
             var options = new HamlOptions { HtmlVersion = htmlVersion };

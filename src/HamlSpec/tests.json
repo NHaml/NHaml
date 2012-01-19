@@ -126,6 +126,11 @@
       "html" : "<zzz />"
     },
 
+    "a self-closing tag with an attribute ('/' modifier + XHTML)" : {
+      "haml" : "%zzz(a='b')/",
+      "html" : "<zzz a='b' />"
+    },
+
     "a self-closing tag ('/' modifier + HTML5)" : {
       "haml" : "%zzz/",
       "html" : "<zzz>",

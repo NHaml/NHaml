@@ -26,7 +26,7 @@ namespace NHaml4.Tests.IO
         }
 
         [Test]
-        [TestCase("", 1, Description = "Empty Line")]
+        [TestCase("", 0, Description = "Empty Line")]
         [TestCase("Line", 1, Description = "Single Line")]
         [TestCase("Line1\n", 2, Description = "Single Line Followed By Line Break")]
         [TestCase("Line1\nLine2", 2, Description = "Two Lines")]
@@ -56,7 +56,20 @@ namespace NHaml4.Tests.IO
                 result.MoveNext();
                 Assert.AreEqual(expectedLine2, result.CurrentLine.Content);
             }
-        }    
+        }
+
+        public void Read_DeterminesLineNumbersCorrectly()
+        {
+            var textReader = new StringReader("Line1\nLine2\r\nLine3\n\rLine4");
+            var result = new HamlFileLexer().Read(textReader);
+
+            // Assert
+            for (int c = 1; c < 5; c++)
+            {
+                Assert.That(result.CurrentLine.SourceFileLineNo, Is.EqualTo(c));
+                result.MoveNext();
+            }
+        }
 
         [Test]
         [TestCase("Test", 0, Description = "No indent")]

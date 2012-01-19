@@ -8,13 +8,17 @@ namespace NHaml4.IO
     public class HamlFileLexer
     {
         bool _eof;
+        int _sourceFileLineIndex;
 
         public HamlFile Read(TextReader reader)
         {
+            _sourceFileLineIndex = 1;
+
             if (reader == null)
                 throw new ArgumentNullException("reader");
 
             var result = new HamlFile();
+            _eof = (reader.Peek() < 0);
 
             while (_eof == false)
             {
@@ -22,11 +26,11 @@ namespace NHaml4.IO
                 while (IsPartialTag(currentLine))
                 {
                     if (_eof)
-                        throw new HamlMalformedTagException("Multi-line tag found with no end token.");
+                        throw new HamlMalformedTagException("Multi-line tag found with no end token.", _sourceFileLineIndex);
                     currentLine += " " + ReadLine(reader);
                 }
 
-                result.AddLine(new HamlLine(currentLine));
+                result.AddLine(new HamlLine(currentLine, _sourceFileLineIndex-1));
             }
 
             return result;
@@ -90,6 +94,7 @@ namespace NHaml4.IO
             }
             if (r <= 0)
                 _eof = true;
+            _sourceFileLineIndex++;
             return line.ToString();
         }
 

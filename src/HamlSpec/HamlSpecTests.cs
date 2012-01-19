@@ -41,16 +41,16 @@ namespace HamlSpec
         [TestCase("boolean attributes")]
 
         // IN PROGRESS
+        //[TestCase("whitespace removal")]
 
         // TODO
+        //[TestCase("HTML escaping")]
+        //[TestCase("whitespace preservation")]
         //[TestCase("tags with HTML-style attributes and variables")]
         //[TestCase("headers")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         //[TestCase("Ruby-style interpolation")]
-        //[TestCase("HTML escaping")]
-        //[TestCase("whitespace preservation")]
-        //[TestCase("whitespace removal")]
         public void ExecuteTestSuite(string groupName)
         {
             var hamlSpecTests = new HamlSpecLoader().GetTheHamlSpecTests(groupName);
@@ -88,7 +88,7 @@ namespace HamlSpec
             output.NewLine = "\n";
             template.Render(output);
 
-            var message = string.Format("{0} - {1}", test.GroupName, test.TestName);
+            var message = string.Format("{0} - {1}\n\"{2}\"", test.GroupName, test.TestName, test.Haml);
             Assert.That(output.ToString(), Is.EqualTo(test.ExpectedHtml), message);
         }
 

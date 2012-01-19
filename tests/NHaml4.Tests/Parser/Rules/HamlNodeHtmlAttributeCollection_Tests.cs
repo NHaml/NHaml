@@ -14,7 +14,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_ValidAttributeStrings_AttributeCollectionContainsCorrectAttributeCount(
             string attributeString, int expectedAttributeCount)
         {
-            var tag = new HamlNodeHtmlAttributeCollection(attributeString);
+            var tag = new HamlNodeHtmlAttributeCollection(0, attributeString);
 
             Assert.That(tag.Children.Count(), Is.EqualTo(expectedAttributeCount));
         }
@@ -27,7 +27,7 @@ namespace NHaml4.Tests.Parser.Rules
         public void Constructor_ValidAttributeStrings_AttributeCollectionContainsCorrectAttributes(
             string attributeString, string expectedFirstAttribute)
         {
-            var tag = new HamlNodeHtmlAttributeCollection(attributeString);
+            var tag = new HamlNodeHtmlAttributeCollection(0, attributeString);
 
             Assert.That(tag.Children[0].Content, Is.EqualTo(expectedFirstAttribute));
         }

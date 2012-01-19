@@ -60,16 +60,18 @@ namespace NHaml4.Parser
             {
                 HamlLine nodeLine = hamlFile.CurrentLine;
                 HamlNode childNode = GetHamlNode(nodeLine);
-                node.Add(childNode);
+                node.AddChild(childNode);
 
                 hamlFile.MoveNext();
                 if (hamlFile.EndOfFile == false)
                 {
-                    childNode.Add(new HamlNodeText(new HamlLine("\n")));
                     if (hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
                     {
+                        childNode.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
                         ParseNode(childNode, hamlFile);
                     }
+                    else
+                        node.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
                 }
             }
         }
@@ -87,7 +89,7 @@ namespace NHaml4.Parser
                 case HamlRuleEnum.HtmlComment:
                     return new HamlNodeHtmlComment(nodeLine);
                 default:
-                    throw new HamlUnknownRuleException(nodeLine.Content);
+                    throw new HamlUnknownRuleException(nodeLine.Content, nodeLine.SourceFileLineNo);
             }
         }
     }

@@ -7,9 +7,8 @@ namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTagClass : HamlNode
     {
-        public HamlNodeTagClass(string className)
-        {
-            Content = className;
-        }
+        public HamlNodeTagClass(int sourceFileLineNo, string className)
+            : base(sourceFileLineNo, className)
+        { }
     }
 }

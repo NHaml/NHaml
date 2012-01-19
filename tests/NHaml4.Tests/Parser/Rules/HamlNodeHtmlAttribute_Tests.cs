@@ -16,14 +16,14 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("a", "a", "")]
         public void Constructor_NormalUse_GeneratesCorrectNameValuePair(string input, string name, string value)
         {
-            var node = new HamlNodeHtmlAttribute(input);
+            var node = new HamlNodeHtmlAttribute(0, input);
             Assert.That(node.Name, Is.EqualTo(name));
             Assert.That(node.Value, Is.EqualTo(value));
         }
 
         public void Constructor_MalformedAttribute_ThrowsException()
         {
-            Assert.Throws<HamlMalformedTagException>(() => new HamlNodeHtmlAttribute("=b"));
+            Assert.Throws<HamlMalformedTagException>(() => new HamlNodeHtmlAttribute(0, "=b"));
 
         }
     }

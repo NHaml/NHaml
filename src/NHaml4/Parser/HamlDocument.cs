@@ -9,10 +9,7 @@ namespace NHaml4.Parser
     public class HamlDocument : HamlNode
     {
         public HamlDocument()
-            : base()
-        {
-            IndentCount = -1;
-        }
-
+            : base(0, "")
+        { }
     }
 }

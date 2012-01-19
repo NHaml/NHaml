@@ -17,8 +17,9 @@ namespace NHaml4.Tests.Walkers
         public void Walk_TextNode_AppendsCorrectTag()
         {
             // Arrange
-            var content = new HamlLine("Simple content");
-            var document = new HamlDocument { new HamlNodeText(content) };
+            var content = new HamlLine("Simple content", 0);
+            var document = new HamlDocument();
+            document.AddChild(new HamlNodeText(content));
 
             // Act
             var builder = new ClassBuilderMock();

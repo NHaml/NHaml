@@ -17,7 +17,7 @@ namespace NHaml4.Tests.Parser.Rules
         {
             string comment = "Test comment";
 
-            var node = new HamlNodeHtmlComment(new HamlLine("/" + comment));
+            var node = new HamlNodeHtmlComment(new HamlLine("/" + comment, 0));
             Assert.That(node.Content, Is.EqualTo(comment));
         }    
     }

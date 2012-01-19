@@ -28,13 +28,26 @@ namespace NHaml4.Walkers.CodeDom
         {
             foreach (var child in node.Children)
             {
-                var nodeWalker = GetNodeWalker(child.GetType());
-                if (nodeWalker != null) nodeWalker.Walk(child);
+                var nodeWalker = GetNodeWalker(child);
+                if (nodeWalker != null)
+                {
+                    try
+                    {
+                        nodeWalker.Walk(child);
+                    }
+                    catch (Exception e)
+                    {
+                        throw new HamlNodeWalkerException(child.GetType().Name,
+                            child.SourceFileLineNo,
+                            e);
+                    }
+                }
             }
         }
 
-        private HamlNodeWalker GetNodeWalker(Type type)
+        private HamlNodeWalker GetNodeWalker(HamlNode node)
         {
+            var type = node.GetType();
             if (type == typeof(HamlNodeTagId)
                 || type == typeof(HamlNodeTagClass)
                 || type == typeof(HamlNodeHtmlAttributeCollection)) return null;
@@ -47,7 +60,7 @@ namespace NHaml4.Walkers.CodeDom
             else if (type == typeof(HamlNodeHamlComment))
                 return new HamlNodeHamlCommentWalker(_classBuilder, _options);
             else
-                throw new HamlUnknownRuleException(type.FullName);
+                throw new HamlUnknownRuleException(type.FullName, node.SourceFileLineNo);
         }
     }
 }
