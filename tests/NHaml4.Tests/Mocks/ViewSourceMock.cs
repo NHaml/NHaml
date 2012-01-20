@@ -10,6 +10,7 @@ namespace NHaml4.Tests.Mocks
     {
         private System.IO.StreamReader _streamReader;
         private string _path;
+        private DateTime _timeStamp = DateTime.Now;
 
         public ViewSourceMock(System.IO.StreamReader streamReader, string path)
         {
@@ -27,9 +28,9 @@ namespace NHaml4.Tests.Mocks
             get { return _path; }
         }
 
-        public bool IsModified
+        public DateTime TimeStamp
         {
-            get { return true; }
+            get { return _timeStamp; }
         }
 
         public string GetClassName()

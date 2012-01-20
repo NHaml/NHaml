@@ -27,7 +27,7 @@ namespace NHaml4.Parser.Rules
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
             ParseClassAndIdNodes(nodeLine.Content, ref pos);
             ParseAttributes(nodeLine.Content, ref pos);
-            ParseWhitespaceRemoval(nodeLine.Content, ref pos);
+            ParseSpecialCharacters(nodeLine.Content, ref pos);
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
@@ -74,22 +74,51 @@ namespace NHaml4.Parser.Rules
             }
         }
 
-        private void ParseWhitespaceRemoval(string p, ref int pos)
+        private void ParseSpecialCharacters(string p, ref int pos)
         {
-            if (pos >= p.Length) return;
+            _whitespaceRemoval = WhitespaceRemoval.None;
+            _isSelfClosing = false;
 
-            if (p[pos] == '>')
+            while (pos < p.Length)
             {
-                _whitespaceRemoval = WhitespaceRemoval.Surrounding;
-                pos++;
+                if (ParseWhitespaceRemoval(p, ref pos) == false
+                    && ParseSelfClosing(p, pos) == false)
+                    break;
             }
-            else if (p[pos] == '<')
+        }
+
+        private bool ParseSelfClosing(string p, int pos)
+        {
+            if (_isSelfClosing == false)
             {
-                _whitespaceRemoval = WhitespaceRemoval.Internal;
-                pos++;
+                if (p[pos] == '/')
+                {
+                    _isSelfClosing = true;
+                    pos++;
+                    return true;
+                }
             }
-            else
-                _whitespaceRemoval = WhitespaceRemoval.None;
+            return false;
+        }
+
+        private bool ParseWhitespaceRemoval(string p, ref int pos)
+        {
+            if (_whitespaceRemoval == WhitespaceRemoval.None)
+            {
+                if (p[pos] == '>')
+                {
+                    _whitespaceRemoval = WhitespaceRemoval.Surrounding;
+                    pos++;
+                    return true;
+                }
+                else if (p[pos] == '<')
+                {
+                    _whitespaceRemoval = WhitespaceRemoval.Internal;
+                    pos++;
+                    return true;
+                }
+            }
+            return false;
         }
 
         private void HandleInlineContent(string content, ref int pos)
@@ -124,15 +153,6 @@ namespace NHaml4.Parser.Rules
         private string GetTagName(string content, ref int pos)
         {
             string result = GetHtmlToken(content, ref pos);
-            if (pos < content.Length && content[pos] == '/')
-            {
-                _isSelfClosing = true;
-                pos++;
-            }
-            else
-            {
-                _isSelfClosing = false;
-            }
 
             return string.IsNullOrEmpty(result) ? "div" : result;
         }

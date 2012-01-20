@@ -11,6 +11,7 @@ namespace NHaml4.Tests
     public class TemplateEngine_Tests
     {
         private Mock<ITemplateFactoryFactory> _templateFactoryFactoryMock;
+        private SimpleTemplateCache _templateCache;
         private TemplateEngine _templateEngine;
 
         class DummyTemplate : Template
@@ -19,8 +20,10 @@ namespace NHaml4.Tests
         [SetUp]
         public void SetUp()
         {
+            _templateCache = new SimpleTemplateCache();
+            _templateCache.Clear();
             _templateFactoryFactoryMock = new Mock<ITemplateFactoryFactory>();
-            _templateEngine = new TemplateEngine(_templateFactoryFactoryMock.Object);
+            _templateEngine = new TemplateEngine(_templateCache, _templateFactoryFactoryMock.Object);
         }
 
         #region GetCompiledTemplate(IViewSource) Tests
@@ -138,6 +141,24 @@ namespace NHaml4.Tests
 
             // Act
             var templateFactory = _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
+
+            // Assert
+            Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
+        }
+        #endregion
+
+        #region HamlCacheProvider Tests
+        [Test]
+        public void GetCompiledTemplateIViewSource_MockHamlCacheProvider_CreatesTemplateOnce()
+        {
+            // Arrange
+            var viewSource = ViewSourceBuilder.Create();
+            var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
+            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<IViewSource>()))
+                .Returns(expectedTemplateFactory);
+
+            // Act
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource);
 
             // Assert
             Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));

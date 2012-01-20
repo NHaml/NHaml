@@ -62,6 +62,7 @@ namespace NHaml4.Tests.Parser.Rules
         [Test]
         [TestCase("p", false)]
         [TestCase("br/", true)]
+        [TestCase("zzz(a='b')/", true)]
         public void Constructor_SimpleTags_DeterminesSelfClosingCorrectly(string templateLine, bool expectedSelfClosing)
         {
             var tag = new HamlNodeTag(new HamlLine(templateLine, 0));

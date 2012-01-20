@@ -10,22 +10,24 @@ using NHaml4.Walkers.CodeDom;
 
 namespace NHaml4
 {
-    public  class TemplateEngine
+    public class TemplateEngine
     {
-        private readonly Dictionary<string, TemplateFactory> _compiledTemplateCache;
+        private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
         public TemplateEngine(HamlOptions hamlOptions)
-            : this(new TemplateFactoryFactory(
+            : this(
+            new SimpleTemplateCache(),
+            new TemplateFactoryFactory(
                     new HamlTreeParser(new HamlFileLexer()),
                     new HamlDocumentWalker(new CSharp2TemplateClassBuilder(), hamlOptions),
                     new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
         { }
 
-        public TemplateEngine(ITemplateFactoryFactory templateFactoryFactory)
+        public TemplateEngine(IHamlTemplateCache templateCache, ITemplateFactoryFactory templateFactoryFactory)
         {
             _templateFactoryFactory = templateFactoryFactory;
-            _compiledTemplateCache = new Dictionary<string, TemplateFactory>();
+            _compiledTemplateCache = templateCache;
         }
 
         public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type baseType)
@@ -48,20 +50,12 @@ namespace NHaml4
 
             templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
             var className = viewSource.GetClassName();
-                
-            TemplateFactory compiledTemplate;
 
             lock( _compiledTemplateCache )
             {
-                if (!_compiledTemplateCache.TryGetValue(className, out compiledTemplate))
-                {
-                    compiledTemplate = _templateFactoryFactory.CompileTemplateFactory(className, viewSource);
-                    _compiledTemplateCache.Add(className, compiledTemplate);
-                    return compiledTemplate;
-                }
+                return _compiledTemplateCache.GetOrAdd(className, viewSource.TimeStamp,
+                    () => _templateFactoryFactory.CompileTemplateFactory(className, viewSource));
             }
-
-            return compiledTemplate;
         }
     }
 }

@@ -1,4 +1,5 @@
 using System.IO;
+using System;
 
 namespace NHaml4.TemplateResolution
 {
@@ -7,15 +8,11 @@ namespace NHaml4.TemplateResolution
     /// </summary>
     public interface IViewSource
     {
-        /// <summary>
-        /// Opens the view stream.
-        /// </summary>
-        /// <returns></returns>
         StreamReader GetStreamReader();
 
         string Path { get;  }
 
-        bool IsModified { get; }
+        DateTime TimeStamp { get; }
 
         string GetClassName();
     }

@@ -87,6 +87,7 @@
     <Compile Include="IO\HamlFile.cs" />
     <Compile Include="IO\HamlLine.cs" />
     <Compile Include="IO\HamlFileLexer.cs" />
+    <Compile Include="IHamlTemplateCache.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedTagException.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlAttribute.cs" />
@@ -105,6 +106,7 @@
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
+    <Compile Include="SimpleTemplateCache.cs" />
     <Compile Include="TemplateBase\Template.cs" />
     <Compile Include="TemplateResolution\FileTemplateContentProvider.cs">
       <SubType>Code</SubType>

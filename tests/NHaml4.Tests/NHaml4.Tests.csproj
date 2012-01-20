@@ -55,6 +55,7 @@
     <Compile Include="Parser\Rules\HamlNodeHtmlComment_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag_Tests.cs" />
     <Compile Include="ProxyExtractor_Tests.cs" />
+    <Compile Include="SimpleTemplateCache_Tests.cs" />
     <Compile Include="TemplateBase\Template_Tests.cs" />
     <Compile Include="TemplateEngine_Tests.cs" />
     <Compile Include="TemplateFactory_Tests.cs" />
