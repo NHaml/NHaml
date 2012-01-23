@@ -48,5 +48,62 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
             Assert.That(_mockClassBuilder.Build(""), Is.StringStarting(indent));
         }
+
+        [Test]
+        [TestCase("   ")]
+        [TestCase("\n\t   ")]
+        public void Walk_PreviousTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
+        {
+            var node = new HamlDocument();
+            node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine(whiteSpace, -1)));
+
+            new HamlDocumentWalker(_mockClassBuilder).Walk(node);
+
+            Assert.That(_mockClassBuilder.Build(""), Is.EqualTo("<p></p>"));
+        }
+
+        [Test]
+        public void Walk_MultipleWhitespaceWithPreviousTagSurroundingWhitespaceRemoved_RendersTag()
+        {
+            var node = new HamlDocument();
+            node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+
+            new HamlDocumentWalker(_mockClassBuilder).Walk(node);
+
+            Assert.That(_mockClassBuilder.Build(""), Is.EqualTo("<p></p>"));
+        }
+
+        [Test]
+        [TestCase("   ")]
+        [TestCase("\n\t   ")]
+        public void Walk_NextTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
+        {
+            var node = new HamlDocument();
+            node.AddChild(new HamlNodeText(new HamlLine(whiteSpace, -1)));
+            node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
+
+            new HamlDocumentWalker(_mockClassBuilder).Walk(node);
+
+            Assert.That(_mockClassBuilder.Build(""), Is.EqualTo("<p></p>"));
+        }
+
+        [Test]
+        public void Walk_MultipleWhitespaceWithNextTagSurroundingWhitespaceRemoved_RendersTag()
+        {
+            var node = new HamlDocument();
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
+
+            new HamlDocumentWalker(_mockClassBuilder).Walk(node);
+
+            Assert.That(_mockClassBuilder.Build(""), Is.EqualTo("<p></p>"));
+        }
+
     }
 }

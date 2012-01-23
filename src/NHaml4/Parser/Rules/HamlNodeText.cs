@@ -10,5 +10,10 @@ namespace NHaml4.Parser.Rules
         public HamlNodeText(IO.HamlLine nodeLine)
             : base(nodeLine)
         { }
+
+        public bool IsWhitespace()
+        {
+            return Content.Trim().Length == 0;
+        }
     }
 }
