@@ -12,16 +12,16 @@ namespace NHaml4.Walkers.CodeDom
 {
     public abstract class HamlNodeWalker
     {
-        internal readonly ITemplateClassBuilder _classBuilder;
-        internal readonly HamlOptions _options;
+        internal readonly ITemplateClassBuilder ClassBuilder;
+        internal readonly HamlOptions Options;
 
         protected HamlNodeWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
         {
             Invariant.ArgumentNotNull(options, "options");
             Invariant.ArgumentNotNull(classBuilder, "classBuilder");
 
-            _classBuilder = classBuilder;
-            _options = options;
+            ClassBuilder = classBuilder;
+            Options = options;
         }
        
         public virtual void Walk(HamlNode node)
@@ -52,13 +52,13 @@ namespace NHaml4.Walkers.CodeDom
                 || type == typeof(HamlNodeTagClass)
                 || type == typeof(HamlNodeHtmlAttributeCollection)) return null;
             else if (type == typeof(HamlNodeText))
-                return new HamlNodeTextWalker(_classBuilder, _options);
+                return new HamlNodeTextWalker(ClassBuilder, Options);
             else if (type == typeof(HamlNodeTag))
-                return new HamlNodeTagWalker(_classBuilder, _options);
+                return new HamlNodeTagWalker(ClassBuilder, Options);
             else if (type == typeof(HamlNodeHtmlComment))
-                return new HamlNodeHtmlCommentWalker(_classBuilder, _options);
+                return new HamlNodeHtmlCommentWalker(ClassBuilder, Options);
             else if (type == typeof(HamlNodeHamlComment))
-                return new HamlNodeHamlCommentWalker(_classBuilder, _options);
+                return new HamlNodeHamlCommentWalker(ClassBuilder, Options);
             else
                 throw new HamlUnknownRuleException(type.FullName, node.SourceFileLineNo);
         }

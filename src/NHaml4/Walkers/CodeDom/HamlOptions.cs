@@ -34,7 +34,7 @@ namespace NHaml4.Walkers.CodeDom
             return AutoClosingTags.Contains(tagName);
         }
 
-        public IList<string> AutoClosingTags;
+        private readonly IList<string> AutoClosingTags;
         public HtmlVersion HtmlVersion;
     }
 }

@@ -7,7 +7,7 @@ namespace NHaml4.TemplateResolution
     {
         IViewSource GetViewSource(string templateName);
         IViewSource GetViewSource( string templatePath, IList<IViewSource> parentViewSourceList );
-        ReadOnlyCollection<string> PathSources { get; }
+        IEnumerable<string> PathSources { get; }
         void AddPathSource(string pathSource);
     }
 }

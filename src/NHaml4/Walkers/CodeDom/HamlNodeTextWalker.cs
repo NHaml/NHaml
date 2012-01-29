@@ -19,14 +19,14 @@ namespace NHaml4.Walkers.CodeDom
 
             string outputText = nodeText.Indent + nodeText.Content;
 
-            if (node.TrimLeadingWhitespace())
+            if (node.IsLeadingWhitespaceTrimmed)
                 outputText = outputText.TrimStart(new[] { ' ', '\n', '\r', '\t'});
-            if (node.TrimTrailingWhitespace())
+            if (node.IsTrailingWhitespaceTrimmed)
                 outputText = outputText.TrimEnd(new[] { ' ', '\n', '\r', '\t'});
 
             if (outputText.Length > 0)
             {
-                _classBuilder.Append(outputText);
+                ClassBuilder.Append(outputText);
             }
             base.Walk(node);
         }

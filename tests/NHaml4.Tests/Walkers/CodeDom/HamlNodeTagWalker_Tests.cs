@@ -269,9 +269,11 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_InternalWhitespaceRemoval_GeneratesCorrectOutput()
         {
             var tagNode = new HamlNodeTag(new HamlLine("%p<", 0));
+            tagNode.IsMultiLine = true;
+
             tagNode.AddChild(new HamlNodeText(new HamlLine("\n", 0)));
             tagNode.AddChild(new HamlNodeText(new HamlLine("  Hello", 0)));
-
+  
             _tagWalker.Walk(tagNode);
 
             const string expectedOutput = "<p>Hello</p>";

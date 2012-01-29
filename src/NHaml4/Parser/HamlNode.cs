@@ -11,9 +11,9 @@ namespace NHaml4.Parser
     public abstract class HamlNode
     {
         private string _content;
-        private IList<HamlNode> _children = new List<HamlNode>();
+        private readonly IList<HamlNode> _children = new List<HamlNode>();
         private bool _multiLine;
-        private HamlLine _line;
+        private readonly HamlLine _line;
         private int _sourceFileLineNo;
 
         //public HamlLine HamlLine
@@ -21,14 +21,14 @@ namespace NHaml4.Parser
         //    get { return _line; }
         //}
 
-        public HamlNode(HamlLine nodeLine)
+        protected HamlNode(HamlLine nodeLine)
         {
             _line = nodeLine;
             _content = nodeLine.Content;
             _sourceFileLineNo = _line.SourceFileLineNo;
         }
 
-        public HamlNode(int sourceFileLineNo, string content)
+        protected HamlNode(int sourceFileLineNo, string content)
         {
             _sourceFileLineNo = sourceFileLineNo;
             _content = content;
@@ -94,11 +94,11 @@ namespace NHaml4.Parser
             _children.Add(hamlNode);
         }
 
-        public HamlNode Previous { get; set; }
-        public HamlNode Next { get; set; }
-        public HamlNode Parent { get; set; }
+        public HamlNode Previous { get; private set; }
+        public HamlNode Next { get; private set; }
+        public HamlNode Parent { get; private set; }
 
-        public HamlNode PreviousNonWhitespaceNode()
+        private HamlNode PreviousNonWhitespaceNode()
         {
             var node = this.Previous;
             while (node != null && node.IsWhitespaceNode())
@@ -106,7 +106,7 @@ namespace NHaml4.Parser
             return node;
         }
 
-        public HamlNode NextNonWhitespaceNode()
+        private HamlNode NextNonWhitespaceNode()
         {
             var node = this.Next;
             while (node != null && node.IsWhitespaceNode())
@@ -114,27 +114,50 @@ namespace NHaml4.Parser
             return node;
         }
 
-        private bool IsWhitespaceNode()
+        public bool IsWhitespaceNode()
         {
             return (this is HamlNodeText)
                 && ((HamlNodeText)this).IsWhitespace();
         }
 
-        public bool TrimLeadingWhitespace()
+        public bool IsLeadingWhitespaceTrimmed
         {
-            var previousNonWhitespaceNode = PreviousNonWhitespaceNode();
-            if (previousNonWhitespaceNode != null && previousNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
-                return true;
-            else if (previousNonWhitespaceNode == null)
+            get
             {
-                var parentNode = ParentNonWhitespaceNode();
-                if (parentNode != null && parentNode.IsInternalWhitespaceRemoved())
+                if (IsSurroundingWhitespaceRemoved())
                     return true;
+
+                var previousNonWhitespaceNode = PreviousNonWhitespaceNode();
+                if (previousNonWhitespaceNode != null && previousNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
+                    return true;
+                else if (previousNonWhitespaceNode == null)
+                {
+                    var parentNode = ParentNonWhitespaceNode();
+                    if (parentNode != null && parentNode.IsInternalWhitespaceTrimmed())
+                        return true;
+                }
+                return false;
             }
-            return false;
         }
 
-        private bool IsInternalWhitespaceRemoved()
+        public bool IsTrailingWhitespaceTrimmed
+        {
+            get
+            {
+                var nextNonWhitespaceNode = NextNonWhitespaceNode();
+                if (nextNonWhitespaceNode != null && nextNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
+                    return true;
+                else if (nextNonWhitespaceNode == null)
+                {
+                    var parentNode = ParentNonWhitespaceNode();
+                    if (parentNode != null && parentNode.IsInternalWhitespaceTrimmed())
+                        return true;
+                }
+                return false;
+            }
+        }
+
+        private bool IsInternalWhitespaceTrimmed()
         {
             return this is HamlNodeTag
                 && ((HamlNodeTag)this).WhitespaceRemoval == WhitespaceRemoval.Internal;
@@ -153,20 +176,5 @@ namespace NHaml4.Parser
                 parentNode = parentNode.Parent;
             return parentNode;
         }
-
-        public bool TrimTrailingWhitespace()
-        {
-            var nextNonWhitespaceNode = NextNonWhitespaceNode();
-            if (nextNonWhitespaceNode != null && nextNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
-                return true;
-            else if (nextNonWhitespaceNode == null)
-            {
-                var parentNode = ParentNonWhitespaceNode();
-                if (parentNode != null && parentNode.IsInternalWhitespaceRemoved())
-                    return true;
-            }
-            return false;
-        }
-
     }
 }

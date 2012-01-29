@@ -13,7 +13,7 @@ namespace NHaml4
             public TemplateFactory TemplateFactory;
         }
 
-        private static IDictionary<string, TemplateFactoryCacheEntry> _templateCache = new Dictionary<string, TemplateFactoryCacheEntry>();
+        private static readonly IDictionary<string, TemplateFactoryCacheEntry> _templateCache = new Dictionary<string, TemplateFactoryCacheEntry>();
 
         public TemplateFactory GetOrAdd(string templateKey, DateTime timeStamp, Func<TemplateFactory> templateGet)
         {

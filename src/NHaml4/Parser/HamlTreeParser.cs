@@ -38,7 +38,7 @@ namespace NHaml4.Parser
             }
         }
 
-        public HamlDocument ParseStreamReader(StreamReader reader)
+        private HamlDocument ParseStreamReader(StreamReader reader)
         {
             var hamlFile = _hamlFileLexer.Read(reader);
             return ParseHamlFile(hamlFile);

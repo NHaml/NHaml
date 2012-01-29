@@ -8,8 +8,9 @@ namespace NHaml4.TemplateResolution
 {
     public class FileTemplateContentProvider : ITemplateContentProvider
     {
-        private List<string> _pathSources;
-        public FileTemplateContentProvider()
+        private readonly List<string> _pathSources;
+
+        protected FileTemplateContentProvider()
         {
             _pathSources = new List<string> ();
             AddPathSource("Views");
@@ -70,7 +71,7 @@ namespace NHaml4.TemplateResolution
         }
 
 
-        public ReadOnlyCollection<string> PathSources {
+        public IEnumerable<string> PathSources {
             get
             {
                 return new ReadOnlyCollection<string>(_pathSources);

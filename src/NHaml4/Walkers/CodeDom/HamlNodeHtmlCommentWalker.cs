@@ -16,19 +16,19 @@ namespace NHaml4.Walkers.CodeDom
             if (commentNode == null)
                 throw new System.InvalidCastException("HamlNodeHtmlCommentWalker requires that HamlNode object be of type HamlNodeHtmlComment.");
 
-            _classBuilder.Append(node.Indent);
-            _classBuilder.Append("<!--" + commentNode.Content);
+            ClassBuilder.Append(node.Indent);
+            ClassBuilder.Append("<!--" + commentNode.Content);
        
             base.Walk(node);
 
             if (node.IsMultiLine)
             {
-                _classBuilder.AppendNewLine();
-                _classBuilder.Append(node.Indent + "-->");
+                ClassBuilder.AppendNewLine();
+                ClassBuilder.Append(node.Indent + "-->");
             }
             else
             {
-                _classBuilder.Append(" -->");
+                ClassBuilder.Append(" -->");
             }
 
         }

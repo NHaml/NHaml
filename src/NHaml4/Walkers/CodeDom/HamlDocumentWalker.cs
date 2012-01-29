@@ -16,7 +16,7 @@ namespace NHaml4.Walkers.CodeDom
         public string Walk(HamlDocument document, string className)
         {
             base.Walk(document);
-            return _classBuilder.Build(className);
+            return ClassBuilder.Build(className);
         }    
     }
 }

@@ -4,7 +4,7 @@ namespace NHaml4.IO
 {
     public class HamlFile
     {
-        private IList<HamlLine> _hamlLines = new List<HamlLine>();
+        private readonly IList<HamlLine> _hamlLines = new List<HamlLine>();
         private int _currentLineIndex = 0;
 
         public int LineCount

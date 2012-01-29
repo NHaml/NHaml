@@ -10,24 +10,24 @@ namespace NHaml4.Compilers.Abstract
 {
     public abstract class CodeDomClassBuilder : ITemplateClassBuilder
     {
-        public const string DefaultTextWriterVariableName = "textWriter";
-        protected StringBuilder Output { get; private set; }
-        protected StringBuilder Preamble { get; private set; }
+        private const string DefaultTextWriterVariableName = "textWriter";
+        private StringBuilder Output { get; set; }
+        private StringBuilder Preamble { get; set; }
 
         private readonly CodeDomProvider _codeDomProvider;
-        public CodeMemberMethod RenderMethod{ get; set; }
+        protected CodeMemberMethod RenderMethod{ get; private set; }
 
         protected abstract string CommentMarkup { get; }
         protected abstract void RenderEndBlock();
         protected abstract void RenderBeginBlock();
 
-        public string CurrentTextWriterVariableName { get; set; }
+        private string CurrentTextWriterVariableName { get; set; }
         public Type BaseType { get; set; }
-        public int Depth { get; set; }
+        private int Depth { get; set; }
         public int BlockDepth { get; set; }
-        public string ClassName { get; internal set; }
+        private string ClassName { get; set; }
 
-        public CodeDomClassBuilder(CodeDomProvider codeDomProvider)
+        protected CodeDomClassBuilder(CodeDomProvider codeDomProvider)
         {
             _codeDomProvider = codeDomProvider;
             CurrentTextWriterVariableName = DefaultTextWriterVariableName;

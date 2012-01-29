@@ -11,12 +11,12 @@ namespace NHaml4.Compilers.Abstract
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
 
-        private CodeDomProvider _codeDomProvider;
+        private readonly CodeDomProvider _codeDomProvider;
         public CompilerResults CompilerResults { get; private set; }
-        public Dictionary<string, string> ProviderOptions { get; private set; }
+        protected Dictionary<string, string> ProviderOptions { get; set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
-        public CodeDomTemplateTypeBuilder(CodeDomProvider codeDomProvider)
+        protected CodeDomTemplateTypeBuilder(CodeDomProvider codeDomProvider)
         {
             _codeDomProvider = codeDomProvider;
             ProviderOptions = new Dictionary<string, string>();
@@ -84,7 +84,7 @@ namespace NHaml4.Compilers.Abstract
 
         }
 
-        private void AddReferences(CompilerParameters parameters, IList<Type> references)
+        private void AddReferences(CompilerParameters parameters, IEnumerable<Type> references)
         {
             parameters.ReferencedAssemblies.Clear();
 

@@ -22,7 +22,7 @@ namespace NHaml4.Walkers.CodeDom
             {
                 if (childNode.Content.StartsWith("class=")
                     || childNode.Content.StartsWith("id=")) continue;
-                _classBuilder.Append(MakeAttribute(childNode));
+                ClassBuilder.Append(MakeAttribute(childNode));
             }
         }
 
@@ -37,7 +37,7 @@ namespace NHaml4.Walkers.CodeDom
                 return "";
             if ((attributeNode.Value == "true") || (attributeNode.Value == ""))
             {
-                if (_options.HtmlVersion == HtmlVersion.XHtml)
+                if (Options.HtmlVersion == HtmlVersion.XHtml)
                     return " " + attributeNode.Name + "='" + attributeNode.Name + "'";
                 else
                     return " " + attributeNode.Name;
