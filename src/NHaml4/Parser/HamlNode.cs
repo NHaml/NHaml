@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NHaml4.IO;
 using System.Collections.ObjectModel;
+using NHaml4.Parser.Rules;
 
 namespace NHaml4.Parser
 {
@@ -96,5 +97,76 @@ namespace NHaml4.Parser
         public HamlNode Previous { get; set; }
         public HamlNode Next { get; set; }
         public HamlNode Parent { get; set; }
+
+        public HamlNode PreviousNonWhitespaceNode()
+        {
+            var node = this.Previous;
+            while (node != null && node.IsWhitespaceNode())
+                node = node.Previous;
+            return node;
+        }
+
+        public HamlNode NextNonWhitespaceNode()
+        {
+            var node = this.Next;
+            while (node != null && node.IsWhitespaceNode())
+                node = node.Next;
+            return node;
+        }
+
+        private bool IsWhitespaceNode()
+        {
+            return (this is HamlNodeText)
+                && ((HamlNodeText)this).IsWhitespace();
+        }
+
+        public bool TrimLeadingWhitespace()
+        {
+            var previousNonWhitespaceNode = PreviousNonWhitespaceNode();
+            if (previousNonWhitespaceNode != null && previousNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
+                return true;
+            else if (previousNonWhitespaceNode == null)
+            {
+                var parentNode = ParentNonWhitespaceNode();
+                if (parentNode != null && parentNode.IsInternalWhitespaceRemoved())
+                    return true;
+            }
+            return false;
+        }
+
+        private bool IsInternalWhitespaceRemoved()
+        {
+            return this is HamlNodeTag
+                && ((HamlNodeTag)this).WhitespaceRemoval == WhitespaceRemoval.Internal;
+        }
+
+        private bool IsSurroundingWhitespaceRemoved()
+        {
+            return this is HamlNodeTag
+                && ((HamlNodeTag)this).WhitespaceRemoval == WhitespaceRemoval.Surrounding;
+        }
+
+        private HamlNode ParentNonWhitespaceNode()
+        {
+            var parentNode = Parent;
+            while (parentNode != null && parentNode.IsWhitespaceNode())
+                parentNode = parentNode.Parent;
+            return parentNode;
+        }
+
+        public bool TrimTrailingWhitespace()
+        {
+            var nextNonWhitespaceNode = NextNonWhitespaceNode();
+            if (nextNonWhitespaceNode != null && nextNonWhitespaceNode.IsSurroundingWhitespaceRemoved())
+                return true;
+            else if (nextNonWhitespaceNode == null)
+            {
+                var parentNode = ParentNonWhitespaceNode();
+                if (parentNode != null && parentNode.IsInternalWhitespaceRemoved())
+                    return true;
+            }
+            return false;
+        }
+
     }
 }

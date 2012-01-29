@@ -611,7 +611,7 @@
 
     "a tag with '<' appended" : {
       "haml" : "%p<\n  hello\n  world",
-      "html" : "<p>hello\nworld</p>"
+      "html" : "<p>hello\n  world</p>"
     }
   }
 }

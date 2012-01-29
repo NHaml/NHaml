@@ -253,15 +253,28 @@ namespace NHaml4.Tests.Walkers.CodeDom
         }
 
         [Test]
-        [TestCase("%p", "   %p>", "<p><p></p></p>")]
-        [TestCase("%p<", "   %p", "<p><p></p></p>")]
-        public void Walk_WhitespaceRemoval_GeneratesCorrectOutput(string line1, string line2, string expectedOutput)
+        [TestCase("%p", "   %p>", "", "<p><p></p></p>")]
+        [TestCase("%p<", "   %p", "", "<p><p></p></p>")]
+        public void Walk_WhitespaceRemoval_GeneratesCorrectOutput(string line1, string line2, string line3, string expectedOutput)
         {
             var tagNode = new HamlNodeTag(new HamlLine(line1, 0));
             tagNode.AddChild(new HamlNodeTag(new HamlLine(line2, 0)));
 
             _tagWalker.Walk(tagNode);
 
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void Walk_InternalWhitespaceRemoval_GeneratesCorrectOutput()
+        {
+            var tagNode = new HamlNodeTag(new HamlLine("%p<", 0));
+            tagNode.AddChild(new HamlNodeText(new HamlLine("\n", 0)));
+            tagNode.AddChild(new HamlNodeText(new HamlLine("  Hello", 0)));
+
+            _tagWalker.Walk(tagNode);
+
+            const string expectedOutput = "<p>Hello</p>";
             Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
         }
     }

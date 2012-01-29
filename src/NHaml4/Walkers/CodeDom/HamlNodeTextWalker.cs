@@ -17,45 +17,18 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeText == null)
                 throw new System.InvalidCastException("HamlNodeTextWalker requires that HamlNode object be of type HamlNodeText.");
 
-            if ((node.Content.Trim().Length > 0)
-                || (IsWhiteSpaceTrimmedDueToSurroundingNode(node) == false))
+            string outputText = nodeText.Indent + nodeText.Content;
+
+            if (node.TrimLeadingWhitespace())
+                outputText = outputText.TrimStart(new[] { ' ', '\n', '\r', '\t'});
+            if (node.TrimTrailingWhitespace())
+                outputText = outputText.TrimEnd(new[] { ' ', '\n', '\r', '\t'});
+
+            if (outputText.Length > 0)
             {
-                _classBuilder.Append(nodeText.Indent);
-                _classBuilder.Append(nodeText.Content);
+                _classBuilder.Append(outputText);
             }
             base.Walk(node);
         }
-
-        private bool IsWhiteSpaceTrimmedDueToSurroundingNode(HamlNode node)
-        {
-            var previousNode = node.Previous;
-            while (IsWhitespaceTextTag(previousNode))
-                previousNode = previousNode.Previous;
-            if (IsHamlNodeTagWithSurroundingWhitespaceRemoval(previousNode))
-                return true;
-
-            var nextNode = node.Next;
-            while (IsWhitespaceTextTag(nextNode))
-                nextNode = nextNode.Next;
-            if (IsHamlNodeTagWithSurroundingWhitespaceRemoval(nextNode))
-                return true;
-
-            return false;
-        }
-
-        private bool IsWhitespaceTextTag(HamlNode node)
-        {
-            return node != null
-                && node is HamlNodeText
-                && ((HamlNodeText)node).IsWhitespace();
-        }
-
-        private bool IsHamlNodeTagWithSurroundingWhitespaceRemoval(HamlNode node)
-        {
-            return node != null
-                && node is HamlNodeTag
-                && ((HamlNodeTag)node).WhitespaceRemoval == WhitespaceRemoval.Surrounding;
-        }
-
     }
 }

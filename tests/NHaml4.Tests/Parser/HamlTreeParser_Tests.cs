@@ -61,11 +61,23 @@ namespace NHaml4.Tests.Parser
         [TestCase("Test\n  Test", 1)]
         [TestCase("Test\n  Test\n  Test", 1)]
         [TestCase("Test\n  Test\n    Test", 1)]
-        [TestCase("Test\n  Test\nTest", 2)]
+        [TestCase("Test\n  Test\nTest", 3)]
         public void ParseDocumentSource_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
             var result = _parser.ParseDocumentSource(template);
             Assert.AreEqual(expectedChildren, result.Children.Count);
+        }
+
+        [Test]
+        public void ParseDocumentSource_NestedContent_PlacesLineBreaksCorrectly()
+        {
+            string template = "%p Line 1\n%p\n  Line 2\n%p Line 3";
+            var result = _parser.ParseDocumentSource(template);
+
+            Assert.That(result.Children[1].Content, Is.EqualTo("\n"));
+            Assert.That(result.Children[2].Children[0].Content, Is.EqualTo("\n"));
+            Assert.That(result.Children[2].Children.Count, Is.EqualTo(2));
+            Assert.That(result.Children[3].Content, Is.EqualTo("\n"));
         }
 
         [Test]
