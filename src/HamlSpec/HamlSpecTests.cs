@@ -1,31 +1,31 @@
-using System.IO;
-using System.Linq;
-using NHaml4.TemplateResolution;
 using NUnit.Framework;
-using System;
-using NHaml4;
-using NHaml4.TemplateBase;
-using NHaml4.Walkers.CodeDom;
 
 namespace HamlSpec
 {
     [TestFixture]
-    public class HamlSpecTests
+    public class HamlSpecs
     {
-        private int _totalNoTests;
-        private int _totalNoTestsFailed;
+        private SpecTestRunner _specTestRunner;
+        const string FileName = "specs_haml.json";
 
         [TestFixtureSetUp]
-        public void TestFixtureSetup()
+        public void FixtureSetup()
         {
-            _totalNoTests = 0;
-            _totalNoTestsFailed = 0;
+            _specTestRunner = new SpecTestRunner(FileName);
+
+#if PROFILED
+            EQATEC.Profiler.Runtime.ClearProfileSnapshot();
+#endif
         }
-        
+
         [TestFixtureTearDown]
-        public void TestFixtureTearDown()
+        public void FixtureTearDown()
         {
-            Console.WriteLine(string.Format("{0} OF {1} TESTS FAILED.", _totalNoTestsFailed, _totalNoTests));            
+            _specTestRunner.OutputSummaryToConsole();
+
+#if PROFILED
+            EQATEC.Profiler.Runtime.TakeProfileSnapshot(true);
+#endif
         }
 
         // WORKING
@@ -51,63 +51,9 @@ namespace HamlSpec
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         //[TestCase("Ruby-style interpolation")]
-        public void ExecuteTestSuite(string groupName)
+        public void ExecuteHamlsTestSuite(string groupName)
         {
-            var hamlSpecTests = new HamlSpecLoader().GetTheHamlSpecTests(groupName);
-
-            int errorCount = 0;
-            foreach (var test in hamlSpecTests)
-            {
-                string testName = test.TestName;
-
-                try
-                {
-                    ExecuteSingleTest(test);
-                    Console.WriteLine("PASS : " + testName);
-                }
-                catch (Exception ex)
-                {
-                    errorCount++;
-                    Console.WriteLine("FAIL - " + testName);
-                    Console.WriteLine(ex.Message);
-                }
-            }
-            int totalCount = hamlSpecTests.Count();
-            Console.WriteLine(errorCount + " of " + totalCount + " scenarios failed.");
-
-            _totalNoTests += totalCount;
-            _totalNoTestsFailed += errorCount;
-
-            Assert.AreEqual(0, errorCount, errorCount + " of " + totalCount + " scenarios failed.");
-        }
-
-        private void ExecuteSingleTest(HamlSpec test)
-        {
-            var template = CreateTemplate(test.Haml, test.Format);
-            var output = new StringWriter();
-            output.NewLine = "\n";
-            template.Render(output);
-
-            var message = string.Format("{0} - {1}\n\"{2}\"", test.GroupName, test.TestName, test.Haml);
-            Assert.That(output.ToString(), Is.EqualTo(test.ExpectedHtml), message);
-        }
-
-        private Template CreateTemplate(string hamlTemplate, string htmlFormat)
-        {
-            var testFile = new FileInfo("test.haml");
-            if (testFile.Exists) testFile.Delete();
-            File.WriteAllText(testFile.FullName, hamlTemplate);
-            var hamlOptions = new HamlOptions();
-            if (htmlFormat == "html4")
-                hamlOptions.HtmlVersion = HtmlVersion.Html4;
-            else if (htmlFormat == "html5")
-                hamlOptions.HtmlVersion = HtmlVersion.Html5;
-            else if (htmlFormat == "xhtml")
-                hamlOptions.HtmlVersion = HtmlVersion.XHtml;
-            
-            var templateEngine = new TemplateEngine(hamlOptions);
-            var compiledTemplate = templateEngine.GetCompiledTemplate(new FileViewSource(testFile));
-            return compiledTemplate.CreateTemplate();
+            _specTestRunner.ExecuteSpecs(groupName);
         }
     }
 }

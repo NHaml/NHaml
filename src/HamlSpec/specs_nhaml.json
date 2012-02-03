@@ -1,0 +1,13 @@
+{
+  "Eval" : {
+    "a string constant" : {
+      "haml" : "= \"test\"",
+      "html" : "test"
+    },
+
+    "an integer constant" : {
+      "haml" : "= 1",
+      "html" : "1"
+    }
+  }
+}

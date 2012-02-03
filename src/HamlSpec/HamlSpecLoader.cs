@@ -10,20 +10,31 @@ namespace HamlSpec
 {
     internal class HamlSpecLoader
     {
-        public IEnumerable<HamlSpec> GetTheHamlSpecTests(string groupName)
+        private string fileName;
+
+        public HamlSpecLoader(string fileName)
         {
-            var group = GetTestGroup(groupName);
-            var hamlTests = GetDictionary(group);
-            return hamlTests.Select(x => GetHamlSpec(groupName, x));
+            this.fileName = fileName;
+        }
+        public IDictionary<string, IEnumerable<HamlSpec>> GetTheHamlSpecTests()
+        {
+            var deserializedFile = GetDeserializedFile();
+            var result = new Dictionary<string,IEnumerable<HamlSpec>>();
+
+            foreach (var key in deserializedFile.Keys)
+            {
+                var entry = (IDictionary<string, object>)deserializedFile[key];
+                result.Add(key, entry.Select(x => GetHamlSpec(key, x)));
+            }
+
+            return result;
         }
 
-        private object GetTestGroup(string groupName)
+        private IDictionary<string, object> GetDeserializedFile()
         {
-            var json = File.ReadAllText(@"tests.json");
-
+            var json = File.ReadAllText(fileName);
             var serializer = new JavaScriptSerializer { MaxJsonLength = int.MaxValue };
-            var deserializedObject = serializer.DeserializeObject(json);
-            return ((IDictionary<string, object>)deserializedObject)[groupName];
+            return (IDictionary<string, object>)serializer.DeserializeObject(json);
         }
 
         private HamlSpec GetHamlSpec(string groupName, KeyValuePair<string, object> test)
