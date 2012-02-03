@@ -6,8 +6,9 @@ using NHaml4.IO;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
-using NHaml4.Compilers.CSharp2;
 using NHaml4.TemplateBase;
+using NHaml4.Compilers.Abstract;
+using NHaml4.Compilers.CSharp2;
 
 namespace NHaml.IntegrationTests
 {
@@ -26,7 +27,7 @@ namespace NHaml.IntegrationTests
             // Act
             var compiledTemplate = new TemplateFactoryFactory(
                 new HamlTreeParser(new HamlFileLexer()),
-                new HamlDocumentWalker(new CSharp2TemplateClassBuilder()),
+                new HamlDocumentWalker(new CodeDomClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
 
             var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);

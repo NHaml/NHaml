@@ -113,11 +113,11 @@ namespace NHaml4.IO
                 _content = (_content.Length > 1 ? _content.Substring(1) : "");
                 return HamlRuleEnum.HtmlComment;
             }
-            //if (_content.StartsWith("="))
-            //{
-            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
-            //    return HamlRuleEnum.Evaluation;
-            //}
+            if (_content.StartsWith("="))
+            {
+                _content = (_content.Length > 1 ? _content.Substring(1) : "");
+                return HamlRuleEnum.Evaluation;
+            }
             return HamlRuleEnum.PlainText;
         }
     }

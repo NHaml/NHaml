@@ -28,7 +28,7 @@ namespace NHaml4.Walkers.CodeDom
         {
             foreach (var child in node.Children)
             {
-                var nodeWalker = GetNodeWalker(child);
+                var nodeWalker = HamlWalkerFactory.GetNodeWalker(child.GetType(), child.SourceFileLineNo, ClassBuilder, Options);
                 if (nodeWalker != null)
                 {
                     try
@@ -45,22 +45,5 @@ namespace NHaml4.Walkers.CodeDom
             }
         }
 
-        private HamlNodeWalker GetNodeWalker(HamlNode node)
-        {
-            var type = node.GetType();
-            if (type == typeof(HamlNodeTagId)
-                || type == typeof(HamlNodeTagClass)
-                || type == typeof(HamlNodeHtmlAttributeCollection)) return null;
-            else if (type == typeof(HamlNodeText))
-                return new HamlNodeTextWalker(ClassBuilder, Options);
-            else if (type == typeof(HamlNodeTag))
-                return new HamlNodeTagWalker(ClassBuilder, Options);
-            else if (type == typeof(HamlNodeHtmlComment))
-                return new HamlNodeHtmlCommentWalker(ClassBuilder, Options);
-            else if (type == typeof(HamlNodeHamlComment))
-                return new HamlNodeHamlCommentWalker(ClassBuilder, Options);
-            else
-                throw new HamlUnknownRuleException(type.FullName, node.SourceFileLineNo);
-        }
     }
 }

@@ -8,48 +8,40 @@ using Microsoft.CSharp;
 
 namespace NHaml4.Compilers.Abstract
 {
-    public abstract class CodeDomClassBuilder : ITemplateClassBuilder
+    public class CodeDomClassBuilder : ITemplateClassBuilder
     {
-        private const string DefaultTextWriterVariableName = "textWriter";
-        private StringBuilder Output { get; set; }
-        private StringBuilder Preamble { get; set; }
+        private const string TextWriterVariableName = "textWriter";
 
         private readonly CodeDomProvider _codeDomProvider;
-        protected CodeMemberMethod RenderMethod{ get; private set; }
 
-        protected abstract string CommentMarkup { get; }
-        protected abstract void RenderEndBlock();
-        protected abstract void RenderBeginBlock();
-
-        private string CurrentTextWriterVariableName { get; set; }
         public Type BaseType { get; set; }
-        private int Depth { get; set; }
         public int BlockDepth { get; set; }
+        protected CodeMemberMethod RenderMethod { get; private set; }
+        private int Depth { get; set; }
         private string ClassName { get; set; }
+        private StringBuilder Output { get; set; }
 
-        protected CodeDomClassBuilder(CodeDomProvider codeDomProvider)
+
+        public CodeDomClassBuilder()
         {
-            _codeDomProvider = codeDomProvider;
-            CurrentTextWriterVariableName = DefaultTextWriterVariableName;
+            _codeDomProvider = new CSharpCodeProvider();
             Output = new StringBuilder();
-            Preamble = new StringBuilder();
 
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
                                    Attributes = MemberAttributes.Override | MemberAttributes.Family,
-                               };
-            RenderMethod.Parameters.Add(new CodeParameterDeclarationExpression(typeof(TextWriter), "textWriter"));
+                               }
+                               .WithParameter(typeof(TextWriter), "textWriter");
         }
 
         public void Append(string line)
         {
             var writeInvoke = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("Write", CurrentTextWriterVariableName)
+                .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
                 .WithPrimitiveParameter(line);
 
-            RenderMethod.Statements.Add(
-                new CodeExpressionStatement { Expression = writeInvoke });
+            RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
         public void AppendFormat(string content, params object[] args)
@@ -60,25 +52,24 @@ namespace NHaml4.Compilers.Abstract
         public void AppendNewLine()
         {
             var writeInvoke = CodeDomFluentBuilder
-                .GetCodeMethodInvokeExpression("WriteLine", CurrentTextWriterVariableName)
+                .GetCodeMethodInvokeExpression("WriteLine", TextWriterVariableName)
                 .WithPrimitiveParameter("");
 
-            RenderMethod.Statements.Add(
-                new CodeExpressionStatement { Expression = writeInvoke });
+            RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
-        public void BeginCodeBlock()
-        {
-            Depth++;
+        //public void BeginCodeBlock()
+        //{
+        //    Depth++;
 
-            RenderBeginBlock();
-        }
+        //    RenderBeginBlock();
+        //}
 
-        public void EndCodeBlock()
-        {
-            RenderEndBlock();
-            Depth--;
-        }
+        //public void EndCodeBlock()
+        //{
+        //    RenderEndBlock();
+        //    Depth--;
+        //}
 
         public string Build(string className)
         {
@@ -312,42 +303,5 @@ namespace NHaml4.Compilers.Abstract
         //    PreambleCount++;
         //}
         #endregion
-    }
-
-    internal static class CodeDomFluentBuilder
-    {
-        public static CodeMethodInvokeExpression GetCodeMethodInvokeExpression(string methodName, string targetObject)
-        {
-            var result = new CodeMethodInvokeExpression
-            {
-                Method = new CodeMethodReferenceExpression
-                {
-                    MethodName = methodName,
-                    TargetObject =
-                        new CodeVariableReferenceExpression { VariableName = targetObject }
-                }
-            };
-            return result;
-        }
-
-        public static CodeMethodInvokeExpression WithPrimitiveParameter(this CodeMethodInvokeExpression expression, object parameter)
-        {
-            expression.Parameters.Add(
-                new CodePrimitiveExpression { Value = parameter });
-            return expression;
-        }
-
-        public static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression, string parameter)
-        {
-            expression.Parameters.Add(
-                new CodeSnippetExpression { Value = parameter });
-            return expression;
-        }
-
-        public static CodeMethodInvokeExpression WithCodeMethodParameter(this CodeMethodInvokeExpression expression, CodeMethodInvokeExpression parameter)
-        {
-            expression.Parameters.Add(parameter);
-            return expression;
-        }
     }
 }

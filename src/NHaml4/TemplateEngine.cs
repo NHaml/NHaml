@@ -7,6 +7,7 @@ using NHaml4.Compilers;
 using NHaml4.Compilers.CSharp2;
 using NHaml4.TemplateResolution;
 using NHaml4.Walkers.CodeDom;
+using NHaml4.Compilers.Abstract;
 
 namespace NHaml4
 {
@@ -20,7 +21,7 @@ namespace NHaml4
             new SimpleTemplateCache(),
             new TemplateFactoryFactory(
                     new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CSharp2TemplateClassBuilder(), hamlOptions),
+                    new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
                     new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
         { }
 

@@ -46,9 +46,10 @@ namespace NHaml4.Tests.IO
         [TestCase(".className", HamlRuleEnum.Tag, Description = "Plain tag")]
         [TestCase("#id", HamlRuleEnum.Tag, Description = "Plain tag")]
         [TestCase("%Tag", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase(" /Tag", HamlRuleEnum.HtmlComment, Description = "HTML Comment")]
-        [TestCase("  -#Tag", HamlRuleEnum.HamlComment, Description = "Haml Comment")]
-        [TestCase("\t\t!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
+        [TestCase("/Tag", HamlRuleEnum.HtmlComment, Description = "HTML Comment")]
+        [TestCase("-#Tag", HamlRuleEnum.HamlComment, Description = "Haml Comment")]
+        [TestCase("!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
+        [TestCase("=Tag", HamlRuleEnum.Evaluation, Description = "DocType")]
         public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
         {
             var line = new HamlLine(testString, 0);
