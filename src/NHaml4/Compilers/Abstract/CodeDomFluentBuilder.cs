@@ -29,16 +29,19 @@ namespace NHaml4.Compilers.Abstract
             return expression;
         }
 
-        public static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression, string parameter)
+        public static CodeMethodInvokeExpression WithCodeSnippetToStringParameter(this CodeMethodInvokeExpression expression,
+            string codeSnippet)
         {
             expression.Parameters.Add(
-                new CodeSnippetExpression { Value = parameter });
+                GetCodeMethodInvokeExpression("ToString", "Convert").WithCodeSnippetParameter(codeSnippet));
+
             return expression;
         }
 
-        public static CodeMethodInvokeExpression WithCodeMethodParameter(this CodeMethodInvokeExpression expression, CodeMethodInvokeExpression parameter)
+        public static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression,
+            string codeSnippet)
         {
-            expression.Parameters.Add(parameter);
+            expression.Parameters.Add(new CodeSnippetExpression(codeSnippet));
             return expression;
         }
 

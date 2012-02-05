@@ -10,6 +10,7 @@ namespace NHaml4.Compilers
         void Append(string content);
         void AppendFormat(string content, params object[] args);
         void AppendNewLine();
+        void AppendCode(string codeSnippet);
         string Build(string className);
     }
 }

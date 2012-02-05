@@ -12,6 +12,8 @@ namespace NHaml4.Walkers.CodeDom
 
     public class HamlOptions
     {
+        private readonly IList<string> AutoClosingTags;
+
         public HamlOptions()
         {
             AutoClosingTags = new List<string> {
@@ -27,14 +29,14 @@ namespace NHaml4.Walkers.CodeDom
                                     "param"
                                 };
             HtmlVersion = CodeDom.HtmlVersion.XHtml;
+            Imports = new List<string> { "System" };
         }
 
         internal bool IsAutoClosingTag(string tagName)
         {
             return AutoClosingTags.Contains(tagName);
         }
-
-        private readonly IList<string> AutoClosingTags;
+        public IList<string> Imports { get; set; }
         public HtmlVersion HtmlVersion;
     }
 }

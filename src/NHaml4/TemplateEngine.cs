@@ -21,7 +21,7 @@ namespace NHaml4
             new SimpleTemplateCache(),
             new TemplateFactoryFactory(
                     new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
+                    new HamlDocumentWalker(new CodeDomClassBuilder(hamlOptions.Imports), hamlOptions),
                     new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
         { }
 

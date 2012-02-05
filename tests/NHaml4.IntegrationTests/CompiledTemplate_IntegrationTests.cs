@@ -27,7 +27,7 @@ namespace NHaml.IntegrationTests
             // Act
             var compiledTemplate = new TemplateFactoryFactory(
                 new HamlTreeParser(new HamlFileLexer()),
-                new HamlDocumentWalker(new CodeDomClassBuilder()),
+                new HamlDocumentWalker(new CodeDomClassBuilder(new System.Collections.Generic.List<string>())),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
 
             var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);

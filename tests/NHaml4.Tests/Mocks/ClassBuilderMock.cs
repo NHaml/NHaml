@@ -25,6 +25,11 @@ namespace NHaml4.Tests.Mocks
             _output.AppendLine();
         }
 
+        public void AppendCode(string codeSnippet)
+        {
+            throw new NotImplementedException();
+        }
+
         public string Build(string className)
         {
             return _output.ToString();

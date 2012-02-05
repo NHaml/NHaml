@@ -17,18 +17,9 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeEval == null)
                 throw new System.InvalidCastException("HamlNodeEvalWalker requires that HamlNode object be of type HamlNodeEval.");
 
-            //string outputText = nodeEval.Indent + nodeEval.Content;
-
-            //if (node.IsLeadingWhitespaceTrimmed)
-            //    outputText = outputText.TrimStart(new[] { ' ', '\n', '\r', '\t'});
-            //if (node.IsTrailingWhitespaceTrimmed)
-            //    outputText = outputText.TrimEnd(new[] { ' ', '\n', '\r', '\t'});
-
-            //if (outputText.Length > 0)
-            //{
-            //    ClassBuilder.Append(outputText);
-            //}
-            base.Walk(node);
+            if (node.IsLeadingWhitespaceTrimmed == false)
+                ClassBuilder.Append(node.Indent);
+            ClassBuilder.AppendCode(node.Content);
         }
     }
 }

@@ -12,21 +12,16 @@ namespace NHaml4.Compilers.Abstract
     {
         private const string TextWriterVariableName = "textWriter";
 
-        private readonly CodeDomProvider _codeDomProvider;
-
         public Type BaseType { get; set; }
         public int BlockDepth { get; set; }
         protected CodeMemberMethod RenderMethod { get; private set; }
         private int Depth { get; set; }
         private string ClassName { get; set; }
-        private StringBuilder Output { get; set; }
+        private IList<string> _imports;
 
-
-        public CodeDomClassBuilder()
+        public CodeDomClassBuilder(IList<string> imports)
         {
-            _codeDomProvider = new CSharpCodeProvider();
-            Output = new StringBuilder();
-
+            _imports = imports;
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
@@ -58,6 +53,15 @@ namespace NHaml4.Compilers.Abstract
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
+        public void AppendCode(string code)
+        {
+            var writeInvoke = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                .WithCodeSnippetToStringParameter(code);
+
+            RenderMethod.AddExpressionStatement(writeInvoke);
+        }
+
         //public void BeginCodeBlock()
         //{
         //    Depth++;
@@ -83,14 +87,13 @@ namespace NHaml4.Compilers.Abstract
                 var testNamespace = new CodeNamespace();
                 compileUnit.Namespaces.Add(testNamespace);
 
-                //foreach (var import in imports)
-                //{
-                //    var namespaceImport = new CodeNamespaceImport(import);
-                //    testNamespace.Imports.Add(namespaceImport);
+                foreach (var import in _imports)
+                {
+                    var namespaceImport = new CodeNamespaceImport(import);
+                    testNamespace.Imports.Add(namespaceImport);
+                }
 
-                //}
-
-                var generator = _codeDomProvider.CreateGenerator(writer);
+                var generator = new CSharpCodeProvider().CreateGenerator(writer);
                 var options = new CodeGeneratorOptions();
                 var declaration = new CodeTypeDeclaration
                 {
