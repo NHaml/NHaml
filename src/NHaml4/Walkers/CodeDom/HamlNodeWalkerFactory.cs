@@ -16,8 +16,8 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeType == typeof(HamlNodeTagId)
                 || nodeType == typeof(HamlNodeTagClass)
                 || nodeType == typeof(HamlNodeHtmlAttributeCollection)) return null;
-            else if (nodeType == typeof(HamlNodeText))
-                return new HamlNodeTextWalker(classBuilder, options);
+            else if (nodeType == typeof(HamlNodeTextContainer))
+                return new HamlNodeTextContainerWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeTag))
                 return new HamlNodeTagWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeHtmlComment))
@@ -26,6 +26,10 @@ namespace NHaml4.Walkers.CodeDom
                 return new HamlNodeHamlCommentWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeEval))
                 return new HamlNodeEvalWalker(classBuilder, options);
+            else if (nodeType == typeof(HamlNodeTextLiteral))
+                return new HamlNodeTextLiteralWalker(classBuilder, options);
+            else if (nodeType == typeof(HamlNodeTextVariable))
+                return new HamlNodeTextVariableWalker(classBuilder, options);
             else
                 throw new HamlUnknownRuleException(nodeType.FullName, sourceFileLineNo);
         }

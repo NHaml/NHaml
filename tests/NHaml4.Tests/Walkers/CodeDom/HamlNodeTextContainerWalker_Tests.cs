@@ -14,10 +14,10 @@ using NHaml4.Tests.Mocks;
 namespace NHaml4.Tests.Walkers.CodeDom
 {
     [TestFixture]
-    public class HamlNodeTextWalker_Tests
+    public class HamlNodeTextContainerWalker_Tests
     {
         private ClassBuilderMock _mockClassBuilder;
-        private HamlNodeTextWalker _walker;
+        private HamlNodeTextContainerWalker _walker;
 
         private class BogusHamlNode : HamlNode
         {
@@ -28,7 +28,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void SetUp()
         {
             _mockClassBuilder = new ClassBuilderMock();
-            _walker = new HamlNodeTextWalker(_mockClassBuilder, new HamlOptions());
+            _walker = new HamlNodeTextContainerWalker(_mockClassBuilder, new HamlOptions());
         }
 
         [Test]
@@ -42,7 +42,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IndentedNode_WritesIndent()
         {
             const string indent = "  ";
-            var node = new HamlNodeText(new HamlLine(indent + "Content", 0));
+            var node = new HamlNodeTextContainer(new HamlLine(indent + "Content", 0));
 
             _walker.Walk(node);
 
@@ -56,7 +56,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             var node = new HamlDocument();
             node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine(whiteSpace, -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine(whiteSpace, -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -68,9 +68,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             var node = new HamlDocument();
             node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -83,7 +83,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NextTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
         {
             var node = new HamlDocument();
-            node.AddChild(new HamlNodeText(new HamlLine(whiteSpace, -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine(whiteSpace, -1)));
             node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
@@ -95,9 +95,9 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleWhitespaceWithNextTagSurroundingWhitespaceRemoved_RendersTag()
         {
             var node = new HamlDocument();
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
-            node.AddChild(new HamlNodeText(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
+            node.AddChild(new HamlNodeTextContainer(new HamlLine("   ", -1)));
             node.AddChild(new HamlNodeTag(new HamlLine("p>", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);

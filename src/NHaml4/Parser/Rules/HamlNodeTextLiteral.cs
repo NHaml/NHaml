@@ -5,11 +5,13 @@ using System.Text;
 
 namespace NHaml4.Parser.Rules
 {
-    public class HamlNodeText : HamlNode
+    public class HamlNodeTextLiteral : HamlNode
     {
-        public HamlNodeText(IO.HamlLine nodeLine)
+        public HamlNodeTextLiteral(IO.HamlLine nodeLine)
             : base(nodeLine)
-        { }
+        {
+            
+        }
 
         public bool IsWhitespace()
         {

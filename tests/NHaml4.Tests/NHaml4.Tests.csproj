@@ -68,7 +68,7 @@
     <Compile Include="Parser\Rules\HamlNodeHtmlAttribute_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlComment_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag_Tests.cs" />
-    <Compile Include="Parser\Rules\HamlNodeText_Tests.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextContainer_Tests.cs" />
     <Compile Include="ProxyExtractor_Tests.cs" />
     <Compile Include="SimpleTemplateCache_Tests.cs" />
     <Compile Include="TemplateBase\Template_Tests.cs" />
@@ -79,7 +79,7 @@
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTagWalker_Tests.cs" />
-    <Compile Include="Walkers\CodeDom\HamlNodeTextWalker_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeTextContainerWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlWalkerFactory_Tests.cs" />
     <None Include="Builders\TemplateOptionsBuilder.cs" />

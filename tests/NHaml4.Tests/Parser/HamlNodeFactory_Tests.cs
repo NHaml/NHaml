@@ -10,7 +10,7 @@ namespace NHaml4.Tests.Parser
     public class HamlNodeFactory_Tests
     {
         [Test]
-        [TestCase("Test", typeof(HamlNodeText))]
+        [TestCase("Test", typeof(HamlNodeTextContainer))]
         [TestCase("%Test", typeof(HamlNodeTag))]
         [TestCase(".Test", typeof(HamlNodeTag))]
         [TestCase("#Test", typeof(HamlNodeTag))]

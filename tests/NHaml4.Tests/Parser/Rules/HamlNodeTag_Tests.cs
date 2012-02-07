@@ -87,9 +87,9 @@ namespace NHaml4.Tests.Parser.Rules
             const string templateLine = "p Hello world";
             var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
-            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeText>());
+            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeTextContainer>());
             const string expectedText = "Hello world";
-            Assert.That(((HamlNodeText)tag.Children[0]).Content, Is.EqualTo(expectedText));
+            Assert.That(((HamlNodeTextContainer)tag.Children[0]).Content, Is.EqualTo(expectedText));
         }
 
         [Test]

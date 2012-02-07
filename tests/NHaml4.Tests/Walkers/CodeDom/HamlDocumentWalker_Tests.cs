@@ -19,7 +19,7 @@ namespace NHaml4.Tests.Walkers
             // Arrange
             var content = new HamlLine("Simple content", 0);
             var document = new HamlDocument();
-            document.AddChild(new HamlNodeText(content));
+            document.AddChild(new HamlNodeTextContainer(content));
 
             // Act
             var builder = new ClassBuilderMock();

@@ -66,13 +66,13 @@ namespace NHaml4.Parser
                 if (hamlFile.EndOfFile == false
                     && hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
                 {
-                    childNode.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
+                    childNode.AddChild(new HamlNodeTextContainer(new HamlLine("\n", nodeLine.SourceFileLineNo)));
                     ParseNode(childNode, hamlFile);
                 }
                 if (hamlFile.EndOfFile == false
                     && hamlFile.CurrentLine.IndentCount >= nodeLine.IndentCount)
                 {
-                    node.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
+                    node.AddChild(new HamlNodeTextContainer(new HamlLine("\n", nodeLine.SourceFileLineNo)));
                 }
             }
         }

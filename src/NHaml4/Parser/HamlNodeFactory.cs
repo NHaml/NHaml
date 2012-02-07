@@ -15,7 +15,7 @@ namespace NHaml4.Parser
             switch (nodeLine.HamlRule)
             {
                 case HamlRuleEnum.PlainText:
-                    return new HamlNodeText(nodeLine);
+                    return new HamlNodeTextContainer(nodeLine);
                 case HamlRuleEnum.Tag:
                     return new HamlNodeTag(nodeLine);
                 case HamlRuleEnum.HamlComment:

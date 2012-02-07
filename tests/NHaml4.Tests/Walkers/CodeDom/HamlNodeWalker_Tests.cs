@@ -37,7 +37,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             const string testText = "Hello world";
             var document = new HamlDocument();
-            document.AddChild(new HamlNodeText(new HamlLine(testText, 0)));
+            document.AddChild(new HamlNodeTextContainer(new HamlLine(testText, 0)));
             _walker.Walk(document);
 
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(testText));

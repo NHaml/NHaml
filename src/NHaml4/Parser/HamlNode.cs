@@ -116,8 +116,8 @@ namespace NHaml4.Parser
 
         public bool IsWhitespaceNode()
         {
-            return (this is HamlNodeText)
-                && ((HamlNodeText)this).IsWhitespace();
+            return (this is HamlNodeTextContainer)
+                && ((HamlNodeTextContainer)this).IsWhitespace();
         }
 
         public bool IsLeadingWhitespaceTrimmed

@@ -60,7 +60,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Arrange
             HamlLine nestedText = new HamlLine("  Hello world", 0);
             var tagNode = new HamlNodeHtmlComment(new HamlLine("", 0));
-            tagNode.AddChild(new HamlNodeText(nestedText));
+            tagNode.AddChild(new HamlNodeTextContainer(nestedText));
 
             // Act
             _walker.Walk(tagNode);

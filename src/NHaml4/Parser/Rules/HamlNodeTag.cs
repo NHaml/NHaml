@@ -126,7 +126,7 @@ namespace NHaml4.Parser.Rules
             if (pos < content.Length)
             {
                 var contentLine = new HamlLine(content.Substring(pos).TrimStart(), SourceFileLineNo);
-                AddChild(new HamlNodeText(contentLine));
+                AddChild(new HamlNodeTextContainer(contentLine));
             }
         }
 

@@ -5,14 +5,13 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
+using System.Linq;
 
-namespace NHaml4.Compilers.Abstract
+namespace NHaml4.Compilers
 {
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
-
         private readonly CodeDomProvider _codeDomProvider;
-        public CompilerResults CompilerResults { get; private set; }
         protected Dictionary<string, string> ProviderOptions { get; set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
@@ -26,8 +25,6 @@ namespace NHaml4.Compilers.Abstract
         [SuppressMessage("Microsoft.Portability", "CA1903")]
         public Type Build(string source, string typeName, IList<Type> references)
         {
-        	//Debug.WriteLine(source);
-
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams, references);
             if (SupportsDebug())
@@ -48,8 +45,8 @@ namespace NHaml4.Compilers.Abstract
                 try
                 {
                     compilerParams.OutputAssembly = tempAssemblyName.FullName;
-                    CompilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
-                    if (ContainsErrors())
+                    var compilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
+                    if (ContainsErrors(compilerResults))
                     {
                         return null;
                     }
@@ -73,12 +70,12 @@ namespace NHaml4.Compilers.Abstract
             {
                 compilerParams.GenerateInMemory = true;
                 compilerParams.IncludeDebugInformation = false;
-                CompilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
-                if (ContainsErrors())
+                var compilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
+                if (ContainsErrors(compilerResults))
                 {
                     return null;
                 }
-                var assembly = CompilerResults.CompiledAssembly;
+                var assembly = compilerResults.CompiledAssembly;
                 return ExtractType(typeName, assembly);
             }
 
@@ -126,14 +123,11 @@ namespace NHaml4.Compilers.Abstract
             return assembly.GetType(typeName);
         }
 
-        private bool ContainsErrors()
+        private bool ContainsErrors(CompilerResults results)
         {
-            foreach (CompilerError result in CompilerResults.Errors)
+            foreach (CompilerError error in results.Errors)
             {
-                if (!result.IsWarning)
-                {
-                    return true;
-                }
+                if (error.IsWarning == false) return true;
             }
             return false;
         }

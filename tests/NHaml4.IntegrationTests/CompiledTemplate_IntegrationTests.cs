@@ -8,7 +8,6 @@ using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
 using NHaml4.TemplateBase;
 using NHaml4.Compilers.Abstract;
-using NHaml4.Compilers.CSharp2;
 
 namespace NHaml.IntegrationTests
 {

@@ -4,7 +4,6 @@ using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.IO;
 using NHaml4.Compilers;
-using NHaml4.Compilers.CSharp2;
 using NHaml4.TemplateResolution;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers.Abstract;

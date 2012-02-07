@@ -87,13 +87,15 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextLiteral.cs" />
     <Compile Include="TemplateFactoryFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compilers\Abstract\CodeDomClassBuilder.cs" />
-    <Compile Include="Compilers\Abstract\CodeDomFluentBuilder.cs" />
+    <Compile Include="Compilers\CodeDomClassBuilder.cs" />
+    <Compile Include="Compilers\CodeDomFluentBuilder.cs" />
     <Compile Include="Compilers\CodeDomTemplateCompiler.cs" />
-    <Compile Include="Compilers\Abstract\CodeDomTemplateTypeBuilder.cs" />
+    <Compile Include="Compilers\CodeDomTemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
     <Compile Include="Crosscutting\HtmlStringHelper.cs" />
@@ -113,7 +115,7 @@
     <Compile Include="Parser\Rules\HamlNodeHamlComment.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag.cs" />
     <Compile Include="Parser\Rules\HamlNodeTagId.cs" />
-    <Compile Include="Parser\Rules\HamlNodeText.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextContainer.cs" />
     <Compile Include="Parser\Exceptions\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
@@ -137,9 +139,13 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Walkers\CodeDom\HamlNodeTagWalker.cs" />
-    <Compile Include="Walkers\CodeDom\HamlNodeTextWalker.cs">
+    <Compile Include="Walkers\CodeDom\HamlNodeTextContainerWalker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeTextLiteralWalker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeTextVariableWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalkerException.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalkerFactory.cs" />
@@ -153,7 +159,7 @@
     <Compile Include="TemplateFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
+    <Compile Include="Compilers\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
   </ItemGroup>
   <ItemGroup>

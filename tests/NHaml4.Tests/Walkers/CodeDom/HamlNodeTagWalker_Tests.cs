@@ -98,7 +98,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             const string tagName = "p";
             const string nestedText = "Hello world";
             var tagNode = new HamlNodeTag(new HamlLine(tagName, 0));
-            tagNode.AddChild(new HamlNodeText(new HamlLine(nestedText, 0)));
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine(nestedText, 0)));
             // Act
             _tagWalker.Walk(tagNode);
 
@@ -271,8 +271,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
             var tagNode = new HamlNodeTag(new HamlLine("%p<", 0));
             tagNode.IsMultiLine = true;
 
-            tagNode.AddChild(new HamlNodeText(new HamlLine("\n", 0)));
-            tagNode.AddChild(new HamlNodeText(new HamlLine("  Hello", 0)));
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine("\n", 0)));
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine("  Hello", 0)));
   
             _tagWalker.Walk(tagNode);
 

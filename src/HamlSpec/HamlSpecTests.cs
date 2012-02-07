@@ -39,18 +39,18 @@ namespace HamlSpec
         [TestCase("tags with nested content")]
         [TestCase("tags with HTML-style attributes")]
         [TestCase("boolean attributes")]
+        [TestCase("whitespace removal")]
 
         // IN PROGRESS
-        [TestCase("whitespace removal")]
+        //[TestCase("Ruby-style interpolation")]
+        //[TestCase("tags with HTML-style attributes and variables")]
 
         // TODO
         //[TestCase("HTML escaping")]
         //[TestCase("whitespace preservation")]
-        //[TestCase("tags with HTML-style attributes and variables")]
         //[TestCase("headers")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
-        //[TestCase("Ruby-style interpolation")]
         public void ExecuteHamlsTestSuite(string groupName)
         {
             _specTestRunner.ExecuteSpecs(groupName);
