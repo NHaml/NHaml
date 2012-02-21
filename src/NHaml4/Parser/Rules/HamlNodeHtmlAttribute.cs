@@ -24,7 +24,15 @@ namespace NHaml4.Parser.Rules
             {
                 if (index < Content.Length)
                 {
-                    string value = RemoveQuotes(Content.Substring(index + 1));
+                    string value = Content.Substring(index + 1);
+                    if (IsQuoted(value))
+                    {
+                        value = RemoveQuotes(value);
+                    }
+                    else
+                    {
+                        value = "#{" + value + "}";
+                    }
                     var valueNode = new HamlNodeTextContainer(new HamlLine(value, SourceFileLineNum));
                     AddChild(valueNode);
                 }
@@ -47,6 +55,12 @@ namespace NHaml4.Parser.Rules
             {
                 return _quoteChar;
             }
+        }
+
+        private bool IsQuoted(string input)
+        {
+          return ((input[0] == '\'' && input[input.Length - 1] == '\'')
+                || (input[0] == '"' && input[input.Length - 1] == '"'));
         }
 
         private string RemoveQuotes(string input)

@@ -287,6 +287,7 @@
     "HTML-style tag with a CSS class and 'class' as a variable attribute" : {
       "haml" : ".hello(class=var)",
       "html" : "<div class='hello world'></div>",
+	  "nHamlIgnored" : true,
       "locals" : {
         "var" : "world"
       }
@@ -528,6 +529,7 @@
       "haml" : ":plain\n  #{var} interpolated: #{var}",
       "html" : "value interpolated: value",
       "optional" : true,
+	  "nHamlIgnored" : true,
       "locals" : {
         "var" : "value"
       }
@@ -545,6 +547,7 @@
       "haml" : "= '<\"&>'",
       "html" : "&lt;&quot;&amp;&gt;",
       "config" : {
+        "format" : "xhtml",
         "escape_html" : "true"
       }
     },
@@ -553,6 +556,7 @@
       "haml" : "!= '<\"&>'",
       "html" : "<\"&>",
       "config" : {
+        "format" : "xhtml",
         "escape_html" : "true"
       }
     }

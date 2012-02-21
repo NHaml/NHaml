@@ -19,5 +19,7 @@ namespace HamlSpec
             get { return _locals; }
             set { _locals = value; }
         }
+
+        public bool NHamlIgnored { get; set; }
     }
 }

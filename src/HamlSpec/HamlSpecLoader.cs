@@ -24,7 +24,7 @@ namespace HamlSpec
             foreach (var key in deserializedFile.Keys)
             {
                 var entry = (IDictionary<string, object>)deserializedFile[key];
-                result.Add(key, entry.Select(x => GetHamlSpec(key, x)));
+                result.Add(key, entry.Select(x => GetHamlSpec(key, x)).ToList().Where(x => x.NHamlIgnored == false));
             }
 
             return result;
@@ -51,6 +51,11 @@ namespace HamlSpec
             if (properties.ContainsKey("config"))
             {
                 result.Format = GetDictionary(properties["config"])["format"].ToString();
+            }
+            if (properties.ContainsKey("nHamlIgnored"))
+            {
+                result.NHamlIgnored = Boolean.Parse(properties["nHamlIgnored"].ToString());
+
             }
             if (properties.ContainsKey("locals"))
             {
