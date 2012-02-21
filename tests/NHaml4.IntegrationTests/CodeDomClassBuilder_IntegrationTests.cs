@@ -30,7 +30,7 @@ namespace NHaml4.IntegrationTests
         {
             var classBuilder = new CodeDomClassBuilder(new List<string>());
             classBuilder.AppendAttributeNameValuePair("name",
-                new List<string> { "value", "#{Variable}", "value"}, '\"');
+                new List<string> { "value", "#{Variable}", "value" }, '\"');
             string templateSource = classBuilder.Build(ClassName);
             var result = GenerateTemplateFromSource(templateSource);
 
@@ -40,6 +40,20 @@ namespace NHaml4.IntegrationTests
             var writer = new StringWriter();
             result.Render(writer, TemplateBase.HtmlVersion.XHtml, dictionary);
             Assert.That(writer.ToString(), Is.EqualTo(" name=\"valueResultvalue\""));
+        }
+
+        [Test]
+        public void AppendMultipleAttributeNameValuePairs_XHtml4_CompilesValidTemplate()
+        {
+            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
+            classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
+            string templateSource = classBuilder.Build(ClassName);
+            var result = GenerateTemplateFromSource(templateSource);
+
+            var writer = new StringWriter();
+            result.Render(writer, TemplateBase.HtmlVersion.XHtml);
+            Assert.That(writer.ToString(), Is.EqualTo(" name=\"value\" name=\"value\""));
         }
 
         private TemplateBase.Template GenerateTemplateFromSource(string templateSource)

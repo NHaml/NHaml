@@ -42,8 +42,8 @@ namespace HamlSpec
         [TestCase("whitespace removal")]
 
         // IN PROGRESS
-        //[TestCase("Ruby-style interpolation")]
-        //[TestCase("tags with HTML-style attributes and variables")]
+        [TestCase("Ruby-style interpolation")]
+        [TestCase("tags with HTML-style attributes and variables")]
 
         // TODO
         //[TestCase("HTML escaping")]

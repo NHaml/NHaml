@@ -11,7 +11,7 @@ namespace NHaml4.Parser.Rules
     public class HamlNodeHtmlAttribute : HamlNode
     {
         private string _name = string.Empty;
-        private char _quoteChar = '\"';
+        private char _quoteChar = '\'';
 
         public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
             : base(sourceFileLineNo, nameValuePair)

@@ -110,7 +110,7 @@ namespace NHaml4.Tests.Compilers
             var classBuilder = new CodeDomClassBuilder(new List<string>());
             classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value" }, '\"');
             string result = classBuilder.Build(ClassName);
-            Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value.ToString(), '\\\"')"));
+            Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value_0.ToString(), '\\\"')"));
         }
 
         [Test]
@@ -119,9 +119,9 @@ namespace NHaml4.Tests.Compilers
             var classBuilder = new CodeDomClassBuilder(new List<string>());
             classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value1", "#{variable}" }, '\"');
             string result = classBuilder.Build(ClassName);
-            Assert.That(result, Is.StringContaining("System.Text.StringBuilder value = new System.Text.StringBuilder();"));
-            Assert.That(result, Is.StringContaining("value.Append(\"value1\");"));
-            Assert.That(result, Is.StringContaining("value.Append(base.RenderValueOrKeyAsString(\"variable\"));"));
+            Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));
+            Assert.That(result, Is.StringContaining(".Append(\"value1\");"));
+            Assert.That(result, Is.StringContaining(".Append(base.RenderValueOrKeyAsString(\"variable\"));"));
         }
     }
 }

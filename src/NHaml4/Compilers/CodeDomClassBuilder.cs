@@ -91,8 +91,9 @@ namespace NHaml4.Compilers.Abstract
 
         public void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse)
         {
+            string variableName = "value_" + RenderMethod.Statements.Count;
             RenderMethod.AddStatement(
-                CodeDomFluentBuilder.GetDeclaration(typeof(StringBuilder), "value",
+                CodeDomFluentBuilder.GetDeclaration(typeof(StringBuilder), variableName,
                 new CodeObjectCreateExpression("System.Text.StringBuilder", new CodeExpression[] { })));
 
             foreach (var fragment in valueFragments)
@@ -109,14 +110,14 @@ namespace NHaml4.Compilers.Abstract
                 }
 
                 RenderMethod.AddExpressionStatement(
-                    CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Append", "value")
+                    CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Append", variableName)
                     .WithParameter(parameter));
             }
 
             var outputExpression = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("base.RenderAttributeNameValuePair")
                 .WithInvokePrimitiveParameter(name)
-                .WithParameter(CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "value"))
+                .WithParameter(CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", variableName))
                 .WithInvokePrimitiveParameter(quoteToUse);
 
             RenderMethod.AddExpressionStatement(

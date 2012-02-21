@@ -49,7 +49,7 @@ namespace NHaml4.Tests.Parser.Rules
         [Test]
         [TestCase("a='b'", '\'')]
         [TestCase("a=\"b\"", '\"')]
-        [TestCase("a=b", '\"')]
+        [TestCase("a=b", '\'')]
         public void Constructor_ValidAttributeStrings_ExtractsQuoteCharCorrectly(
             string attributeString, char expectedQuoteChar)
         {

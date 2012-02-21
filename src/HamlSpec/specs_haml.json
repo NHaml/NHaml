@@ -270,7 +270,7 @@
   "tags with HTML-style attributes and variables": {
     "HTML-style interpolated attribute" : {
       "haml" : "%p(a=\"#{var}\")",
-      "html" : "<p a='value'></p>",
+      "html" : "<p a=\"value\"></p>",
       "locals" : {
         "var" : "value"
       }
