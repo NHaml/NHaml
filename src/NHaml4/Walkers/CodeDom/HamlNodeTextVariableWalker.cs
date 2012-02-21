@@ -17,7 +17,9 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeText == null)
                 throw new System.InvalidCastException("HamlNodeTextVariableWalker requires that HamlNode object be of type HamlNodeTextVariable.");
 
-            ClassBuilder.Append(node.Content);
+            string variableName = node.Content.Substring(2, node.Content.Length-3);
+
+            ClassBuilder.AppendVariable(variableName);
         }
     }
 }

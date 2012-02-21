@@ -11,6 +11,9 @@ namespace NHaml4.Compilers
         void AppendFormat(string content, params object[] args);
         void AppendNewLine();
         void AppendCode(string codeSnippet);
+        void AppendVariable(string variableName);
         string Build(string className);
+        void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse);
+        void AppendSelfClosingTagSuffix();
     }
 }

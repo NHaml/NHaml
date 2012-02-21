@@ -36,39 +36,49 @@ namespace NHaml4.Walkers.CodeDom
 
         private void AppendAttributes(HamlNodeTag nodeTag)
         {
-            ClassBuilder.Append(MakeClassAttribute(nodeTag));
-            ClassBuilder.Append(MakeIdAttribute(nodeTag));
+            MakeClassAttribute(nodeTag);
+            MakeIdAttribute(nodeTag);
             WalkHtmlStyleAttributes(nodeTag);
         }
 
-        private string MakeClassAttribute(HamlNodeTag nodeTag)
+        private void MakeClassAttribute(HamlNodeTag nodeTag)
         {
-            var classes = (from collection in nodeTag.Children
-                           from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                           where ((HamlNodeHtmlAttribute)attr).Name == "class"
-                           select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
+            var classValues = new List<string>();
+            classValues.AddRange(from collection in nodeTag.Children
+                                 from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                                 where ((HamlNodeHtmlAttribute)attr).Name == "class"
+                                 from attrFragment in attr.Children
+                                 select attrFragment.Content);
 
-            var classesToAdd = nodeTag.Children.OfType<HamlNodeTagClass>()
-                .Select(x => x.Content).ToList();
+            classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>()
+                .Select(x => " " + x.Content));
 
-            classes.AddRange(classesToAdd);
-
-            return (classes.Any())
-                ? string.Format(" class='{0}'", string.Join(" ", classes.ToArray()))
-                : "";
+            if (classValues.Any())
+            {
+                classValues[0] = classValues[0].Trim();
+                ClassBuilder.AppendAttributeNameValuePair("class", classValues, '\'');
+            }
         }
 
-        private string MakeIdAttribute(HamlNodeTag nodeTag)
+        private void MakeIdAttribute(HamlNodeTag nodeTag)
         {
-            var idAttributes = (from collection in nodeTag.Children
-                                from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                                where ((HamlNodeHtmlAttribute)attr).Name == "id"
-                                select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
+            var idValues = new List<string>();
+            idValues.AddRange(from collection in nodeTag.Children
+                              from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                              where ((HamlNodeHtmlAttribute)attr).Name == "id"
+                              from attrFragment in attr.Children
+                              select attrFragment.Content);
+
 
             var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
-            if (idTag != null) idAttributes.Insert(0, idTag.Content);
+            if (idTag != null) idValues.Insert(0, idTag.Content);
 
-            return idAttributes.Any() ? " id='" + string.Join("_", idAttributes.ToArray()) + "'" : "";
+            if (idValues.Any())
+            {
+                for (int c = idValues.Count-1; c > 0; c--)
+                    idValues.Insert(c, "_");
+                ClassBuilder.AppendAttributeNameValuePair("id", idValues, '\'');
+            }
         }
 
         private void WalkHtmlStyleAttributes(HamlNodeTag nodeTag)
@@ -84,9 +94,7 @@ namespace NHaml4.Walkers.CodeDom
         private void AppendTagBodyAndClose(HamlNodeTag nodeTag)
         {
             if (nodeTag.IsSelfClosing || Options.IsAutoClosingTag(nodeTag.TagName))
-                ClassBuilder.Append(Options.HtmlVersion == HtmlVersion.XHtml ?
-                    " />"
-                    : ">");
+                ClassBuilder.AppendSelfClosingTagSuffix();
             else
             {
                 ClassBuilder.Append(">");

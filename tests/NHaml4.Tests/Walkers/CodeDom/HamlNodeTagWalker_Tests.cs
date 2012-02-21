@@ -10,6 +10,7 @@ using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
 using NHaml4.Tests.Mocks;
+using NHaml4.TemplateBase;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -58,23 +59,6 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Assert
             const string expectedTag = "<foo />";
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedTag));
-        }
-
-        [Test]
-        [TestCase(HtmlVersion.Html4, ">")]
-        [TestCase(HtmlVersion.Html5, ">")]
-        [TestCase(HtmlVersion.XHtml, " />")]
-        public void Walk_AutoSelfClosingTag_AppendsCorrectTag(HtmlVersion htmlVersion, string expectedFormat)
-        {
-            // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("br", 0));
-
-            // Act
-            _hamlOptions.HtmlVersion = htmlVersion;
-            _tagWalker.Walk(tagNode);
-
-            // Assert
-            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedFormat));
         }
 
         [Test]
@@ -218,7 +202,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            const string expectedIdAttr = "id='id1_id2'";
+            const string expectedIdAttr = @"id='id1_id2'";
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
         }
 
@@ -241,7 +225,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         [TestCase("p", "()", "<p></p>")]
         [TestCase("p/", "()", "<p />")]
-        [TestCase("p", "(a='b')", "<p a='b'></p>")]
+        [TestCase("p", "(a='b')", "<p a=\'b\'></p>")]
         public void Walk_EmptyAttributeCollectionNode_WritesCorrectAttributes(string tag, string attributes, string expectedOutput)
         {
             var tagNode = new HamlNodeTag(new HamlLine(tag, 0));

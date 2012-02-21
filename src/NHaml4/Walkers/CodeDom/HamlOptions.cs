@@ -5,11 +5,6 @@ using System.Text;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public enum HtmlVersion
-    {
-        Html4, Html5, XHtml
-    }
-
     public class HamlOptions
     {
         private readonly IList<string> AutoClosingTags;
@@ -28,7 +23,6 @@ namespace NHaml4.Walkers.CodeDom
                                     "meta",
                                     "param"
                                 };
-            HtmlVersion = CodeDom.HtmlVersion.XHtml;
             Imports = new List<string> { "System" };
         }
 
@@ -37,6 +31,5 @@ namespace NHaml4.Walkers.CodeDom
             return AutoClosingTags.Contains(tagName);
         }
         public IList<string> Imports { get; set; }
-        public HtmlVersion HtmlVersion;
     }
 }

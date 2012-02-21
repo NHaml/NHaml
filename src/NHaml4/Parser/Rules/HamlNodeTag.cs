@@ -66,9 +66,9 @@ namespace NHaml4.Parser.Rules
                 {
                     string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { ')' });
                     if (attributes[attributes.Length - 1] != ')')
-                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNo);
+                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNum);
                     pos++;
-                    var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNo, attributes);
+                    var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNum, attributes);
                     AddChild(attributesNode);
                 }
             }
@@ -125,7 +125,7 @@ namespace NHaml4.Parser.Rules
         {
             if (pos < content.Length)
             {
-                var contentLine = new HamlLine(content.Substring(pos).TrimStart(), SourceFileLineNo);
+                var contentLine = new HamlLine(content.Substring(pos).TrimStart(), SourceFileLineNum);
                 AddChild(new HamlNodeTextContainer(contentLine));
             }
         }
@@ -161,7 +161,7 @@ namespace NHaml4.Parser.Rules
         {
             pos++;
             string tagId = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagId(SourceFileLineNo, tagId);
+            var newTag = new HamlNodeTagId(SourceFileLineNum, tagId);
             AddChild(newTag);
         }
 
@@ -169,7 +169,7 @@ namespace NHaml4.Parser.Rules
         {
             pos++;
             string className = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagClass(SourceFileLineNo, className);
+            var newTag = new HamlNodeTagClass(SourceFileLineNum, className);
             AddChild(newTag);
         }
 

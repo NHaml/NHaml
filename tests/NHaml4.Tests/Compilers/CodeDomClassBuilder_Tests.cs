@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using NUnit.Framework;
 using NHaml4.Compilers.Abstract;
+using NHaml4.TemplateBase;
 
 namespace NHaml4.Tests.Compilers
 {
@@ -12,46 +13,43 @@ namespace NHaml4.Tests.Compilers
     {
         const string ClassName = "Class1";
 
-        [TestFixture]
-        public class Build_EmptyClassBuilder
+        [Test]
+        public void Build_EmptyClassBuilder_ContainsCorrectUsingStatements()
         {
-            private string _code;
+            var code = BuildEmptyClass();
+            Assert.That(code, Is.StringContaining("using System;"));
+            Assert.That(code, Is.StringContaining("using System.IO;"));
+        }
 
-            [SetUp]
-            public void Setup()
-            {
-                var classBuilder = new CodeDomClassBuilder(
-                    new List<string> { "System", "System.IO" }
-                );
-                _code = classBuilder.Build(ClassName);
-            }
+        [Test]
+        public void Build_EmptyClassBuilder_CreatesCorrectClass()
+        {
+            var code = BuildEmptyClass();
+            Assert.That(code, Is.StringContaining("class " + ClassName));
+        }
 
-            [Test]
-            public void ContainsCorrectUsingStatements()
-            {
-                Assert.That(_code, Is.StringContaining("using System;"));
-                Assert.That(_code, Is.StringContaining("using System.IO;"));
-            }
+        [Test]
+        public void Build_EmptyClassBuilder_InheritsFromCorrectClass()
+        {
+            var code = BuildEmptyClass();
+            string expectedCode = ": " + typeof(NHaml4.TemplateBase.Template).FullName;
+            Assert.That(code, Is.StringContaining(expectedCode));
+        }
 
-            [Test]
-            public void CreatesCorrectClass()
-            {
-                Assert.That(_code, Is.StringContaining("class " + ClassName));
-            }
+        [Test]
+        public void Build_EmptyClassBuilder_ContainsRenderMethod()
+        {
+            var code = BuildEmptyClass();
+            string expectedCode = "protected override void CoreRender(System.IO.TextWriter textWriter)";
+            Assert.That(code, Is.StringContaining(expectedCode));
+        }
 
-            [Test]
-            public void InheritsFromCorrectClass()
-            {
-                string expectedCode = ": " + typeof(NHaml4.TemplateBase.Template).FullName;
-                Assert.That(_code, Is.StringContaining(expectedCode));
-            }
-
-            [Test]
-            public void ContainsRenderMethod()
-            {
-                string expectedCode = "protected override void CoreRender(System.IO.TextWriter textWriter)";
-                Assert.That(_code, Is.StringContaining(expectedCode));
-            }
+        private object BuildEmptyClass()
+        {
+            var classBuilder = new CodeDomClassBuilder(
+                new List<string> { "System", "System.IO" }
+            );
+            return classBuilder.Build(ClassName);
         }
 
         [Test]
@@ -83,6 +81,47 @@ namespace NHaml4.Tests.Compilers
             string result = classBuilder.Build(ClassName);
 
             Assert.That(result, Is.StringContaining("textWriter.Write(Convert.ToString(1+1));"));
+        }
+
+        [Test]
+        public void AppendVariable_ValidVariableName_AppendsRenderValueOrKeyAsString()
+        {
+            const string variableName = "key";
+            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            classBuilder.AppendVariable(variableName);
+
+            string result = classBuilder.Build(ClassName);
+
+            Assert.That(result, Is.StringContaining("textWriter.Write(RenderValueOrKeyAsString(\"" + variableName + "\"));"));
+        }
+
+        [Test]
+        public void AppendSelfClosingTagSuffix_AppendsCorrectOutput()
+        {
+            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            classBuilder.AppendSelfClosingTagSuffix();
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining("base.AppendSelfClosingTagSuffix()"));
+        }
+
+        [Test]
+        public void AppendAttributeNameValuePair_AppendsOutputCallingTemplateAppendAttributeNameValuePair()
+        {
+            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value" }, '\"');
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value.ToString(), '\\\"')"));
+        }
+
+        [Test]
+        public void AppendAttributeNameValuePair_BuildsValueCorrectly()
+        {
+            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value1", "#{variable}" }, '\"');
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining("System.Text.StringBuilder value = new System.Text.StringBuilder();"));
+            Assert.That(result, Is.StringContaining("value.Append(\"value1\");"));
+            Assert.That(result, Is.StringContaining("value.Append(base.RenderValueOrKeyAsString(\"variable\"));"));
         }
     }
 }

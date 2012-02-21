@@ -19,14 +19,14 @@ namespace NHaml4.Parser.Rules
         private void ParseChildren(string attributeCollection)
         {
             if (Content[0] != '(')
-                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.", SourceFileLineNo);
+                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.", SourceFileLineNum);
 
             int index = 1;
             while (index < attributeCollection.Length)
             {
                 string nameValuePair = GetNextAttributeToken(attributeCollection, ref index);
                 if (!string.IsNullOrEmpty(nameValuePair))
-                    AddChild(new HamlNodeHtmlAttribute(SourceFileLineNo, nameValuePair));
+                    AddChild(new HamlNodeHtmlAttribute(SourceFileLineNum, nameValuePair));
                 index++;
             }
         }

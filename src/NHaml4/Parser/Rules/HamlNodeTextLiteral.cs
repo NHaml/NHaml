@@ -7,8 +7,8 @@ namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTextLiteral : HamlNode
     {
-        public HamlNodeTextLiteral(IO.HamlLine nodeLine)
-            : base(nodeLine)
+        public HamlNodeTextLiteral(string content, int sourceLineNum)
+            : base(sourceLineNum, content)
         {
             
         }

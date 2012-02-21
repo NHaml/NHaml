@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.Parser.Exceptions;
+using NHaml4.IO;
 
 namespace NHaml4.Parser.Rules
 {
@@ -19,36 +20,68 @@ namespace NHaml4.Parser.Rules
             int index = 0;
             while (index < nodeLine.Content.Length)
             {
-                string token = GetNextToken(nodeLine.Content, ref index);
-                if (token.Length > 3 && token.StartsWith("#{") && token.EndsWith("}"))
-                    AddChild(new HamlNodeTextVariable(nodeLine));
-                else
-                    AddChild(new HamlNodeTextLiteral(nodeLine));
+                var node = GetNextNode(nodeLine.Content, ref index);
+                AddChild(node);
             }
         }
 
-        private string GetNextToken(string content, ref int index)
+        private HamlNode GetNextNode(string content, ref int index)
         {
             int startIndex = index;
-
             bool isInTag = IsTagToken(content, index);
+            bool isEscaped = false;
+
+            string result = string.Empty;
+
             for (; index < content.Length; index++)
             {
                 if (isInTag)
                 {
+                    result += content[index];
                     if (IsEndTagToken(content, index))
                     {
                         index++;
-                        isInTag = false;
-                        break;
+                        if (result.Length > 3)
+                            return new HamlNodeTextVariable(result, SourceFileLineNum);
+                        else
+                            return new HamlNodeTextLiteral(result, SourceFileLineNum);
+                    }
+                }
+                else if (IsTagToken(content, index))
+                {
+                    if (isEscaped == false)
+                        return new HamlNodeTextLiteral(result, SourceFileLineNum);
+                    else
+                    {
+                        result = RemoveEscapeCharacter(result) + content[index];
                     }
                 }
                 else
                 {
-                    if (IsTagToken(content, index)) break;
+                    result += content[index];
+                    if (IsEscapeToken(content, index))
+                    {
+                        if (isEscaped) result = RemoveEscapeCharacter(result);
+                        isEscaped = !isEscaped;
+                    }
                 }
             }
-            return content.Substring(startIndex, index - startIndex);
+
+            if (isInTag)
+                throw new HamlMalformedVariableException(result, SourceFileLineNum);
+
+            return new HamlNodeTextLiteral(result, SourceFileLineNum);
+        }
+
+        private static string RemoveEscapeCharacter(string result)
+        {
+            result = result.Substring(0, result.Length - 1);
+            return result;
+        }
+
+        private bool IsEscapeToken(string content, int index)
+        {
+            return (content[index] == '\\');
         }
 
         private bool IsEndTagToken(string content, int index)

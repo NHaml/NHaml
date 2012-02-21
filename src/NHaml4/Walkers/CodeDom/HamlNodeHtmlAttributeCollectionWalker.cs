@@ -3,6 +3,7 @@ using NHaml4.Parser.Rules;
 using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.Parser.Exceptions;
+using System.Linq;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -22,27 +23,18 @@ namespace NHaml4.Walkers.CodeDom
             {
                 if (childNode.Content.StartsWith("class=")
                     || childNode.Content.StartsWith("id=")) continue;
-                ClassBuilder.Append(MakeAttribute(childNode));
+                MakeAttribute(childNode);
             }
         }
 
-        private string MakeAttribute(HamlNode childNode)
+        private void MakeAttribute(HamlNode childNode)
         {
             var attributeNode = childNode as HamlNodeHtmlAttribute;
             if (attributeNode == null)
                 throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node",
-                    childNode.SourceFileLineNo);
+                    childNode.SourceFileLineNum);
 
-            if ((string.IsNullOrEmpty(attributeNode.Name)) || (attributeNode.Value == "false"))
-                return "";
-            if ((attributeNode.Value == "true") || (attributeNode.Value == ""))
-            {
-                if (Options.HtmlVersion == HtmlVersion.XHtml)
-                    return " " + attributeNode.Name + "='" + attributeNode.Name + "'";
-                else
-                    return " " + attributeNode.Name;
-            }
-            return " " + attributeNode.Name + "=" + attributeNode.Value;
+            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, attributeNode.Children.Select(x => x.Content), attributeNode.QuoteChar);
         }
     }
 }

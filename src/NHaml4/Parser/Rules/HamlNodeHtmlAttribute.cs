@@ -4,13 +4,14 @@ using System.Linq;
 using System.Text;
 using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
+using NHaml4.IO;
 
 namespace NHaml4.Parser.Rules
 {
     public class HamlNodeHtmlAttribute : HamlNode
     {
         private string _name = string.Empty;
-        private string _value = string.Empty;
+        private char _quoteChar = '\"';
 
         public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
             : base(sourceFileLineNo, nameValuePair)
@@ -22,11 +23,15 @@ namespace NHaml4.Parser.Rules
             if (!string.IsNullOrEmpty(_name))
             {
                 if (index < Content.Length)
-                    _value = Content.Substring(index + 1);
+                {
+                    string value = RemoveQuotes(Content.Substring(index + 1));
+                    var valueNode = new HamlNodeTextContainer(new HamlLine(value, SourceFileLineNum));
+                    AddChild(valueNode);
+                }
             }
             else
             {
-                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"", SourceFileLineNo);
+                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"", SourceFileLineNum);
             }
         }
 
@@ -36,24 +41,26 @@ namespace NHaml4.Parser.Rules
             set { _name = value; }
         }
 
-        public string Value
-        {
-            get { return _value; }
-            set { _value = value; }
-        }
-
-        public string ValueWithoutQuotes
+        public char QuoteChar
         {
             get
             {
-                if (_value.Length < 2) return _value;
-
-                if ((_value[0] == '\'' && _value[_value.Length - 1] == '\'')
-                    || (_value[0] == '"' && _value[_value.Length - 1] == '"'))
-                    return _value.Substring(1, _value.Length - 2);
-                
-                return _value;
+                return _quoteChar;
             }
+        }
+
+        private string RemoveQuotes(string input)
+        {
+            if (input.Length < 2) return input;
+
+            if ((input[0] == '\'' && input[input.Length - 1] == '\'')
+                || (input[0] == '"' && input[input.Length - 1] == '"'))
+            {
+                _quoteChar = input[0];
+                return input.Substring(1, input.Length - 2);
+            }
+
+            return input;
         }
     }
 }

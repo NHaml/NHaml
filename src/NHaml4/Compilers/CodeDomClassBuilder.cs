@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Microsoft.CSharp;
+using System.Linq;
 
 namespace NHaml4.Compilers.Abstract
 {
@@ -34,7 +35,7 @@ namespace NHaml4.Compilers.Abstract
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
-                .WithPrimitiveParameter(line);
+                .WithInvokePrimitiveParameter(line);
 
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
@@ -48,7 +49,7 @@ namespace NHaml4.Compilers.Abstract
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("WriteLine", TextWriterVariableName)
-                .WithPrimitiveParameter("");
+                .WithInvokePrimitiveParameter("");
 
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
@@ -57,7 +58,20 @@ namespace NHaml4.Compilers.Abstract
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
-                .WithCodeSnippetToStringParameter(code);
+                .WithInvokeCodeSnippetToStringParameter(code);
+
+            RenderMethod.AddExpressionStatement(writeInvoke);
+        }
+
+        public void AppendVariable(string variableName)
+        {
+            var renderValueOrKeyAsString = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("RenderValueOrKeyAsString")
+                .WithInvokePrimitiveParameter(variableName);
+
+            var writeInvoke = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                .WithInvokeCodeParameter(renderValueOrKeyAsString);
 
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
@@ -74,6 +88,53 @@ namespace NHaml4.Compilers.Abstract
         //    RenderEndBlock();
         //    Depth--;
         //}
+
+        public void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse)
+        {
+            RenderMethod.AddStatement(
+                CodeDomFluentBuilder.GetDeclaration(typeof(StringBuilder), "value",
+                new CodeObjectCreateExpression("System.Text.StringBuilder", new CodeExpression[] { })));
+
+            foreach (var fragment in valueFragments)
+            {
+                CodeExpression parameter;
+                if (fragment.StartsWith("#{") && fragment.EndsWith("}"))
+                {
+                    parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("base.RenderValueOrKeyAsString")
+                        .WithInvokePrimitiveParameter(fragment.Substring(2, fragment.Length-3));
+                }
+                else
+                {
+                    parameter = new CodePrimitiveExpression { Value = fragment };
+                }
+
+                RenderMethod.AddExpressionStatement(
+                    CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Append", "value")
+                    .WithParameter(parameter));
+            }
+
+            var outputExpression = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("base.RenderAttributeNameValuePair")
+                .WithInvokePrimitiveParameter(name)
+                .WithParameter(CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "value"))
+                .WithInvokePrimitiveParameter(quoteToUse);
+
+            RenderMethod.AddExpressionStatement(
+                CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                .WithParameter(outputExpression));
+        }
+
+        public void AppendSelfClosingTagSuffix()
+        {
+            var renderValueOrKeyAsString = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("base.AppendSelfClosingTagSuffix");
+
+            var writeInvoke = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                .WithInvokeCodeParameter(renderValueOrKeyAsString);
+
+            RenderMethod.AddExpressionStatement(writeInvoke);
+        }
 
         public string Build(string className)
         {
@@ -306,5 +367,6 @@ namespace NHaml4.Compilers.Abstract
         //    PreambleCount++;
         //}
         #endregion
+
     }
 }
