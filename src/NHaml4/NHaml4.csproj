@@ -87,8 +87,11 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Compilers\ITemplateFactoryCompiler.cs" />
+    <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextLiteral.cs" />
+    <Compile Include="TemplateBase\HtmlVersion.cs" />
     <Compile Include="TemplateFactoryFactory.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -120,7 +123,6 @@
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
     <Compile Include="Parser\HamlTreeParser.cs" />
-    <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />

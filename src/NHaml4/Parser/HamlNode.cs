@@ -14,7 +14,7 @@ namespace NHaml4.Parser
         private readonly IList<HamlNode> _children = new List<HamlNode>();
         private bool _multiLine;
         private readonly HamlLine _line;
-        private int _sourceFileLineNo;
+        private int _sourceFileLineNum;
 
         //public HamlLine HamlLine
         //{
@@ -25,12 +25,12 @@ namespace NHaml4.Parser
         {
             _line = nodeLine;
             _content = nodeLine.Content;
-            _sourceFileLineNo = _line.SourceFileLineNo;
+            _sourceFileLineNum = _line.SourceFileLineNo;
         }
 
-        protected HamlNode(int sourceFileLineNo, string content)
+        protected HamlNode(int sourceFileLineNum, string content)
         {
-            _sourceFileLineNo = sourceFileLineNo;
+            _sourceFileLineNum = sourceFileLineNum;
             _content = content;
         }
 
@@ -65,15 +65,15 @@ namespace NHaml4.Parser
             }
         }
 
-        public int SourceFileLineNo
+        public int SourceFileLineNum
         {
             protected set
             {
-                _sourceFileLineNo = value;
+                _sourceFileLineNum = value;
             }
             get
             {
-                return _sourceFileLineNo;
+                return _sourceFileLineNum;
             }
         }
 

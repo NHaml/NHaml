@@ -12,12 +12,12 @@ namespace NHaml4.IO
         private HamlRuleEnum _hamlRule;
         private string _content;
         private string _indent;
-        private readonly int _sourceFileLineNo;
+        private readonly int _sourceFileLineNum;
 
-        public HamlLine(string currentLine, int sourceFileLineNo)
+        public HamlLine(string currentLine, int sourceFileLineNum)
         {
             ParseHamlLine(currentLine);
-            _sourceFileLineNo = sourceFileLineNo;
+            _sourceFileLineNum = sourceFileLineNum;
         }
 
         public int IndentCount
@@ -27,7 +27,7 @@ namespace NHaml4.IO
 
         public int SourceFileLineNo
         {
-            get { return _sourceFileLineNo; }
+            get { return _sourceFileLineNum; }
         }
 
         public HamlRuleEnum HamlRule
