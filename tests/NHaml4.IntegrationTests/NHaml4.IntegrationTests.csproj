@@ -54,7 +54,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CodeDomClassBuilder_IntegrationTests.cs" />
     <Compile Include="CompiledTemplate_IntegrationTests.cs" />
+    <Compile Include="HttpUtility.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
