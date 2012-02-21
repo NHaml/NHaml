@@ -62,27 +62,30 @@ namespace HamlSpec
 
         private void ExecuteSingleTest(HamlSpec test)
         {
-            var template = CreateTemplate(test.Haml, test.Format);
+            var template = CreateTemplate(test.Haml);
             var output = new StringWriter();
             output.NewLine = "\n";
-            template.Render(output);
+            template.Render(output, GetHtmlVersion(test.Format), test.Locals);
 
             var message = string.Format("{0} - {1}\n\"{2}\"", test.GroupName, test.TestName, test.Haml);
             Assert.That(output.ToString(), Is.EqualTo(test.ExpectedHtml), message);
         }
 
-        private Template CreateTemplate(string hamlTemplate, string htmlFormat)
+        private HtmlVersion GetHtmlVersion(string htmlFormat)
+        {
+            if (htmlFormat == "html4")
+                return HtmlVersion.Html4;
+            else if (htmlFormat == "html5")
+                return HtmlVersion.Html5;
+
+            return HtmlVersion.XHtml;
+        }
+
+        private Template CreateTemplate(string hamlTemplate)
         {
             var viewSource = ViewSourceBuilder.Create(hamlTemplate);
 
             var hamlOptions = new HamlOptions();
-            if (htmlFormat == "html4")
-                hamlOptions.HtmlVersion = HtmlVersion.Html4;
-            else if (htmlFormat == "html5")
-                hamlOptions.HtmlVersion = HtmlVersion.Html5;
-            else if (htmlFormat == "xhtml")
-                hamlOptions.HtmlVersion = HtmlVersion.XHtml;
-
             var templateEngine = new TemplateEngine(hamlOptions);
             var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource);
             return compiledTemplate.CreateTemplate();

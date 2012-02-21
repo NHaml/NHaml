@@ -52,6 +52,10 @@ namespace HamlSpec
             {
                 result.Format = GetDictionary(properties["config"])["format"].ToString();
             }
+            if (properties.ContainsKey("locals"))
+            {
+                result.Locals = GetDictionary(properties["locals"]);
+            }
 
             return result;
         }
