@@ -8,6 +8,11 @@ namespace NHaml4.TemplateBase
     public abstract class Template
     {
         private IDictionary<string, object> _viewData;
+        public IDictionary<string, object> ViewData
+        {
+            get { return _viewData; }
+        }
+
         private HtmlVersion _htmlVersion;
 
         public void Render(TextWriter writer)

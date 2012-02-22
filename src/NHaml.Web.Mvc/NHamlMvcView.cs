@@ -55,7 +55,7 @@ namespace NHaml.Web.Mvc
 
         public ViewContext ViewContext { get; private set; }
 
-        public ViewDataDictionary<TModel> ViewData { get; private set; }
+        public new ViewDataDictionary<TModel> ViewData { get; private set; }
 
         public TempDataDictionary TempData
         {

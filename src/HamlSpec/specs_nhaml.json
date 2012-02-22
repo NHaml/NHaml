@@ -1,13 +1,39 @@
 {
   "Eval" : {
     "a string constant" : {
-      "haml" : "= \"test\"",
+      "haml" : "=\"test\"",
       "html" : "test"
     },
 
     "an integer constant" : {
-      "haml" : "= 1",
+      "haml" : "=1",
       "html" : "1"
+    },
+
+	"a viewbag variable" : {
+	  "haml" : "=ViewData[\"var\"]",
+	  "html" : "hello world",
+	  "locals" : {
+        "var" : "hello world"
+      }
+	}
+  },
+  
+  "Inline code" : {
+    "a string constant" : {
+      "haml" : "-ViewData[\"var\"] = \"hello\"\n= ViewData[\"var\"]",
+	  "html" : "hello"
+    }
+  },
+
+  "Code flow" : {
+    "If statement with true eval" : {
+      "haml" : "-if (true)\n  =Hello",
+	  "html" : "Hello"
+    },
+    "If statement with false eval" : {
+      "haml" : "-if (false)\n  =Hello",
+	  "html" : ""
     }
   }
 }
