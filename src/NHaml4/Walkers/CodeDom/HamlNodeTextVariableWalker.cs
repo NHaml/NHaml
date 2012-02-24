@@ -7,7 +7,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeTextVariableWalker : HamlNodeWalker, INodeWalker
     {
-        public HamlNodeTextVariableWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeTextVariableWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

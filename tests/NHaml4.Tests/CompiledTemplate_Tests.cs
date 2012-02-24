@@ -6,6 +6,8 @@ using NHaml4.Compilers;
 using NHaml4.TemplateResolution;
 using System.Collections.Generic;
 using NHaml4.Walkers;
+using System;
+using NHaml4.TemplateBase;
 
 namespace NHaml4.Tests
 {
@@ -14,14 +16,14 @@ namespace NHaml4.Tests
     {
         private Mock<ITreeParser> _parserMock;
         private Mock<ITemplateFactoryCompiler> _compilerMock;
-        private Mock<IDocumentWalker> _templateClassBuilderMock;
+        private Mock<IDocumentWalker> _documentWalkerMock;
 
         [SetUp]
         public void SetUp()
         {
             _parserMock = new Mock<ITreeParser>();
             _compilerMock = new Mock<ITemplateFactoryCompiler>();
-            _templateClassBuilderMock = new Mock<IDocumentWalker>();
+            _documentWalkerMock = new Mock<IDocumentWalker>();
         }
 
         [Test]
@@ -32,7 +34,7 @@ namespace NHaml4.Tests
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _templateClassBuilderMock.Object, _compilerMock.Object);
+                _documentWalkerMock.Object, _compilerMock.Object);
             compiledTemplate.CompileTemplateFactory("className", fakeHamlSource);
 
             // Assert
@@ -40,9 +42,12 @@ namespace NHaml4.Tests
         }
 
         [Test]
-        public void CompileTemplateFactory_CallsTemplateClassBuilder()
+        public void CompileTemplateFactory_CallsDocumentWalker()
         {
             // Arrange
+            const string className = "className";
+            var baseType = typeof(Template);
+
             var fakeHamlDocument = new HamlDocument();
             _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
                 .Returns(fakeHamlDocument);
@@ -50,11 +55,11 @@ namespace NHaml4.Tests
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _templateClassBuilderMock.Object, _compilerMock.Object);
-            compiledTemplate.CompileTemplateFactory("className", viewSource);
+                _documentWalkerMock.Object, _compilerMock.Object);
+            compiledTemplate.CompileTemplateFactory(className, viewSource, baseType);
 
             // Assert
-            _templateClassBuilderMock.Verify(x => x.Walk(fakeHamlDocument, It.IsAny<string>()));
+            _documentWalkerMock.Verify(x => x.Walk(fakeHamlDocument, className, baseType));
         }
 
         [Test]
@@ -62,17 +67,17 @@ namespace NHaml4.Tests
         {
             // Arrange
             var fakeTemplateSource = "FakeTemplateSource";
-            _templateClassBuilderMock.Setup(x => x.Walk(It.IsAny<HamlDocument>(), It.IsAny<string>()))
+            _documentWalkerMock.Setup(x => x.Walk(It.IsAny<HamlDocument>(), It.IsAny<string>(), It.IsAny<Type>()))
                 .Returns(fakeTemplateSource);
             var viewSource = ViewSourceBuilder.Create();
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _templateClassBuilderMock.Object, _compilerMock.Object);
+                _documentWalkerMock.Object, _compilerMock.Object);
             compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);
 
             // Assert
-            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, viewSource.GetClassName(), It.IsAny<IList<System.Type>>()));
+            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, viewSource.GetClassName()));
         }
     }
 }

@@ -20,15 +20,26 @@ namespace NHaml4.Compilers.Abstract
         private string ClassName { get; set; }
         private IList<string> _imports;
 
+        public CodeDomClassBuilder()
+            : this(new List<string>())
+        { }
+
         public CodeDomClassBuilder(IList<string> imports)
         {
             _imports = imports;
+            MergeRequiredImports();
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
                                    Attributes = MemberAttributes.Override | MemberAttributes.Family,
                                }
                                .WithParameter(typeof(TextWriter), "textWriter");
+        }
+
+        private void MergeRequiredImports()
+        {
+            if (_imports.Contains("System") == false)
+                _imports.Add("System");
         }
 
         public void Append(string line)
@@ -139,6 +150,11 @@ namespace NHaml4.Compilers.Abstract
 
         public string Build(string className)
         {
+            return Build(className, typeof(TemplateBase.Template));
+        }
+
+        public string Build(string className, Type baseType)
+        {
             ClassName = className;
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
@@ -162,7 +178,7 @@ namespace NHaml4.Compilers.Abstract
                     Name = className,
                     IsClass = true
                 };
-                declaration.BaseTypes.Add(new CodeTypeReference(typeof(NHaml4.TemplateBase.Template)));
+                declaration.BaseTypes.Add(new CodeTypeReference(baseType));
 
                 declaration.Members.Add(RenderMethod);
 

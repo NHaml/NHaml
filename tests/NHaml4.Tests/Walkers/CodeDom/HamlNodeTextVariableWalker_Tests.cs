@@ -29,7 +29,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_ValidVariableName_CallsAppendVariableCorrectly(string variableName, string expectedCall)
         {
             var node = new HamlNodeTextVariable(variableName, 0);
-            var walker = new HamlNodeTextVariableWalker(_mockClassBuilder.Object, new HamlOptions());
+            var walker = new HamlNodeTextVariableWalker(_mockClassBuilder.Object, new HamlHtmlOptions());
             walker.Walk(node);
             _mockClassBuilder.Verify(x => x.AppendVariable(expectedCall));
         }

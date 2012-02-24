@@ -13,9 +13,9 @@ namespace NHaml4.Walkers.CodeDom
     public abstract class HamlNodeWalker
     {
         internal readonly ITemplateClassBuilder ClassBuilder;
-        internal readonly HamlOptions Options;
+        internal readonly HamlHtmlOptions Options;
 
-        protected HamlNodeWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        protected HamlNodeWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
         {
             Invariant.ArgumentNotNull(options, "options");
             Invariant.ArgumentNotNull(classBuilder, "classBuilder");

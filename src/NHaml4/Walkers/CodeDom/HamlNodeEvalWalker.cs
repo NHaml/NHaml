@@ -7,7 +7,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeEvalWalker : HamlNodeWalker, INodeWalker
     {
-        public HamlNodeEvalWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeEvalWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

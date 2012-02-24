@@ -5,11 +5,11 @@ using System.Text;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlOptions
+    public class HamlHtmlOptions
     {
         private readonly IList<string> AutoClosingTags;
 
-        public HamlOptions()
+        public HamlHtmlOptions()
         {
             AutoClosingTags = new List<string> {
                                     "area",
@@ -23,13 +23,11 @@ namespace NHaml4.Walkers.CodeDom
                                     "meta",
                                     "param"
                                 };
-            Imports = new List<string> { "System" };
         }
 
         internal bool IsAutoClosingTag(string tagName)
         {
             return AutoClosingTags.Contains(tagName);
         }
-        public IList<string> Imports { get; set; }
     }
 }

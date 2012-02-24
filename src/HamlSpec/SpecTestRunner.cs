@@ -85,7 +85,7 @@ namespace HamlSpec
         {
             var viewSource = ViewSourceBuilder.Create(hamlTemplate);
 
-            var hamlOptions = new HamlOptions();
+            var hamlOptions = new HamlHtmlOptions();
             var templateEngine = new TemplateEngine(hamlOptions);
             var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource);
             return compiledTemplate.CreateTemplate();

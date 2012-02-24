@@ -25,7 +25,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             var node = new HamlNodeHtmlAttributeCollection(0, hamlLine);
 
             var builder = new ClassBuilderMock();
-            new HamlNodeHtmlAttributeCollectionWalker(builder, new HamlOptions())
+            new HamlNodeHtmlAttributeCollectionWalker(builder, new HamlHtmlOptions())
                 .Walk(node);
 
             Assert.That(builder.Build(""), Is.EqualTo(expectedTag));

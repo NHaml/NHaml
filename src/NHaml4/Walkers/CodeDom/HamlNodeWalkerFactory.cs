@@ -11,7 +11,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public static class HamlWalkerFactory
     {
-        public static HamlNodeWalker GetNodeWalker(Type nodeType, int sourceFileLineNo, ITemplateClassBuilder classBuilder, HamlOptions options)
+        public static HamlNodeWalker GetNodeWalker(Type nodeType, int sourceFileLineNo, ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
         {
             if (nodeType == typeof(HamlNodeTagId)
                 || nodeType == typeof(HamlNodeTagClass)

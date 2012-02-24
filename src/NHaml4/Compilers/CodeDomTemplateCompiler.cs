@@ -9,63 +9,33 @@ namespace NHaml4.Compilers
 {
     public class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {
-        //private readonly Regex lambdaRegex;
-        private readonly CodeDomTemplateTypeBuilder _typeBuilder;
+        private readonly ITemplateTypeBuilder _typeBuilder;
+        private IList<string> _referencedAssemblyLocations;
 
-        public CodeDomTemplateCompiler(CodeDomTemplateTypeBuilder typeBuilder)
+        public CodeDomTemplateCompiler(ITemplateTypeBuilder typeBuilder)
+            : this(typeBuilder, new List<string>())
+        {}
+
+        public CodeDomTemplateCompiler(ITemplateTypeBuilder typeBuilder, IList<string> referencedAssemblyLocations)
         {
-            //this.lambdaRegex = new Regex(lambdaRegex,
-            //    RegexOptions.Compiled | RegexOptions.Singleline);
             _typeBuilder = typeBuilder;
+            _referencedAssemblyLocations = referencedAssemblyLocations;
+            MergeInDefaultCompileTypes();
         }
 
-        public TemplateFactory Compile(string templateSource, string className, IList<Type> references)
+        private void MergeInDefaultCompileTypes()
         {
-            var templateType = _typeBuilder.Build( templateSource, className, references);
+            if (_referencedAssemblyLocations.Contains(typeof(TemplateBase.Template).Assembly.Location) == false)
+                _referencedAssemblyLocations.Add(typeof(TemplateBase.Template).Assembly.Location);
 
-            //if( templateType == null )
-            //{
-            //    var viewSources = viewSourceReader.ViewSources;
-            //    TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
-            //}
+            if (_referencedAssemblyLocations.Contains(typeof(System.Web.HttpUtility).Assembly.Location) == false)
+                _referencedAssemblyLocations.Add(typeof(System.Web.HttpUtility).Assembly.Location);
+        }
 
+        public TemplateFactory Compile(string templateSource, string className)
+        {
+            var templateType = _typeBuilder.Build( templateSource, className, _referencedAssemblyLocations);
             return new TemplateFactory( templateType );
         }
-
-        //public BlockClosingAction RenderSilentEval(HamlNode node, TemplateClassBuilder builder)
-        //{
-        //    var code = viewSourceReader.CurrentInputLine.NormalizedText;
-
-        //    var lambdaMatch = lambdaRegex.Match(code);
-
-        //    if (!lambdaMatch.Success)
-        //    {
-        //        builder.AppendSilentCode(code, !viewSourceReader.IsBlock);
-
-        //        if (viewSourceReader.IsBlock)
-        //        {
-        //            builder.BeginCodeBlock();
-
-        //            return builder.EndCodeBlock;
-        //        }
-
-        //        return MarkupRule.EmptyClosingAction;
-        //    }
-
-        //    var depth = viewSourceReader.CurrentInputLine.IndentCount;
-        //    code = TranslateLambda(code, lambdaMatch);
-
-        //    builder.AppendChangeOutputDepth(depth);
-        //    builder.AppendSilentCode(code, true);
-
-        //    return () =>
-        //               {
-        //                   builder.AppendChangeOutputDepth(depth);
-        //                   builder.AppendSilentCode("})", true);
-        //               };
-        //    return null;
-        //}
-
-        //public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
     }
 }

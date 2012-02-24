@@ -23,10 +23,10 @@ namespace NHaml4.Compilers
 
         [SuppressMessage("Microsoft.Security", "CA2122")]
         [SuppressMessage("Microsoft.Portability", "CA1903")]
-        public Type Build(string source, string typeName, IList<Type> references)
+        public Type Build(string source, string typeName, IEnumerable<string> referencedAssemblyLocations)
         {
             var compilerParams = new CompilerParameters();
-            AddReferences(compilerParams, references);
+            AddReferences(compilerParams, referencedAssemblyLocations);
             if (SupportsDebug())
             {
                 compilerParams.GenerateInMemory = false;
@@ -81,13 +81,13 @@ namespace NHaml4.Compilers
 
         }
 
-        private void AddReferences(CompilerParameters parameters, IEnumerable<Type> references)
+        private void AddReferences(CompilerParameters parameters, IEnumerable<string> referencedAssemblyLocations)
         {
             parameters.ReferencedAssemblies.Clear();
 
-            foreach (var type in references)
+            foreach (var assemblyLocation in referencedAssemblyLocations)
             {
-                parameters.ReferencedAssemblies.Add(type.Assembly.Location);
+                parameters.ReferencedAssemblies.Add(assemblyLocation);
             }
         }
 

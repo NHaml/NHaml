@@ -23,13 +23,13 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
         ClassBuilderMock _classBuilderMock;
         private HamlNodeHtmlCommentWalker _walker;
-        private HamlOptions _hamlOptions;
+        private HamlHtmlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
             _classBuilderMock = new ClassBuilderMock();
-            _hamlOptions = new HamlOptions();
+            _hamlOptions = new HamlHtmlOptions();
             _walker = new HamlNodeHtmlCommentWalker(_classBuilderMock, _hamlOptions);
         }
 

@@ -60,7 +60,7 @@ namespace NHaml4.IntegrationTests
         {
             var typeBuilder = new CSharp2TemplateTypeBuilder();
             var templateCompiler = new CodeDomTemplateCompiler(typeBuilder);
-            var templateFactory = templateCompiler.Compile(templateSource, ClassName, GetCompileTypes());
+            var templateFactory = templateCompiler.Compile(templateSource, ClassName);
             var result = templateFactory.CreateTemplate();
             return result;
         }

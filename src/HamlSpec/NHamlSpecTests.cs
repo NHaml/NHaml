@@ -32,7 +32,7 @@ namespace HamlSpec
         [TestCase("Eval")]
 
         // IN PROGRESS
-        [TestCase("Inline code")]
+        //[TestCase("Inline code")]
         public void ExecuteHamlsTestSuite(string groupName)
         {
             _specTestRunner.ExecuteSpecs(groupName);

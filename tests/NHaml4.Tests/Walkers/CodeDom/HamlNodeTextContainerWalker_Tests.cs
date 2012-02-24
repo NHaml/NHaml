@@ -28,7 +28,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void SetUp()
         {
             _mockClassBuilder = new ClassBuilderMock();
-            _walker = new HamlNodeTextContainerWalker(_mockClassBuilder, new HamlOptions());
+            _walker = new HamlNodeTextContainerWalker(_mockClassBuilder, new HamlHtmlOptions());
         }
 
         [Test]

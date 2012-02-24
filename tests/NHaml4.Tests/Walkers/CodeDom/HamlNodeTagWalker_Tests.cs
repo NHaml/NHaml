@@ -19,13 +19,13 @@ namespace NHaml4.Tests.Walkers.CodeDom
     {
         private ClassBuilderMock _classBuilderMock;
         private HamlNodeTagWalker _tagWalker;
-        private HamlOptions _hamlOptions;
+        private HamlHtmlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
             _classBuilderMock = new ClassBuilderMock();
-            _hamlOptions = new HamlOptions();
+            _hamlOptions = new HamlHtmlOptions();
             _tagWalker = new HamlNodeTagWalker(_classBuilderMock, _hamlOptions);
         }
 

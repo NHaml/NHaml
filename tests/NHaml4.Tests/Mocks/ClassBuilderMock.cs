@@ -41,6 +41,11 @@ namespace NHaml4.Tests.Mocks
             return _output.ToString();
         }
 
+        public string Build(string className, Type baseType)
+        {
+            return _output.ToString();
+        }
+
 
         void ITemplateClassBuilder.AppendVariable(string variableName)
         {

@@ -8,7 +8,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeHamlCommentWalker : HamlNodeWalker
     {
-        public HamlNodeHamlCommentWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeHamlCommentWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

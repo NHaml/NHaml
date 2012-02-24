@@ -49,7 +49,7 @@ namespace NHaml4.Tests.Compilers
             var classBuilder = new CodeDomClassBuilder(
                 new List<string> { "System", "System.IO" }
             );
-            return classBuilder.Build(ClassName);
+            return classBuilder.Build(ClassName, typeof(Template));
         }
 
         [Test]

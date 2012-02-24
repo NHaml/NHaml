@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Core", "src\NHaml.Cor
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Console", "src\NHaml.Console\NHaml.Console.csproj", "{CF0A9532-EDBB-46AF-AE34-784D7CD46486}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc", "src\NHaml.Web.Mvc\NHaml.Web.Mvc.csproj", "{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc3", "src\NHaml.Web.Mvc\NHaml.Web.Mvc3.csproj", "{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp", "src\Samples\NHaml.Samples.Mvc.CSharp\NHaml.Samples.Mvc.CSharp.csproj", "{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7}"
 EndProject

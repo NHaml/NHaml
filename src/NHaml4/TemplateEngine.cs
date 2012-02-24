@@ -15,19 +15,19 @@ namespace NHaml4
         private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
-        public TemplateEngine(HamlOptions hamlOptions)
+        public TemplateEngine(HamlHtmlOptions hamlOptions)
             : this(
             new SimpleTemplateCache(),
             new TemplateFactoryFactory(
                     new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CodeDomClassBuilder(hamlOptions.Imports), hamlOptions),
+                    new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
                     new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
         { }
 
         public TemplateEngine(IHamlTemplateCache templateCache, ITemplateFactoryFactory templateFactoryFactory)
         {
-            _templateFactoryFactory = templateFactoryFactory;
             _compiledTemplateCache = templateCache;
+            _templateFactoryFactory = templateFactoryFactory;
         }
 
         public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type baseType)
@@ -54,7 +54,7 @@ namespace NHaml4
             lock( _compiledTemplateCache )
             {
                 return _compiledTemplateCache.GetOrAdd(className, viewSource.TimeStamp,
-                    () => _templateFactoryFactory.CompileTemplateFactory(className, viewSource));
+                    () => _templateFactoryFactory.CompileTemplateFactory(className, viewSource, templateBaseType));
             }
         }
     }

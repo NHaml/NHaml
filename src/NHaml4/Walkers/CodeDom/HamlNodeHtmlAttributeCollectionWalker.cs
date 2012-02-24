@@ -9,7 +9,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeHtmlAttributeCollectionWalker : HamlNodeWalker
     {
-        public HamlNodeHtmlAttributeCollectionWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeHtmlAttributeCollectionWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

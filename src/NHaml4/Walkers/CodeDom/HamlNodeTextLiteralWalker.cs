@@ -7,7 +7,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeTextLiteralWalker : HamlNodeWalker, INodeWalker
     {
-        public HamlNodeTextLiteralWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeTextLiteralWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

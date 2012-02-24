@@ -11,7 +11,7 @@ namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeTagWalker : HamlNodeWalker, INodeWalker
     {
-        public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 

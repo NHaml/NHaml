@@ -18,7 +18,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_ValidNode_CallsAppendCodeSnippetMethod()
         {
             var classBuilderMock = new Mock<ITemplateClassBuilder>();
-            var walker = new HamlNodeEvalWalker(classBuilderMock.Object, new HamlOptions());
+            var walker = new HamlNodeEvalWalker(classBuilderMock.Object, new HamlHtmlOptions());
             string codeSnippet = "1+1";
             var node = new HamlNodeEval(new HamlLine(codeSnippet, -1));
             walker.Walk(node);

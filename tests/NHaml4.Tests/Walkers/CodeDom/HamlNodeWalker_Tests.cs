@@ -20,7 +20,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
 
         private class DummyWalker : HamlNodeWalker
         {
-            public DummyWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+            public DummyWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
                 : base(classBuilder, options)
             { }
         }
@@ -29,7 +29,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void SetUp()
         {
             _classBuilderMock = new ClassBuilderMock();
-            _walker = new DummyWalker(_classBuilderMock, new HamlOptions());
+            _walker = new DummyWalker(_classBuilderMock, new HamlHtmlOptions());
         }
 
         [Test]

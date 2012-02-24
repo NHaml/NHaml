@@ -12,7 +12,7 @@ namespace NHaml4.Compilers
         void AppendNewLine();
         void AppendCode(string codeSnippet);
         void AppendVariable(string variableName);
-        string Build(string className);
+        string Build(string className, Type baseType);
         void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse);
         void AppendSelfClosingTagSuffix();
     }
