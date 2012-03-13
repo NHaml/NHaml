@@ -46,17 +46,16 @@ namespace NHaml4.Tests.Compilers
 
         private object BuildEmptyClass()
         {
-            var classBuilder = new CodeDomClassBuilder(
-                new List<string> { "System", "System.IO" }
-            );
-            return classBuilder.Build(ClassName, typeof(Template));
+            var classBuilder = new CodeDomClassBuilder();
+            return classBuilder.Build(ClassName, typeof(Template),
+                new List<string> { "System", "System.IO" });
         }
 
         [Test]
         public void Append_SingleLine_GeneratesWriteStatement()
         {
             string lineToWrite = "Test";
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.Append(lineToWrite);
             string result = classBuilder.Build(ClassName);
 
@@ -66,7 +65,7 @@ namespace NHaml4.Tests.Compilers
         [Test]
         public void AppendNewLine_NormalUse_GeneratesWriteStatement()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendNewLine();
             string result = classBuilder.Build(ClassName);
 
@@ -76,7 +75,7 @@ namespace NHaml4.Tests.Compilers
         [Test]
         public void AppendCode_ValidCodeFragment_AppendsFragment()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendCode("1+1");
             string result = classBuilder.Build(ClassName);
 
@@ -87,7 +86,7 @@ namespace NHaml4.Tests.Compilers
         public void AppendVariable_ValidVariableName_AppendsRenderValueOrKeyAsString()
         {
             const string variableName = "key";
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendVariable(variableName);
 
             string result = classBuilder.Build(ClassName);
@@ -98,7 +97,7 @@ namespace NHaml4.Tests.Compilers
         [Test]
         public void AppendSelfClosingTagSuffix_AppendsCorrectOutput()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendSelfClosingTagSuffix();
             string result = classBuilder.Build(ClassName);
             Assert.That(result, Is.StringContaining("base.AppendSelfClosingTagSuffix()"));
@@ -107,7 +106,7 @@ namespace NHaml4.Tests.Compilers
         [Test]
         public void AppendAttributeNameValuePair_AppendsOutputCallingTemplateAppendAttributeNameValuePair()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value" }, '\"');
             string result = classBuilder.Build(ClassName);
             Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value_0.ToString(), '\\\"')"));
@@ -116,7 +115,7 @@ namespace NHaml4.Tests.Compilers
         [Test]
         public void AppendAttributeNameValuePair_BuildsValueCorrectly()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value1", "#{variable}" }, '\"');
             string result = classBuilder.Build(ClassName);
             Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));

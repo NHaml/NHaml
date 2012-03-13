@@ -34,7 +34,7 @@ namespace NHaml4.Tests
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _documentWalkerMock.Object, _compilerMock.Object);
+                _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), new List<string>());
             compiledTemplate.CompileTemplateFactory("className", fakeHamlSource);
 
             // Assert
@@ -52,14 +52,15 @@ namespace NHaml4.Tests
             _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
                 .Returns(fakeHamlDocument);
             var viewSource = ViewSourceBuilder.Create();
+            var imports = new List<string>();
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _documentWalkerMock.Object, _compilerMock.Object);
+                _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), imports);
             compiledTemplate.CompileTemplateFactory(className, viewSource, baseType);
 
             // Assert
-            _documentWalkerMock.Verify(x => x.Walk(fakeHamlDocument, className, baseType));
+            _documentWalkerMock.Verify(x => x.Walk(fakeHamlDocument, className, baseType, imports));
         }
 
         [Test]
@@ -67,17 +68,19 @@ namespace NHaml4.Tests
         {
             // Arrange
             var fakeTemplateSource = "FakeTemplateSource";
-            _documentWalkerMock.Setup(x => x.Walk(It.IsAny<HamlDocument>(), It.IsAny<string>(), It.IsAny<Type>()))
+            _documentWalkerMock.Setup(x => x.Walk(It.IsAny<HamlDocument>(), It.IsAny<string>(),
+                It.IsAny<Type>(), It.IsAny<IList<string>>()))
                 .Returns(fakeTemplateSource);
             var viewSource = ViewSourceBuilder.Create();
+            var assemblies = new List<string>();
 
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
-                _documentWalkerMock.Object, _compilerMock.Object);
+                _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), assemblies);
             compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);
 
             // Assert
-            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, viewSource.GetClassName()));
+            _compilerMock.Verify(x => x.Compile(fakeTemplateSource, viewSource.GetClassName(), assemblies));
         }
     }
 }

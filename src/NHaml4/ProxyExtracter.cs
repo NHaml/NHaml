@@ -5,12 +5,6 @@ namespace NHaml4
 {
     public static class ProxyExtracter
     {
-        /// <summary>
-        /// Do a best guess on getting a non dynamic <see cref="Type"/>.
-        /// </summary>
-        /// <remarks>
-        /// This is necessary for libraries like nhibernate that use proxied types.
-        /// </remarks>
         public static Type GetNonProxiedType(Type type)
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)

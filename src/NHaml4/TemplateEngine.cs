@@ -15,13 +15,15 @@ namespace NHaml4
         private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
-        public TemplateEngine(HamlHtmlOptions hamlOptions)
+        public TemplateEngine(HamlHtmlOptions htmlOptions)
             : this(
             new SimpleTemplateCache(),
             new TemplateFactoryFactory(
                     new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
-                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
+                    new HamlDocumentWalker(new CodeDomClassBuilder(), htmlOptions),
+                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
+                    new List<string>(),
+                    new List<string>()))
         { }
 
         public TemplateEngine(IHamlTemplateCache templateCache, ITemplateFactoryFactory templateFactoryFactory)
@@ -30,12 +32,12 @@ namespace NHaml4
             _templateFactoryFactory = templateFactoryFactory;
         }
 
-        public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type baseType)
+        public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type templateBaseType)
         {
             Invariant.ArgumentNotNull(contentProvider, "contentProvider");
 
             var viewSource = contentProvider.GetViewSource(templatePath);
-            return GetCompiledTemplate(viewSource, baseType);
+            return GetCompiledTemplate(viewSource, templateBaseType);
         }
 
         public TemplateFactory GetCompiledTemplate(IViewSource viewSource)

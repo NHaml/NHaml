@@ -9,6 +9,7 @@ using NHaml4.IO;
 using NHaml4.Tests.Mocks;
 using System;
 using NHaml4.TemplateBase;
+using System.Collections.Generic;
 
 namespace NHaml4.Tests.Walkers
 {
@@ -26,7 +27,7 @@ namespace NHaml4.Tests.Walkers
 
             // Act
             var builder = new ClassBuilderMock();
-            new HamlDocumentWalker(builder).Walk(document, "", baseType);
+            new HamlDocumentWalker(builder).Walk(document, "", baseType, new List<string>());
 
             // Assert
             Assert.That(builder.Build(""), Is.EqualTo(content.Content));
@@ -39,14 +40,15 @@ namespace NHaml4.Tests.Walkers
             const string className = "ClassName";
             Type baseType = typeof(Template);
             var document = new HamlTreeParser(new NHaml4.IO.HamlFileLexer()).ParseDocumentSource("Simple content");
-            
+            var imports = new List<string>();
+
             // Act
             var builder = new Mock<ITemplateClassBuilder>();
-            
-            new HamlDocumentWalker(builder.Object).Walk(document, className, baseType);
+
+            new HamlDocumentWalker(builder.Object).Walk(document, className, baseType, imports);
 
             // Assert
-            builder.Verify(x => x.Build(className, baseType));
+            builder.Verify(x => x.Build(className, baseType, imports));
         }
     }
 }

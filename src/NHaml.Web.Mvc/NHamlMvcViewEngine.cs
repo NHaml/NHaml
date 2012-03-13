@@ -15,25 +15,23 @@ using NHaml4.Walkers.CodeDom;
 
 namespace NHaml.Web.Mvc
 {
-    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
     {
         private readonly TemplateEngine _templateEngine;
         private readonly IList<string> _usings;
-        private readonly IList<string> _references;
         private readonly MapPathTemplateContentProvider _contentProvider;
         private readonly Type _baseType = typeof(NHamlMvcView<>);
         private bool _isMasterConfigured;
         public string DefaultMaster { get; set; }
 
-
         public NHamlMvcViewEngine()
         {
             _contentProvider = new MapPathTemplateContentProvider();
             _usings = GetDefaultUsings();
-            _references = GetDefaultReferences();
-            _templateEngine = new TemplateEngine(new HamlOptions());
+            _templateEngine = new TemplateEngine(new SimpleTemplateCache(),
+                new TemplateFactoryFactory(new HamlHtmlOptions(), GetDefaultUsings(), GetDefaultReferences()));
             InitializeBaseViewLocations();
             DefaultMaster = "Application";
         }
@@ -55,7 +53,9 @@ namespace NHaml.Web.Mvc
                 typeof(RouteValueDictionary).Assembly.Location,
                 typeof(DataContext).Assembly.Location,
                 typeof(LinkExtensions).Assembly.Location,
-                typeof(IView).Assembly.Location };
+                typeof(IView).Assembly.Location,
+                typeof(NHamlMvcView).Assembly.Location
+            };
 
             var referencedAssemblies = typeof(MvcHandler).Assembly.GetReferencedAssemblies();
             result.AddRange(referencedAssemblies.Select(x => Assembly.Load(x).Location));

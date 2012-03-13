@@ -15,6 +15,8 @@ namespace NHaml4
         private readonly ITreeParser _treeParser;
         private readonly IDocumentWalker _treeWalker;
         private readonly ITemplateFactoryCompiler _templateFactoryCompiler;
+        private IEnumerable<string> _imports;
+        private IEnumerable<string> _referencedAssemblyLocations;
 
         public TemplateFactoryFactory(Walkers.CodeDom.HamlHtmlOptions hamlOptions)
             : this(hamlOptions, new List<string>(), new List<string>())
@@ -22,16 +24,19 @@ namespace NHaml4
 
         public TemplateFactoryFactory(Walkers.CodeDom.HamlHtmlOptions hamlOptions, IList<string> imports, IList<string> referencedAssemblyLocations)
             : this(new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CodeDomClassBuilder(imports), hamlOptions),
-                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder(), referencedAssemblyLocations))
+                    new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
+                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
+            imports, referencedAssemblyLocations)
         { }
 
         public TemplateFactoryFactory(ITreeParser treeParser, IDocumentWalker treeWalker,
-            ITemplateFactoryCompiler templateCompiler)
+            ITemplateFactoryCompiler templateCompiler, IEnumerable<string> imports, IEnumerable<string> referencedAssemblyLocations)
         {
             _treeParser = treeParser;
             _treeWalker = treeWalker;
             _templateFactoryCompiler = templateCompiler;
+            _imports = imports;
+            _referencedAssemblyLocations = referencedAssemblyLocations;
         }
 
         public TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource)
@@ -42,8 +47,8 @@ namespace NHaml4
         public TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource, Type baseType)
         {
             var hamlDocument = _treeParser.ParseViewSource(viewSource);
-            string templateCode = _treeWalker.Walk(hamlDocument, className, baseType);
-            var templateFactory = _templateFactoryCompiler.Compile(templateCode, className);
+            string templateCode = _treeWalker.Walk(hamlDocument, className, baseType, _imports);
+            var templateFactory = _templateFactoryCompiler.Compile(templateCode, className, _referencedAssemblyLocations);
             return templateFactory;
         }
     }

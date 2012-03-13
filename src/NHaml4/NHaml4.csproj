@@ -12,7 +12,7 @@
     <AssemblyName>NHaml4</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>..\NHaml.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -88,6 +88,12 @@
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Compilers\ITemplateFactoryCompiler.cs" />
+    <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
+    <Compile Include="Configuration\ConfigurationCollection.cs" />
+    <Compile Include="Configuration\ImportConfigurationElement.cs" />
+    <Compile Include="Configuration\KeyedConfigurationElement.cs" />
+    <Compile Include="Configuration\NHamlConfigurationSection.cs" />
+    <Compile Include="Configuration\XmlConfigurator.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextLiteral.cs" />
@@ -169,6 +175,7 @@
       <Link>Properties\NHaml.snk</Link>
     </None>
     <Compile Include="TemplateEngine.cs" />
+    <None Include="NHaml.snk" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />

@@ -15,7 +15,7 @@ namespace NHaml4.IntegrationTests
         [Test]
         public void AppendSelfClosingTagSuffix_XHtml4_CompilesValidTemplate()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendSelfClosingTagSuffix();
             string templateSource = classBuilder.Build(ClassName);
             var result = GenerateTemplateFromSource(templateSource);
@@ -28,7 +28,7 @@ namespace NHaml4.IntegrationTests
         [Test]
         public void AppendAttributeNameValuePair_XHtml4_CompilesValidTemplate()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendAttributeNameValuePair("name",
                 new List<string> { "value", "#{Variable}", "value" }, '\"');
             string templateSource = classBuilder.Build(ClassName);
@@ -45,7 +45,7 @@ namespace NHaml4.IntegrationTests
         [Test]
         public void AppendMultipleAttributeNameValuePairs_XHtml4_CompilesValidTemplate()
         {
-            var classBuilder = new CodeDomClassBuilder(new List<string>());
+            var classBuilder = new CodeDomClassBuilder();
             classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
             classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
             string templateSource = classBuilder.Build(ClassName);
@@ -60,7 +60,7 @@ namespace NHaml4.IntegrationTests
         {
             var typeBuilder = new CSharp2TemplateTypeBuilder();
             var templateCompiler = new CodeDomTemplateCompiler(typeBuilder);
-            var templateFactory = templateCompiler.Compile(templateSource, ClassName);
+            var templateFactory = templateCompiler.Compile(templateSource, ClassName, new List<string>());
             var result = templateFactory.CreateTemplate();
             return result;
         }

@@ -1,6 +1,7 @@
 ﻿using NHaml4.Compilers;
 using NHaml4.Parser;
 using System;
+using System.Collections.Generic;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -10,14 +11,14 @@ namespace NHaml4.Walkers.CodeDom
             : base (classBuilder, new HamlHtmlOptions())
         { }
 
-        public HamlDocumentWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
-            : base(classBuilder, options)
+        public HamlDocumentWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions htmlOptions)
+            : base(classBuilder, htmlOptions)
         { }
 
-        public string Walk(HamlDocument document, string className, Type baseType)
+        public string Walk(HamlDocument document, string className, Type baseType, IEnumerable<string> imports)
         {
             base.Walk(document);
-            return ClassBuilder.Build(className, baseType);
+            return ClassBuilder.Build(className, baseType, imports);
         }    
     }
 }

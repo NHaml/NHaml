@@ -41,7 +41,7 @@ namespace NHaml4.Tests.Mocks
             return _output.ToString();
         }
 
-        public string Build(string className, Type baseType)
+        public string Build(string className, Type baseType, IEnumerable<string> usings)
         {
             return _output.ToString();
         }

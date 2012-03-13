@@ -8,6 +8,7 @@ using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
 using NHaml4.TemplateBase;
 using NHaml4.Compilers.Abstract;
+using System.Collections.Generic;
 
 namespace NHaml.IntegrationTests
 {
@@ -26,8 +27,10 @@ namespace NHaml.IntegrationTests
             // Act
             var compiledTemplate = new TemplateFactoryFactory(
                 new HamlTreeParser(new HamlFileLexer()),
-                new HamlDocumentWalker(new CodeDomClassBuilder(new System.Collections.Generic.List<string>())),
-                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()));
+                new HamlDocumentWalker(new CodeDomClassBuilder()),
+                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
+                new List<string>(),
+                new List<string>());
 
             var templateFactory = compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);
             Template template = templateFactory.CreateTemplate();

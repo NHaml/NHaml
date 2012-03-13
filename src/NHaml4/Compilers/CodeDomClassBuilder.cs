@@ -18,16 +18,9 @@ namespace NHaml4.Compilers.Abstract
         protected CodeMemberMethod RenderMethod { get; private set; }
         private int Depth { get; set; }
         private string ClassName { get; set; }
-        private IList<string> _imports;
 
         public CodeDomClassBuilder()
-            : this(new List<string>())
-        { }
-
-        public CodeDomClassBuilder(IList<string> imports)
         {
-            _imports = imports;
-            MergeRequiredImports();
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
@@ -36,10 +29,12 @@ namespace NHaml4.Compilers.Abstract
                                .WithParameter(typeof(TextWriter), "textWriter");
         }
 
-        private void MergeRequiredImports()
+        private IList<string> MergeRequiredImports(IEnumerable<string> imports)
         {
-            if (_imports.Contains("System") == false)
-                _imports.Add("System");
+            var result = new List<string>(imports);
+            if (result.Contains("System") == false)
+                result.Add("System");
+            return result;
         }
 
         public void Append(string line)
@@ -150,11 +145,13 @@ namespace NHaml4.Compilers.Abstract
 
         public string Build(string className)
         {
-            return Build(className, typeof(TemplateBase.Template));
+            return Build(className, typeof(TemplateBase.Template), new List<string>());
         }
 
-        public string Build(string className, Type baseType)
+        public string Build(string className, Type baseType, IEnumerable<string> imports)
         {
+            imports = MergeRequiredImports(imports);
+
             ClassName = className;
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
@@ -165,7 +162,7 @@ namespace NHaml4.Compilers.Abstract
                 var testNamespace = new CodeNamespace();
                 compileUnit.Namespaces.Add(testNamespace);
 
-                foreach (var import in _imports)
+                foreach (var import in imports)
                 {
                     var namespaceImport = new CodeNamespaceImport(import);
                     testNamespace.Imports.Add(namespaceImport);
