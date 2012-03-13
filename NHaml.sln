@@ -3,10 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{00B488F1-CD80-46F6-9994-55AA0C4B2DE4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Core", "src\NHaml.Core\NHaml.Core.csproj", "{3344FF2F-B326-41C5-B8EA-D18B040B2886}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Console", "src\NHaml.Console\NHaml.Console.csproj", "{CF0A9532-EDBB-46AF-AE34-784D7CD46486}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Web.Mvc3", "src\NHaml.Web.Mvc\NHaml.Web.Mvc3.csproj", "{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp", "src\Samples\NHaml.Samples.Mvc.CSharp\NHaml.Samples.Mvc.CSharp.csproj", "{9FDCA2CD-11B3-4314-9A89-8BDBC9C609B7}"
@@ -30,14 +26,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{3344FF2F-B326-41C5-B8EA-D18B040B2886}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3344FF2F-B326-41C5-B8EA-D18B040B2886}.Profiled|Any CPU.ActiveCfg = Profiled|Any CPU
-		{3344FF2F-B326-41C5-B8EA-D18B040B2886}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3344FF2F-B326-41C5-B8EA-D18B040B2886}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Profiled|Any CPU.ActiveCfg = Profiled|Any CPU
-		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF0A9532-EDBB-46AF-AE34-784D7CD46486}.Release|Any CPU.Build.0 = Release|Any CPU
 		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}.Profiled|Any CPU.ActiveCfg = Profiled|Any CPU
