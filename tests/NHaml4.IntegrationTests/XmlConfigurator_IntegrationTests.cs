@@ -43,6 +43,21 @@ namespace NHaml4.IntegrationTests
             Assert.That(textWriter.ToString(), Is.StringMatching("Test"));
         }
 
+        [Test]
+        public void GetTemplateEngine_AdditionalUsingAndReferencedAssemblies_ContainsExtraUsingStatement()
+        {
+            var viewSource = ViewSourceBuilder.Create("= new StringBuilder(\"Default\")");
+            var importsList = new List<string> { "System.Text" };
+            var referencedAssembliesList = new List<string>();
+
+            var templateEngine = XmlConfigurator.GetTemplateEngine(importsList, referencedAssembliesList);
+            var templateFactory = templateEngine.GetCompiledTemplate(viewSource);
+            var template = templateFactory.CreateTemplate();
+            var textWriter = new StringWriter();
+            template.Render(textWriter);
+            Assert.That(textWriter.ToString(), Is.StringMatching("Default"));
+        }
+
         public static string TestRenderMethod()
         {
             return "Test";

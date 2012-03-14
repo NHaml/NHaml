@@ -33,5 +33,14 @@ namespace NHaml4.Tests
             var result = XmlConfigurator.GetTemplateEngine(configFile);
             Assert.That(result, Is.InstanceOf<TemplateEngine>());
         }
+
+        [Test]
+        public void GetTemplateEngine_AdditionalImportsAndReferencedAssemblies_ReturnsTemplateEngine()
+        {
+            var importsList = new List<string>();
+            var referencedAssemblies = new List<string>();
+            var result = XmlConfigurator.GetTemplateEngine(importsList, referencedAssemblies);
+            Assert.That(result, Is.InstanceOf<TemplateEngine>());
+        }
     }
 }

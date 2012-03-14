@@ -87,6 +87,7 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Compilers\Exceptions\CompilerException.cs" />
     <Compile Include="Compilers\ITemplateFactoryCompiler.cs" />
     <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
     <Compile Include="Configuration\ConfigurationCollection.cs" />

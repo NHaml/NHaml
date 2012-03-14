@@ -12,6 +12,7 @@ using System.Web.UI;
 using System.IO;
 using NHaml4;
 using NHaml4.Walkers.CodeDom;
+using NHaml4.Configuration;
 
 namespace NHaml.Web.Mvc
 {
@@ -20,7 +21,6 @@ namespace NHaml.Web.Mvc
     public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
     {
         private readonly TemplateEngine _templateEngine;
-        private readonly IList<string> _usings;
         private readonly MapPathTemplateContentProvider _contentProvider;
         private readonly Type _baseType = typeof(NHamlMvcView<>);
         private bool _isMasterConfigured;
@@ -29,9 +29,7 @@ namespace NHaml.Web.Mvc
         public NHamlMvcViewEngine()
         {
             _contentProvider = new MapPathTemplateContentProvider();
-            _usings = GetDefaultUsings();
-            _templateEngine = new TemplateEngine(new SimpleTemplateCache(),
-                new TemplateFactoryFactory(new HamlHtmlOptions(), GetDefaultUsings(), GetDefaultReferences()));
+            _templateEngine = XmlConfigurator.GetTemplateEngine(GetDefaultUsings(), GetDefaultReferences());
             InitializeBaseViewLocations();
             DefaultMaster = "Application";
         }

@@ -19,7 +19,18 @@ namespace NHaml4.Configuration
             return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath);
         }
 
+        public static TemplateEngine GetTemplateEngine(IList<string> imports, IList<string> referencedAssemblies)
+        {
+            return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath,
+                imports, referencedAssemblies);
+        }
+        
         public static TemplateEngine GetTemplateEngine(string configFile)
+        {
+            return GetTemplateEngine(configFile, new List<string>(), new List<string>());
+        }
+
+        private static TemplateEngine GetTemplateEngine(string configFile, IList<string> imports, IList<string> referencedAssemblies)
         {
             var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration(configFile);
             
@@ -29,8 +40,8 @@ namespace NHaml4.Configuration
                 new HamlTreeParser(new HamlFileLexer()),
                 new HamlDocumentWalker(new CodeDomClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
-                nhamlConfiguration.ImportsList,
-                nhamlConfiguration.ReferencedAssembliesList);
+                nhamlConfiguration.ImportsList.Concat(imports),
+                nhamlConfiguration.ReferencedAssembliesList.Concat(referencedAssemblies));
 
             return new TemplateEngine(templateCache, templateFactoryFactory);
         }
