@@ -6,6 +6,7 @@ using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Reflection;
 using System.Linq;
+using NHaml4.Compilers.Exceptions;
 
 namespace NHaml4.Compilers
 {
@@ -46,10 +47,7 @@ namespace NHaml4.Compilers
                 {
                     compilerParams.OutputAssembly = tempAssemblyName.FullName;
                     var compilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
-                    if (ContainsErrors(compilerResults))
-                    {
-                        return null;
-                    }
+                    ValidateCompilerResults(compilerResults);
 
                     var assembly = Assembly.Load(File.ReadAllBytes(tempAssemblyName.FullName), File.ReadAllBytes(tempSymbolsName.FullName));
                     return assembly.GetType(typeName);
@@ -71,14 +69,19 @@ namespace NHaml4.Compilers
                 compilerParams.GenerateInMemory = true;
                 compilerParams.IncludeDebugInformation = false;
                 var compilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
-                if (ContainsErrors(compilerResults))
-                {
-                    return null;
-                }
+                ValidateCompilerResults(compilerResults);
                 var assembly = compilerResults.CompiledAssembly;
                 return ExtractType(typeName, assembly);
             }
 
+        }
+
+        private void ValidateCompilerResults(CompilerResults compilerResults)
+        {
+            if (ContainsErrors(compilerResults))
+            {
+                throw new CompilerException(compilerResults);
+            }
         }
 
         private void AddReferences(CompilerParameters parameters, IEnumerable<string> referencedAssemblyLocations)
