@@ -24,6 +24,8 @@ namespace NHaml4.Parser
                     return new HamlNodeHtmlComment(nodeLine);
                 case HamlRuleEnum.Evaluation:
                     return new HamlNodeEval(nodeLine);
+                case HamlRuleEnum.Code:
+                    return new HamlNodeCode(nodeLine);
                 default:
                     throw new HamlUnknownRuleException(nodeLine.Content, nodeLine.SourceFileLineNo);
             }

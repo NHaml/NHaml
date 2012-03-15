@@ -9,18 +9,24 @@ namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTextContainer : HamlNode
     {
-        public HamlNodeTextContainer(IO.HamlLine nodeLine)
+        public HamlNodeTextContainer(HamlLine nodeLine)
             : base(nodeLine)
         {
-            ParseFragments(nodeLine);
+            ParseFragments(nodeLine.Content);
         }
 
-        private void ParseFragments(IO.HamlLine nodeLine)
+        public HamlNodeTextContainer(int sourceFileLineNo, string content)
+            : base(sourceFileLineNo, content)
+        {
+            ParseFragments(content);
+        }
+
+        private void ParseFragments(string content)
         {
             int index = 0;
-            while (index < nodeLine.Content.Length)
+            while (index < content.Length)
             {
-                var node = GetNextNode(nodeLine.Content, ref index);
+                var node = GetNextNode(content, ref index);
                 AddChild(node);
             }
         }

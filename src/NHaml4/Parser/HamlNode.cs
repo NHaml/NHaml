@@ -77,9 +77,9 @@ namespace NHaml4.Parser
             }
         }
 
-        public ReadOnlyCollection<HamlNode> Children
+        public IEnumerable<HamlNode> Children
         {
-            get { return new ReadOnlyCollection<HamlNode>(_children); }
+            get { return _children; }
         }
 
         public void AddChild(HamlNode hamlNode)

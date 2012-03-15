@@ -17,6 +17,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("-#Test", typeof(HamlNodeHamlComment))]
         [TestCase("/Test", typeof(HamlNodeHtmlComment))]
         [TestCase("=Test", typeof(HamlNodeEval))]
+        [TestCase("-Test", typeof(HamlNodeCode))]
         public void GetHamlNode_DifferentHamlLineTypes_ReturnsCorrectHamlNode(string hamlLine, Type nodeType)
         {
             var line = new HamlLine(hamlLine, 0);

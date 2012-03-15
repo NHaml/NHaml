@@ -65,6 +65,7 @@
     <Compile Include="Compilers\CodeDomClassBuilder_Tests.cs" />
     <Compile Include="Configuration\NHamlConfigurationSection_Tests.cs" />
     <Compile Include="Crosscutting\Invariant_Tests.cs" />
+    <Compile Include="IO\HamlRuleFactory_Tests.cs" />
     <Compile Include="Mocks\ClassBuilderMock.cs" />
     <Compile Include="Parser\HamlNodeFactory_Tests.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlAttributeCollection_Tests.cs" />

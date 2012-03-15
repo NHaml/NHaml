@@ -87,9 +87,9 @@ namespace NHaml4.Tests.Parser.Rules
             const string templateLine = "p Hello world";
             var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
-            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeTextContainer>());
+            Assert.That(tag.Children.First(), Is.InstanceOf<HamlNodeTextContainer>());
             const string expectedText = "Hello world";
-            Assert.That(((HamlNodeTextContainer)tag.Children[0]).Content, Is.EqualTo(expectedText));
+            Assert.That(((HamlNodeTextContainer)tag.Children.First()).Content, Is.EqualTo(expectedText));
         }
 
         [Test]
@@ -98,7 +98,7 @@ namespace NHaml4.Tests.Parser.Rules
             const string templateLine = "p(a='b')";
             var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
 
-            Assert.That(tag.Children[0], Is.InstanceOf<HamlNodeHtmlAttributeCollection>());
+            Assert.That(tag.Children.First(), Is.InstanceOf<HamlNodeHtmlAttributeCollection>());
         }
 
         [Test]
@@ -112,8 +112,8 @@ namespace NHaml4.Tests.Parser.Rules
         {
             var tag = new HamlNodeTag(new HamlLine(hamlLine, 0));
 
-            Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttributeContent));
-            Assert.That(tag.Children.Count, Is.EqualTo(expectedaAttrCount));
+            Assert.That(tag.Children.First().Content, Is.EqualTo(expectedAttributeContent));
+            Assert.That(tag.Children.Count(), Is.EqualTo(expectedaAttrCount));
         }
 
         [Test]
@@ -123,9 +123,9 @@ namespace NHaml4.Tests.Parser.Rules
             var tag = new HamlNodeTag(new HamlLine(hamlLine, 0));
 
             const string expectedAttrContent = "(a='b')";
-            Assert.That(tag.Children[0].Content, Is.EqualTo(expectedAttrContent));
+            Assert.That(tag.Children.First().Content, Is.EqualTo(expectedAttrContent));
             const string expectedStringContent = "Content";
-            Assert.That(tag.Children[1].Content, Is.EqualTo(expectedStringContent));
+            Assert.That(tag.Children.ToList()[1].Content, Is.EqualTo(expectedStringContent));
         }
 
         [Test]
@@ -144,6 +144,15 @@ namespace NHaml4.Tests.Parser.Rules
             var tagNode = new HamlNodeTag(new HamlLine(tag, 0));
 
             Assert.That(tagNode.WhitespaceRemoval, Is.EqualTo(expectedSetting));
+        }
+
+        [Test]
+        [TestCase("%p #variable", "#variable")]
+        public void Walk_TagWithWhitespaceSupression_SetsCorrectFlag(string tag, string expectedVariableContent)
+        {
+            var tagNode = new HamlNodeTag(new HamlLine(tag, 0));
+
+            Assert.That(tagNode.Children.First().Children.First().Content, Is.EqualTo(expectedVariableContent));
         }
     }
 }

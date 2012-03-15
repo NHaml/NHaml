@@ -95,7 +95,9 @@
     <Compile Include="Configuration\KeyedConfigurationElement.cs" />
     <Compile Include="Configuration\NHamlConfigurationSection.cs" />
     <Compile Include="Configuration\XmlConfigurator.cs" />
+    <Compile Include="IO\HamlRuleFactory.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
+    <Compile Include="Parser\Rules\HamlNodeCode.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextLiteral.cs" />
     <Compile Include="TemplateBase\HtmlVersion.cs" />

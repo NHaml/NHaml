@@ -29,7 +29,7 @@ namespace NHaml4.Tests.Parser.Rules
         {
             var tag = new HamlNodeHtmlAttributeCollection(0, attributeString);
 
-            Assert.That(tag.Children[0].Content, Is.EqualTo(expectedFirstAttribute));
+            Assert.That(tag.Children.First().Content, Is.EqualTo(expectedFirstAttribute));
         }
     }
 }

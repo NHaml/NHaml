@@ -33,7 +33,7 @@ namespace NHaml4.Parser.Rules
                     {
                         value = "#{" + value + "}";
                     }
-                    var valueNode = new HamlNodeTextContainer(new HamlLine(value, SourceFileLineNum));
+                    var valueNode = new HamlNodeTextContainer(SourceFileLineNum, value);
                     AddChild(valueNode);
                 }
             }

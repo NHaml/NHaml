@@ -38,38 +38,5 @@ namespace NHaml4.Tests.IO
             var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedIndent, line.Indent);
         }
-
-        [Test]
-        [TestCase("", HamlRuleEnum.PlainText, Description = "Empty string")]
-        [TestCase(" ", HamlRuleEnum.PlainText, Description = "Single space")]
-        [TestCase("%", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase(".className", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase("#id", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase("%Tag", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase("/Tag", HamlRuleEnum.HtmlComment, Description = "HTML Comment")]
-        [TestCase("-#Tag", HamlRuleEnum.HamlComment, Description = "Haml Comment")]
-        [TestCase("!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
-        [TestCase("=Tag", HamlRuleEnum.Evaluation, Description = "DocType")]
-        public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
-        {
-            var line = new HamlLine(testString, 0);
-            Assert.AreEqual(expectedRule, line.HamlRule);
-        }
-
-        [Test]
-        [TestCase("", "", Description = "Empty string")]
-        [TestCase(" ", "", Description = "Single space")]
-        [TestCase("%", "", Description = "Plain tag")]
-        [TestCase(".className", ".className", Description = "Plain tag")]
-        [TestCase("#id", "#id", Description = "Plain tag")]
-        [TestCase("%Tag", "Tag", Description = "Plain tag")]
-        [TestCase(" /Tag", "Tag", Description = "HTML Comment")]
-        [TestCase("  -#Tag", "Tag", Description = "Haml Comment")]
-        [TestCase("\t\t!!!Tag", "Tag", Description = "DocType")]
-        public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
-        {
-            var line = new HamlLine(testString, 0);
-            Assert.AreEqual(expectedContent, line.Content);
-        }
     }
 }

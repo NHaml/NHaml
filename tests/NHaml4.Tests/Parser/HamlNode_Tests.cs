@@ -21,7 +21,7 @@ namespace NHaml4.Tests.Parser
             var node = new HamlNodeDummy();
             var childNode = new HamlNodeDummy();
             node.AddChild(childNode);
-            Assert.AreSame(childNode, node.Children[0]);
+            Assert.AreSame(childNode, node.Children.First());
         }
 
         [Test]
@@ -31,8 +31,8 @@ namespace NHaml4.Tests.Parser
             document.AddChild(new HamlNodeDummy());
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[1].Previous;
-            Assert.That(result, Is.SameAs(document.Children[0]));
+            var result = new List<HamlNode>(document.Children)[1].Previous;
+            Assert.That(result, Is.SameAs(document.Children.First()));
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Previous;
+            var result = document.Children.First().Previous;
             Assert.That(result, Is.Null);
         }
 
@@ -52,8 +52,8 @@ namespace NHaml4.Tests.Parser
             document.AddChild(new HamlNodeDummy());
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Next;
-            Assert.That(result, Is.SameAs(document.Children[1]));
+            var result = document.Children.First().Next;
+            Assert.That(result, Is.SameAs(document.Children.ToList()[1]));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Parent;
+            var result = document.Children.First().Parent;
             Assert.That(result, Is.SameAs(document));
         }
 
@@ -81,7 +81,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Next;
+            var result = document.Children.First().Next;
             Assert.That(result, Is.Null);
         }
 

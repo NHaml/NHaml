@@ -5,6 +5,7 @@ using NHaml4.Parser;
 using NHaml.Tests.Builders;
 using NHaml4.Parser.Rules;
 using NHaml4.Parser.Exceptions;
+using System.Linq;
 
 namespace NHaml4.Tests.Parser
 {
@@ -36,7 +37,7 @@ namespace NHaml4.Tests.Parser
         public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
             var result = _parser.ParseDocumentSource(template);
-            Assert.IsInstanceOf(nodeType, result.Children[0]);
+            Assert.IsInstanceOf(nodeType, result.Children.First());
         }
 
         [Test]
@@ -47,7 +48,7 @@ namespace NHaml4.Tests.Parser
         public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildrenCount)
         {
             var result = _parser.ParseDocumentSource(template);
-            Assert.That(result.Children.Count, Is.EqualTo(expectedChildrenCount));
+            Assert.That(result.Children.Count(), Is.EqualTo(expectedChildrenCount));
         }
 
         [Test]
@@ -55,7 +56,7 @@ namespace NHaml4.Tests.Parser
         {
             string template = "Line1\nLine2";
             var result = _parser.ParseDocumentSource(template);
-            Assert.That(result.Children[1].Content, Is.EqualTo("\n"));
+            Assert.That(result.Children.ToList()[1].Content, Is.EqualTo("\n"));
         }
 
         [Test]
@@ -66,7 +67,7 @@ namespace NHaml4.Tests.Parser
         public void ParseDocumentSource_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
             var result = _parser.ParseDocumentSource(template);
-            Assert.AreEqual(expectedChildren, result.Children.Count);
+            Assert.AreEqual(expectedChildren, result.Children.Count());
         }
 
         [Test]
@@ -75,10 +76,12 @@ namespace NHaml4.Tests.Parser
             string template = "%p Line 1\n%p\n  Line 2\n%p Line 3";
             var result = _parser.ParseDocumentSource(template);
 
-            Assert.That(result.Children[1].Content, Is.EqualTo("\n"));
-            Assert.That(result.Children[2].Children[0].Content, Is.EqualTo("\n"));
-            Assert.That(result.Children[2].Children.Count, Is.EqualTo(2));
-            Assert.That(result.Children[3].Content, Is.EqualTo("\n"));
+            var children = result.Children.ToList();
+
+            Assert.That(children[1].Content, Is.EqualTo("\n"));
+            Assert.That(children[2].Children.First().Content, Is.EqualTo("\n"));
+            Assert.That(children[2].Children.Count(), Is.EqualTo(2));
+            Assert.That(children[3].Content, Is.EqualTo("\n"));
         }
 
         [Test]
