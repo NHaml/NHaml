@@ -26,10 +26,13 @@ namespace NHaml4.Tests.Mocks
             _output.AppendLine();
         }
 
-        public void AppendCode(string codeSnippet)
+        public void AppendCodeToString(string codeSnippet)
         {
             throw new NotImplementedException();
         }
+
+        public void AppendCodeSnippet(string codeSnippet)
+        { }
 
         public string AppendVariable(string variableName)
         {

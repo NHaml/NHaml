@@ -30,11 +30,10 @@ namespace HamlSpec
 
         // WORKING
         //[TestCase("Eval")]
+        //[TestCase("Inline code")]
 
         // IN PROGRESS
-        [TestCase("Inline code")]
-
-        //[TestCase("Code flow")]
+        [TestCase("Code flow")]
         public void ExecuteHamlsTestSuite(string groupName)
         {
             _specTestRunner.ExecuteSpecs(groupName);

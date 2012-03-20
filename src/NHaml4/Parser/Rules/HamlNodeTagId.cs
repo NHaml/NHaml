@@ -10,5 +10,10 @@ namespace NHaml4.Parser.Rules
         public HamlNodeTagId(int sourceFileLineNo, string tagId)
             : base(sourceFileLineNo, tagId)
         { }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
     }
 }

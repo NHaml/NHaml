@@ -76,7 +76,7 @@ namespace NHaml4.Tests.Compilers
         public void AppendCode_ValidCodeFragment_AppendsFragment()
         {
             var classBuilder = new CodeDomClassBuilder();
-            classBuilder.AppendCode("1+1");
+            classBuilder.AppendCodeToString("1+1");
             string result = classBuilder.Build(ClassName);
 
             Assert.That(result, Is.StringContaining("textWriter.Write(Convert.ToString(1+1));"));
@@ -121,6 +121,17 @@ namespace NHaml4.Tests.Compilers
             Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));
             Assert.That(result, Is.StringContaining(".Append(\"value1\");"));
             Assert.That(result, Is.StringContaining(".Append(base.RenderValueOrKeyAsString(\"variable\"));"));
+        }
+
+        [Test]
+        public void AppendCodeSnippet_BuildsValueCorrectly()
+        {
+            string codeStatement = "int c = 1";
+
+            var classBuilder = new CodeDomClassBuilder();
+            classBuilder.AppendCodeSnippet(codeStatement);
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining(codeStatement));
         }
     }
 }

@@ -10,5 +10,10 @@ namespace NHaml4.Parser.Rules
         public HamlNodeHtmlComment(IO.HamlLine nodeLine)
             : base(nodeLine)
         { }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
     }
 }

@@ -60,13 +60,25 @@ namespace NHaml4.Compilers.Abstract
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
-        public void AppendCode(string code)
+        public void AppendCodeToString(string code)
         {
             var writeInvoke = CodeDomFluentBuilder
                 .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
                 .WithInvokeCodeSnippetToStringParameter(code);
 
             RenderMethod.AddExpressionStatement(writeInvoke);
+        }
+
+        public void AppendCodeSnippet(string code)
+        {
+            RenderMethod.Statements.Add(
+                new CodeSnippetExpression { Value = code });
+            //throw new NotImplementedException();
+            //var writeInvoke = CodeDomFluentBuilder
+            //    .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+            //    .WithInvokeCodeSnippetToStringParameter(code);
+
+            //RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
         public void AppendVariable(string variableName)

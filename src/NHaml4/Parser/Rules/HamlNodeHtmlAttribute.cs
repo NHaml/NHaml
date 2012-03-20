@@ -16,6 +16,16 @@ namespace NHaml4.Parser.Rules
         public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
             : base(sourceFileLineNo, nameValuePair)
         {
+            ParseChild(nameValuePair);
+        }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
+
+        private void ParseChild(string nameValuePair)
+        {
             int index = 0;
             _name = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
             if (_name.EndsWith("=")) _name = _name.Substring(0, _name.Length - 1);

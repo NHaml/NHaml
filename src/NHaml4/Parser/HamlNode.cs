@@ -34,6 +34,8 @@ namespace NHaml4.Parser
             _content = content;
         }
 
+        public abstract bool IsContentGeneratingTag { get; }
+
         public string Content
         {
             get { return _content; }
@@ -175,6 +177,18 @@ namespace NHaml4.Parser
             while (parentNode != null && parentNode.IsWhitespaceNode())
                 parentNode = parentNode.Parent;
             return parentNode;
+        }
+
+        public void AppendInnerTagNewLine()
+        {
+            if (IsContentGeneratingTag)
+                AddChild(new HamlNodeTextContainer(new HamlLine("\n", SourceFileLineNum)));
+        }
+
+        public void AppendPostTagNewLine(int lineNo)
+        {
+            if (IsContentGeneratingTag)
+                AddChild(new HamlNodeTextContainer(new HamlLine("\n", lineNo)));
         }
     }
 }

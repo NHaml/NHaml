@@ -79,6 +79,7 @@
     <Compile Include="TemplateEngine_Tests.cs" />
     <Compile Include="TemplateFactory_Tests.cs" />
     <Compile Include="TemplateResolution\FileViewSource_Tests.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeCodeWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeTextVariableWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeEvalWalker_Tests.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker_Tests.cs" />

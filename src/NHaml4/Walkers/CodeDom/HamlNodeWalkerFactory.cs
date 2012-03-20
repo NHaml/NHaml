@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml4.Parser;
-using NHaml4.Parser.Exceptions;
 using NHaml4.Parser.Rules;
 using NHaml4.Compilers;
+using NHaml4.Walkers.Exceptions;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -26,12 +25,14 @@ namespace NHaml4.Walkers.CodeDom
                 return new HamlNodeHamlCommentWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeEval))
                 return new HamlNodeEvalWalker(classBuilder, options);
+            else if (nodeType == typeof(HamlNodeCode))
+                return new HamlNodeCodeWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeTextLiteral))
                 return new HamlNodeTextLiteralWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeTextVariable))
                 return new HamlNodeTextVariableWalker(classBuilder, options);
             else
-                throw new HamlUnknownRuleException(nodeType.FullName, sourceFileLineNo);
+                throw new HamlUnknownNodeTypeException(nodeType, sourceFileLineNo);
         }
     }
 }

@@ -16,6 +16,11 @@ namespace NHaml4.Parser.Rules
             ParseChildren(attributeCollection);
         }
 
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
+
         private void ParseChildren(string attributeCollection)
         {
             if (Content[0] != '(')

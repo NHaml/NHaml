@@ -31,6 +31,11 @@ namespace NHaml4.Parser.Rules
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
+
         private void SetNamespaceAndTagName(string content, ref int pos)
         {
             _tagName = GetTagName(content, ref pos);

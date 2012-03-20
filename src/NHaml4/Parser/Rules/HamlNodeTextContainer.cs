@@ -15,6 +15,11 @@ namespace NHaml4.Parser.Rules
             ParseFragments(nodeLine.Content);
         }
 
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
+
         public HamlNodeTextContainer(int sourceFileLineNo, string content)
             : base(sourceFileLineNo, content)
         {

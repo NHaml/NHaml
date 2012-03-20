@@ -11,5 +11,10 @@ namespace NHaml4.Parser
         public HamlDocument()
             : base(0, "")
         { }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return false; }
+        }
     }
 }

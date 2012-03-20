@@ -96,6 +96,8 @@
     <Compile Include="Configuration\NHamlConfigurationSection.cs" />
     <Compile Include="Configuration\XmlConfigurator.cs" />
     <Compile Include="IO\HamlRuleFactory.cs" />
+    <Compile Include="Walkers\Exceptions\HamlInvalidChildNodeException.cs" />
+    <Compile Include="Walkers\Exceptions\HamlUnknownNodeTypeException.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
     <Compile Include="Parser\Rules\HamlNodeCode.cs" />
     <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
@@ -143,6 +145,7 @@
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeCodeWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeEvalWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHamlCommentWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker.cs" />
@@ -200,9 +203,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Walkers\Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

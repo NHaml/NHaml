@@ -13,6 +13,11 @@ namespace NHaml4.Tests.Parser
     {
         private class HamlNodeDummy : HamlNode {
             public HamlNodeDummy() : base(0, "") { }
+
+            public override bool IsContentGeneratingTag
+            {
+                get { return true; }
+            }
         }
 
         [Test]

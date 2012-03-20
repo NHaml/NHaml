@@ -10,5 +10,10 @@ namespace NHaml4.Parser.Rules
     {
         public HamlNodeCode(HamlLine line)
             : base(line) { }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return false; }
+        }
     }
 }

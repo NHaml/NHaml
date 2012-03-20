@@ -27,12 +27,12 @@
   },
 
   "Code flow" : {
-    "If statement with true eval" : {
-      "haml" : "-if (true)\n  =Hello",
-	  "html" : "Hello"
+    "Passing conditional statement renders content" : {
+      "haml" : "-if (true)\n  Hello",
+	  "html" : "  Hello"
     },
-    "If statement with false eval" : {
-      "haml" : "-if (false)\n  =Hello",
+    "Failing conditional statement does not render content" : {
+      "haml" : "-if (false)\n  Hello",
 	  "html" : ""
     }
   }

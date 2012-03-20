@@ -10,7 +10,8 @@ namespace NHaml4.Compilers
         void Append(string content);
         void AppendFormat(string content, params object[] args);
         void AppendNewLine();
-        void AppendCode(string codeSnippet);
+        void AppendCodeToString(string codeSnippet);
+        void AppendCodeSnippet(string codeSnippet);
         void AppendVariable(string variableName);
         string Build(string className, Type baseType, IEnumerable<string> imports);
         void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse);

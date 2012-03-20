@@ -7,6 +7,7 @@ using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.Parser.Rules;
 using NHaml4.Parser.Exceptions;
+using NHaml4.Walkers.Exceptions;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -45,5 +46,12 @@ namespace NHaml4.Walkers.CodeDom
             }
         }
 
+
+        internal void ValidateThereAreNoChildren(HamlNode node)
+        {
+            if (node.Children.Any())
+                throw new HamlInvalidChildNodeException(node.GetType(), node.Children.First().GetType(),
+                    node.SourceFileLineNum);
+        }
     }
 }

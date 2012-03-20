@@ -17,5 +17,10 @@ namespace NHaml4.Parser.Rules
         {
             return Content.Trim().Length == 0;
         }
+
+        public override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
     }
 }
