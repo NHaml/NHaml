@@ -29,6 +29,16 @@ namespace NHaml4.Compilers.Abstract
                                .WithParameter(typeof(TextWriter), "textWriter");
         }
 
+        public void RenderEndBlock()
+        {
+            AppendCodeSnippet("}//");
+        }
+
+        protected void RenderBeginBlock()
+        {
+            AppendCodeSnippet("{//");
+        }
+
         private IList<string> MergeRequiredImports(IEnumerable<string> imports)
         {
             var result = new List<string>(imports);
@@ -69,10 +79,18 @@ namespace NHaml4.Compilers.Abstract
             RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
-        public void AppendCodeSnippet(string code)
+        public void AppendCodeSnippet(string code, bool containsChildren)
         {
-            RenderMethod.Statements.Add(
-                new CodeSnippetExpression { Value = code });
+            if (containsChildren)
+            {
+                RenderMethod.Statements.Add(
+                    new CodeSnippetExpression { Value = code + "//"});
+                RenderBeginBlock();
+            }
+            else
+            {
+                AppendCodeSnippet(code);
+            }
             //throw new NotImplementedException();
             //var writeInvoke = CodeDomFluentBuilder
             //    .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
@@ -80,6 +98,12 @@ namespace NHaml4.Compilers.Abstract
 
             //RenderMethod.AddExpressionStatement(writeInvoke);
         }
+
+private void AppendCodeSnippet(string code)
+{
+                RenderMethod.Statements.Add(
+                    new CodeSnippetExpression { Value = code });
+}
 
         public void AppendVariable(string variableName)
         {
@@ -97,7 +121,6 @@ namespace NHaml4.Compilers.Abstract
         //public void BeginCodeBlock()
         //{
         //    Depth++;
-
         //    RenderBeginBlock();
         //}
 

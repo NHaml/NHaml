@@ -2,6 +2,7 @@
 using NHaml4.Compilers;
 using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
+using System.Linq;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -17,11 +18,12 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeEval == null)
                 throw new System.InvalidCastException("HamlNodeCode requires that HamlNode object be of type HamlNodeCode.");
 
-            //if (node.IsLeadingWhitespaceTrimmed == false)
-            //    ClassBuilder.Append(node.Indent);
-            ClassBuilder.AppendCodeSnippet(node.Content);
+            ClassBuilder.AppendCodeSnippet(node.Content, node.Children.Any());
             
             base.Walk(node);
+
+            if (node.Children.Any())
+                ClassBuilder.RenderEndBlock();
         }
     }
 }

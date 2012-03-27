@@ -29,8 +29,8 @@ namespace HamlSpec
         }
 
         // WORKING
-        //[TestCase("Eval")]
-        //[TestCase("Inline code")]
+        [TestCase("Eval")]
+        [TestCase("Inline code")]
 
         // IN PROGRESS
         [TestCase("Code flow")]

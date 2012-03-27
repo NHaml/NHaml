@@ -185,9 +185,9 @@ namespace NHaml4.Parser
                 AddChild(new HamlNodeTextContainer(new HamlLine("\n", SourceFileLineNum)));
         }
 
-        public void AppendPostTagNewLine(int lineNo)
+        public void AppendPostTagNewLine(HamlNode childNode, int lineNo)
         {
-            if (IsContentGeneratingTag)
+            if (childNode.IsContentGeneratingTag)
                 AddChild(new HamlNodeTextContainer(new HamlLine("\n", lineNo)));
         }
     }

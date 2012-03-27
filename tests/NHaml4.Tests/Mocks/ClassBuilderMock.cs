@@ -31,7 +31,10 @@ namespace NHaml4.Tests.Mocks
             throw new NotImplementedException();
         }
 
-        public void AppendCodeSnippet(string codeSnippet)
+        public void AppendCodeSnippet(string codeSnippet, bool containsChildren)
+        { }
+
+        public void RenderEndBlock()
         { }
 
         public string AppendVariable(string variableName)

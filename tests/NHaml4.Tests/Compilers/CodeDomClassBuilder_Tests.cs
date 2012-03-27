@@ -124,14 +124,25 @@ namespace NHaml4.Tests.Compilers
         }
 
         [Test]
-        public void AppendCodeSnippet_BuildsValueCorrectly()
+        public void AppendCodeSnippet_NoChildNodes_BuildsValueCorrectly()
         {
             string codeStatement = "int c = 1";
 
             var classBuilder = new CodeDomClassBuilder();
-            classBuilder.AppendCodeSnippet(codeStatement);
+            classBuilder.AppendCodeSnippet(codeStatement, false);
             string result = classBuilder.Build(ClassName);
-            Assert.That(result, Is.StringContaining(codeStatement));
+            Assert.That(result, Is.StringContaining(codeStatement + ";"));
+        }
+
+        [Test]
+        public void AppendCodeSnippet_ChildNode_OpensCodeBlockCorrectly()
+        {
+            string codeStatement = "for (int c = 0; c < 10; c++)";
+
+            var classBuilder = new CodeDomClassBuilder();
+            classBuilder.AppendCodeSnippet(codeStatement, true);
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining(codeStatement + "//;"));
         }
     }
 }

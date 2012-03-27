@@ -72,7 +72,7 @@ namespace NHaml4.Parser
                 if (hamlFile.EndOfFile == false
                     && hamlFile.CurrentLine.IndentCount >= nodeLine.IndentCount)
                 {
-                    childNode.AppendPostTagNewLine(hamlFile.CurrentLine.SourceFileLineNo);
+                    node.AppendPostTagNewLine(childNode, hamlFile.CurrentLine.SourceFileLineNo);
                 }
             }
         }
