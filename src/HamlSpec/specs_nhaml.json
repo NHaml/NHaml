@@ -34,6 +34,10 @@
     "Failing conditional statement does not render content" : {
       "haml" : "-if (false)\n  Hello",
 	  "html" : ""
+    },
+    "For loop repeats content" : {
+      "haml" : "-for (int c = 0; c < 3; c++)\n  Hello",
+	  "html" : "  Hello\n  Hello\n  Hello"
     }
   }
 }

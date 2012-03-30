@@ -83,27 +83,33 @@ namespace NHaml4.Compilers.Abstract
         {
             if (containsChildren)
             {
+                InitialiseCodeBlock();
                 RenderMethod.Statements.Add(
                     new CodeSnippetExpression { Value = code + "//"});
                 RenderBeginBlock();
+                WriteNewLineIfRepeated();
             }
             else
             {
                 AppendCodeSnippet(code);
             }
-            //throw new NotImplementedException();
-            //var writeInvoke = CodeDomFluentBuilder
-            //    .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
-            //    .WithInvokeCodeSnippetToStringParameter(code);
-
-            //RenderMethod.AddExpressionStatement(writeInvoke);
         }
 
-private void AppendCodeSnippet(string code)
-{
-                RenderMethod.Statements.Add(
-                    new CodeSnippetExpression { Value = code });
-}
+        private void InitialiseCodeBlock()
+        {
+            AppendCodeSnippet("HasCodeBlockRepeated = false;");
+        }
+
+        private void WriteNewLineIfRepeated()
+        {
+            AppendCodeSnippet("WriteNewLineIfRepeated(textWriter)");
+        }
+
+        private void AppendCodeSnippet(string code)
+        {
+            RenderMethod.Statements.Add(
+                new CodeSnippetExpression { Value = code });
+        }
 
         public void AppendVariable(string variableName)
         {

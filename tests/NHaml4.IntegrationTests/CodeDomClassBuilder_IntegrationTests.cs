@@ -56,6 +56,21 @@ namespace NHaml4.IntegrationTests
             Assert.That(writer.ToString(), Is.EqualTo(" name=\"value\" name=\"value\""));
         }
 
+        [Test]
+        public void WriteNewLineIfRepeated_RepeatedCode_AppendsNewline()
+        {
+            var classBuilder = new CodeDomClassBuilder();
+            classBuilder.AppendCodeSnippet("for (int c = 0; c < 3; c++)", true);
+            classBuilder.Append("Test");
+            classBuilder.RenderEndBlock();
+            string templateSource = classBuilder.Build(ClassName);
+            var result = GenerateTemplateFromSource(templateSource);
+
+            var writer = new StringWriter();
+            result.Render(writer, TemplateBase.HtmlVersion.XHtml);
+            Assert.That(writer.ToString(), Is.EqualTo("Test\r\nTest\r\nTest"));
+        }
+
         private TemplateBase.Template GenerateTemplateFromSource(string templateSource)
         {
             var typeBuilder = new CSharp2TemplateTypeBuilder();

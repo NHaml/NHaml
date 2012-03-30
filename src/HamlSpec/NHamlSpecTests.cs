@@ -28,11 +28,8 @@ namespace HamlSpec
 #endif
         }
 
-        // WORKING
         [TestCase("Eval")]
         [TestCase("Inline code")]
-
-        // IN PROGRESS
         [TestCase("Code flow")]
         public void ExecuteHamlsTestSuite(string groupName)
         {

@@ -14,6 +14,7 @@ namespace NHaml4.TemplateBase
         }
 
         private HtmlVersion _htmlVersion;
+        protected bool HasCodeBlockRepeated;
 
         public void Render(TextWriter writer)
         {
@@ -30,7 +31,7 @@ namespace NHaml4.TemplateBase
             Invariant.ArgumentNotNull(writer, "textWriter");
             _htmlVersion = htmlVersion;
             _viewData = viewData;
-
+            HasCodeBlockRepeated = false;
             CoreRender(writer);
         }
 
@@ -70,6 +71,12 @@ namespace NHaml4.TemplateBase
         public void SetHtmlVersion(HtmlVersion htmlVersion)
         {
             _htmlVersion = htmlVersion;
+        }
+
+        public void WriteNewLineIfRepeated(TextWriter writer)
+        {
+            if (HasCodeBlockRepeated) writer.WriteLine();
+            HasCodeBlockRepeated = true;
         }
     }
 }
