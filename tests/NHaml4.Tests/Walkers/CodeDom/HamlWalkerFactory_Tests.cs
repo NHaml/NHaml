@@ -20,6 +20,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [TestCase(typeof(HamlNodeTextLiteral), typeof(HamlNodeTextLiteralWalker))]
         [TestCase(typeof(HamlNodeTextVariable), typeof(HamlNodeTextVariableWalker))]
         [TestCase(typeof(HamlNodeCode), typeof(HamlNodeCodeWalker))]
+        [TestCase(typeof(HamlNodeDocType), typeof(HamlNodeDocTypeWalker))]
         public void GetNodeWalker_VariousNodeTypes_ReturnsCorrectWalker(Type nodeType, Type expectedWalkerType)
         {
             var walker = HamlWalkerFactory.GetNodeWalker(nodeType, -1, new Mocks.ClassBuilderMock(), new HamlHtmlOptions());

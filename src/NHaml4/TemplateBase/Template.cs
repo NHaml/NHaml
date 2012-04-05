@@ -78,5 +78,10 @@ namespace NHaml4.TemplateBase
             if (HasCodeBlockRepeated) writer.WriteLine();
             HasCodeBlockRepeated = true;
         }
+
+        public string GetDocType(string docTypeId)
+        {
+            return DocTypeFactory.GetDocType(docTypeId, _htmlVersion);
+        }
     }
 }

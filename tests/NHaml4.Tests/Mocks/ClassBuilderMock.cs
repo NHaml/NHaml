@@ -75,5 +75,11 @@ namespace NHaml4.Tests.Mocks
         {
             _output.Append(" />");
         }
+
+
+        public void AppendDocType(string docTypeId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

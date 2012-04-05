@@ -31,6 +31,8 @@ namespace NHaml4.Walkers.CodeDom
                 return new HamlNodeTextLiteralWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodeTextVariable))
                 return new HamlNodeTextVariableWalker(classBuilder, options);
+            else if (nodeType == typeof(HamlNodeDocType))
+                return new HamlNodeDocTypeWalker(classBuilder, options);
             else
                 throw new HamlUnknownNodeTypeException(nodeType, sourceFileLineNo);
         }

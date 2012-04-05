@@ -105,6 +105,19 @@ namespace NHaml4.Compilers.Abstract
             AppendCodeSnippet("WriteNewLineIfRepeated(textWriter)");
         }
 
+        public void AppendDocType(string docTypeId)
+        {
+            var docType = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("GetDocType")
+                .WithInvokePrimitiveParameter(docTypeId);
+
+            var writeInvoke = CodeDomFluentBuilder
+                .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                .WithInvokeCodeParameter(docType);
+
+            RenderMethod.AddExpressionStatement(writeInvoke);
+        }
+
         private void AppendCodeSnippet(string code)
         {
             RenderMethod.Statements.Add(
@@ -422,6 +435,5 @@ namespace NHaml4.Compilers.Abstract
         //    PreambleCount++;
         //}
         #endregion
-
     }
 }

@@ -17,5 +17,6 @@ namespace NHaml4.Compilers
         string Build(string className, Type baseType, IEnumerable<string> imports);
         void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse);
         void AppendSelfClosingTagSuffix();
+        void AppendDocType(string docTypeId);
     }
 }

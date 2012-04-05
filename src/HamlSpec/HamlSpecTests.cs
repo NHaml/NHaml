@@ -42,13 +42,13 @@ namespace HamlSpec
         [TestCase("whitespace removal")]
         [TestCase("Ruby-style interpolation")]
         [TestCase("tags with HTML-style attributes and variables")]
+        [TestCase("headers")]
 
         // IN PROGRESS
 
         // TODO
         //[TestCase("HTML escaping")]
         //[TestCase("whitespace preservation")]
-        //[TestCase("headers")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         public void ExecuteHamlsTestSuite(string groupName)

@@ -144,5 +144,18 @@ namespace NHaml4.Tests.Compilers
             string result = classBuilder.Build(ClassName);
             Assert.That(result, Is.StringContaining(codeStatement + "//;"));
         }
+
+        [Test]
+        public void AppendDocType_CallsTemplateMethodCorrectly()
+        {
+            const string docTypeId = "Transitional";
+
+            var classBuilder = new CodeDomClassBuilder();
+            classBuilder.AppendDocType(docTypeId);
+            string result = classBuilder.Build(ClassName);
+
+            const string expectedCodeStatement = "Write(GetDocType(\"" + docTypeId + "\"))";
+            Assert.That(result, Is.StringContaining(expectedCodeStatement));
+        }
     }
 }

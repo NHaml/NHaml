@@ -96,6 +96,10 @@
     <Compile Include="Configuration\NHamlConfigurationSection.cs" />
     <Compile Include="Configuration\XmlConfigurator.cs" />
     <Compile Include="IO\HamlRuleFactory.cs" />
+    <Compile Include="Parser\Rules\HamlNodeDocType.cs" />
+    <Compile Include="TemplateBase\DocTypeFactory.cs" />
+    <Compile Include="TemplateBase\HamlDocType.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeDocTypeWalker.cs" />
     <Compile Include="Walkers\Exceptions\HamlInvalidChildNodeException.cs" />
     <Compile Include="Walkers\Exceptions\HamlUnknownNodeTypeException.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
