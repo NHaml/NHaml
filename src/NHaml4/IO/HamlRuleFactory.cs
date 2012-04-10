@@ -50,6 +50,11 @@ namespace NHaml4.IO
                 content = content.Substring(1);
                 return HamlRuleEnum.Code;
             }
+            else if (content.StartsWith(@"\"))
+            {
+                content = content.Substring(1);
+                return HamlRuleEnum.PlainText;
+            }
             return HamlRuleEnum.PlainText;
         }
     }

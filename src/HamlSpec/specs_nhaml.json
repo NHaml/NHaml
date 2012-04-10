@@ -39,5 +39,20 @@
       "haml" : "-for (int c = 0; c < 3; c++)\n  Hello",
 	  "html" : "  Hello\n  Hello\n  Hello"
     }
+  },
+
+  "Line Escaping" : {
+    "Escaped tag" : {
+      "haml" : "\\%p Paragraph tag goes here",
+	  "html" : "%p Paragraph tag goes here"
+    },
+    "Escaped comment" : {
+      "haml" : "\\/Test",
+	  "html" : "/Test"
+    },
+    "Escaped DocType" : {
+      "haml" : "\\!!! XML",
+	  "html" : "!!! XML"
+    }
   }
 }

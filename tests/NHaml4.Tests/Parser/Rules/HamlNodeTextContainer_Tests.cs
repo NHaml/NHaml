@@ -44,13 +44,13 @@ namespace NHaml4.Tests.Parser.Rules
         }
 
         [Test]
-        //[TestCase("Text#{Variable}", typeof(HamlNodeTextLiteral), typeof(HamlNodeTextVariable))]
-        //[TestCase("#{Variable}Text", typeof(HamlNodeTextVariable), typeof(HamlNodeTextLiteral))]
-        //[TestCase("#{Variable1}#{Variable}", typeof(HamlNodeTextVariable), typeof(HamlNodeTextVariable))]
+        [TestCase("Text#{Variable}", typeof(HamlNodeTextLiteral), typeof(HamlNodeTextVariable))]
+        [TestCase("#{Variable}Text", typeof(HamlNodeTextVariable), typeof(HamlNodeTextLiteral))]
+        [TestCase("#{Variable1}#{Variable}", typeof(HamlNodeTextVariable), typeof(HamlNodeTextVariable))]
         [TestCase("\\\\#{Variable1}", typeof(HamlNodeTextLiteral), typeof(HamlNodeTextVariable))]
         public void Children_MultipleFragments_ChildrenAreOfCorrectType(string line, Type node1Type, Type node2Type)
         {
-            var node = new HamlNodeTextContainer(new HamlLine(line, 0));
+            var node = new HamlNodeTextContainer(0, line);
             Assert.That(node.Children.First(), Is.InstanceOf(node1Type));
             Assert.That(new List<HamlNode>(node.Children)[1], Is.InstanceOf(node2Type));
         }

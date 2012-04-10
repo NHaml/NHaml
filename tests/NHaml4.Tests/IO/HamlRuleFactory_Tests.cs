@@ -23,6 +23,7 @@ namespace NHaml4.Tests.IO
         [TestCase("!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
         [TestCase("=Tag", HamlRuleEnum.Evaluation, Description = "DocType")]
         [TestCase("-Statement", HamlRuleEnum.Code, Description = "Haml Comment")]
+        [TestCase("\\%EscapedTag", HamlRuleEnum.PlainText, Description = "Escaped Tag")]
         public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);
@@ -38,6 +39,7 @@ namespace NHaml4.Tests.IO
         [TestCase("/Tag", "Tag", Description = "HTML Comment")]
         [TestCase("-#Tag", "Tag", Description = "Haml Comment")]
         [TestCase("!!!Tag", "Tag", Description = "DocType")]
+        [TestCase("\\%EscapedTag", "%EscapedTag", Description = "Escaped Tag")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);
