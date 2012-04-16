@@ -34,7 +34,7 @@ Ouer IssueTracker is located here: [http://code.google.com/p/nhaml/issues/list]
 
 Getting Help
 ===========
-The Google Group NHaml-Users at ([http://groups.google.com/group/nhaml-users]) is the best place to go.
+The Google Group NHaml-Users at ( [http://groups.google.com/group/nhaml-users] ) is the best place to go.
 
 Contributors
 ============
