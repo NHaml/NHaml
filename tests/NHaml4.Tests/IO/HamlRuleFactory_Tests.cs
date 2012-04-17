@@ -24,6 +24,7 @@ namespace NHaml4.Tests.IO
         [TestCase("=Tag", HamlRuleEnum.Evaluation, Description = "DocType")]
         [TestCase("-Statement", HamlRuleEnum.Code, Description = "Haml Comment")]
         [TestCase("\\%EscapedTag", HamlRuleEnum.PlainText, Description = "Escaped Tag")]
+        [TestCase("_Partial", HamlRuleEnum.Partial, Description = "Partial Reference")]
         public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);

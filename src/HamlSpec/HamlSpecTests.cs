@@ -47,8 +47,8 @@ namespace HamlSpec
         // IN PROGRESS
 
         // TODO
-        //[TestCase("HTML escaping")]
         //[TestCase("whitespace preservation")]
+        //[TestCase("HTML escaping")]
         //[TestCase("tags with Ruby-style attributes")]
         //[TestCase("internal filters")]
         public void ExecuteHamlsTestSuite(string groupName)

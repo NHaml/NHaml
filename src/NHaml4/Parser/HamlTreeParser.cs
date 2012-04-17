@@ -21,32 +21,30 @@ namespace NHaml4.Parser
 
         public HamlDocument ParseViewSource(IViewSource layoutViewSource)
         {
-            HamlDocument result = null;
             using (var streamReader = layoutViewSource.GetStreamReader())
             {
-                result = ParseStreamReader(streamReader);
+                return ParseStreamReader(streamReader, layoutViewSource.FileName);
             }
-            return result;
         }
 
-        public HamlDocument ParseDocumentSource(string documentSource)
+        public HamlDocument ParseDocumentSource(string documentSource, string fileName)
         {
             using (var streamReader = new StreamReader(
                 new MemoryStream(new UTF8Encoding().GetBytes(documentSource))))
             {
-                return ParseStreamReader(streamReader);
+                return ParseStreamReader(streamReader, fileName);
             }
         }
 
-        private HamlDocument ParseStreamReader(StreamReader reader)
+        private HamlDocument ParseStreamReader(StreamReader reader, string fileName)
         {
-            var hamlFile = _hamlFileLexer.Read(reader);
+            var hamlFile = _hamlFileLexer.Read(reader, fileName);
             return ParseHamlFile(hamlFile);
         }
 
         public HamlDocument ParseHamlFile(HamlFile hamlFile)
         {
-            var result = new HamlDocument();
+            var result = new HamlDocument(hamlFile.FileName);
 
             ParseNode(result, hamlFile);
 

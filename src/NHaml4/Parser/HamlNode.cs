@@ -190,5 +190,21 @@ namespace NHaml4.Parser
             if (childNode.IsContentGeneratingTag)
                 AddChild(new HamlNodeTextContainer(new HamlLine("\n", lineNo)));
         }
+
+        public HamlNodePartial GetNextUnresolvedPartial()
+        {
+            foreach (var childNode in Children)
+            {
+                var partialNode = childNode as HamlNodePartial;
+                if (partialNode != null && partialNode.IsResolved == false)
+                    return (HamlNodePartial)childNode;
+
+                var childPartialNode = childNode.GetNextUnresolvedPartial();
+                if (childPartialNode != null)
+                    return childPartialNode;
+            }
+
+            return null;
+        }
     }
 }

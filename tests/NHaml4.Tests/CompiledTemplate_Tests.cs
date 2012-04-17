@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using NHaml4.Walkers;
 using System;
 using NHaml4.TemplateBase;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests
 {
@@ -22,6 +23,8 @@ namespace NHaml4.Tests
         public void SetUp()
         {
             _parserMock = new Mock<ITreeParser>();
+            _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
+                .Returns(HamlDocumentBuilder.Create());
             _compilerMock = new Mock<ITemplateFactoryCompiler>();
             _documentWalkerMock = new Mock<IDocumentWalker>();
         }
@@ -48,7 +51,7 @@ namespace NHaml4.Tests
             const string className = "className";
             var baseType = typeof(Template);
 
-            var fakeHamlDocument = new HamlDocument();
+            var fakeHamlDocument = HamlDocumentBuilder.Create("");
             _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
                 .Returns(fakeHamlDocument);
             var viewSource = ViewSourceBuilder.Create();

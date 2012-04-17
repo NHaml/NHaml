@@ -97,8 +97,11 @@
     <Compile Include="Configuration\XmlConfigurator.cs" />
     <Compile Include="IO\HamlRuleFactory.cs" />
     <Compile Include="Parser\Rules\HamlNodeDocType.cs" />
+    <Compile Include="Parser\Rules\HamlNodePartial.cs" />
+    <Compile Include="PartialNotFoundException.cs" />
     <Compile Include="TemplateBase\DocTypeFactory.cs" />
     <Compile Include="TemplateBase\HamlDocType.cs" />
+    <Compile Include="TemplateResolution\ViewSourceCollection.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeDocTypeWalker.cs" />
     <Compile Include="Walkers\Exceptions\HamlInvalidChildNodeException.cs" />
     <Compile Include="Walkers\Exceptions\HamlUnknownNodeTypeException.cs" />

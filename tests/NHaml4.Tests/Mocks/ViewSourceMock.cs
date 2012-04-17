@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.TemplateResolution;
+using System.IO;
 
 namespace NHaml4.Tests.Mocks
 {
@@ -23,7 +24,7 @@ namespace NHaml4.Tests.Mocks
             return _streamReader;
         }
 
-        public string Path
+        public string FilePath
         {
             get { return _path; }
         }
@@ -36,6 +37,12 @@ namespace NHaml4.Tests.Mocks
         public string GetClassName()
         {
             return "mockClassName";
+        }
+
+
+        public string FileName
+        {
+            get { return Path.GetFileName(_path); }
         }
     }
 }

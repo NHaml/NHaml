@@ -35,7 +35,7 @@ namespace NHaml4.Tests.TemplateResolution
         {
             const string fileName = "test.haml";
             var fileInfo = new FileInfo(fileName);
-            string path = new FileViewSource(fileInfo).Path;
+            string path = new FileViewSource(fileInfo).FilePath;
 
             Assert.That(path.Length, Is.GreaterThan(fileName.Length));
             Assert.That(path, Is.StringContaining(fileName));
@@ -60,7 +60,7 @@ namespace NHaml4.Tests.TemplateResolution
         private static Mock<IViewSource> ViewSourceWithPath(string pathName1)
         {
             var viewSourceMock1 = new Mock<IViewSource>();
-            viewSourceMock1.SetupGet(x => x.Path).Returns(pathName1);
+            viewSourceMock1.SetupGet(x => x.FilePath).Returns(pathName1);
             return viewSourceMock1;
         }
     }

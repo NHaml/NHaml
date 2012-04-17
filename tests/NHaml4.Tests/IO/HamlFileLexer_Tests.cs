@@ -15,14 +15,14 @@ namespace NHaml4.Tests.IO
         public void Read_NormalUse_ReturnsHamlFile()
         {
             var textReader = new StringReader("");
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             Assert.IsInstanceOf<HamlFile>(result);
         }
 
         [Test]
         public void Read_NullArgument_ThrowsArgumentNullException()
         {
-            Assert.Throws<ArgumentNullException>(() => new HamlFileLexer().Read(null));
+            Assert.Throws<ArgumentNullException>(() => new HamlFileLexer().Read(null, ""));
         }
 
         [Test]
@@ -34,7 +34,7 @@ namespace NHaml4.Tests.IO
         public void Read_ReturnsHamlFileWithCorrectLineCount(string template, int expectedLineCount)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             Assert.AreEqual(expectedLineCount, result.LineCount);
         }
 
@@ -46,7 +46,7 @@ namespace NHaml4.Tests.IO
         public void Read_HandlesNonStandardLineBreaksCorrectly(string template, int expectedLineCount, string expectedLine1, string expectedLine2)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
 
             // Assert
             Assert.AreEqual(expectedLineCount, result.LineCount);
@@ -61,7 +61,7 @@ namespace NHaml4.Tests.IO
         public void Read_DeterminesLineNumbersCorrectly()
         {
             var textReader = new StringReader("Line1\nLine2\r\nLine3\n\rLine4");
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
 
             // Assert
             for (int c = 1; c < 5; c++)
@@ -80,7 +80,7 @@ namespace NHaml4.Tests.IO
         public void Read_ReturnsLineWithCorrectIndent(string template, int expectedIndentCount)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             Assert.AreEqual(expectedIndentCount, result.CurrentLine.IndentCount);
         }
 
@@ -89,7 +89,7 @@ namespace NHaml4.Tests.IO
         {
             string template = "test";
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             result.MoveNext();
             Assert.IsNull(result.CurrentLine);
         }
@@ -99,7 +99,7 @@ namespace NHaml4.Tests.IO
         {
             string template = "test\ntest2";
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             result.MoveNext();
             Assert.AreEqual("test2", result.CurrentLine.Content);
         }
@@ -111,8 +111,17 @@ namespace NHaml4.Tests.IO
         public void Read_SplitLineTag_ReturnsSingleLine(string template, string expectedLine)
         {
             var textReader = new StringReader(template);
-            var result = new HamlFileLexer().Read(textReader);
+            var result = new HamlFileLexer().Read(textReader, "");
             Assert.That(result.CurrentLine.Content, Is.EqualTo(expectedLine));
+        }
+
+        public void Read_FileName_ResultContainsFileName()
+        {
+            const string fileName = "testFileName";
+            var textReader = new StringReader("");
+            var result = new HamlFileLexer().Read(textReader, fileName);
+
+            Assert.That(result.FileName, Is.EqualTo(fileName));
         }
 
     }

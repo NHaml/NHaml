@@ -17,6 +17,7 @@ namespace NHaml4.Parser
         HtmlComment,
         HamlComment,
         Evaluation,
-        Code
+        Code,
+        Partial
     }
 }

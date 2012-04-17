@@ -55,6 +55,11 @@ namespace NHaml4.IO
                 content = content.Substring(1);
                 return HamlRuleEnum.PlainText;
             }
+            else if (content.StartsWith("_"))
+            {
+                content = content.Substring(1);
+                return HamlRuleEnum.Partial;
+            }
             return HamlRuleEnum.PlainText;
         }
     }

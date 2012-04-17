@@ -10,14 +10,14 @@ namespace NHaml4.IO
         bool _eof;
         int _sourceFileLineIndex;
 
-        public HamlFile Read(TextReader reader)
+        public HamlFile Read(TextReader reader, string fileName)
         {
             _sourceFileLineIndex = 1;
 
             if (reader == null)
                 throw new ArgumentNullException("reader");
 
-            var result = new HamlFile();
+            var result = new HamlFile(fileName);
             _eof = (reader.Peek() < 0);
 
             while (_eof == false)

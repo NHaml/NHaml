@@ -25,19 +25,27 @@ namespace NHaml4.TemplateResolution
             return new StreamReader(_fileInfo.FullName);
         }
 
-        public string Path
+        public string FilePath
         {
             get { return _fileInfo.FullName; }
         }
 
+        public string FileName
+        {
+            get
+            {
+                return _fileInfo.Name;
+            }
+        }
+
         public DateTime TimeStamp
         {
-            get { return File.GetLastWriteTime(Path); }
+            get { return File.GetLastWriteTime(FilePath); }
         }
 
         public string GetClassName()
         {
-            string templatePath = this.Path;
+            string templatePath = this.FilePath;
             var stringBuilder = new StringBuilder();
             foreach (char ch in templatePath)
             {

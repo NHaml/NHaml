@@ -10,6 +10,7 @@ using NHaml4.Tests.Mocks;
 using System;
 using NHaml4.TemplateBase;
 using System.Collections.Generic;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests.Walkers
 {
@@ -21,9 +22,9 @@ namespace NHaml4.Tests.Walkers
         {
             // Arrange
             var content = new HamlLine("Simple content", 0);
-            var document = new HamlDocument();
+            var document = HamlDocumentBuilder.Create("",
+                new HamlNodeTextContainer(content));
             Type baseType = typeof(Template);
-            document.AddChild(new HamlNodeTextContainer(content));
 
             // Act
             var builder = new ClassBuilderMock();
@@ -39,7 +40,8 @@ namespace NHaml4.Tests.Walkers
             // Arrange
             const string className = "ClassName";
             Type baseType = typeof(Template);
-            var document = new HamlTreeParser(new NHaml4.IO.HamlFileLexer()).ParseDocumentSource("Simple content");
+            var parser = new HamlTreeParser(new NHaml4.IO.HamlFileLexer());
+            var document = parser.ParseDocumentSource("Simple content", "");
             var imports = new List<string>();
 
             // Act

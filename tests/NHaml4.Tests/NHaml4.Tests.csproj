@@ -61,6 +61,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Builders\HamlDocumentBuilder.cs" />
     <Compile Include="Builders\ViewSourceBuilder.cs" />
     <Compile Include="Compilers\CodeDomClassBuilder_Tests.cs" />
     <Compile Include="Configuration\NHamlConfigurationSection_Tests.cs" />
@@ -77,6 +78,7 @@
     <Compile Include="SimpleTemplateCache_Tests.cs" />
     <Compile Include="TemplateBase\Template_Tests.cs" />
     <Compile Include="TemplateEngine_Tests.cs" />
+    <Compile Include="TemplateFactoryFactory_Tests.cs" />
     <Compile Include="TemplateFactory_Tests.cs" />
     <Compile Include="TemplateResolution\FileViewSource_Tests.cs" />
     <Compile Include="TemplateBase\HamlDocTypeFactory_Tests.cs" />

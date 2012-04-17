@@ -35,7 +35,7 @@ namespace NHaml4.TemplateResolution
             {
                 var source = parentViewSourceList[index];
                 //search where the current parent template exists
-                var parentDirectory = Path.GetDirectoryName(source.Path);
+                var parentDirectory = Path.GetDirectoryName(source.FilePath);
                 var combine = Path.Combine(parentDirectory, templateName);
                 if (File.Exists(combine))
                 {

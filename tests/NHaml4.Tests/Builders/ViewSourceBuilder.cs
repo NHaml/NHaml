@@ -16,10 +16,10 @@ namespace NHaml.Tests.Builders
             return Create("Test");
         }
 
-        public static IViewSource Create(string content)
+        public static IViewSource Create(string content, string fileName = @"c:\test.haml")
         {
             var streamReader = new StreamReader(new MemoryStream(new System.Text.UTF8Encoding().GetBytes(content)));
-            var stubViewSource = new ViewSourceMock(streamReader, @"c:\test.haml");
+            var stubViewSource = new ViewSourceMock(streamReader, fileName);
 
             return stubViewSource;
         }

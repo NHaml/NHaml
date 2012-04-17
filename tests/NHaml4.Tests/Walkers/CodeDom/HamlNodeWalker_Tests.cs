@@ -10,6 +10,7 @@ using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
 using NHaml4.Tests.Mocks;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -36,8 +37,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void WalkChildren_TextNode_WalksTextNode()
         {
             const string testText = "Hello world";
-            var document = new HamlDocument();
-            document.AddChild(new HamlNodeTextContainer(new HamlLine(testText, 0)));
+            var document = HamlDocumentBuilder.Create("",
+                new HamlNodeTextContainer(new HamlLine(testText, 0)));
             _walker.Walk(document);
 
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(testText));
@@ -47,8 +48,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void WalkChildren_TagNode_WalksTagNode()
         {
             const string tagName = "div";
-            var document = new HamlDocument();
-            document.AddChild(new HamlNodeTag(new HamlLine(tagName, 0)));
+            var document = HamlDocumentBuilder.Create("",
+                new HamlNodeTag(new HamlLine(tagName, 0)));
             _walker.Walk(document);
 
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(tagName));
@@ -58,8 +59,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void WalkChildren_HtmlCommentNode_WalksHtmlCommentNode()
         {
             const string comment = "test";
-            var document = new HamlDocument();
-            document.AddChild(new HamlNodeHtmlComment(new HamlLine(comment, 0)));
+            var document = HamlDocumentBuilder.Create("",
+                new HamlNodeHtmlComment(new HamlLine(comment, 0)));
 
             _walker.Walk(document);
 

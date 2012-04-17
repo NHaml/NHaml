@@ -9,11 +9,9 @@ namespace NHaml4.TemplateResolution
     public interface IViewSource
     {
         StreamReader GetStreamReader();
-
-        string Path { get;  }
-
+        string FilePath { get;  }
+        string FileName { get; }
         DateTime TimeStamp { get; }
-
         string GetClassName();
     }
 }

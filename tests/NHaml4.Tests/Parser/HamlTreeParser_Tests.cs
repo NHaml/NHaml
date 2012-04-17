@@ -36,7 +36,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("= Test", typeof(HamlNodeEval))]
         public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
-            var result = _parser.ParseDocumentSource(template);
+            var result = _parser.ParseDocumentSource(template, "");
             Assert.IsInstanceOf(nodeType, result.Children.First());
         }
 
@@ -47,7 +47,7 @@ namespace NHaml4.Tests.Parser
         [TestCase("Test\n  Test", 1)]
         public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildrenCount)
         {
-            var result = _parser.ParseDocumentSource(template);
+            var result = _parser.ParseDocumentSource(template, "");
             Assert.That(result.Children.Count(), Is.EqualTo(expectedChildrenCount));
         }
 
@@ -55,7 +55,7 @@ namespace NHaml4.Tests.Parser
         public void ParseDocumentSource_MultiLineTemplates_AddsLineBreakNode()
         {
             string template = "Line1\nLine2";
-            var result = _parser.ParseDocumentSource(template);
+            var result = _parser.ParseDocumentSource(template, "");
             Assert.That(result.Children.ToList()[1].Content, Is.EqualTo("\n"));
         }
 
@@ -66,15 +66,22 @@ namespace NHaml4.Tests.Parser
         [TestCase("Test\n  Test\nTest", 3)]
         public void ParseDocumentSource_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
-            var result = _parser.ParseDocumentSource(template);
+            var result = _parser.ParseDocumentSource(template, "");
             Assert.AreEqual(expectedChildren, result.Children.Count());
+        }
+
+        public void ParseDocumentSource_FileNameSpecified_DocumentContainsMatchingFileName()
+        {
+            const string fileName = "FileName";
+            var result = _parser.ParseDocumentSource("", fileName);
+            Assert.That(result.Content, Is.EqualTo(fileName));
         }
 
         [Test]
         public void ParseDocumentSource_NestedContent_PlacesLineBreaksCorrectly()
         {
             string template = "%p Line 1\n%p\n  Line 2\n%p Line 3";
-            var result = _parser.ParseDocumentSource(template);
+            var result = _parser.ParseDocumentSource(template, "");
 
             var children = result.Children.ToList();
 
@@ -89,7 +96,7 @@ namespace NHaml4.Tests.Parser
         {
             var fakeLine = new HamlLineFake("") {HamlRule = HamlRuleEnum.Unknown};
 
-            var file = new HamlFile();
+            var file = new HamlFile("");
             file.AddLine(fakeLine);
             Assert.Throws<HamlUnknownRuleException>(() => _parser.ParseHamlFile(file));           
         }

@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml4.IO;
+using NHaml4.Parser.Rules;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests.Parser
 {
@@ -100,5 +102,56 @@ namespace NHaml4.Tests.Parser
             var result = document.Next;
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void GetNextUnresolvedPartial_NoPartials_ReturnsNull()
+        {
+            var rootNode = new HamlNodeDummy();
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_Partials_ReturnsPartial()
+        {
+            var partial = new HamlNodePartial(new HamlLine("", -1));
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(partial);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(partial));
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_OneResolvedAndOneUnresolvedPartial_ReturnsCorrectPartial()
+        {
+            var resolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+            resolvedPartial.SetDocument(HamlDocumentBuilder.Create());
+
+            var unresolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(resolvedPartial);
+            rootNode.AddChild(unresolvedPartial);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(unresolvedPartial));
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_PartialIsAGrandchildNode_ReturnsPartial()
+        {
+            var textContainerNode = new HamlNodeTextContainer(0, "Test content");
+            var partial = new HamlNodePartial(new HamlLine("", -1));
+            textContainerNode.AddChild(partial);
+
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(textContainerNode);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(partial));
+        }
+
     }
 }

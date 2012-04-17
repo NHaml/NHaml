@@ -28,6 +28,8 @@ namespace NHaml4.Parser
                     return new HamlNodeCode(nodeLine);
                 case HamlRuleEnum.DocType:
                     return new HamlNodeDocType(nodeLine);
+                case HamlRuleEnum.Partial:
+                    return new HamlNodePartial(nodeLine);
                 default:
                     throw new HamlUnknownRuleException(nodeLine.Content, nodeLine.SourceFileLineNo);
             }

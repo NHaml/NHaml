@@ -5,14 +5,22 @@ namespace NHaml4.IO
     public class HamlFile
     {
         private readonly IList<HamlLine> _hamlLines = new List<HamlLine>();
+        private readonly string _fileName;
         private int _currentLineIndex = 0;
+
+        public HamlFile(string fileName)
+        {
+            _fileName = fileName;
+        }
 
         public int LineCount
         {
-            get
-            {
-                return _hamlLines.Count;
-            }
+            get { return _hamlLines.Count; }
+        }
+
+        public string FileName
+        {
+            get { return _fileName; }
         }
 
         public HamlLine CurrentLine
