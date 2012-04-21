@@ -152,7 +152,7 @@ namespace NHaml.Web.Mvc
             //{
             //    if (string.IsNullOrEmpty(masterPath))
             //    {
-            return (IView)_templateEngine.GetCompiledTemplate(_contentProvider, viewPath, GetViewBaseType(controllerContext)).
+            return (IView)_templateEngine.GetCompiledTemplate(_contentProvider, viewPath, masterPath, GetViewBaseType(controllerContext)).
                     CreateTemplate();
             //    }
             //    else

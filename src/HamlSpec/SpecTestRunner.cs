@@ -87,7 +87,7 @@ namespace HamlSpec
 
             var hamlOptions = new HamlHtmlOptions();
             var templateEngine = new TemplateEngine(hamlOptions);
-            var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource);
+            var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             return compiledTemplate.CreateTemplate();
         }
     }

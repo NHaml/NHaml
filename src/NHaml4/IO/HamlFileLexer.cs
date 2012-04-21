@@ -38,7 +38,7 @@ namespace NHaml4.IO
 
         private bool IsPartialTag(string currentLine)
         {
-            bool inHtmlAttributes = false;
+            bool inAttributes = false;
             bool inSingleQuote = false;
             bool inDoubleQuote = false;
 
@@ -52,27 +52,27 @@ namespace NHaml4.IO
                 {
                     if (curChar == '\"') inDoubleQuote = false;
                 }
-                else if (inHtmlAttributes)
+                else if (inAttributes)
                 {
                     if (curChar == '\'')
                         inSingleQuote = true;
                     else if (curChar == '\"')
                         inDoubleQuote = true;
-                    else if (curChar == ')')
+                    else if (curChar == ')' || curChar == '}')
                     {
-                        inHtmlAttributes = false;
+                        inAttributes = false;
                         break;
                     }
                 }
                 else
                 {
-                    if (curChar == '(')
-                        inHtmlAttributes = true;
+                    if (curChar == '(' || curChar == '{')
+                        inAttributes = true;
                     else if (Char.IsWhiteSpace(curChar))
                         break;
                 }
             }
-            return inHtmlAttributes;
+            return inAttributes;
         }
 
         private string ReadLine(TextReader reader)

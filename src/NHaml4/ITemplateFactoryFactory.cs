@@ -6,6 +6,7 @@ namespace NHaml4
 {
     public interface ITemplateFactoryFactory
     {
-        TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource, Type baseType);
+        //TemplateFactory CompileTemplateFactory(string className, IViewSource viewSource, Type baseType);
+        TemplateFactory CompileTemplateFactory(string className, ViewSourceCollection viewSourceCollection, Type baseType);
     }
 }

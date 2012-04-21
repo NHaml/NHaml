@@ -67,10 +67,17 @@ namespace NHaml4.Parser.Rules
         {
             if (pos < content.Length)
             {
+                char attributeEndChar = '\0';
+
                 if (content[pos] == '(')
+                    attributeEndChar = ')';
+                else if (content[pos] == '{')
+                    attributeEndChar = '}';
+
+                if (attributeEndChar != '\0')
                 {
-                    string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { ')' });
-                    if (attributes[attributes.Length - 1] != ')')
+                    string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { attributeEndChar });
+                    if (attributes[attributes.Length - 1] != attributeEndChar)
                         throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNum);
                     pos++;
                     var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNum, attributes);

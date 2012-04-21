@@ -303,7 +303,6 @@
   },
 
   "tags with HTML-style attributes": {
-
     "HTML-style one attribute" : {
       "haml" : "%p(a='b')",
       "html" : "<p a='b'></p>"

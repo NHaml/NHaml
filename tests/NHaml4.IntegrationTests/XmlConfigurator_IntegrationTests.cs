@@ -22,7 +22,7 @@ namespace NHaml4.IntegrationTests
 
             // Act
             var templateEngine = XmlConfigurator.GetTemplateEngine();
-            var compiledTemplateFactory = templateEngine.GetCompiledTemplate(viewSource);
+            var compiledTemplateFactory = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             Template template = compiledTemplateFactory.CreateTemplate();
             var textWriter = new StringWriter();
             template.Render(textWriter);
@@ -36,7 +36,7 @@ namespace NHaml4.IntegrationTests
         {
             var viewSource = ViewSourceBuilder.Create("= NHaml4.IntegrationTests.XmlConfigurator_IntegrationTests.TestRenderMethod()");
             var templateEngine = XmlConfigurator.GetTemplateEngine();
-            var templateFactory = templateEngine.GetCompiledTemplate(viewSource);
+            var templateFactory = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             var template = templateFactory.CreateTemplate();
             var textWriter = new StringWriter();
             template.Render(textWriter);
@@ -51,7 +51,7 @@ namespace NHaml4.IntegrationTests
             var referencedAssembliesList = new List<string>();
 
             var templateEngine = XmlConfigurator.GetTemplateEngine(importsList, referencedAssembliesList);
-            var templateFactory = templateEngine.GetCompiledTemplate(viewSource);
+            var templateFactory = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             var template = templateFactory.CreateTemplate();
             var textWriter = new StringWriter();
             template.Render(textWriter);

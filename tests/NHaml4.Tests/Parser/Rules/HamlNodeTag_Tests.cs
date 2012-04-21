@@ -102,6 +102,15 @@ namespace NHaml4.Tests.Parser.Rules
         }
 
         [Test]
+        public void Constructor_LegacyMangledRubyStyleAttribute_GeneratesHtmlAttributeCollectionTag()
+        {
+            const string templateLine = "p{a='b'}";
+            var tag = new HamlNodeTag(new HamlLine(templateLine, 0));
+
+            Assert.That(tag.Children.First(), Is.InstanceOf<HamlNodeHtmlAttributeCollection>());
+        }
+
+        [Test]
         [TestCase("p(a='b')", "(a='b')", 1)]
         [TestCase("p(a='b)')", "(a='b)')", 1)]
         [TestCase("p(a=\"b\")", "(a=\"b\")", 1)]

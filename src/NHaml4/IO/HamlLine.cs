@@ -21,7 +21,7 @@ namespace NHaml4.IO
             _hamlRule = HamlRuleFactory.ParseHamlRule(ref _content);
             AddImplicitDivTag();
 
-            if (string.IsNullOrEmpty(_content)) _indentCount = 0;
+            if (string.IsNullOrEmpty(currentLine.Trim())) _indentCount = 0;
         }
 
         public int IndentCount

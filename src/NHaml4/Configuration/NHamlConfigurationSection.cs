@@ -21,11 +21,15 @@ namespace NHaml4.Configuration
             var map = new ConfigurationFileMap(configFile);
             var config = ConfigurationManager.OpenMappedMachineConfiguration(map);
             var result = (NHamlConfigurationSection)config.GetSection("NHaml");
-            if (result == null)
-                return new NHamlConfigurationSection();
 
-            return result;
-		}
+            return result ?? new NHamlConfigurationSection();
+        }
+
+        internal static NHamlConfigurationSection GetConfiguration()
+        {
+            var result = ConfigurationManager.GetSection("system.serviceModel/client") as NHamlConfigurationSection;
+            return result ?? new NHamlConfigurationSection();
+        }
 
         const string ReferencedAssembliesElement = "ReferencedAssemblies";
         [ConfigurationProperty(ReferencedAssembliesElement)]

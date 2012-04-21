@@ -21,19 +21,18 @@ namespace NHaml4.Configuration
 
         public static TemplateEngine GetTemplateEngine(IList<string> imports, IList<string> referencedAssemblies)
         {
-            return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath,
-                imports, referencedAssemblies);
+            var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration();
+            return GetTemplateEngine(nhamlConfiguration, imports, referencedAssemblies);
         }
         
         public static TemplateEngine GetTemplateEngine(string configFile)
         {
-            return GetTemplateEngine(configFile, new List<string>(), new List<string>());
+            var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration(configFile);
+            return GetTemplateEngine(nhamlConfiguration, new List<string>(), new List<string>());
         }
 
-        private static TemplateEngine GetTemplateEngine(string configFile, IList<string> imports, IList<string> referencedAssemblies)
+        private static TemplateEngine GetTemplateEngine(NHamlConfigurationSection nhamlConfiguration, IList<string> imports, IList<string> referencedAssemblies)
         {
-            var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration(configFile);
-            
             var templateCache = new SimpleTemplateCache();
 
             var templateFactoryFactory = new TemplateFactoryFactory(

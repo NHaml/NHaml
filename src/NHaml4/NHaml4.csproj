@@ -102,6 +102,7 @@
     <Compile Include="TemplateBase\DocTypeFactory.cs" />
     <Compile Include="TemplateBase\HamlDocType.cs" />
     <Compile Include="TemplateResolution\ViewSourceCollection.cs" />
+    <Compile Include="Walkers\CodeDom\HamlPartialWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeDocTypeWalker.cs" />
     <Compile Include="Walkers\Exceptions\HamlInvalidChildNodeException.cs" />
     <Compile Include="Walkers\Exceptions\HamlUnknownNodeTypeException.cs" />

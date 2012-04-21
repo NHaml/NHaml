@@ -108,6 +108,9 @@ namespace NHaml4.Tests.IO
         [TestCase("%p(a='b'\nc='d')content", "p(a='b' c='d')content")]
         [TestCase("%p(a=')b'\nc='d')content", "p(a=')b' c='d')content")]
         [TestCase("%p(a=\")b\"\nc='d')content", "p(a=\")b\" c='d')content")]
+        [TestCase("%p{a='b'\nc='d'}content", "p{a='b' c='d'}content")]
+        [TestCase("%p{a='}b'\nc='d'}content", "p{a='}b' c='d'}content")]
+        [TestCase("%p{a=\"}b\"\nc='d'}content", "p{a=\"}b\" c='d'}content")]
         public void Read_SplitLineTag_ReturnsSingleLine(string template, string expectedLine)
         {
             var textReader = new StringReader(template);

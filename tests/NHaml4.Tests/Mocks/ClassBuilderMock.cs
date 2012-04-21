@@ -52,6 +52,10 @@ namespace NHaml4.Tests.Mocks
             return _output.ToString();
         }
 
+        public void Clear()
+        {
+            _output.Clear();
+        }
 
         void ITemplateClassBuilder.AppendVariable(string variableName)
         {

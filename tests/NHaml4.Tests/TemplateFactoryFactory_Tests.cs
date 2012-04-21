@@ -76,5 +76,29 @@ namespace NHaml4.Tests
             Assert.That(((HamlNodePartial)result.Children.ToList()[1]).IsResolved, Is.True);
             Assert.That(result.Children.ToList()[1].Children.First(), Is.SameAs(childDocument.Children.First()));
         }
+
+        [Test]
+        public void BuildHamlDocument_UnnamedPartialReference_UsesFollowingPartial()
+        {
+            var rootViewSource = ViewSourceBuilder.Create("MainFile");
+            var rootDocument = HamlDocumentBuilder.Create("MainFile",
+                new HamlNodePartial(new HamlLine("", 0)));
+            _treeParserMock.Setup(x => x.ParseViewSource(rootViewSource))
+                .Returns(rootDocument);
+
+            var childViewSource = ViewSourceBuilder.Create("SubDocument", "SubDocument");
+            var childDocument = HamlDocumentBuilder.Create("SubDocument)",
+                new HamlNodeTextContainer(0, "Child Test"));
+            _treeParserMock.Setup(x => x.ParseViewSource(childViewSource))
+                .Returns(childDocument);
+
+            var viewSourceList = new ViewSourceCollection { rootViewSource, childViewSource };
+
+            var result = _templateFactoryFactory.BuildHamlDocument(viewSourceList);
+
+            Assert.That(result, Is.SameAs(rootDocument));
+            Assert.That(((HamlNodePartial)result.Children.First()).IsResolved, Is.True);
+            Assert.That(result.Children.First().Children.First(), Is.SameAs(childDocument.Children.First()));
+        }
     }
 }

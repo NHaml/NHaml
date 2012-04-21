@@ -68,23 +68,19 @@ namespace NHaml4
 
         public HamlDocument BuildHamlDocument(ViewSourceCollection viewSourceList)
         {
+            _hamlDocumentCache.Clear();
             var hamlDocument = HamlDocumentCacheGetOrAdd(viewSourceList.First().FileName,
                 () => _treeParser.ParseViewSource(viewSourceList.First()));
 
             HamlNodePartial partial;
             while ((partial = hamlDocument.GetNextUnresolvedPartial()) != null)
             {
-                try
-                {
-                    var viewSource = viewSourceList.GetByPartialName(partial.Content);
-                    var partialDocument = HamlDocumentCacheGetOrAdd(viewSource.FileName,
-                        () => _treeParser.ParseViewSource(viewSource));
-                    partial.SetDocument(partialDocument);
-                }
-                catch (InvalidOperationException)
-                {
-                    throw new PartialNotFoundException(partial.Content);
-                }
+                var viewSource = string.IsNullOrEmpty(partial.Content)
+                    ? viewSourceList[1]
+                    : viewSourceList.GetByPartialName(partial.Content);
+                var partialDocument = HamlDocumentCacheGetOrAdd(viewSource.FileName,
+                    () => _treeParser.ParseViewSource(viewSource));
+                partial.SetDocument(partialDocument);
             }
             return hamlDocument;
         }

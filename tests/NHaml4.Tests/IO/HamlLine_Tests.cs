@@ -19,6 +19,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\tTest", 2, Description = "Tab followed by plain text")]
         [TestCase(" \tTest", 3, Description = "Space + Tab followed by plain text")]
         [TestCase("\t Test", 3, Description = "Tab + Space followed by plain text")]
+        [TestCase("  _", 2, Description = "Token-only haml line")]
         public void Constructor_CalculatesIndentCountCorrectly(string testString, int expectedIndent)
         {
             var line = new HamlLine(testString, 0);

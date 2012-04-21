@@ -17,6 +17,7 @@ namespace NHaml4.Walkers.CodeDom
 
         public string Walk(HamlDocument document, string className, Type baseType, IEnumerable<string> imports)
         {
+            ClassBuilder.Clear();
             base.Walk(document);
             return ClassBuilder.Build(className, baseType, imports);
         }    

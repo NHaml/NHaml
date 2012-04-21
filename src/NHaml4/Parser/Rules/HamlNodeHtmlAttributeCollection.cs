@@ -23,8 +23,8 @@ namespace NHaml4.Parser.Rules
 
         private void ParseChildren(string attributeCollection)
         {
-            if (Content[0] != '(')
-                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket.", SourceFileLineNum);
+            if (Content[0] != '(' && Content[0] != '{')
+                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket or curly bracket.", SourceFileLineNum);
 
             int index = 1;
             while (index < attributeCollection.Length)
@@ -38,7 +38,7 @@ namespace NHaml4.Parser.Rules
 
         private static string GetNextAttributeToken(string attributeCollection, ref int index)
         {
-            char[] terminatingChars = new[] { ' ', '\t', ')' };
+            char[] terminatingChars = new[] { ' ', '\t', ')', '}' };
             string nameValuePair = HtmlStringHelper.ExtractTokenFromTagString(attributeCollection, ref index,
                 terminatingChars);
             if (terminatingChars.Contains(nameValuePair[nameValuePair.Length - 1]))
