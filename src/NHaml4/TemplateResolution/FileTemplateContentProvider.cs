@@ -25,12 +25,12 @@ namespace NHaml4.TemplateResolution
         {
             Invariant.ArgumentNotEmpty(templateName, "templateName");
             Invariant.ArgumentNotNull(parentViewSourceList, "parentViewSourceList");
+            
             templateName = SuffixWithHaml(templateName);
             var fileInfo = CreateFileInfo(templateName);
             if (fileInfo != null && fileInfo.Exists)
-            {
                 return new FileViewSource(fileInfo);
-            }
+
             for (var index = 0; index < parentViewSourceList.Count; index++)
             {
                 var source = parentViewSourceList[index];
@@ -38,9 +38,7 @@ namespace NHaml4.TemplateResolution
                 var parentDirectory = Path.GetDirectoryName(source.FilePath);
                 var combine = Path.Combine(parentDirectory, templateName);
                 if (File.Exists(combine))
-                {
                     return new FileViewSource(new FileInfo(combine));
-                }
             }
 
             throw new FileNotFoundException(string.Format("Could not find template '{0}'.", templateName));
@@ -48,14 +46,11 @@ namespace NHaml4.TemplateResolution
 
         protected virtual FileInfo CreateFileInfo(string templateName)
         {
-
             foreach (var pathSource in PathSources)
             {
                 var fileInfo = CreateFileInfo(pathSource, templateName);
                 if (fileInfo.Exists)
-                {
                     return fileInfo;
-                }
             }
 
             return null;
@@ -63,11 +58,9 @@ namespace NHaml4.TemplateResolution
 
         private static string SuffixWithHaml(string templateName)
         {
-            if (templateName.EndsWith(".haml"))
-            {
-                return templateName;
-            }
-            return templateName + ".haml";
+            return templateName.EndsWith(".haml")
+                ? templateName
+                : templateName + ".haml";
         }
 
 
@@ -83,36 +76,13 @@ namespace NHaml4.TemplateResolution
         {
             _pathSources.Add(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, pathSource));
         }
-   
-//TODO:Not sure if this is useful
-        //public bool HasSource(string sourceName)
-        //{
-        //    foreach (var pathSource in PathSources)
-        //    {
-        //        var fileInfo = CreateFileInfo(pathSource, sourceName);
-        //        if (fileInfo.Exists)
-        //        {
-        //            return true;
-        //        }
-        //    }
-
-        //    return false;
-        //}
 
         private static FileInfo CreateFileInfo(string viewRoot, string templateName)
         {
-            //TODO: not sure what the purpose of this is. came from castle
-            //if (Path.IsPathRooted(templateName))
-            //{
-            //    templateName = templateName.Substring(Path.GetPathRoot(templateName).Length);
-            //}
             var info = new FileInfo(templateName);
-            if (!info.Exists)
-            {
-                info = new FileInfo(Path.Combine(viewRoot, templateName));
-            }
-
-            return info;
+            return info.Exists
+                ? info
+                : new FileInfo(Path.Combine(viewRoot, templateName));
         }
 
     }

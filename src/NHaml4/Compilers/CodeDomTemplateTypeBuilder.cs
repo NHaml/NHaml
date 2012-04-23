@@ -134,18 +134,5 @@ namespace NHaml4.Compilers
             }
             return false;
         }
-
-
-
-        //[SuppressMessage( "Microsoft.Security", "CA2122" )]
-        //private void AddReferences(CompilerParameters parameters)
-        //{
-        //    parameters.ReferencedAssemblies.Clear();
-
-        //    foreach( var assembly in Options.References )
-        //    {
-        //        parameters.ReferencedAssemblies.Add( assembly );
-        //    }
-        //}
     }
 }

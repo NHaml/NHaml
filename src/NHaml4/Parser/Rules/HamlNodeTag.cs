@@ -86,49 +86,45 @@ namespace NHaml4.Parser.Rules
             }
         }
 
-        private void ParseSpecialCharacters(string p, ref int pos)
+        private void ParseSpecialCharacters(string content, ref int pos)
         {
             _whitespaceRemoval = WhitespaceRemoval.None;
             _isSelfClosing = false;
 
-            while (pos < p.Length)
+            while (pos < content.Length)
             {
-                if (ParseWhitespaceRemoval(p, ref pos) == false
-                    && ParseSelfClosing(p, pos) == false)
+                if (ParseWhitespaceRemoval(content, ref pos) == false
+                    && ParseSelfClosing(content, pos) == false)
                     break;
             }
         }
 
-        private bool ParseSelfClosing(string p, int pos)
+        private bool ParseSelfClosing(string content, int pos)
         {
-            if (_isSelfClosing == false)
-            {
-                if (p[pos] == '/')
-                {
-                    _isSelfClosing = true;
-                    pos++;
-                    return true;
-                }
-            }
-            return false;
+            if (_isSelfClosing || content[pos] != '/')
+                return false;
+
+            _isSelfClosing = true;
+            pos++;
+            return true;
         }
 
-        private bool ParseWhitespaceRemoval(string p, ref int pos)
+        private bool ParseWhitespaceRemoval(string content, ref int pos)
         {
-            if (_whitespaceRemoval == WhitespaceRemoval.None)
+            if (_whitespaceRemoval != WhitespaceRemoval.None)
+                return false;
+
+            if (content[pos] == '>')
             {
-                if (p[pos] == '>')
-                {
-                    _whitespaceRemoval = WhitespaceRemoval.Surrounding;
-                    pos++;
-                    return true;
-                }
-                else if (p[pos] == '<')
-                {
-                    _whitespaceRemoval = WhitespaceRemoval.Internal;
-                    pos++;
-                    return true;
-                }
+                _whitespaceRemoval = WhitespaceRemoval.Surrounding;
+                pos++;
+                return true;
+            }
+            else if (content[pos] == '<')
+            {
+                _whitespaceRemoval = WhitespaceRemoval.Internal;
+                pos++;
+                return true;
             }
             return false;
         }
@@ -191,13 +187,9 @@ namespace NHaml4.Parser.Rules
             while (pos < content.Length)
             {
                 if (HtmlStringHelper.IsHtmlIdentifierChar(content[pos]))
-                {
                     pos++;
-                }
                 else
-                {
                     break;
-                }
             }
             return content.Substring(startIndex, pos - startIndex);
         }

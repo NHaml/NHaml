@@ -18,15 +18,25 @@ namespace NHaml4.Walkers.CodeDom
                 throw new System.InvalidCastException("HamlNodeTextLiteralWalker requires that HamlNode object be of type HamlNodeTextLiteral.");
 
             string outputText = node.Content;
-            if (node.Parent.IsLeadingWhitespaceTrimmed)
-                outputText = outputText.TrimStart(new[] { ' ', '\n', '\r', '\t' });
-            if (node.Parent.IsTrailingWhitespaceTrimmed)
-                outputText = outputText.TrimEnd(new[] { ' ', '\n', '\r', '\t' });
+            outputText = HandleLeadingWhitespace(node, outputText);
+            outputText = HandleTrailingWhitespace(node, outputText);
 
             if (outputText.Length > 0)
-            {
                 ClassBuilder.Append(outputText);
-            }
+        }
+
+        private static string HandleTrailingWhitespace(HamlNode node, string outputText)
+        {
+            if (node.Parent.IsTrailingWhitespaceTrimmed)
+                outputText = outputText.TrimEnd(new[] { ' ', '\n', '\r', '\t' });
+            return outputText;
+        }
+
+        private static string HandleLeadingWhitespace(HamlNode node, string outputText)
+        {
+            if (node.Parent.IsLeadingWhitespaceTrimmed)
+                outputText = outputText.TrimStart(new[] { ' ', '\n', '\r', '\t' });
+            return outputText;
         }
     }
 }

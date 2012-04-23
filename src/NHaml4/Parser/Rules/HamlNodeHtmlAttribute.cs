@@ -16,41 +16,36 @@ namespace NHaml4.Parser.Rules
         public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
             : base(sourceFileLineNo, nameValuePair)
         {
-            ParseChild(nameValuePair);
+            int index = 0;
+            _name = ParseName(ref index);
+            if (index < Content.Length)
+            {
+                var value = ParseValue(index);
+                AddChild(new HamlNodeTextContainer(SourceFileLineNum, value));
+            }
+        }
+
+        private string ParseValue(int index)
+        {
+            string value = Content.Substring(index + 1);
+            value = IsQuoted(value)
+                ? RemoveQuotes(value)
+                : value = "#{" + value + "}";
+            return value;
+        }
+
+        private string ParseName(ref int index)
+        {
+            string result = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
+            if (string.IsNullOrEmpty(result))
+                throw new HamlMalformedTagException("Malformed HTML attribute \"" + Content + "\"", SourceFileLineNum);
+
+            return result.TrimEnd('=');
         }
 
         public override bool IsContentGeneratingTag
         {
             get { return true; }
-        }
-
-        private void ParseChild(string nameValuePair)
-        {
-            int index = 0;
-            _name = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
-            if (_name.EndsWith("=")) _name = _name.Substring(0, _name.Length - 1);
-
-            if (!string.IsNullOrEmpty(_name))
-            {
-                if (index < Content.Length)
-                {
-                    string value = Content.Substring(index + 1);
-                    if (IsQuoted(value))
-                    {
-                        value = RemoveQuotes(value);
-                    }
-                    else
-                    {
-                        value = "#{" + value + "}";
-                    }
-                    var valueNode = new HamlNodeTextContainer(SourceFileLineNum, value);
-                    AddChild(valueNode);
-                }
-            }
-            else
-            {
-                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"", SourceFileLineNum);
-            }
         }
 
         public string Name
@@ -61,10 +56,7 @@ namespace NHaml4.Parser.Rules
 
         public char QuoteChar
         {
-            get
-            {
-                return _quoteChar;
-            }
+            get { return _quoteChar; }
         }
 
         private bool IsQuoted(string input)
@@ -75,16 +67,11 @@ namespace NHaml4.Parser.Rules
 
         private string RemoveQuotes(string input)
         {
-            if (input.Length < 2) return input;
+            if (input.Length < 2 || IsQuoted(input) == false)
+                return input;
 
-            if ((input[0] == '\'' && input[input.Length - 1] == '\'')
-                || (input[0] == '"' && input[input.Length - 1] == '"'))
-            {
-                _quoteChar = input[0];
-                return input.Substring(1, input.Length - 2);
-            }
-
-            return input;
+            _quoteChar = input[0];
+            return input.Substring(1, input.Length - 2);
         }
     }
 }

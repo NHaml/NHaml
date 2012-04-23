@@ -17,11 +17,16 @@ namespace NHaml4.Walkers.CodeDom
             if (nodeText == null)
                 throw new System.InvalidCastException("HamlNodeTextWalker requires that HamlNode object be of type HamlNodeText.");
 
-            if (node.IsLeadingWhitespaceTrimmed == false
-                && (node.IsWhitespaceNode() == false || node.IsTrailingWhitespaceTrimmed == false))
-                ClassBuilder.Append(nodeText.Indent);
-
+            RenderIndent(node, nodeText);
             base.Walk(node);
+        }
+
+        private void RenderIndent(HamlNode node, HamlNodeTextContainer nodeText)
+        {
+            if (node.IsLeadingWhitespaceTrimmed) return;
+            if (node.IsWhitespaceNode() && node.IsTrailingWhitespaceTrimmed) return;
+            
+            ClassBuilder.Append(nodeText.Indent);
         }
     }
 }

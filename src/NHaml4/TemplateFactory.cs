@@ -30,9 +30,7 @@ namespace NHaml4
         {
             var constructor = type.GetConstructor( new Type[] { } );
             if (constructor == null)
-            {
                 throw new InvalidTemplateTypeException(type);
-            }
 
             var dynamicMethod = new DynamicMethod( "activatefast__", type, null, type );
             var ilGenerator = dynamicMethod.GetILGenerator();

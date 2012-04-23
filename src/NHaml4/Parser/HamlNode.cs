@@ -16,11 +16,6 @@ namespace NHaml4.Parser
         private readonly HamlLine _line;
         private int _sourceFileLineNum;
 
-        //public HamlLine HamlLine
-        //{
-        //    get { return _line; }
-        //}
-
         protected HamlNode(HamlLine nodeLine)
         {
             _line = nodeLine;
@@ -44,12 +39,7 @@ namespace NHaml4.Parser
 
         public string Indent
         {
-            get
-            {
-                return _line == null
-                    ? ""
-                    : _line.Indent;
-            }
+            get { return (_line == null) ? "" : _line.Indent; }
         }
 
         public bool IsMultiLine {
@@ -59,24 +49,13 @@ namespace NHaml4.Parser
 
         public int IndentCount
         {
-            get
-            {
-                return _line == null
-                    ? -1
-                    : _line.IndentCount;
-            }
+            get { return (_line == null) ? -1 : _line.IndentCount; }
         }
 
         public int SourceFileLineNum
         {
-            protected set
-            {
-                _sourceFileLineNum = value;
-            }
-            get
-            {
-                return _sourceFileLineNum;
-            }
+            protected set { _sourceFileLineNum = value; }
+            get { return _sourceFileLineNum; }
         }
 
         public IEnumerable<HamlNode> Children
@@ -89,9 +68,7 @@ namespace NHaml4.Parser
             hamlNode.Parent = this;
             hamlNode.Previous = _children.LastOrDefault();
             if (hamlNode.Previous != null)
-            {
                 hamlNode.Previous.Next = hamlNode;
-            }
 
             _children.Add(hamlNode);
         }

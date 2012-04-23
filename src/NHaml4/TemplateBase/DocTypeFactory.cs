@@ -9,7 +9,6 @@ namespace NHaml4.TemplateBase
     {
         public static string GetDocType(string docType, HtmlVersion htmlVersion)
         {
-
             var docTypeParts = docType.Split(' ');
 
             if (docTypeParts.Length == 0)

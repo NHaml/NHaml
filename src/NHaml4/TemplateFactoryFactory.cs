@@ -89,12 +89,15 @@ namespace NHaml4
         {
             HamlDocument result;
             bool templateInCache = _hamlDocumentCache.TryGetValue(key, out result);
-            if (templateInCache == false)
-            {
-                result = getter();
-                _hamlDocumentCache[key] = result;
-            }
+            return templateInCache
+                ? result
+                : GetAndAddToCache(key, getter);
+        }
 
+        private HamlDocument GetAndAddToCache(string key, Func<HamlDocument> getter)
+        {
+            var result = getter();
+            _hamlDocumentCache[key] = result;
             return result;
         }
     }

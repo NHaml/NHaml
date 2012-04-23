@@ -52,10 +52,9 @@ namespace NHaml4.Parser.Rules
                     if (IsEndTagToken(content, index))
                     {
                         index++;
-                        if (result.Length > 3)
-                            return new HamlNodeTextVariable(result, SourceFileLineNum);
-                        else
-                            return new HamlNodeTextLiteral(result, SourceFileLineNum);
+                        return (result.Length > 3)
+                            ? (HamlNode)new HamlNodeTextVariable(result, SourceFileLineNum)
+                            : (HamlNode)new HamlNodeTextLiteral(result, SourceFileLineNum);
                     }
                 }
                 else if (IsTagToken(content, index))
@@ -63,9 +62,7 @@ namespace NHaml4.Parser.Rules
                     if (isEscaped == false)
                         return new HamlNodeTextLiteral(result, SourceFileLineNum);
                     else
-                    {
                         result = RemoveEscapeCharacter(result) + content[index];
-                    }
                 }
                 else
                 {

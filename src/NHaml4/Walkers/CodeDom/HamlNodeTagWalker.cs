@@ -43,12 +43,11 @@ namespace NHaml4.Walkers.CodeDom
 
         private void MakeClassAttribute(HamlNodeTag nodeTag)
         {
-            var classValues = new List<string>();
-            classValues.AddRange(from collection in nodeTag.Children
-                                 from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                                 where ((HamlNodeHtmlAttribute)attr).Name == "class"
-                                 from attrFragment in attr.Children
-                                 select attrFragment.Content);
+            var classValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
+                               from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                               where ((HamlNodeHtmlAttribute)attr).Name == "class"
+                               from attrFragment in attr.Children
+                               select attrFragment.Content).ToList();
 
             classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>()
                 .Select(x => " " + x.Content));
@@ -62,13 +61,11 @@ namespace NHaml4.Walkers.CodeDom
 
         private void MakeIdAttribute(HamlNodeTag nodeTag)
         {
-            var idValues = new List<string>();
-            idValues.AddRange(from collection in nodeTag.Children
-                              from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                              where ((HamlNodeHtmlAttribute)attr).Name == "id"
-                              from attrFragment in attr.Children
-                              select attrFragment.Content);
-
+            var idValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
+                            from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                            where ((HamlNodeHtmlAttribute)attr).Name == "id"
+                            from attrFragment in attr.Children
+                            select attrFragment.Content).ToList();
 
             var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
             if (idTag != null) idValues.Insert(0, idTag.Content);
@@ -113,9 +110,7 @@ namespace NHaml4.Walkers.CodeDom
 
         private bool IsPreCloseTagWhitespaceTrimmed(HamlNodeTag nodeTag)
         {
-            if (nodeTag.IsMultiLine == false)
-                return true;
-            else if (nodeTag.WhitespaceRemoval == WhitespaceRemoval.Internal)
+            if (nodeTag.IsMultiLine == false || nodeTag.WhitespaceRemoval == WhitespaceRemoval.Internal)
                 return true;
 
             var lastNonWhitespaceChild = GetLastNonWhitespaceChild(nodeTag) as HamlNodeTag;

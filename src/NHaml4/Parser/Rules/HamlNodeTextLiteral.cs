@@ -9,9 +9,7 @@ namespace NHaml4.Parser.Rules
     {
         public HamlNodeTextLiteral(string content, int sourceLineNum)
             : base(sourceLineNum, content)
-        {
-            
-        }
+        { }
 
         public bool IsWhitespace()
         {

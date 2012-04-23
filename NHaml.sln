@@ -9,7 +9,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{8D9585A7-E660-4DA3-ACEF-688763473022}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamlSpec", "src\HamlSpec\HamlSpec.csproj", "{F9164010-CA96-4EE8-834A-FE441BA9E4A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "HamlSpec", "tests\HamlSpec\HamlSpec.csproj", "{F9164010-CA96-4EE8-834A-FE441BA9E4A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp4", "src\Samples\NHaml.Samples.Mvc.CSharp4\NHaml.Samples.Mvc.CSharp4.csproj", "{6938609C-1ABB-42AE-9CBC-AD79F68B92D1}"
 EndProject

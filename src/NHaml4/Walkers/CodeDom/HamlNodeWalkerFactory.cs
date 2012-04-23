@@ -34,7 +34,7 @@ namespace NHaml4.Walkers.CodeDom
             else if (nodeType == typeof(HamlNodeDocType))
                 return new HamlNodeDocTypeWalker(classBuilder, options);
             else if (nodeType == typeof(HamlNodePartial))
-                return new HamlDocumentWalker(classBuilder, options);
+                return new HamlPartialWalker(classBuilder, options);
             else
                 throw new HamlUnknownNodeTypeException(nodeType, sourceFileLineNo);
         }

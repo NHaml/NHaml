@@ -13,6 +13,9 @@ namespace NHaml4.Parser.Rules
             : base(sourceFileLineNo, attributeCollection)
             
         {
+            if (Content[0] != '(' && Content[0] != '{')
+                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket or curly bracket.", SourceFileLineNum);
+
             ParseChildren(attributeCollection);
         }
 
@@ -23,9 +26,6 @@ namespace NHaml4.Parser.Rules
 
         private void ParseChildren(string attributeCollection)
         {
-            if (Content[0] != '(' && Content[0] != '{')
-                throw new HamlMalformedTagException("AttributeCollection tag must start with an opening bracket or curly bracket.", SourceFileLineNum);
-
             int index = 1;
             while (index < attributeCollection.Length)
             {

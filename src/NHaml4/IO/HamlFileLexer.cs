@@ -21,19 +21,22 @@ namespace NHaml4.IO
             _eof = (reader.Peek() < 0);
 
             while (_eof == false)
-            {
-                string currentLine = ReadLine(reader);
-                while (IsPartialTag(currentLine))
-                {
-                    if (_eof)
-                        throw new HamlMalformedTagException("Multi-line tag found with no end token.", _sourceFileLineIndex);
-                    currentLine += " " + ReadLine(reader);
-                }
-
-                result.AddLine(new HamlLine(currentLine, _sourceFileLineIndex-1));
-            }
+                ReadHamlLine(reader, result);
 
             return result;
+        }
+
+        private void ReadHamlLine(TextReader reader, HamlFile result)
+        {
+            string currentLine = ReadLine(reader);
+            while (IsPartialTag(currentLine))
+            {
+                if (_eof)
+                    throw new HamlMalformedTagException("Multi-line tag found with no end token.", _sourceFileLineIndex);
+                currentLine += " " + ReadLine(reader);
+            }
+
+            result.AddLine(new HamlLine(currentLine, _sourceFileLineIndex - 1));
         }
 
         private bool IsPartialTag(string currentLine)

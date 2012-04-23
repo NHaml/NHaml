@@ -28,9 +28,7 @@ namespace NHaml4.Configuration
             set
             {
                 if( BaseGet( index ) != null )
-                {
                     BaseRemoveAt( index );
-                }
 
                 BaseAdd( index, value );
             }
@@ -46,9 +44,7 @@ namespace NHaml4.Configuration
             var enumerator = base.GetEnumerator();
 
             while( enumerator.MoveNext() )
-            {
                 yield return (T)enumerator.Current;
-            }
         }
 
         public int IndexOf( T element )
@@ -69,9 +65,7 @@ namespace NHaml4.Configuration
         public void Remove( T element )
         {
             if( BaseIndexOf( element ) >= 0 )
-            {
                 BaseRemove( element.Key );
-            }
         }
 
         public void RemoveAt( int index )

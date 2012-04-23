@@ -30,22 +30,19 @@ namespace NHaml4.Walkers.CodeDom
             foreach (var child in node.Children)
             {
                 var nodeWalker = HamlWalkerFactory.GetNodeWalker(child.GetType(), child.SourceFileLineNum, ClassBuilder, Options);
-                if (nodeWalker != null)
+                if (nodeWalker == null) continue;
+
+                try
                 {
-                    try
-                    {
-                        nodeWalker.Walk(child);
-                    }
-                    catch (Exception e)
-                    {
-                        throw new HamlNodeWalkerException(child.GetType().Name,
-                            child.SourceFileLineNum,
-                            e);
-                    }
+                    nodeWalker.Walk(child);
+                }
+                catch (Exception e)
+                {
+                    throw new HamlNodeWalkerException(child.GetType().Name,
+                        child.SourceFileLineNum, e);
                 }
             }
         }
-
 
         internal void ValidateThereAreNoChildren(HamlNode node)
         {
