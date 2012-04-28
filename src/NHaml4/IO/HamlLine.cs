@@ -1,17 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Parser;
+﻿using NHaml4.Parser;
 
 namespace NHaml4.IO
 {
     public class HamlLine
     {
-        private int _indentCount;
         private HamlRuleEnum _hamlRule;
         private string _content;
-        private string _indent;
         private readonly int _sourceFileLineNum;
 
         public HamlLine(string currentLine, int sourceFileLineNum)
@@ -21,13 +15,10 @@ namespace NHaml4.IO
             _hamlRule = HamlRuleFactory.ParseHamlRule(ref _content);
             AddImplicitDivTag();
 
-            if (string.IsNullOrEmpty(currentLine.Trim())) _indentCount = 0;
+            if (string.IsNullOrEmpty(currentLine.Trim())) IndentCount = 0;
         }
 
-        public int IndentCount
-        {
-            get { return _indentCount; }
-        }
+        public int IndentCount { get; private set; }
 
         public int SourceFileLineNo
         {
@@ -45,27 +36,24 @@ namespace NHaml4.IO
             get { return _content; }
         }
 
-        public string Indent
-        {
-            get { return _indent; }
-        }
+        public string Indent { get; private set; }
 
         private void ParseHamlLine(string currentLine)
         {
-            _indentCount = 0;
+            IndentCount = 0;
             int whiteSpaceIndex = 0;
             while (whiteSpaceIndex < currentLine.Length)
             {
                 if (currentLine[whiteSpaceIndex] == ' ')
-                    _indentCount++;
+                    IndentCount++;
                 else if (currentLine[whiteSpaceIndex] == '\t')
-                    _indentCount += 2;
+                    IndentCount += 2;
                 else
                     break;
                 whiteSpaceIndex++;
             }
 
-            _indent = currentLine.Substring(0, whiteSpaceIndex);
+            Indent = currentLine.Substring(0, whiteSpaceIndex);
             _content = (whiteSpaceIndex == currentLine.Length) ? "" : currentLine.Substring(whiteSpaceIndex);
         }
 

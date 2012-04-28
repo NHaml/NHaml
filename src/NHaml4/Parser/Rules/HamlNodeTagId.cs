@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NHaml4.Parser.Rules
+﻿namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTagId : HamlNode
     {
@@ -11,7 +6,7 @@ namespace NHaml4.Parser.Rules
             : base(sourceFileLineNo, tagId)
         { }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }

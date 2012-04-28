@@ -16,14 +16,14 @@ namespace NHaml.Web.Mvc
         protected override FileInfo CreateFileInfo(string templateName)
         {
             var info = base.CreateFileInfo(templateName);
-            if ((info == null) && (_context != null))
+            if ((info != null) || (_context == null))
             {
-                string path = _context.HttpContext.Request.MapPath(templateName);
-                return base.CreateFileInfo(path);
+                return info;
             }
             else
             {
-                return info;
+                string path = _context.HttpContext.Request.MapPath(templateName);
+                return base.CreateFileInfo(path);
             }
         }
     }

@@ -1,12 +1,11 @@
 ﻿using NHaml4.Parser;
 using NHaml4.Compilers;
-using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
 using System.Linq;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeCodeWalker : HamlNodeWalker, INodeWalker
+    public class HamlNodeCodeWalker : HamlNodeWalker
     {
         public HamlNodeCodeWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)

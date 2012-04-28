@@ -4,15 +4,6 @@ namespace NHaml4.Configuration
 {
     public  class ImportConfigurationElement : KeyedConfigurationElement
     {
-        public ImportConfigurationElement()
-        {
-        }
-
-        public ImportConfigurationElement(string name)
-        {
-            Name = name;
-        }
-
         public override string Key
         {
             get { return Name; }
@@ -23,7 +14,6 @@ namespace NHaml4.Configuration
         public string Name
         {
             get { return (string)this[NamespaceElement]; }
-            set { this[NamespaceElement] = value; }
         }
     }
 }

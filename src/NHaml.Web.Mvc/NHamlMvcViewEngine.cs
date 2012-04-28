@@ -24,7 +24,7 @@ namespace NHaml.Web.Mvc
         private readonly MapPathTemplateContentProvider _contentProvider;
         private readonly Type _baseType = typeof(NHamlMvcView<>);
         private bool _isMasterConfigured;
-        public string DefaultMaster { get; set; }
+        private string DefaultMaster { get; set; }
 
         public NHamlMvcViewEngine()
         {

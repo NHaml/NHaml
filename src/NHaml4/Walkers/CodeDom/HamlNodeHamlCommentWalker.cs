@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Compilers;
+﻿using NHaml4.Compilers;
 
 namespace NHaml4.Walkers.CodeDom
 {
@@ -13,8 +9,6 @@ namespace NHaml4.Walkers.CodeDom
         { }
 
         public override void Walk(Parser.HamlNode node)
-        {
-            return;
-        }
+        { }
     }
 }

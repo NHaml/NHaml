@@ -7,11 +7,10 @@ using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Compilers;
 using NHaml4.TemplateBase;
-using NHaml4.Compilers.Abstract;
 using System.Collections.Generic;
 using NHaml4.TemplateResolution;
 
-namespace NHaml.IntegrationTests
+namespace NHaml4.IntegrationTests
 {
     [TestFixture]
     [Category("Integration")]

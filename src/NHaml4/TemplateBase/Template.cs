@@ -7,11 +7,10 @@ namespace NHaml4.TemplateBase
 {
     public abstract class Template
     {
-        private IDictionary<string, object> _viewData;
-        public IDictionary<string, object> ViewData
-        {
-            get { return _viewData; }
-        }
+        // ReSharper disable UnusedMember.Global
+        // ReSharper disable MemberCanBePrivate.Global
+        // ReSharper disable VirtualMemberNeverOverriden.Global
+        public IDictionary<string, object> ViewData { get; set; }
 
         private HtmlVersion _htmlVersion;
         protected bool HasCodeBlockRepeated;
@@ -30,7 +29,7 @@ namespace NHaml4.TemplateBase
         {
             Invariant.ArgumentNotNull(writer, "textWriter");
             _htmlVersion = htmlVersion;
-            _viewData = viewData;
+            ViewData = viewData;
             HasCodeBlockRepeated = false;
             CoreRender(writer);
         }
@@ -41,8 +40,8 @@ namespace NHaml4.TemplateBase
 
         protected string RenderValueOrKeyAsString(string keyName)
         {
-            return !string.IsNullOrEmpty(keyName) && _viewData.ContainsKey(keyName)
-                ? Convert.ToString(_viewData[keyName])
+            return !string.IsNullOrEmpty(keyName) && ViewData.ContainsKey(keyName)
+                ? Convert.ToString(ViewData[keyName])
                 : keyName;
         }
 
@@ -50,22 +49,21 @@ namespace NHaml4.TemplateBase
         {
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value) || value.ToLower() == "false")
                 return "";
-            else if (value.ToLower() == "true" || string.IsNullOrEmpty(value))
+            if (value.ToLower() == "true" || string.IsNullOrEmpty(value))
                 return _htmlVersion == HtmlVersion.XHtml
-                    ? " " + name + "=" + quoteToUse + name + quoteToUse
-                    : " " + name;
-            else
-                return " " + name + "=" + quoteToUse + value + quoteToUse;
+                           ? " " + name + "=" + quoteToUse + name + quoteToUse
+                           : " " + name;
+            return " " + name + "=" + quoteToUse + value + quoteToUse;
         }
 
-        public string AppendSelfClosingTagSuffix()
+        protected string AppendSelfClosingTagSuffix()
         {
             return _htmlVersion == HtmlVersion.XHtml ? " />" : ">";
         }
 
-        public void SetViewData(IDictionary<string, object> viewData)
+        protected void SetViewData(IDictionary<string, object> viewData)
         {
-            _viewData = viewData;
+            ViewData = viewData;
         }
 
         public void SetHtmlVersion(HtmlVersion htmlVersion)
@@ -83,5 +81,8 @@ namespace NHaml4.TemplateBase
         {
             return DocTypeFactory.GetDocType(docTypeId, _htmlVersion);
         }
+        // ReSharper restore VirtualMemberNeverOverriden.Global
+        // ReSharper restore UnusedMember.Global
+        // ReSharper restore MemberCanBePrivate.Global
     }
 }

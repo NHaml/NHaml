@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Crosscutting;
+﻿using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
-using NHaml4.IO;
 
 namespace NHaml4.Parser.Rules
 {
@@ -17,33 +12,32 @@ namespace NHaml4.Parser.Rules
             : base(sourceFileLineNo, nameValuePair)
         {
             int index = 0;
-            _name = ParseName(ref index);
-            if (index < Content.Length)
-            {
-                var value = ParseValue(index);
-                AddChild(new HamlNodeTextContainer(SourceFileLineNum, value));
-            }
+            ParseName(ref index);
+            ParseValue(index);
         }
 
-        private string ParseValue(int index)
+        private void ParseValue(int index)
         {
+            if (index >= Content.Length) return;
+
             string value = Content.Substring(index + 1);
             value = IsQuoted(value)
                 ? RemoveQuotes(value)
-                : value = "#{" + value + "}";
-            return value;
+                : "#{" + value + "}";
+
+            AddChild(new HamlNodeTextContainer(SourceFileLineNum, value));
         }
 
-        private string ParseName(ref int index)
+        private void ParseName(ref int index)
         {
             string result = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
             if (string.IsNullOrEmpty(result))
                 throw new HamlMalformedTagException("Malformed HTML attribute \"" + Content + "\"", SourceFileLineNum);
 
-            return result.TrimEnd('=');
+            _name = result.TrimEnd('=');
         }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }
@@ -51,7 +45,6 @@ namespace NHaml4.Parser.Rules
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
         public char QuoteChar

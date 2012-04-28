@@ -6,7 +6,7 @@ namespace NHaml4.IO
     {
         private readonly IList<HamlLine> _hamlLines = new List<HamlLine>();
         private readonly string _fileName;
-        private int _currentLineIndex = 0;
+        private int _currentLineIndex;
 
         public HamlFile(string fileName)
         {

@@ -9,7 +9,7 @@ namespace NHaml4.Walkers.Exceptions
             : this(nodeType, lineNo, null)
         { }
 
-        public HamlUnknownNodeTypeException(Type nodeType, int lineNo, Exception ex)
+        private HamlUnknownNodeTypeException(Type nodeType, int lineNo, Exception ex)
             : base(string.Format("Unknown node type '{0}' on line {1}", nodeType.FullName, lineNo), ex)
         { }
     }

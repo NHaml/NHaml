@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using NHaml4.Crosscutting;
-using NHaml4.IO;
+﻿using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
@@ -16,12 +12,12 @@ namespace NHaml4.Parser.Rules
     {
         private string _tagName = string.Empty;
         private string _namespace = string.Empty;
-        private bool _isSelfClosing = false;
         private WhitespaceRemoval _whitespaceRemoval = WhitespaceRemoval.None;
 
         public HamlNodeTag(IO.HamlLine nodeLine)
             : base(nodeLine)
         {
+            IsSelfClosing = false;
             int pos = 0;
 
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
@@ -31,7 +27,7 @@ namespace NHaml4.Parser.Rules
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }
@@ -42,7 +38,7 @@ namespace NHaml4.Parser.Rules
             
             if (pos < content.Length
                 && content[pos] == ':'
-                && _isSelfClosing == false)
+                && IsSelfClosing == false)
             {
                 pos++;
                 _namespace = _tagName;
@@ -65,48 +61,34 @@ namespace NHaml4.Parser.Rules
 
         private void ParseAttributes(string content, ref int pos)
         {
-            if (pos < content.Length)
+            if (pos >= content.Length) return;
+
+            char attributeEndChar = HtmlStringHelper.GetAttributeTerminatingChar(content[pos]);
+            if (attributeEndChar != '\0')
             {
-                char attributeEndChar = '\0';
+                string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos,
+                                                                               new[] {attributeEndChar});
+                if (attributes[attributes.Length - 1] != attributeEndChar)
+                    throw new HamlMalformedTagException(
+                        "Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNum);
+                AddChild(new HamlNodeHtmlAttributeCollection(SourceFileLineNum, attributes));
 
-                if (content[pos] == '(')
-                    attributeEndChar = ')';
-                else if (content[pos] == '{')
-                    attributeEndChar = '}';
-
-                if (attributeEndChar != '\0')
-                {
-                    string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { attributeEndChar });
-                    if (attributes[attributes.Length - 1] != attributeEndChar)
-                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNum);
-                    pos++;
-                    var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNum, attributes);
-                    AddChild(attributesNode);
-                }
+                pos++;
             }
         }
 
         private void ParseSpecialCharacters(string content, ref int pos)
         {
             _whitespaceRemoval = WhitespaceRemoval.None;
-            _isSelfClosing = false;
+            IsSelfClosing = false;
 
             while (pos < content.Length)
             {
-                if (ParseWhitespaceRemoval(content, ref pos) == false
-                    && ParseSelfClosing(content, pos) == false)
-                    break;
+                if (ParseWhitespaceRemoval(content, ref pos)) continue;
+                if (ParseSelfClosing(content, ref pos)) continue;
+                
+                break;
             }
-        }
-
-        private bool ParseSelfClosing(string content, int pos)
-        {
-            if (_isSelfClosing || content[pos] != '/')
-                return false;
-
-            _isSelfClosing = true;
-            pos++;
-            return true;
         }
 
         private bool ParseWhitespaceRemoval(string content, ref int pos)
@@ -114,28 +96,36 @@ namespace NHaml4.Parser.Rules
             if (_whitespaceRemoval != WhitespaceRemoval.None)
                 return false;
 
-            if (content[pos] == '>')
+            switch (content[pos])
             {
-                _whitespaceRemoval = WhitespaceRemoval.Surrounding;
-                pos++;
-                return true;
-            }
-            else if (content[pos] == '<')
-            {
-                _whitespaceRemoval = WhitespaceRemoval.Internal;
-                pos++;
-                return true;
+                case '>':
+                    _whitespaceRemoval = WhitespaceRemoval.Surrounding;
+                    pos++;
+                    return true;
+                case '<':
+                    _whitespaceRemoval = WhitespaceRemoval.Internal;
+                    pos++;
+                    return true;
             }
             return false;
         }
 
+        private bool ParseSelfClosing(string content, ref int pos)
+        {
+            if (IsSelfClosing || content[pos] != '/')
+                return false;
+
+            IsSelfClosing = true;
+            pos++;
+            return true;
+        }
+
         private void HandleInlineContent(string content, ref int pos)
         {
-            if (pos < content.Length)
-            {
-                string contentLine = content.Substring(pos).TrimStart();
-                AddChild(new HamlNodeTextContainer(SourceFileLineNum, contentLine));
-            }
+            if (pos >= content.Length) return;
+
+            string contentLine = content.Substring(pos).TrimStart();
+            AddChild(new HamlNodeTextContainer(SourceFileLineNum, contentLine));
         }
 
         public string TagName
@@ -143,10 +133,7 @@ namespace NHaml4.Parser.Rules
             get { return _tagName; }
         }
 
-        public bool IsSelfClosing
-        {
-            get { return _isSelfClosing; }
-        }
+        public bool IsSelfClosing { get; private set; }
 
         public WhitespaceRemoval WhitespaceRemoval
         {

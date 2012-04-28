@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using NHaml4.Compilers;
 using NUnit.Framework;
-using NHaml4.Compilers.Abstract;
 using NHaml4.TemplateBase;
 
 namespace NHaml4.Tests.Compilers

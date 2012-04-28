@@ -1,9 +1,4 @@
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using NHaml4.Parser;
-using System;
-using NHaml4.Compilers.Abstract;
 
 namespace NHaml4.Compilers
 {
@@ -23,7 +18,7 @@ namespace NHaml4.Compilers
             return new TemplateFactory( templateType );
         }
 
-        private IList<string> MergeInDefaultCompileTypes(IEnumerable<string> referencedAssemblyLocations)
+        private IEnumerable<string> MergeInDefaultCompileTypes(IEnumerable<string> referencedAssemblyLocations)
         {
             var result = new List<string>(referencedAssemblyLocations);
             if (result.Contains(typeof(TemplateBase.Template).Assembly.Location) == false)

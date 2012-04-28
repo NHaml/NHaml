@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace NHaml4.TemplateResolution
 {
@@ -9,7 +8,7 @@ namespace NHaml4.TemplateResolution
     {
         public string GetClassName()
         {
-            string result = "";
+            var result = "";
 
             if (this.Any())
                 result += this[0].GetClassName();

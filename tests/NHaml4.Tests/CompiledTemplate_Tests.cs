@@ -60,7 +60,7 @@ namespace NHaml4.Tests
             // Act
             var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
                 _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), imports);
-            compiledTemplate.CompileTemplateFactory(className, viewSource, baseType);
+            compiledTemplate.CompileTemplateFactory(className, new ViewSourceCollection { viewSource }, baseType);
 
             // Assert
             _documentWalkerMock.Verify(x => x.Walk(fakeHamlDocument, className, baseType, imports));

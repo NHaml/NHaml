@@ -1,11 +1,10 @@
 ﻿using NHaml4.Parser;
 using NHaml4.Compilers;
-using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeEvalWalker : HamlNodeWalker, INodeWalker
+    public sealed class HamlNodeEvalWalker : HamlNodeWalker
     {
         public HamlNodeEvalWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
@@ -19,7 +18,7 @@ namespace NHaml4.Walkers.CodeDom
 
             ClassBuilder.AppendCodeToString(node.Content);
 
-            base.ValidateThereAreNoChildren(node);
+            ValidateThereAreNoChildren(node);
         }
     }
 }

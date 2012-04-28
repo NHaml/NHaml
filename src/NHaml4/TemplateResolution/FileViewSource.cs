@@ -45,7 +45,7 @@ namespace NHaml4.TemplateResolution
 
         public string GetClassName()
         {
-            string templatePath = this.FilePath;
+            string templatePath = FilePath;
             var stringBuilder = new StringBuilder();
             foreach (char ch in templatePath)
             {
