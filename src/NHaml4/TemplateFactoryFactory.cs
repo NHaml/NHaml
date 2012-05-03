@@ -21,21 +21,20 @@ namespace NHaml4
         private IEnumerable<string> _imports;
         private IEnumerable<string> _referencedAssemblyLocations;
         private IDictionary<string, HamlDocument> _hamlDocumentCache = new Dictionary<string, HamlDocument>();
+        private ITemplateContentProvider _contentProvider;
 
-        public TemplateFactoryFactory(Walkers.CodeDom.HamlHtmlOptions hamlOptions)
-            : this(hamlOptions, new List<string>(), new List<string>())
-        { }
-
-        public TemplateFactoryFactory(Walkers.CodeDom.HamlHtmlOptions hamlOptions, IList<string> imports, IList<string> referencedAssemblyLocations)
-            : this(new HamlTreeParser(new HamlFileLexer()),
+        public TemplateFactoryFactory(Walkers.CodeDom.HamlHtmlOptions hamlOptions,
+            IList<string> imports, IList<string> referencedAssemblyLocations)
+            : this(new FileTemplateContentProvider(), new HamlTreeParser(new HamlFileLexer()),
                     new HamlDocumentWalker(new CodeDomClassBuilder(), hamlOptions),
                     new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
             imports, referencedAssemblyLocations)
         { }
 
-        public TemplateFactoryFactory(ITreeParser treeParser, IDocumentWalker treeWalker,
+        public TemplateFactoryFactory(ITemplateContentProvider contentProvider, ITreeParser treeParser, IDocumentWalker treeWalker,
             ITemplateFactoryCompiler templateCompiler, IEnumerable<string> imports, IEnumerable<string> referencedAssemblyLocations)
         {
+            _contentProvider = contentProvider;
             _treeParser = treeParser;
             _treeWalker = treeWalker;
             _templateFactoryCompiler = templateCompiler;

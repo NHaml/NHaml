@@ -18,6 +18,8 @@ namespace NHaml4.Tests
         private Mock<ITreeParser> _parserMock;
         private Mock<ITemplateFactoryCompiler> _compilerMock;
         private Mock<IDocumentWalker> _documentWalkerMock;
+        private Mock<ITemplateContentProvider> _templateContentProviderMock;
+        private Mock<ITemplateContentProvider> _contentProviderMock;
 
         [SetUp]
         public void SetUp()
@@ -27,6 +29,8 @@ namespace NHaml4.Tests
                 .Returns(HamlDocumentBuilder.Create());
             _compilerMock = new Mock<ITemplateFactoryCompiler>();
             _documentWalkerMock = new Mock<IDocumentWalker>();
+            _templateContentProviderMock = new Mock<ITemplateContentProvider>();
+            _contentProviderMock = new Mock<ITemplateContentProvider>();
         }
 
         [Test]
@@ -36,7 +40,7 @@ namespace NHaml4.Tests
             var fakeHamlSource = ViewSourceBuilder.Create();
 
             // Act
-            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_templateContentProviderMock.Object, _parserMock.Object,
                 _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), new List<string>());
             compiledTemplate.CompileTemplateFactory("className", fakeHamlSource);
 
@@ -58,7 +62,7 @@ namespace NHaml4.Tests
             var imports = new List<string>();
 
             // Act
-            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_contentProviderMock.Object, _parserMock.Object,
                 _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), imports);
             compiledTemplate.CompileTemplateFactory(className, viewSource, baseType);
 
@@ -78,7 +82,7 @@ namespace NHaml4.Tests
             var assemblies = new List<string>();
 
             // Act
-            var compiledTemplate = new TemplateFactoryFactory(_parserMock.Object,
+            var compiledTemplate = new TemplateFactoryFactory(_contentProviderMock.Object, _parserMock.Object,
                 _documentWalkerMock.Object, _compilerMock.Object, new List<string>(), assemblies);
             compiledTemplate.CompileTemplateFactory(viewSource.GetClassName(), viewSource);
 

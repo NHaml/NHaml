@@ -15,17 +15,6 @@ namespace NHaml4
         private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
-        public TemplateEngine(HamlHtmlOptions htmlOptions)
-            : this(
-            new SimpleTemplateCache(),
-            new TemplateFactoryFactory(
-                    new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CodeDomClassBuilder(), htmlOptions),
-                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
-                    new List<string>(),
-                    new List<string>()))
-        { }
-
         public TemplateEngine(IHamlTemplateCache templateCache, ITemplateFactoryFactory templateFactoryFactory)
         {
             _compiledTemplateCache = templateCache;

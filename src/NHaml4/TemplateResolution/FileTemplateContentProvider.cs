@@ -10,7 +10,7 @@ namespace NHaml4.TemplateResolution
     {
         private readonly List<string> _pathSources;
 
-        protected FileTemplateContentProvider()
+        public FileTemplateContentProvider()
         {
             _pathSources = new List<string> ();
             AddPathSource("Views");

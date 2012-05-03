@@ -27,6 +27,7 @@ namespace NHaml.IntegrationTests
 
             // Act
             var templateFactoryFactory = new TemplateFactoryFactory(
+                new FileTemplateContentProvider(),
                 new HamlTreeParser(new HamlFileLexer()),
                 new HamlDocumentWalker(new CodeDomClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
@@ -56,6 +57,7 @@ namespace NHaml.IntegrationTests
 
             // Act
             var templateFactoryFactory = new TemplateFactoryFactory(
+                new FileTemplateContentProvider(),
                 new HamlTreeParser(new HamlFileLexer()),
                 new HamlDocumentWalker(new CodeDomClassBuilder()),
                 new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),

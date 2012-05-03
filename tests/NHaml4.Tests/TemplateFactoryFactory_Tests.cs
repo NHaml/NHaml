@@ -19,6 +19,7 @@ namespace NHaml4.Tests
         private Mock<ITreeParser> _treeParserMock;
         private Mock<IDocumentWalker> _documentWalkerMock;
         private Mock<ITemplateFactoryCompiler> _templateCompilerMock;
+        private Mock<ITemplateContentProvider> _templateContentProviderMock;
         private TemplateFactoryFactory _templateFactoryFactory;
 
         [SetUp]
@@ -27,8 +28,9 @@ namespace NHaml4.Tests
             _treeParserMock = new Mock<ITreeParser>();
             _documentWalkerMock = new Mock<IDocumentWalker>();
             _templateCompilerMock = new Mock<ITemplateFactoryCompiler>();
-
-            _templateFactoryFactory = new TemplateFactoryFactory(_treeParserMock.Object,
+            _templateContentProviderMock = new Mock<ITemplateContentProvider>();
+            _templateFactoryFactory = new TemplateFactoryFactory(_templateContentProviderMock.Object,
+                _treeParserMock.Object,
                 _documentWalkerMock.Object,
                 _templateCompilerMock.Object,
                 new List<string>(),

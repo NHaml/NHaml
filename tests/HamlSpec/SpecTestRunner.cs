@@ -8,6 +8,7 @@ using NHaml.Tests.Builders;
 using NHaml4.Walkers.CodeDom;
 using NHaml4;
 using System.IO;
+using NHaml4.Configuration;
 
 namespace HamlSpec
 {
@@ -86,7 +87,7 @@ namespace HamlSpec
             var viewSource = ViewSourceBuilder.Create(hamlTemplate);
 
             var hamlOptions = new HamlHtmlOptions();
-            var templateEngine = new TemplateEngine(hamlOptions);
+            var templateEngine = XmlConfigurator.GetTemplateEngine();
             var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             return compiledTemplate.CreateTemplate();
         }

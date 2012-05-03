@@ -5,6 +5,8 @@ using System.Text;
 using NHaml4.Configuration;
 using NUnit.Framework;
 using NHaml.Tests.Builders;
+using NHaml4.TemplateResolution;
+using Moq;
 
 namespace NHaml4.Tests
 {
@@ -39,7 +41,9 @@ namespace NHaml4.Tests
         {
             var importsList = new List<string>();
             var referencedAssemblies = new List<string>();
-            var result = XmlConfigurator.GetTemplateEngine(importsList, referencedAssemblies);
+            var contentProviderMock = new Mock<ITemplateContentProvider>();
+
+            var result = XmlConfigurator.GetTemplateEngine(contentProviderMock.Object, importsList, referencedAssemblies);
             Assert.That(result, Is.InstanceOf<TemplateEngine>());
         }
     }

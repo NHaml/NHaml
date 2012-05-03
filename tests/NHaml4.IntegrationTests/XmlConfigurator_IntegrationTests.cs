@@ -6,6 +6,7 @@ using NUnit.Framework;
 using NHaml4.TemplateBase;
 using System.IO;
 using NHaml4.Configuration;
+using NHaml4.TemplateResolution;
 
 namespace NHaml4.IntegrationTests
 {
@@ -47,10 +48,11 @@ namespace NHaml4.IntegrationTests
         public void GetTemplateEngine_AdditionalUsingAndReferencedAssemblies_ContainsExtraUsingStatement()
         {
             var viewSource = ViewSourceBuilder.Create("= new StringBuilder(\"Default\")");
+            var contentProvider = new FileTemplateContentProvider();
             var importsList = new List<string> { "System.Text" };
             var referencedAssembliesList = new List<string>();
 
-            var templateEngine = XmlConfigurator.GetTemplateEngine(importsList, referencedAssembliesList);
+            var templateEngine = XmlConfigurator.GetTemplateEngine(contentProvider, importsList, referencedAssembliesList);
             var templateFactory = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             var template = templateFactory.CreateTemplate();
             var textWriter = new StringWriter();

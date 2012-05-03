@@ -28,9 +28,12 @@ namespace NHaml.Web.Mvc
 
         public NHamlMvcViewEngine()
         {
-            _contentProvider = new MapPathTemplateContentProvider();
-            _templateEngine = XmlConfigurator.GetTemplateEngine(GetDefaultUsings(), GetDefaultReferences());
             InitializeBaseViewLocations();
+            _contentProvider = new MapPathTemplateContentProvider();
+            _templateEngine = XmlConfigurator.GetTemplateEngine(
+                _contentProvider,
+                GetDefaultUsings(),
+                GetDefaultReferences());
             DefaultMaster = "Application";
         }
 
