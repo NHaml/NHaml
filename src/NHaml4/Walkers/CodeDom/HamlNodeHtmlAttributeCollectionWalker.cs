@@ -1,6 +1,5 @@
 ﻿using NHaml4.Compilers;
 using NHaml4.Parser.Rules;
-using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.Parser.Exceptions;
 using System.Linq;
@@ -13,7 +12,7 @@ namespace NHaml4.Walkers.CodeDom
             : base(classBuilder, options)
         { }
 
-        public override void Walk(Parser.HamlNode node)
+        public override void Walk(HamlNode node)
         {
             var attributeCollectionNode = node as HamlNodeHtmlAttributeCollection;
             if (attributeCollectionNode == null)

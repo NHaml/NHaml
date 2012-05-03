@@ -1,15 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NHaml4.Compilers;
 using NHaml4.Parser;
-using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeTagWalker : HamlNodeWalker, INodeWalker
+    public class HamlNodeTagWalker : HamlNodeWalker
     {
         public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
@@ -43,39 +41,57 @@ namespace NHaml4.Walkers.CodeDom
 
         private void MakeClassAttribute(HamlNodeTag nodeTag)
         {
+            var classValues = GetClassValues(nodeTag);
+            AppendClassAttribute(classValues);
+        }
+
+        private static IList<string> GetClassValues(HamlNodeTag nodeTag)
+        {
             var classValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
                                from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                               where ((HamlNodeHtmlAttribute)attr).Name == "class"
+                               where attr.Name == "class"
                                from attrFragment in attr.Children
                                select attrFragment.Content).ToList();
 
             classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>()
-                .Select(x => " " + x.Content));
+                                     .Select(x => " " + x.Content));
+            return classValues;
+        }
 
-            if (classValues.Any())
-            {
-                classValues[0] = classValues[0].Trim();
-                ClassBuilder.AppendAttributeNameValuePair("class", classValues, '\'');
-            }
+        private void AppendClassAttribute(IList<string> classValues)
+        {
+            if (!classValues.Any()) return;
+
+            classValues[0] = classValues[0].Trim();
+            ClassBuilder.AppendAttributeNameValuePair("class", classValues, '\'');
         }
 
         private void MakeIdAttribute(HamlNodeTag nodeTag)
         {
+            var idValues = GetIdValues(nodeTag);
+            AppendIdAttribute(idValues);
+        }
+
+        private static IList<string> GetIdValues(HamlNodeTag nodeTag)
+        {
             var idValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
                             from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                            where ((HamlNodeHtmlAttribute)attr).Name == "id"
+                            where attr.Name == "id"
                             from attrFragment in attr.Children
                             select attrFragment.Content).ToList();
 
-            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
+            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof (HamlNodeTagId));
             if (idTag != null) idValues.Insert(0, idTag.Content);
+            return idValues;
+        }
 
-            if (idValues.Any())
-            {
-                for (int c = idValues.Count-1; c > 0; c--)
-                    idValues.Insert(c, "_");
-                ClassBuilder.AppendAttributeNameValuePair("id", idValues, '\'');
-            }
+        private void AppendIdAttribute(IList<string> idValues)
+        {
+            if (!idValues.Any()) return;
+
+            for (int c = idValues.Count - 1; c > 0; c--)
+                idValues.Insert(c, "_");
+            ClassBuilder.AppendAttributeNameValuePair("id", idValues, '\'');
         }
 
         private void WalkHtmlStyleAttributes(HamlNodeTag nodeTag)

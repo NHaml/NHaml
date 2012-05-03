@@ -1,19 +1,11 @@
 ﻿using NHaml4.Parser;
 using NHaml4.Compilers;
-using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
-using NHaml4.TemplateBase;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeDocTypeWalker : HamlNodeWalker, INodeWalker
+    public sealed class HamlNodeDocTypeWalker : HamlNodeWalker
     {
-        public class DocTypeInfo
-        {
-            public string DocType;
-            public string DocSubType;
-        }
-
         public HamlNodeDocTypeWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
@@ -26,7 +18,7 @@ namespace NHaml4.Walkers.CodeDom
 
             ClassBuilder.AppendDocType(node.Content.Trim());
 
-            base.ValidateThereAreNoChildren(node);
+            ValidateThereAreNoChildren(node);
         }
     }
 }

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using NHaml4.IO;
 using System.IO;
 using NHaml4.TemplateResolution;
-using NHaml4.Parser.Rules;
-using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser
 {
@@ -36,7 +31,7 @@ namespace NHaml4.Parser
             }
         }
 
-        private HamlDocument ParseStreamReader(StreamReader reader, string fileName)
+        private HamlDocument ParseStreamReader(TextReader reader, string fileName)
         {
             var hamlFile = _hamlFileLexer.Read(reader, fileName);
             return ParseHamlFile(hamlFile);
@@ -56,8 +51,8 @@ namespace NHaml4.Parser
             node.IsMultiLine = true;
             while ((!hamlFile.EndOfFile) && (hamlFile.CurrentLine.IndentCount > node.IndentCount))
             {
-                HamlLine nodeLine = hamlFile.CurrentLine;
-                HamlNode childNode = HamlNodeFactory.GetHamlNode(nodeLine);
+                var nodeLine = hamlFile.CurrentLine;
+                var childNode = HamlNodeFactory.GetHamlNode(nodeLine);
                 node.AddChild(childNode);
 
                 hamlFile.MoveNext();

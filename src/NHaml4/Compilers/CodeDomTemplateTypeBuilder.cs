@@ -4,8 +4,8 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Reflection;
 using System.Linq;
+using System.Reflection;
 using NHaml4.Compilers.Exceptions;
 
 namespace NHaml4.Compilers
@@ -13,7 +13,7 @@ namespace NHaml4.Compilers
     public abstract class CodeDomTemplateTypeBuilder : ITemplateTypeBuilder
     {
         private readonly CodeDomProvider _codeDomProvider;
-        protected Dictionary<string, string> ProviderOptions { get; set; }
+        protected Dictionary<string, string> ProviderOptions { get; private set; }
 
         [SuppressMessage( "Microsoft.Security", "CA2122" )]
         protected CodeDomTemplateTypeBuilder(CodeDomProvider codeDomProvider)
@@ -28,52 +28,57 @@ namespace NHaml4.Compilers
         {
             var compilerParams = new CompilerParameters();
             AddReferences(compilerParams, referencedAssemblyLocations);
-            if (SupportsDebug())
+            return SupportsDebug()
+                ? BuildWithDebug(source, typeName, compilerParams)
+                : BuildWithoutDebug(source, typeName, compilerParams);
+        }
+
+        private Type BuildWithDebug(string source, string typeName, CompilerParameters compilerParams)
+        {
+            compilerParams.GenerateInMemory = false;
+            compilerParams.IncludeDebugInformation = true;
+            var directoryInfo = GetNHamlTempDirectoryInfo();
+            var classFileInfo = GetClassFileInfo(directoryInfo, typeName);
+            using (var writer = classFileInfo.CreateText())
             {
-                compilerParams.GenerateInMemory = false;
-                compilerParams.IncludeDebugInformation = true;
-                var directoryInfo = GetNHamlTempDirectoryInfo();
-                var classFileInfo = GetClassFileInfo(directoryInfo, typeName);
-                using (var writer = classFileInfo.CreateText())
-                {
-                    writer.Write(source);
-                }
-
-                //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for an in memory assembly.
-                var tempFileName = Path.GetTempFileName();
-                var tempAssemblyName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".dll"));
-                var tempSymbolsName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".pdb"));
-                try
-                {
-                    compilerParams.OutputAssembly = tempAssemblyName.FullName;
-                    var compilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
-                    ValidateCompilerResults(compilerResults);
-
-                    var assembly = Assembly.Load(File.ReadAllBytes(tempAssemblyName.FullName), File.ReadAllBytes(tempSymbolsName.FullName));
-                    return assembly.GetType(typeName);
-                }
-                finally
-                {
-                    if (tempAssemblyName.Exists)
-                    {
-                        tempAssemblyName.Delete();
-                    }
-                    if (tempSymbolsName.Exists)
-                    {
-                        tempSymbolsName.Delete();
-                    }
-                }
+                writer.Write(source);
             }
-            else
+
+            //TODO: when we move to vs2010 fully this ebcomes redundant as it will load the debug info for an in memory assembly.
+            var tempFileName = Path.GetTempFileName();
+            var tempAssemblyName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".dll"));
+            var tempSymbolsName = new FileInfo(Path.Combine(directoryInfo.FullName, tempFileName + ".pdb"));
+            try
             {
-                compilerParams.GenerateInMemory = true;
-                compilerParams.IncludeDebugInformation = false;
-                var compilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
+                compilerParams.OutputAssembly = tempAssemblyName.FullName;
+                var compilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
                 ValidateCompilerResults(compilerResults);
-                var assembly = compilerResults.CompiledAssembly;
-                return ExtractType(typeName, assembly);
-            }
 
+                var assembly = Assembly.Load(File.ReadAllBytes(tempAssemblyName.FullName),
+                                             File.ReadAllBytes(tempSymbolsName.FullName));
+                return assembly.GetType(typeName);
+            }
+            finally
+            {
+                if (tempAssemblyName.Exists)
+                {
+                    tempAssemblyName.Delete();
+                }
+                if (tempSymbolsName.Exists)
+                {
+                    tempSymbolsName.Delete();
+                }
+            }
+        }
+
+        private Type BuildWithoutDebug(string source, string typeName, CompilerParameters compilerParams)
+        {
+            compilerParams.GenerateInMemory = true;
+            compilerParams.IncludeDebugInformation = false;
+            var compilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
+            ValidateCompilerResults(compilerResults);
+            var assembly = compilerResults.CompiledAssembly;
+            return ExtractType(typeName, assembly);
         }
 
         private void ValidateCompilerResults(CompilerResults compilerResults)
@@ -94,7 +99,7 @@ namespace NHaml4.Compilers
             }
         }
 
-        private FileInfo GetClassFileInfo(DirectoryInfo directoryInfo, string typeName)
+        private FileInfo GetClassFileInfo(FileSystemInfo directoryInfo, string typeName)
         {
             var fileInfo = new FileInfo(string.Format("{0}\\{1}.{2}", directoryInfo.FullName, typeName, _codeDomProvider.FileExtension));
             if (fileInfo.Exists)
@@ -121,18 +126,15 @@ namespace NHaml4.Compilers
 
         protected abstract bool SupportsDebug();
 
-        protected virtual Type ExtractType(string typeName, Assembly assembly)
+        private Type ExtractType(string typeName, Assembly assembly)
         {
             return assembly.GetType(typeName);
         }
 
         private bool ContainsErrors(CompilerResults results)
         {
-            foreach (CompilerError error in results.Errors)
-            {
-                if (error.IsWarning == false) return true;
-            }
-            return false;
+            return results.Errors.Cast<CompilerError>()
+                .Any(error => error.IsWarning == false);
         }
     }
 }

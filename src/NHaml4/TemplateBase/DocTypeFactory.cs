@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace NHaml4.TemplateBase
 {
@@ -23,16 +20,16 @@ namespace NHaml4.TemplateBase
                 case "STRICT": return GetStrictDocType(htmlVersion);
                 case "FRAMESET": return GetFramesetDocType(htmlVersion);
                 case "5": return GetHtml5DocType();
-                case "1.1": return GetXHtmlDocType1_1();
+                case "1.1": return GetXHtmlDocType11();
                 case "BASIC": return GetBasicDocType();
                 case "MOBILE": return GetMobileDocType();
-                case "RDFA": return GetRDFaDocType();
+                case "RDFA": return GetRdfaDocType();
                 case "XML": return GetXmlDocType(docTypeParts, htmlVersion);
                 default: return GetTransitionalDocType(htmlVersion);
             }
         }
 
-        private static string GetRDFaDocType()
+        private static string GetRdfaDocType()
         {
             return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML+RDFa 1.0//EN"" ""http://www.w3.org/MarkUp/DTD/xhtml-rdfa-1.dtd"">";
         }
@@ -74,16 +71,16 @@ namespace NHaml4.TemplateBase
             return @"<!DOCTYPE html PUBLIC ""-//WAPFORUM//DTD XHTML Mobile 1.2//EN"" ""http://www.openmobilealliance.org/tech/DTD/xhtml-mobile12.dtd"">";
         }
 
-        private static string GetXHtmlDocType1_1()
+        private static string GetXHtmlDocType11()
         {
             return @"<!DOCTYPE html PUBLIC ""-//W3C//DTD XHTML 1.1//EN"" ""http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd"">";
         }
 
-        private static string GetXmlDocType(string[] docTypeParts, HtmlVersion htmlVersion)
+        private static string GetXmlDocType(IList<string> docTypeParts, HtmlVersion htmlVersion)
         {
             if (htmlVersion != HtmlVersion.XHtml) return "";
 
-            string encoding = docTypeParts.Length < 2
+            string encoding = docTypeParts.Count < 2
                 ? "utf-8"
                 : docTypeParts[1];
             return "<?xml version='1.0' encoding='" + encoding + "' ?>";

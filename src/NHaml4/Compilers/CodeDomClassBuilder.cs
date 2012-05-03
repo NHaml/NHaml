@@ -3,30 +3,28 @@ using System.CodeDom;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text;
 using Microsoft.CSharp;
-using System.Linq;
 
-namespace NHaml4.Compilers.Abstract
+namespace NHaml4.Compilers
 {
     public class CodeDomClassBuilder : ITemplateClassBuilder
     {
         private const string TextWriterVariableName = "textWriter";
 
-        public Type BaseType { get; set; }
-        public int BlockDepth { get; set; }
-        protected CodeMemberMethod RenderMethod { get; private set; }
-        private int Depth { get; set; }
-        private string ClassName { get; set; }
+        private CodeMemberMethod RenderMethod { get; set; }
 
         public CodeDomClassBuilder()
         {
+            // ReSharper disable BitwiseOperatorOnEnumWihtoutFlags
             RenderMethod = new CodeMemberMethod
                                {
                                    Name = "CoreRender",
                                    Attributes = MemberAttributes.Override | MemberAttributes.Family,
                                }
                                .WithParameter(typeof(TextWriter), "textWriter");
+            // ReSharper restore BitwiseOperatorOnEnumWihtoutFlags
         }
 
         public void RenderEndBlock()
@@ -34,12 +32,12 @@ namespace NHaml4.Compilers.Abstract
             AppendCodeSnippet("}//");
         }
 
-        protected void RenderBeginBlock()
+        private void RenderBeginBlock()
         {
             AppendCodeSnippet("{//");
         }
 
-        private IList<string> MergeRequiredImports(IEnumerable<string> imports)
+        private IEnumerable<string> MergeRequiredImports(IEnumerable<string> imports)
         {
             var result = new List<string>(imports);
             if (result.Contains("System") == false)
@@ -206,7 +204,6 @@ namespace NHaml4.Compilers.Abstract
         {
             imports = MergeRequiredImports(imports);
 
-            ClassName = className;
             var builder = new StringBuilder();
             using (var writer = new StringWriter(builder))
             {
@@ -216,11 +213,8 @@ namespace NHaml4.Compilers.Abstract
                 var testNamespace = new CodeNamespace();
                 compileUnit.Namespaces.Add(testNamespace);
 
-                foreach (var import in imports)
-                {
-                    var namespaceImport = new CodeNamespaceImport(import);
-                    testNamespace.Imports.Add(namespaceImport);
-                }
+                testNamespace.Imports.AddRange(
+                    imports.Select(x => new CodeNamespaceImport(x)).ToArray());
 
                 var generator = new CSharpCodeProvider().CreateGenerator(writer);
                 var options = new CodeGeneratorOptions();

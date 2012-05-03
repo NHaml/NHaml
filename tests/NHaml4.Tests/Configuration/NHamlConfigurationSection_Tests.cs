@@ -21,7 +21,7 @@ namespace NHaml4.Tests.Configuration
         public void GetConfiguration_ConfigWithReferencesAndImports_ReferencedAssemblyListContainsCorrectElement()
         {
             var config = NHamlConfigurationSection.GetConfiguration("Configuration/configWithReferencesAndImports.config");
-            Assert.That(config.ReferencedAssembliesList.First(), Is.StringEnding("NHaml4.Tests.dll"));
+            Assert.That(config.ReferencedAssembliesList.First().ToLower(), Is.StringEnding("nhaml4.tests.dll"));
         }
 
         [Test]

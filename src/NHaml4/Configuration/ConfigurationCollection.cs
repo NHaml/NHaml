@@ -4,6 +4,8 @@ using System.Configuration;
 
 namespace NHaml4.Configuration
 {
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable ClassNeverInstantiated.Global
     public class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
       where T : KeyedConfigurationElement, new()
     {
@@ -83,4 +85,6 @@ namespace NHaml4.Configuration
             BaseClear();
         }
     }
+    // ReSharper restore ClassNeverInstantiated.Global
+    // ReSharper restore UnusedMember.Global
 }

@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.CodeDom;
 
-namespace NHaml4.Compilers.Abstract
+namespace NHaml4.Compilers
 {
     internal static class CodeDomFluentBuilder
     {
@@ -50,11 +47,6 @@ namespace NHaml4.Compilers.Abstract
             return WithParameter(expression, new CodePrimitiveExpression { Value = parameter });
         }
 
-        public static CodeMethodInvokeExpression WithInvokeVariableReferenceParameter(this CodeMethodInvokeExpression expression, string variableName)
-        {
-            return WithParameter(expression, new CodeVariableReferenceExpression { VariableName = variableName });
-        }
-
         public static CodeMethodInvokeExpression WithInvokeCodeSnippetToStringParameter(this CodeMethodInvokeExpression expression,
             string codeSnippet)
         {
@@ -62,7 +54,7 @@ namespace NHaml4.Compilers.Abstract
                 GetCodeMethodInvokeExpression("ToString", "Convert").WithCodeSnippetParameter(codeSnippet));
         }
 
-        public static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression,
+        private static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression,
             string codeSnippet)
         {
             return WithParameter(expression, new CodeSnippetExpression(codeSnippet));
@@ -74,7 +66,7 @@ namespace NHaml4.Compilers.Abstract
             return WithParameter(expression, expressionToInvoke);
         }
 
-        public static CodeExpressionStatement GetExpressionStatement(CodeMethodInvokeExpression writeInvoke)
+        private static CodeExpressionStatement GetExpressionStatement(CodeMethodInvokeExpression writeInvoke)
         {
             return new CodeExpressionStatement { Expression = writeInvoke };
         }
@@ -87,7 +79,7 @@ namespace NHaml4.Compilers.Abstract
 
         public static void AddExpressionStatement(this CodeMemberMethod method, CodeMethodInvokeExpression expression)
         {
-            method.Statements.Add(CodeDomFluentBuilder.GetExpressionStatement(expression));
+            method.Statements.Add(GetExpressionStatement(expression));
         }
 
         public static void AddStatement(this CodeMemberMethod method, CodeStatement statement)

@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-
-namespace NHaml4.Parser.Rules
+﻿namespace NHaml4.Parser.Rules
 {
     public class HamlNodeTextLiteral : HamlNode
     {
@@ -11,12 +6,7 @@ namespace NHaml4.Parser.Rules
             : base(sourceLineNum, content)
         { }
 
-        public bool IsWhitespace()
-        {
-            return Content.Trim().Length == 0;
-        }
-
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }

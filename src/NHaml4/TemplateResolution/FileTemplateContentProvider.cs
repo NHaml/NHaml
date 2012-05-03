@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Collections.ObjectModel;
+using System.Linq;
 using NHaml4.Crosscutting;
 
 namespace NHaml4.TemplateResolution
@@ -21,7 +22,7 @@ namespace NHaml4.TemplateResolution
             return GetViewSource(templateName, new List<IViewSource>());
         }
 
-        public IViewSource GetViewSource(string templateName, IList<IViewSource> parentViewSourceList)
+        public IViewSource GetViewSource(string templateName, IEnumerable<IViewSource> parentViewSourceList)
         {
             Invariant.ArgumentNotEmpty(templateName, "templateName");
             Invariant.ArgumentNotNull(parentViewSourceList, "parentViewSourceList");
@@ -31,9 +32,8 @@ namespace NHaml4.TemplateResolution
             if (fileInfo != null && fileInfo.Exists)
                 return new FileViewSource(fileInfo);
 
-            for (var index = 0; index < parentViewSourceList.Count; index++)
+            foreach (var source in parentViewSourceList)
             {
-                var source = parentViewSourceList[index];
                 //search where the current parent template exists
                 var parentDirectory = Path.GetDirectoryName(source.FilePath);
                 var combine = Path.Combine(parentDirectory, templateName);
@@ -46,14 +46,9 @@ namespace NHaml4.TemplateResolution
 
         protected virtual FileInfo CreateFileInfo(string templateName)
         {
-            foreach (var pathSource in PathSources)
-            {
-                var fileInfo = CreateFileInfo(pathSource, templateName);
-                if (fileInfo.Exists)
-                    return fileInfo;
-            }
-
-            return null;
+            return PathSources
+                .Select(pathSource => CreateFileInfo(pathSource, templateName))
+                .FirstOrDefault(fileInfo => fileInfo.Exists);
         }
 
         private static string SuffixWithHaml(string templateName)

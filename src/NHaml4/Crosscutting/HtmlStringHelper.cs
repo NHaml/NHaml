@@ -1,8 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Crosscutting
 {
@@ -19,7 +16,7 @@ namespace NHaml4.Crosscutting
 
         public static string ExtractTokenFromTagString(string inputString, ref int index, char[] endMarkers)
         {
-            AttributeParseStates state = AttributeParseStates.Normal;
+            var state = AttributeParseStates.Normal;
             int startIndex = index;
 
             for (; index < inputString.Length; index++)
@@ -46,6 +43,19 @@ namespace NHaml4.Crosscutting
             }
 
             return inputString.Substring(startIndex);
+        }
+
+        public static char GetAttributeTerminatingChar(char startChar)
+        {
+            switch (startChar)
+            {
+                case '(':
+                    return ')';
+                case '{':
+                    return '}';
+                default:
+                    return '\0';
+            }
         }
     }
 }

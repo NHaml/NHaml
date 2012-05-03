@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Parser.Exceptions;
+﻿using NHaml4.Parser.Exceptions;
 using NHaml4.IO;
 
 namespace NHaml4.Parser.Rules
@@ -15,7 +11,7 @@ namespace NHaml4.Parser.Rules
             ParseFragments(nodeLine.Content);
         }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }
@@ -38,7 +34,6 @@ namespace NHaml4.Parser.Rules
 
         private HamlNode GetNextNode(string content, ref int index)
         {
-            int startIndex = index;
             bool isInTag = IsTagToken(content, index);
             bool isEscaped = false;
 
@@ -53,7 +48,7 @@ namespace NHaml4.Parser.Rules
                     {
                         index++;
                         return (result.Length > 3)
-                            ? (HamlNode)new HamlNodeTextVariable(result, SourceFileLineNum)
+                            ? new HamlNodeTextVariable(result, SourceFileLineNum)
                             : (HamlNode)new HamlNodeTextLiteral(result, SourceFileLineNum);
                     }
                 }
@@ -61,8 +56,7 @@ namespace NHaml4.Parser.Rules
                 {
                     if (isEscaped == false)
                         return new HamlNodeTextLiteral(result, SourceFileLineNum);
-                    else
-                        result = RemoveEscapeCharacter(result) + content[index];
+                    result = RemoveEscapeCharacter(result) + content[index];
                 }
                 else
                 {

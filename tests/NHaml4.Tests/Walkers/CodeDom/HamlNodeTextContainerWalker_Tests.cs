@@ -24,7 +24,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             public BogusHamlNode() : base(0, "") { }
 
-            public override bool IsContentGeneratingTag
+            protected override bool IsContentGeneratingTag
             {
                 get { return true; }
             }

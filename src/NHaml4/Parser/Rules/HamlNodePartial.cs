@@ -8,7 +8,7 @@ namespace NHaml4.Parser.Rules
             IsResolved = false;
         }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return false; }
         }

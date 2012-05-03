@@ -1,6 +1,5 @@
 using System;
 using System.Linq;
-using System.Collections.Generic;
 
 namespace NHaml4
 {
@@ -10,10 +9,9 @@ namespace NHaml4
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
                 return GetGenericType(ref type);
-            else if (IsDynamic(type))
-                return GetNonDynamicType(type);
-            else
-                return type;
+            return IsDynamic(type)
+                ? GetNonDynamicType(type)
+                : type;
         }
 
         private static Type GetNonDynamicType(Type type)
@@ -41,7 +39,9 @@ namespace NHaml4
         {
             try
             {
+#pragma warning disable 168
                 var location = type.Assembly.Location;
+#pragma warning restore 168
                 return false;
             }
             catch (NotSupportedException)

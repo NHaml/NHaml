@@ -1,13 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.IO;
-using NHaml4.Compilers.Abstract;
 using NHaml4.Compilers;
-using NHaml4.Configuration;
 using System.Configuration;
 using NHaml4.TemplateResolution;
 
@@ -20,7 +16,7 @@ namespace NHaml4.Configuration
             return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath);
         }
 
-        public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, IList<string> imports, IList<string> referencedAssemblies)
+        public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)
         {
             var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration();
             return GetTemplateEngine(templateContentProvider, nhamlConfiguration, imports, referencedAssemblies);
@@ -32,7 +28,7 @@ namespace NHaml4.Configuration
             return GetTemplateEngine(new FileTemplateContentProvider(), nhamlConfiguration, new List<string>(), new List<string>());
         }
 
-        private static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, NHamlConfigurationSection nhamlConfiguration, IList<string> imports, IList<string> referencedAssemblies)
+        private static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, NHamlConfigurationSection nhamlConfiguration, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)
         {
             var templateCache = new SimpleTemplateCache();
 

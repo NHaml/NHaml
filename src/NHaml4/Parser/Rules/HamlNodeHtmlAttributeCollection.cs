@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
 
@@ -19,7 +16,7 @@ namespace NHaml4.Parser.Rules
             ParseChildren(attributeCollection);
         }
 
-        public override bool IsContentGeneratingTag
+        protected override bool IsContentGeneratingTag
         {
             get { return true; }
         }
@@ -38,7 +35,7 @@ namespace NHaml4.Parser.Rules
 
         private static string GetNextAttributeToken(string attributeCollection, ref int index)
         {
-            char[] terminatingChars = new[] { ' ', '\t', ')', '}' };
+            var terminatingChars = new[] { ' ', '\t', ')', '}' };
             string nameValuePair = HtmlStringHelper.ExtractTokenFromTagString(attributeCollection, ref index,
                 terminatingChars);
             if (terminatingChars.Contains(nameValuePair[nameValuePair.Length - 1]))

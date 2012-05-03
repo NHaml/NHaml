@@ -5,7 +5,6 @@ using System.Reflection;
 using System.Resources;
 using System.Runtime.InteropServices;
 using System.Security;
-using System.Security.Permissions;
 
 [assembly: AssemblyProduct("NHaml")]
 [assembly: AssemblyCopyright("MIT License")]

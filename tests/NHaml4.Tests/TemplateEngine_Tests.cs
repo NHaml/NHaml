@@ -11,7 +11,7 @@ namespace NHaml4.Tests
     public class TemplateEngine_Tests
     {
         private Mock<ITemplateFactoryFactory> _templateFactoryFactoryMock;
-        private SimpleTemplateCache _templateCache;
+        private IHamlTemplateCache _templateCache;
         private TemplateEngine _templateEngine;
 
         class DummyTemplate : Template

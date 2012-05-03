@@ -21,7 +21,7 @@ namespace NHaml4
             _fastActivator = CreateFastActivator( templateType );
         }
 
-        public virtual Template CreateTemplate()
+        public Template CreateTemplate()
         {
             return _fastActivator();
         }
