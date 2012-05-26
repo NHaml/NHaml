@@ -25,7 +25,7 @@ namespace NHaml4.Tests
         public void SetUp()
         {
             _parserMock = new Mock<ITreeParser>();
-            _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
+            _parserMock.Setup(x => x.ParseViewSource(It.IsAny<ViewSource>()))
                 .Returns(HamlDocumentBuilder.Create());
             _compilerMock = new Mock<ITemplateFactoryCompiler>();
             _documentWalkerMock = new Mock<IDocumentWalker>();
@@ -56,7 +56,7 @@ namespace NHaml4.Tests
             var baseType = typeof(Template);
 
             var fakeHamlDocument = HamlDocumentBuilder.Create("");
-            _parserMock.Setup(x => x.ParseViewSource(It.IsAny<IViewSource>()))
+            _parserMock.Setup(x => x.ParseViewSource(It.IsAny<ViewSource>()))
                 .Returns(fakeHamlDocument);
             var viewSource = ViewSourceBuilder.Create();
             var imports = new List<string>();

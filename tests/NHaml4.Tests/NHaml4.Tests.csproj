@@ -97,7 +97,6 @@
     <Compile Include="CompiledTemplate_Tests.cs" />
     <Compile Include="IO\HamlLine_Tests.cs" />
     <Compile Include="IO\HamlFileLexer_Tests.cs" />
-    <Compile Include="Mocks\ViewSourceMock.cs" />
     <Compile Include="Parser\HamlNode_Tests.cs" />
     <Compile Include="Parser\HamlTreeParser_Tests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

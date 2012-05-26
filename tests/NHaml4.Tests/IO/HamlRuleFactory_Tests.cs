@@ -41,6 +41,7 @@ namespace NHaml4.Tests.IO
         [TestCase("-#Tag", "Tag", Description = "Haml Comment")]
         [TestCase("!!!Tag", "Tag", Description = "DocType")]
         [TestCase("\\%EscapedTag", "%EscapedTag", Description = "Escaped Tag")]
+        [TestCase("_ PartialName", "PartialName", Description = "Partial with space")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);

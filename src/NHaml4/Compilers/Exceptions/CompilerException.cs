@@ -3,11 +3,15 @@ using System.CodeDom.Compiler;
 
 namespace NHaml4.Compilers.Exceptions
 {
+    [Serializable]
     class CompilerException : Exception
     {
-        public CompilerException(CompilerResults compilerResults)
+        private string _sourceCode;
+
+        public CompilerException(CompilerResults compilerResults, string source)
             : base(GenerateExceptionMessage(compilerResults))
         {
+            _sourceCode = source;
         }
 
         private static string GenerateExceptionMessage(CompilerResults compilerResults)
@@ -22,6 +26,11 @@ namespace NHaml4.Compilers.Exceptions
             }
 
             return outputMessage;
+        }
+
+        public string SourceCode
+        {
+            get { return _sourceCode; }
         }
     }
 }

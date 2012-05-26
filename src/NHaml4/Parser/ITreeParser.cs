@@ -4,6 +4,6 @@ namespace NHaml4.Parser
 {
     public interface ITreeParser
     {
-        HamlDocument ParseViewSource(IViewSource viewSource);
+        HamlDocument ParseViewSource(ViewSource viewSource);
     }
 }

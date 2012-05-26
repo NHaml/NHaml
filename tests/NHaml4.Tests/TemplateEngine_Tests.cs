@@ -118,7 +118,7 @@ namespace NHaml4.Tests
         {
             // Act
             Assert.Throws<ArgumentNullException>(
-                () => _templateEngine.GetCompiledTemplate((IViewSource)null, typeof(DummyTemplate)));
+                () => _templateEngine.GetCompiledTemplate((ViewSource)null, typeof(DummyTemplate)));
         }
 
         [Test]
@@ -130,48 +130,48 @@ namespace NHaml4.Tests
         }
         #endregion
 
-        #region GetCompiledTemplate(ITemplateContentProvider, string, Type) Tests
-        [Test]
-        public void GetCompiledTemplate_NullContentProvider_ThrowsArgumentNullException()
-        {
-            // Act
-            Assert.Throws<ArgumentNullException>(() => _templateEngine.GetCompiledTemplate(null, "", typeof(DummyTemplate)));
-        }
+        //#region GetCompiledTemplate(ITemplateContentProvider, string, Type) Tests
+        //[Test]
+        //public void GetCompiledTemplate_NullContentProvider_ThrowsArgumentNullException()
+        //{
+        //    // Act
+        //    Assert.Throws<ArgumentNullException>(() => _templateEngine.GetCompiledTemplate(null, "", typeof(DummyTemplate)));
+        //}
 
-        [Test]
-        public void GetCompiledTemplate_NormalUse_CallsGetViewSource()
-        {
-            // Arrange
-            const string templatePath = "test.haml";
-            var contentProviderMock = new Mock<ITemplateContentProvider>();
-            contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
+        //[Test]
+        //public void GetCompiledTemplate_NormalUse_CallsGetViewSource()
+        //{
+        //    // Arrange
+        //    const string templatePath = "test.haml";
+        //    var contentProviderMock = new Mock<ITemplateContentProvider>();
+        //    contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
 
-            // Act
-            _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
+        //    // Act
+        //    _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
 
-            // Assert
-            contentProviderMock.Verify(x => x.GetViewSource(templatePath));
-        }
+        //    // Assert
+        //    contentProviderMock.Verify(x => x.GetViewSource(templatePath));
+        //}
 
-        [Test]
-        public void GetCompiledTemplate_NormalUse_ReturnsCorrectTemplateFactory()
-        {
-            // Arrange
-            const string templatePath = "test.haml";
-            var contentProviderMock = new Mock<ITemplateContentProvider>();
-            contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
+        //[Test]
+        //public void GetCompiledTemplate_NormalUse_ReturnsCorrectTemplateFactory()
+        //{
+        //    // Arrange
+        //    const string templatePath = "test.haml";
+        //    var contentProviderMock = new Mock<ITemplateContentProvider>();
+        //    contentProviderMock.Setup(x => x.GetViewSource(It.IsAny<string>())).Returns(ViewSourceBuilder.Create());
 
-            var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
-            _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<ViewSourceCollection>(), typeof(DummyTemplate)))
-                .Returns(expectedTemplateFactory);
+        //    var expectedTemplateFactory = new TemplateFactory(typeof(DummyTemplate));
+        //    _templateFactoryFactoryMock.Setup(x => x.CompileTemplateFactory(It.IsAny<string>(), It.IsAny<ViewSourceCollection>(), typeof(DummyTemplate)))
+        //        .Returns(expectedTemplateFactory);
 
-            // Act
-            var templateFactory = _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
+        //    // Act
+        //    var templateFactory = _templateEngine.GetCompiledTemplate(contentProviderMock.Object, templatePath, typeof(DummyTemplate));
 
-            // Assert
-            Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
-        }
-        #endregion
+        //    // Assert
+        //    Assert.That(templateFactory, Is.SameAs(expectedTemplateFactory));
+        //}
+        //#endregion
 
         #region HamlCacheProvider Tests
         [Test]

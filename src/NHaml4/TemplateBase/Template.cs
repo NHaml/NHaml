@@ -17,12 +17,12 @@ namespace NHaml4.TemplateBase
 
         public void Render(TextWriter writer)
         {
-            Render(writer, HtmlVersion.XHtml, new Dictionary<string, object>());
+            Render(writer, HtmlVersion.XHtml, ViewData ?? new Dictionary<string, object>());
         }
 
         public void Render(TextWriter writer, HtmlVersion htmlVersion)
         {
-            Render(writer, htmlVersion, new Dictionary<string, object>());
+            Render(writer, htmlVersion, ViewData ?? new Dictionary<string, object>());
         }
 
         public void Render(TextWriter writer, HtmlVersion htmlVersion, IDictionary<string, object> viewData)

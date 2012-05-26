@@ -9,7 +9,7 @@ using NHaml4.Walkers.CodeDom;
 
 namespace NHaml4
 {
-    public class TemplateEngine
+    public class TemplateEngine : ITemplateEngine
     {
         private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
@@ -20,21 +20,21 @@ namespace NHaml4
             _templateFactoryFactory = templateFactoryFactory;
         }
 
-        public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type templateBaseType)
-        {
-            Invariant.ArgumentNotNull(contentProvider, "contentProvider");
+        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type templateBaseType)
+        //{
+        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
 
-            var viewSourceCollection = new ViewSourceCollection { contentProvider.GetViewSource(templatePath) };
-            return GetCompiledTemplate(viewSourceCollection, templateBaseType);
-        }
+        //    var viewSourceCollection = new ViewSourceCollection { contentProvider.GetViewSource(templatePath) };
+        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
+        //}
 
-        public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, string masterPath, Type templateBaseType)
-        {
-            Invariant.ArgumentNotNull(contentProvider, "contentProvider");
+        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, string masterPath, Type templateBaseType)
+        //{
+        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
 
-            var viewSourceCollection = GetViewSourceCollection(contentProvider, templatePath, masterPath);
-            return GetCompiledTemplate(viewSourceCollection, templateBaseType);
-        }
+        //    var viewSourceCollection = GetViewSourceCollection(contentProvider, templatePath, masterPath);
+        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
+        //}
 
         private static ViewSourceCollection GetViewSourceCollection(ITemplateContentProvider contentProvider, string templatePath, string masterPath)
         {
@@ -44,7 +44,7 @@ namespace NHaml4
             };
         }
 
-        public TemplateFactory GetCompiledTemplate(IViewSource viewSource, Type templateBaseType)
+        public TemplateFactory GetCompiledTemplate(ViewSource viewSource, Type templateBaseType)
         {
             return GetCompiledTemplate(new ViewSourceCollection { viewSource }, templateBaseType);
         }
@@ -62,6 +62,11 @@ namespace NHaml4
                 return _compiledTemplateCache.GetOrAdd(className, viewSourceCollection[0].TimeStamp,
                     () => _templateFactoryFactory.CompileTemplateFactory(className, viewSourceCollection, templateBaseType));
             }
+        }
+
+        public ITemplateContentProvider TemplateContentProvider
+        {
+            set { _templateFactoryFactory.TemplateContentProvider = value; }
         }
     }
 }

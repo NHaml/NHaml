@@ -26,8 +26,8 @@ namespace NHaml4.Tests.TemplateResolution
         public void GetStreamReader_ExistingFile_ReturnsStream()
         {
             var fileInfo = new FileInfo("test.haml");
-            var stream = new FileViewSource(fileInfo).GetStreamReader();
-            Assert.That(stream.EndOfStream == false);
+            var textReader = new FileViewSource(fileInfo).GetTextReader();
+            Assert.That(textReader.Peek() != 0);
         }
 
         [Test]
@@ -57,9 +57,9 @@ namespace NHaml4.Tests.TemplateResolution
             Assert.That(actual, Is.StringEnding(expectedClassName));
         }
 
-        private static Mock<IViewSource> ViewSourceWithPath(string pathName1)
+        private static Mock<ViewSource> ViewSourceWithPath(string pathName1)
         {
-            var viewSourceMock1 = new Mock<IViewSource>();
+            var viewSourceMock1 = new Mock<ViewSource>();
             viewSourceMock1.SetupGet(x => x.FilePath).Returns(pathName1);
             return viewSourceMock1;
         }

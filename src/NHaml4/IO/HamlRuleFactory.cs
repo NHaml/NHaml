@@ -53,7 +53,7 @@ namespace NHaml4.IO
             }
             if (content.StartsWith("_"))
             {
-                content = content.Substring(1);
+                content = content.Substring(1).Trim();
                 return HamlRuleEnum.Partial;
             }
             return HamlRuleEnum.PlainText;

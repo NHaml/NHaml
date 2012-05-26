@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace NHaml4.TemplateResolution
 {
-    public class ViewSourceCollection : List<IViewSource>
+    public class ViewSourceCollection : List<ViewSource>
     {
         public string GetClassName()
         {
@@ -16,15 +16,17 @@ namespace NHaml4.TemplateResolution
             return result;
         }
 
-        internal IViewSource GetByPartialName(string partialName)
+        internal ViewSource GetByPartialName(string partialName)
         {
             try
             {
-                return this.First(x => x.FileName.ToLower() == partialName.ToLower());
+                return string.IsNullOrEmpty(partialName)
+                    ? this[1]
+                    : this.First(x => x.FileName.ToLower() == partialName.ToLower());
             }
             catch (InvalidOperationException)
             {
-                throw new PartialNotFoundException(partialName);
+                return null;
             }
         }
     }

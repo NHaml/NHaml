@@ -17,12 +17,12 @@ namespace NHaml4.TemplateResolution
             AddPathSource("Views");
         }
 
-        public IViewSource GetViewSource(string templateName)
+        public ViewSource GetViewSource(string templateName)
         {
-            return GetViewSource(templateName, new List<IViewSource>());
+            return GetViewSource(templateName, new List<ViewSource>());
         }
 
-        public IViewSource GetViewSource(string templateName, IEnumerable<IViewSource> parentViewSourceList)
+        public ViewSource GetViewSource(string templateName, IEnumerable<ViewSource> parentViewSourceList)
         {
             Invariant.ArgumentNotEmpty(templateName, "templateName");
             Invariant.ArgumentNotNull(parentViewSourceList, "parentViewSourceList");
@@ -32,14 +32,14 @@ namespace NHaml4.TemplateResolution
             if (fileInfo != null && fileInfo.Exists)
                 return new FileViewSource(fileInfo);
 
-            foreach (var source in parentViewSourceList)
-            {
-                //search where the current parent template exists
-                var parentDirectory = Path.GetDirectoryName(source.FilePath);
-                var combine = Path.Combine(parentDirectory, templateName);
-                if (File.Exists(combine))
-                    return new FileViewSource(new FileInfo(combine));
-            }
+            //foreach (var source in parentViewSourceList)
+            //{
+            //    //search where the current parent template exists
+            //    var parentDirectory = Path.GetDirectoryName(source.FilePath);
+            //    var combine = Path.Combine(parentDirectory, templateName);
+            //    if (File.Exists(combine))
+            //        return new FileViewSource(new FileInfo(combine));
+            //}
 
             throw new FileNotFoundException(string.Format("Could not find template '{0}'.", templateName));
         }

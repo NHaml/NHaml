@@ -13,6 +13,7 @@ using System.IO;
 using NHaml4;
 using NHaml4.Walkers.CodeDom;
 using NHaml4.Configuration;
+using NHaml4.TemplateResolution;
 
 namespace NHaml.Web.Mvc
 {
@@ -130,7 +131,8 @@ namespace NHaml.Web.Mvc
         {
             _contentProvider.SetRequestContext(controllerContext.RequestContext);
             string templatePath = VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath);
-            var templateFactory = _templateEngine.GetCompiledTemplate(_contentProvider, templatePath, GetViewBaseType(controllerContext));
+            var viewSource = _contentProvider.GetViewSource(templatePath);
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource, GetViewBaseType(controllerContext));
             return (IView)templateFactory.CreateTemplate();
 
             //return (IView)_templateEngine.Compile(
@@ -155,7 +157,10 @@ namespace NHaml.Web.Mvc
             //{
             //    if (string.IsNullOrEmpty(masterPath))
             //    {
-            return (IView)_templateEngine.GetCompiledTemplate(_contentProvider, viewPath, masterPath, GetViewBaseType(controllerContext)).
+            var viewSource = _contentProvider.GetViewSource(viewPath);
+            var masterSource = _contentProvider.GetViewSource(masterPath);
+            var viewSourceCollection = new ViewSourceCollection { viewSource, masterSource };
+            return (IView)_templateEngine.GetCompiledTemplate(viewSourceCollection, GetViewBaseType(controllerContext)).
                     CreateTemplate();
             //    }
             //    else

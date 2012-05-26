@@ -4,7 +4,7 @@ using System.Text;
 
 namespace NHaml4.TemplateResolution
 {
-    public class FileViewSource : IViewSource
+    public class FileViewSource : ViewSource
     {
         private readonly FileInfo _fileInfo;
 
@@ -20,17 +20,17 @@ namespace NHaml4.TemplateResolution
             _fileInfo = fileInfo;
         }
 
-        public StreamReader GetStreamReader()
+        public override TextReader GetTextReader()
         {
             return new StreamReader(_fileInfo.FullName);
         }
 
-        public string FilePath
+        public override string FilePath
         {
             get { return _fileInfo.FullName; }
         }
 
-        public string FileName
+        public override string FileName
         {
             get
             {
@@ -38,21 +38,9 @@ namespace NHaml4.TemplateResolution
             }
         }
 
-        public DateTime TimeStamp
+        public override DateTime TimeStamp
         {
             get { return File.GetLastWriteTime(FilePath); }
-        }
-
-        public string GetClassName()
-        {
-            string templatePath = FilePath;
-            var stringBuilder = new StringBuilder();
-            foreach (char ch in templatePath)
-            {
-                stringBuilder.Append(Char.IsLetter(ch) ? ch : '_');
-            }
-
-            return stringBuilder.ToString();
         }
     }
 }

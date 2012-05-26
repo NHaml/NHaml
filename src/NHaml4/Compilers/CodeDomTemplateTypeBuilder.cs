@@ -52,7 +52,7 @@ namespace NHaml4.Compilers
             {
                 compilerParams.OutputAssembly = tempAssemblyName.FullName;
                 var compilerResults = _codeDomProvider.CompileAssemblyFromFile(compilerParams, classFileInfo.FullName);
-                ValidateCompilerResults(compilerResults);
+                ValidateCompilerResults(compilerResults, source);
 
                 var assembly = Assembly.Load(File.ReadAllBytes(tempAssemblyName.FullName),
                                              File.ReadAllBytes(tempSymbolsName.FullName));
@@ -76,16 +76,16 @@ namespace NHaml4.Compilers
             compilerParams.GenerateInMemory = true;
             compilerParams.IncludeDebugInformation = false;
             var compilerResults = _codeDomProvider.CompileAssemblyFromSource(compilerParams, source);
-            ValidateCompilerResults(compilerResults);
+            ValidateCompilerResults(compilerResults, source);
             var assembly = compilerResults.CompiledAssembly;
             return ExtractType(typeName, assembly);
         }
 
-        private void ValidateCompilerResults(CompilerResults compilerResults)
+        private void ValidateCompilerResults(CompilerResults compilerResults, string source)
         {
             if (ContainsErrors(compilerResults))
             {
-                throw new CompilerException(compilerResults);
+                throw new CompilerException(compilerResults, source);
             }
         }
 

@@ -14,9 +14,9 @@ namespace NHaml4.Parser
             _hamlFileLexer = hamlFileLexer;
         }
 
-        public HamlDocument ParseViewSource(IViewSource layoutViewSource)
+        public HamlDocument ParseViewSource(ViewSource layoutViewSource)
         {
-            using (var streamReader = layoutViewSource.GetStreamReader())
+            using (var streamReader = layoutViewSource.GetTextReader())
             {
                 return ParseStreamReader(streamReader, layoutViewSource.FileName);
             }

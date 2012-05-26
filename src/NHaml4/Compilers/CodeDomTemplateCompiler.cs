@@ -1,4 +1,6 @@
 using System.Collections.Generic;
+using System;
+using System.Reflection.Emit;
 
 namespace NHaml4.Compilers
 {
@@ -21,6 +23,23 @@ namespace NHaml4.Compilers
         private IEnumerable<string> MergeInDefaultCompileTypes(IEnumerable<string> referencedAssemblyLocations)
         {
             var result = new List<string>(referencedAssemblyLocations);
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly is AssemblyBuilder)
+                    continue;
+
+                string location;
+                try
+                {
+                    location = assembly.Location;
+                }
+                catch (NotSupportedException)
+                {
+                    continue;
+                }
+                if (result.Contains(location) == false)
+                    result.Add(location);
+            }
             if (result.Contains(typeof(TemplateBase.Template).Assembly.Location) == false)
                 result.Add(typeof(TemplateBase.Template).Assembly.Location);
 
