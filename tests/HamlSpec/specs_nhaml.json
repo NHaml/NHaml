@@ -35,6 +35,10 @@
       "haml" : "-if (false)\n  Hello",
 	  "html" : ""
     },
+    "Passing conditional statement with else block renders content" : {
+      "haml" : "-if (true)\n  Hello\n-else\n  Goodbye",
+	  "html" : "  Hello"
+    },
     "For loop repeats content" : {
       "haml" : "-for (int c = 0; c < 3; c++)\n  Hello",
 	  "html" : "  Hello\n  Hello\n  Hello"

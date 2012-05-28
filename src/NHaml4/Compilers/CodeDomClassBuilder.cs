@@ -81,7 +81,8 @@ namespace NHaml4.Compilers
         {
             if (containsChildren)
             {
-                InitialiseCodeBlock();
+                if (IsCodeBlockBeginningElse(code) == false)
+                    InitialiseCodeBlock();
                 RenderMethod.Statements.Add(
                     new CodeSnippetExpression { Value = code + "//"});
                 RenderBeginBlock();
@@ -91,6 +92,11 @@ namespace NHaml4.Compilers
             {
                 AppendCodeSnippet(code);
             }
+        }
+
+        private bool IsCodeBlockBeginningElse(string code)
+        {
+            return (code.ToLower().Trim() + " ").StartsWith("else ");
         }
 
         private void InitialiseCodeBlock()

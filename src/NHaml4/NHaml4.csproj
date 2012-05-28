@@ -100,6 +100,7 @@
     <Compile Include="Parser\Rules\HamlNodeDocType.cs" />
     <Compile Include="Parser\Rules\HamlNodePartial.cs" />
     <Compile Include="PartialNotFoundException.cs" />
+    <Compile Include="TemplateBase\TypedTemplate.cs" />
     <Compile Include="TemplateBase\DocTypeFactory.cs" />
     <Compile Include="TemplateResolution\StreamViewSource.cs" />
     <Compile Include="TemplateResolution\ViewSourceCollection.cs" />

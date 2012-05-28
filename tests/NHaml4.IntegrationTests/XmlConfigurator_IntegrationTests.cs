@@ -33,6 +33,24 @@ namespace NHaml4.IntegrationTests
         }
 
         [Test]
+        public void XmlConfigurator_TypedTemplate_CompilesValidTemplate()
+        {
+            // Arrange
+            string templateContent = @"= Model.Date";
+            var viewSource = ViewSourceBuilder.Create(templateContent);
+
+            // Act
+            var templateEngine = XmlConfigurator.GetTemplateEngine();
+            var compiledTemplateFactory = templateEngine.GetCompiledTemplate(viewSource, typeof(TypedTemplate<DateTime>));
+            var template = (TypedTemplate<DateTime>)compiledTemplateFactory.CreateTemplate();
+            var textWriter = new StringWriter();
+            template.Render(textWriter, DateTime.Now);
+
+            // Assert
+            Assert.AreEqual(DateTime.Today.ToString(), textWriter.ToString());
+        }
+
+        [Test]
         public void GetTemplateEngine_BasicHamlConfig_ContainsExtraUsingStatement()
         {
             var viewSource = ViewSourceBuilder.Create("= NHaml4.IntegrationTests.XmlConfigurator_IntegrationTests.TestRenderMethod()");

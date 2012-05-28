@@ -40,5 +40,10 @@ namespace NHaml4
 
             return (Func<Template>)dynamicMethod.CreateDelegate(typeof(Func<Template>));
         }
+
+        public object CreateTemplate<T1>()
+        {
+            throw new NotImplementedException();
+        }
     }
 }
