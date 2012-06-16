@@ -12,7 +12,7 @@
     <AssemblyName>NHaml4</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <AssemblyOriginatorKeyFile>..\NHaml.snk</AssemblyOriginatorKeyFile>
     <FileUpgradeFlags>
     </FileUpgradeFlags>
@@ -63,6 +63,19 @@
     <NoWarn>
     </NoWarn>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Profiled|AnyCPU'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Profiled\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRules>-Microsoft.Design#CA1020</CodeAnalysisRules>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisIgnoreBuiltInRuleSets>false</CodeAnalysisIgnoreBuiltInRuleSets>
+    <CodeAnalysisIgnoreBuiltInRules>false</CodeAnalysisIgnoreBuiltInRules>
+    <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
@@ -74,12 +87,39 @@
     <Compile Include="..\SharedAssemblyInfo.cs">
       <Link>Properties\SharedAssemblyInfo.cs</Link>
     </Compile>
-    <Compile Include="CompiledTemplate.cs">
+    <Compile Include="Compilers\Exceptions\CompilerException.cs" />
+    <Compile Include="Compilers\ITemplateFactoryCompiler.cs" />
+    <Compile Include="Configuration\AssemblyConfigurationElement.cs" />
+    <Compile Include="Configuration\ConfigurationCollection.cs" />
+    <Compile Include="Configuration\ImportConfigurationElement.cs" />
+    <Compile Include="Configuration\KeyedConfigurationElement.cs" />
+    <Compile Include="Configuration\NHamlConfigurationSection.cs" />
+    <Compile Include="Configuration\XmlConfigurator.cs" />
+    <Compile Include="IO\HamlRuleFactory.cs" />
+    <Compile Include="ITemplateEngine.cs" />
+    <Compile Include="Parser\Rules\HamlNodeDocType.cs" />
+    <Compile Include="Parser\Rules\HamlNodePartial.cs" />
+    <Compile Include="PartialNotFoundException.cs" />
+    <Compile Include="TemplateBase\TypedTemplate.cs" />
+    <Compile Include="TemplateBase\DocTypeFactory.cs" />
+    <Compile Include="TemplateResolution\StreamViewSource.cs" />
+    <Compile Include="TemplateResolution\ViewSourceCollection.cs" />
+    <Compile Include="Walkers\CodeDom\HamlPartialWalker.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeDocTypeWalker.cs" />
+    <Compile Include="Walkers\Exceptions\HamlInvalidChildNodeException.cs" />
+    <Compile Include="Walkers\Exceptions\HamlUnknownNodeTypeException.cs" />
+    <Compile Include="Parser\Exceptions\HamlMalformedVariableException.cs" />
+    <Compile Include="Parser\Rules\HamlNodeCode.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextVariable.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextLiteral.cs" />
+    <Compile Include="TemplateBase\HtmlVersion.cs" />
+    <Compile Include="TemplateFactoryFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compilers\Abstract\CodeDomClassBuilder.cs" />
+    <Compile Include="Compilers\CodeDomClassBuilder.cs" />
+    <Compile Include="Compilers\CodeDomFluentBuilder.cs" />
     <Compile Include="Compilers\CodeDomTemplateCompiler.cs" />
-    <Compile Include="Compilers\Abstract\CodeDomTemplateTypeBuilder.cs" />
+    <Compile Include="Compilers\CodeDomTemplateTypeBuilder.cs" />
     <Compile Include="Compilers\ITemplateClassBuilder.cs" />
     <Compile Include="Compilers\ITemplateTypeBuilder.cs" />
     <Compile Include="Crosscutting\HtmlStringHelper.cs" />
@@ -90,6 +130,8 @@
     <Compile Include="IHamlTemplateCache.cs" />
     <Compile Include="ITemplateFactoryFactory.cs" />
     <Compile Include="Parser\Exceptions\HamlMalformedTagException.cs" />
+    <Compile Include="Parser\HamlNodeFactory.cs" />
+    <Compile Include="Parser\Rules\HamlNodeEval.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlAttribute.cs" />
     <Compile Include="Parser\Rules\HamlNodeHtmlAttributeCollection.cs" />
     <Compile Include="Parser\Rules\HamlNodeTagClass.cs" />
@@ -97,12 +139,11 @@
     <Compile Include="Parser\Rules\HamlNodeHamlComment.cs" />
     <Compile Include="Parser\Rules\HamlNodeTag.cs" />
     <Compile Include="Parser\Rules\HamlNodeTagId.cs" />
-    <Compile Include="Parser\Rules\HamlNodeText.cs" />
+    <Compile Include="Parser\Rules\HamlNodeTextContainer.cs" />
     <Compile Include="Parser\Exceptions\HamlUnknownRuleException.cs" />
     <Compile Include="Parser\HamlDocument.cs" />
     <Compile Include="Parser\HamlNode.cs" />
     <Compile Include="Parser\HamlTreeParser.cs" />
-    <Compile Include="Compilers\ITemplateCompiler.cs" />
     <Compile Include="Parser\ITreeParser.cs" />
     <Compile Include="Parser\HamlRuleEnum.cs" />
     <Compile Include="ProxyExtracter.cs" />
@@ -114,36 +155,42 @@
     <Compile Include="TemplateResolution\ITemplateContentProvider.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeCodeWalker.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeEvalWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHamlCommentWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlCommentWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Walkers\CodeDom\HamlNodeTagWalker.cs" />
-    <Compile Include="Walkers\CodeDom\HamlNodeTextWalker.cs">
+    <Compile Include="Walkers\CodeDom\HamlNodeTextContainerWalker.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeTextLiteralWalker.cs">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Walkers\CodeDom\HamlNodeTextVariableWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalker.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeWalkerException.cs" />
+    <Compile Include="Walkers\CodeDom\HamlNodeWalkerFactory.cs" />
     <Compile Include="Walkers\CodeDom\HamlOptions.cs" />
     <Compile Include="Walkers\CodeDom\HamlNodeHtmlAttributeCollectionWalker.cs" />
     <Compile Include="Walkers\IDocumentWalker.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Walkers\INodeWalker.cs" />
     <Compile Include="TemplateResolution\FileViewSource.cs" />
     <Compile Include="TemplateFactory.cs">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Compilers\CSharp2\CSharp2TemplateTypeBuilder.cs" />
+    <Compile Include="Compilers\CSharp2TemplateTypeBuilder.cs" />
     <Compile Include="TemplateResolution\IViewSource.cs" />
-    <Compile Include="Compilers\CSharp2\CSharp2TemplateClassBuilder.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\NHaml.snk">
       <Link>Properties\NHaml.snk</Link>
     </None>
     <Compile Include="TemplateEngine.cs" />
+    <None Include="NHaml.snk" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
@@ -165,9 +212,7 @@
       <Install>true</Install>
     </BootstrapperPackage>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Walkers\Exceptions\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

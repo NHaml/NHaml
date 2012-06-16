@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using NHaml4.IO;
 using System.IO;
 using NHaml4.TemplateResolution;
-using NHaml4.Parser.Rules;
-using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser
 {
@@ -19,34 +14,32 @@ namespace NHaml4.Parser
             _hamlFileLexer = hamlFileLexer;
         }
 
-        public HamlDocument ParseViewSource(IViewSource layoutViewSource)
+        public HamlDocument ParseViewSource(ViewSource layoutViewSource)
         {
-            HamlDocument result = null;
-            using (var streamReader = layoutViewSource.GetStreamReader())
+            using (var streamReader = layoutViewSource.GetTextReader())
             {
-                result = ParseStreamReader(streamReader);
+                return ParseStreamReader(streamReader, layoutViewSource.FileName);
             }
-            return result;
         }
 
-        public HamlDocument ParseDocumentSource(string documentSource)
+        public HamlDocument ParseDocumentSource(string documentSource, string fileName)
         {
             using (var streamReader = new StreamReader(
                 new MemoryStream(new UTF8Encoding().GetBytes(documentSource))))
             {
-                return ParseStreamReader(streamReader);
+                return ParseStreamReader(streamReader, fileName);
             }
         }
 
-        public HamlDocument ParseStreamReader(StreamReader reader)
+        private HamlDocument ParseStreamReader(TextReader reader, string fileName)
         {
-            var hamlFile = _hamlFileLexer.Read(reader);
+            var hamlFile = _hamlFileLexer.Read(reader, fileName);
             return ParseHamlFile(hamlFile);
         }
 
         public HamlDocument ParseHamlFile(HamlFile hamlFile)
         {
-            var result = new HamlDocument();
+            var result = new HamlDocument(hamlFile.FileName);
 
             ParseNode(result, hamlFile);
 
@@ -58,38 +51,22 @@ namespace NHaml4.Parser
             node.IsMultiLine = true;
             while ((!hamlFile.EndOfFile) && (hamlFile.CurrentLine.IndentCount > node.IndentCount))
             {
-                HamlLine nodeLine = hamlFile.CurrentLine;
-                HamlNode childNode = GetHamlNode(nodeLine);
+                var nodeLine = hamlFile.CurrentLine;
+                var childNode = HamlNodeFactory.GetHamlNode(nodeLine);
                 node.AddChild(childNode);
 
                 hamlFile.MoveNext();
-                if (hamlFile.EndOfFile == false)
+                if (hamlFile.EndOfFile == false
+                    && hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
                 {
-                    if (hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
-                    {
-                        childNode.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
-                        ParseNode(childNode, hamlFile);
-                    }
-                    else
-                        node.AddChild(new HamlNodeText(new HamlLine("\n", nodeLine.SourceFileLineNo)));
+                    childNode.AppendInnerTagNewLine();
+                    ParseNode(childNode, hamlFile);
                 }
-            }
-        }
-
-        private HamlNode GetHamlNode(HamlLine nodeLine)
-        {
-            switch (nodeLine.HamlRule)
-            {
-                case HamlRuleEnum.PlainText:
-                    return new HamlNodeText(nodeLine);
-                case HamlRuleEnum.Tag:
-                    return new HamlNodeTag(nodeLine);
-                case HamlRuleEnum.HamlComment:
-                    return new HamlNodeHamlComment(nodeLine);
-                case HamlRuleEnum.HtmlComment:
-                    return new HamlNodeHtmlComment(nodeLine);
-                default:
-                    throw new HamlUnknownRuleException(nodeLine.Content, nodeLine.SourceFileLineNo);
+                if (hamlFile.EndOfFile == false
+                    && hamlFile.CurrentLine.IndentCount >= nodeLine.IndentCount)
+                {
+                    node.AppendPostTagNewLine(childNode, hamlFile.CurrentLine.SourceFileLineNo);
+                }
             }
         }
     }

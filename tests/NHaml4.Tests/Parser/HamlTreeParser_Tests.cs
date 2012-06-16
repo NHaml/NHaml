@@ -5,6 +5,7 @@ using NHaml4.Parser;
 using NHaml.Tests.Builders;
 using NHaml4.Parser.Rules;
 using NHaml4.Parser.Exceptions;
+using System.Linq;
 
 namespace NHaml4.Tests.Parser
 {
@@ -28,14 +29,15 @@ namespace NHaml4.Tests.Parser
         }
 
         [Test]
-        [TestCase("Test content", typeof(HamlNodeText))]
+        [TestCase("Test content", typeof(HamlNodeTextContainer))]
         [TestCase("%p", typeof(HamlNodeTag))]
         [TestCase("-#comment", typeof(HamlNodeHamlComment))]
         [TestCase("/comment", typeof(HamlNodeHtmlComment))]
+        [TestCase("= Test", typeof(HamlNodeEval))]
         public void ParseDocumentSource_DifferentLineTypes_CreatesCorrectTreeNodeTypes(string template, Type nodeType)
         {
-            var result = _parser.ParseDocumentSource(template);
-            Assert.IsInstanceOf(nodeType, result.Children[0]);
+            var result = _parser.ParseDocumentSource(template, "");
+            Assert.IsInstanceOf(nodeType, result.Children.First());
         }
 
         [Test]
@@ -45,27 +47,48 @@ namespace NHaml4.Tests.Parser
         [TestCase("Test\n  Test", 1)]
         public void ParseDocumentSource_SingleLevelTemplates_TreeContainsCorrectNoOfChildren(string template, int expectedChildrenCount)
         {
-            var result = _parser.ParseDocumentSource(template);
-            Assert.That(result.Children.Count, Is.EqualTo(expectedChildrenCount));
+            var result = _parser.ParseDocumentSource(template, "");
+            Assert.That(result.Children.Count(), Is.EqualTo(expectedChildrenCount));
         }
 
         [Test]
         public void ParseDocumentSource_MultiLineTemplates_AddsLineBreakNode()
         {
             string template = "Line1\nLine2";
-            var result = _parser.ParseDocumentSource(template);
-            Assert.That(result.Children[1].Content, Is.EqualTo("\n"));
+            var result = _parser.ParseDocumentSource(template, "");
+            Assert.That(result.Children.ToList()[1].Content, Is.EqualTo("\n"));
         }
 
         [Test]
         [TestCase("Test\n  Test", 1)]
         [TestCase("Test\n  Test\n  Test", 1)]
         [TestCase("Test\n  Test\n    Test", 1)]
-        [TestCase("Test\n  Test\nTest", 2)]
+        [TestCase("Test\n  Test\nTest", 3)]
         public void ParseDocumentSource_MultiLevelTemplates_TreeContainsCorrectNoChildren(string template, int expectedChildren)
         {
-            var result = _parser.ParseDocumentSource(template);
-            Assert.AreEqual(expectedChildren, result.Children.Count);
+            var result = _parser.ParseDocumentSource(template, "");
+            Assert.AreEqual(expectedChildren, result.Children.Count());
+        }
+
+        public void ParseDocumentSource_FileNameSpecified_DocumentContainsMatchingFileName()
+        {
+            const string fileName = "FileName";
+            var result = _parser.ParseDocumentSource("", fileName);
+            Assert.That(result.Content, Is.EqualTo(fileName));
+        }
+
+        [Test]
+        public void ParseDocumentSource_NestedContent_PlacesLineBreaksCorrectly()
+        {
+            string template = "%p Line 1\n%p\n  Line 2\n%p Line 3";
+            var result = _parser.ParseDocumentSource(template, "");
+
+            var children = result.Children.ToList();
+
+            Assert.That(children[1].Content, Is.EqualTo("\n"));
+            Assert.That(children[2].Children.First().Content, Is.EqualTo("\n"));
+            Assert.That(children[2].Children.Count(), Is.EqualTo(2));
+            Assert.That(children[3].Content, Is.EqualTo("\n"));
         }
 
         [Test]
@@ -73,7 +96,7 @@ namespace NHaml4.Tests.Parser
         {
             var fakeLine = new HamlLineFake("") {HamlRule = HamlRuleEnum.Unknown};
 
-            var file = new HamlFile();
+            var file = new HamlFile("");
             file.AddLine(fakeLine);
             Assert.Throws<HamlUnknownRuleException>(() => _parser.ParseHamlFile(file));           
         }

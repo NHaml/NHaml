@@ -8,6 +8,7 @@ using Moq;
 namespace NHaml4.Tests
 {
     public interface IDummyInterface { }
+    public interface IDummyGenericInterface<T> { }
 
     [TestFixture]
     class ProxyExtractor_Tests
@@ -33,9 +34,9 @@ namespace NHaml4.Tests
         [Test]
         public void GetNonProxiedType_ProxiedIList_ReturnsIList()
         {
-            var inputType = new Mock<IList<string>>();
+            var inputType = new Mock<IDummyGenericInterface<string>>();
             var actualResult = ProxyExtracter.GetNonProxiedType(inputType.Object.GetType());
-            Assert.That(actualResult, Is.EqualTo(typeof(IList<string>)));
+            Assert.That(actualResult, Is.EqualTo(typeof(IDummyGenericInterface<string>)));
         }
         
 

@@ -13,65 +13,103 @@ namespace NHaml4.Tests.TemplateBase
     {
         private class DummyTemplate : Template
         {
-            protected override void PreRender(TextWriter textWriter)
+            public string RenderValueOrKeyAsString(IDictionary<string, object> dictionary, string keyName)
             {
-                textWriter.Write("PreRender");
-            }
-            protected override void CoreRender(TextWriter textWriter)
-            {
-                textWriter.Write("CoreRender");
-            }
-            protected override void PostRender(TextWriter textWriter)
-            {
-                textWriter.Write("PostRender");
+                base.SetViewData(dictionary);
+                return base.RenderValueOrKeyAsString(keyName);
             }
 
-            public void RenderAttributeIfValueNotNull(TextWriter writer, string attSchema, string attName, string attValue)
+            public new string RenderAttributeNameValuePair(string name, string value, char quoteToUse)
             {
-                base.RenderAttributeIfValueNotNull(writer, attSchema, attName, attValue);
+                return base.RenderAttributeNameValuePair(name, value, quoteToUse);
+            }
+
+            public string AppendSelfClosingTagSuffix(HtmlVersion htmlVersion)
+            {
+                base.SetHtmlVersion(htmlVersion);
+                return base.AppendSelfClosingTagSuffix();
             }
         }
-
-        #region Render
-        [Test]
-        public void Render_NormalUse_CallsPreRender()
-        {
-            var writer = new StringWriter();
-            new DummyTemplate().Render(writer);
-            Assert.That(writer.ToString(), Is.StringContaining("PreRender"));
-        }
+        
+        #region RenderValueOrKeyAsString
 
         [Test]
-        public void Render_NormalUse_CallsCoreRender()
+        [TestCase("FakeKeyName", "KeyName")]
+        [TestCase("RealKeyName", "RealValue")]
+        public void RenderValueOrKeyAsString_RealVsFakeKey_RendersKeyOrValueCorrectly(string keyName, string expecedValue)
         {
-            var writer = new StringWriter();
-            new DummyTemplate().Render(writer);
-            Assert.That(writer.ToString(), Is.StringContaining("CoreRender"));
-        }
+            var dictionary = new Dictionary<string, object>();
+            dictionary.Add("RealKeyName", "RealValue");
 
-        [Test]
-        public void Render_NormalUse_CallsPostRender()
-        {
-            var writer = new StringWriter();
-            new DummyTemplate().Render(writer);
-            Assert.That(writer.ToString(), Is.StringContaining("PostRender"));
-        }
-        #endregion
-    
-        #region RenderAttributeIfValueNotNull
-        [Test]
-        [TestCase("", "Name", null, @"", Description="Null attribute value")]
-        [TestCase("", "", "Value", @"", Description = "Empty attribute name")]
-        [TestCase("", "Name", "Value", @" Name=""Value""", Description = "Empty attribute name")]
-        [TestCase("Schema", "Name", "Value", @" Schema:Name=""Value""", Description = "Empty attribute name")]
-        public void RenderAttributeIfValueNotNull_MultipleScenarios_GeneratesCorrectOutput(string attSchema, string attName, string attValue, string expectedOutput)
-        {
-            var writer = new StringWriter();
-            new DummyTemplate().RenderAttributeIfValueNotNull(writer, attSchema, attName, attValue);
-            Assert.That(writer.ToString(), Is.EqualTo(expectedOutput));
+            var template = new DummyTemplate();
+            string result  = template.RenderValueOrKeyAsString(dictionary, keyName);
+
+            Assert.That(result, Is.StringContaining(expecedValue));
         }
 
         #endregion
 
+        #region RenderAttributeNameValuePair
+
+        [Test]
+        [TestCase("a", "b", " a=\"b\"")]
+        [TestCase("", "a", "")]
+        [TestCase("a", "false", "")]
+        public void RenderAttributeNameValuePair_VaryingNameValuePairs_GeneratesCorrectValue(string name, string value, string expectedOutput)
+        {
+            var template = new DummyTemplate();
+            string result = template.RenderAttributeNameValuePair(name, value, '\"');
+            Assert.That(result, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        [TestCase("checked", "true", HtmlVersion.XHtml, " checked=\"checked\"")]
+        [TestCase("checked", "TRUE", HtmlVersion.XHtml, " checked=\"checked\"")]
+        [TestCase("checked", "", HtmlVersion.XHtml, "")]
+        [TestCase("checked", "false", HtmlVersion.XHtml, "")]
+        [TestCase("checked", "FALSE", HtmlVersion.XHtml, "")]
+        [TestCase("checked", "true", HtmlVersion.Html5, " checked")]
+        [TestCase("checked", "", HtmlVersion.Html5, "")]
+        [TestCase("checked", "true", HtmlVersion.Html4, " checked")]
+        [TestCase("checked", "", HtmlVersion.Html4, "")]
+        public void RenderAttributeNameValuePair_BooleanAttribute_WritesCorrectAttributes(string name, string value, HtmlVersion htmlVersion, string expectedOutput)
+        {
+            var template = new DummyTemplate();
+            template.SetHtmlVersion(htmlVersion);
+            string result = template.RenderAttributeNameValuePair(name, value, '\"');
+
+            Assert.That(result, Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        [TestCase('\"')]
+        [TestCase('\'')]
+        public void RenderAttributeNameValuePair_VaryingQuoteTypes_RendersCorrectQuotes(char quoteToUse)
+        {
+            const string name = "name";
+            const string value = "value";
+            var template = new DummyTemplate();
+            string result = template.RenderAttributeNameValuePair(name, value, quoteToUse);
+
+            string expectedOutput = " " + name + "=" + quoteToUse + value + quoteToUse;
+            Assert.That(result, Is.EqualTo(expectedOutput));
+        }
+        #endregion
+
+        #region AppendSelfClosingTagSuffix
+
+        [Test]
+        [TestCase(HtmlVersion.Html4, ">")]
+        [TestCase(HtmlVersion.XHtml, " />")]
+        [TestCase(HtmlVersion.Html5, ">")]
+        public void AppendSelfClosingTagSuffix_VaryingHtmlVersion_AppendsCorrectOutput(HtmlVersion htmlVersion, string expectedOutput)
+        {
+            var template = new DummyTemplate();
+            string result = template.AppendSelfClosingTagSuffix(htmlVersion);
+
+            Assert.That(result, Is.EqualTo(expectedOutput));
+        }
+        
+        #endregion
     }
 }

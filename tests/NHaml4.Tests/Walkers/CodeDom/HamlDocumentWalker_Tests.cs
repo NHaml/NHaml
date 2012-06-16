@@ -7,6 +7,10 @@ using NHaml4.Tests.Walkers.CodeDom;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
 using NHaml4.Tests.Mocks;
+using System;
+using NHaml4.TemplateBase;
+using System.Collections.Generic;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests.Walkers
 {
@@ -18,12 +22,13 @@ namespace NHaml4.Tests.Walkers
         {
             // Arrange
             var content = new HamlLine("Simple content", 0);
-            var document = new HamlDocument();
-            document.AddChild(new HamlNodeText(content));
+            var document = HamlDocumentBuilder.Create("",
+                new HamlNodeTextContainer(content));
+            Type baseType = typeof(Template);
 
             // Act
             var builder = new ClassBuilderMock();
-            new HamlDocumentWalker(builder).Walk(document, "");
+            new HamlDocumentWalker(builder).Walk(document, "", baseType, new List<string>());
 
             // Assert
             Assert.That(builder.Build(""), Is.EqualTo(content.Content));
@@ -34,15 +39,18 @@ namespace NHaml4.Tests.Walkers
         {
             // Arrange
             const string className = "ClassName";
-            var document = new HamlTreeParser(new NHaml4.IO.HamlFileLexer()).ParseDocumentSource("Simple content");
-            
+            Type baseType = typeof(Template);
+            var parser = new HamlTreeParser(new NHaml4.IO.HamlFileLexer());
+            var document = parser.ParseDocumentSource("Simple content", "");
+            var imports = new List<string>();
+
             // Act
             var builder = new Mock<ITemplateClassBuilder>();
-            
-            new HamlDocumentWalker(builder.Object).Walk(document, className);
+
+            new HamlDocumentWalker(builder.Object).Walk(document, className, baseType, imports);
 
             // Assert
-            builder.Verify(x => x.Build(className));
+            builder.Verify(x => x.Build(className, baseType, imports));
         }
     }
 }

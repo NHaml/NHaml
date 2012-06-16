@@ -21,7 +21,7 @@ namespace NHaml4
             _fastActivator = CreateFastActivator( templateType );
         }
 
-        public virtual Template CreateTemplate()
+        public Template CreateTemplate()
         {
             return _fastActivator();
         }
@@ -30,9 +30,7 @@ namespace NHaml4
         {
             var constructor = type.GetConstructor( new Type[] { } );
             if (constructor == null)
-            {
                 throw new InvalidTemplateTypeException(type);
-            }
 
             var dynamicMethod = new DynamicMethod( "activatefast__", type, null, type );
             var ilGenerator = dynamicMethod.GetILGenerator();
@@ -41,6 +39,11 @@ namespace NHaml4
             ilGenerator.Emit( OpCodes.Ret );
 
             return (Func<Template>)dynamicMethod.CreateDelegate(typeof(Func<Template>));
+        }
+
+        public object CreateTemplate<T1>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

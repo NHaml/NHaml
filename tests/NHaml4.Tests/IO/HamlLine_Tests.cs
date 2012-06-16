@@ -19,6 +19,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\tTest", 2, Description = "Tab followed by plain text")]
         [TestCase(" \tTest", 3, Description = "Space + Tab followed by plain text")]
         [TestCase("\t Test", 3, Description = "Tab + Space followed by plain text")]
+        [TestCase("  _", 2, Description = "Token-only haml line")]
         public void Constructor_CalculatesIndentCountCorrectly(string testString, int expectedIndent)
         {
             var line = new HamlLine(testString, 0);
@@ -37,38 +38,6 @@ namespace NHaml4.Tests.IO
         {
             var line = new HamlLine(testString, 0);
             Assert.AreEqual(expectedIndent, line.Indent);
-        }
-
-        [Test]
-        [TestCase("", HamlRuleEnum.PlainText, Description = "Empty string")]
-        [TestCase(" ", HamlRuleEnum.PlainText, Description = "Single space")]
-        [TestCase("%", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase(".className", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase("#id", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase("%Tag", HamlRuleEnum.Tag, Description = "Plain tag")]
-        [TestCase(" /Tag", HamlRuleEnum.HtmlComment, Description = "HTML Comment")]
-        [TestCase("  -#Tag", HamlRuleEnum.HamlComment, Description = "Haml Comment")]
-        [TestCase("\t\t!!!Tag", HamlRuleEnum.DocType, Description = "DocType")]
-        public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
-        {
-            var line = new HamlLine(testString, 0);
-            Assert.AreEqual(expectedRule, line.HamlRule);
-        }
-
-        [Test]
-        [TestCase("", "", Description = "Empty string")]
-        [TestCase(" ", "", Description = "Single space")]
-        [TestCase("%", "", Description = "Plain tag")]
-        [TestCase(".className", ".className", Description = "Plain tag")]
-        [TestCase("#id", "#id", Description = "Plain tag")]
-        [TestCase("%Tag", "Tag", Description = "Plain tag")]
-        [TestCase(" /Tag", "Tag", Description = "HTML Comment")]
-        [TestCase("  -#Tag", "Tag", Description = "Haml Comment")]
-        [TestCase("\t\t!!!Tag", "Tag", Description = "DocType")]
-        public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
-        {
-            var line = new HamlLine(testString, 0);
-            Assert.AreEqual(expectedContent, line.Content);
         }
     }
 }

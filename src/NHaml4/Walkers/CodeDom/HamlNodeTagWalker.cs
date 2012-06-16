@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NHaml4.Compilers;
 using NHaml4.Parser;
-using NHaml4.Crosscutting;
 using NHaml4.Parser.Rules;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public class HamlNodeTagWalker : HamlNodeWalker, INodeWalker
+    public class HamlNodeTagWalker : HamlNodeWalker
     {
-        public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeTagWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 
@@ -28,61 +26,72 @@ namespace NHaml4.Walkers.CodeDom
 
         private void AppendTagStart(HamlNodeTag nodeTag)
         {
-            AppendLeadingWhitespace(nodeTag);
-            _classBuilder.Append("<" + nodeTag.NamespaceQualifiedTagName);
-        }
+            if (nodeTag.IsLeadingWhitespaceTrimmed == false)
+                ClassBuilder.Append(nodeTag.Indent);
 
-        private void AppendLeadingWhitespace(HamlNodeTag nodeTag)
-        {
-            if (nodeTag.WhitespaceRemoval == WhitespaceRemoval.Surrounding)
-                return;
-
-            var previousTag = nodeTag.Previous as HamlNodeTag;
-            if (previousTag != null && previousTag.WhitespaceRemoval == WhitespaceRemoval.Surrounding)
-                return;
-
-            var parentTag = nodeTag.Parent as HamlNodeTag;
-            if (parentTag != null && parentTag.WhitespaceRemoval == WhitespaceRemoval.Internal)
-                return;
-
-            _classBuilder.Append(nodeTag.Indent);
+            ClassBuilder.Append("<" + nodeTag.NamespaceQualifiedTagName);
         }
 
         private void AppendAttributes(HamlNodeTag nodeTag)
         {
-            _classBuilder.Append(MakeClassAttribute(nodeTag));
-            _classBuilder.Append(MakeIdAttribute(nodeTag));
+            MakeClassAttribute(nodeTag);
+            MakeIdAttribute(nodeTag);
             WalkHtmlStyleAttributes(nodeTag);
         }
 
-        private string MakeClassAttribute(HamlNodeTag nodeTag)
+        private void MakeClassAttribute(HamlNodeTag nodeTag)
         {
-            var classes = (from collection in nodeTag.Children
-                           from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                           where ((HamlNodeHtmlAttribute)attr).Name == "class"
-                           select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
-
-            var classesToAdd = nodeTag.Children.OfType<HamlNodeTagClass>()
-                .Select(x => x.Content).ToList();
-
-            classes.AddRange(classesToAdd);
-
-            return (classes.Any())
-                ? string.Format(" class='{0}'", string.Join(" ", classes.ToArray()))
-                : "";
+            var classValues = GetClassValues(nodeTag);
+            AppendClassAttribute(classValues);
         }
 
-        private string MakeIdAttribute(HamlNodeTag nodeTag)
+        private static IList<string> GetClassValues(HamlNodeTag nodeTag)
         {
-            var idAttributes = (from collection in nodeTag.Children
-                                from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
-                                where ((HamlNodeHtmlAttribute)attr).Name == "id"
-                                select ((HamlNodeHtmlAttribute)attr).ValueWithoutQuotes).ToList();
+            var classValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
+                               from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                               where attr.Name == "class"
+                               from attrFragment in attr.Children
+                               select attrFragment.Content).ToList();
 
-            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
-            if (idTag != null) idAttributes.Insert(0, idTag.Content);
+            classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>()
+                                     .Select(x => " " + x.Content));
+            return classValues;
+        }
 
-            return idAttributes.Any() ? " id='" + string.Join("_", idAttributes.ToArray()) + "'" : "";
+        private void AppendClassAttribute(IList<string> classValues)
+        {
+            if (!classValues.Any()) return;
+
+            classValues[0] = classValues[0].Trim();
+            ClassBuilder.AppendAttributeNameValuePair("class", classValues, '\'');
+        }
+
+        private void MakeIdAttribute(HamlNodeTag nodeTag)
+        {
+            var idValues = GetIdValues(nodeTag);
+            AppendIdAttribute(idValues);
+        }
+
+        private static IList<string> GetIdValues(HamlNodeTag nodeTag)
+        {
+            var idValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
+                            from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
+                            where attr.Name == "id"
+                            from attrFragment in attr.Children
+                            select attrFragment.Content).ToList();
+
+            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof (HamlNodeTagId));
+            if (idTag != null) idValues.Insert(0, idTag.Content);
+            return idValues;
+        }
+
+        private void AppendIdAttribute(IList<string> idValues)
+        {
+            if (!idValues.Any()) return;
+
+            for (int c = idValues.Count - 1; c > 0; c--)
+                idValues.Insert(c, "_");
+            ClassBuilder.AppendAttributeNameValuePair("id", idValues, '\'');
         }
 
         private void WalkHtmlStyleAttributes(HamlNodeTag nodeTag)
@@ -90,55 +99,46 @@ namespace NHaml4.Walkers.CodeDom
             var attributeTags = nodeTag.Children.Where(x => x.GetType() == typeof(HamlNodeHtmlAttributeCollection));
             foreach (var child in attributeTags)
             {
-                new HamlNodeHtmlAttributeCollectionWalker(_classBuilder, _options)
+                new HamlNodeHtmlAttributeCollectionWalker(ClassBuilder, Options)
                     .Walk(child);
             }
         }
 
         private void AppendTagBodyAndClose(HamlNodeTag nodeTag)
         {
-            if (nodeTag.IsSelfClosing || _options.IsAutoClosingTag(nodeTag.TagName))
-                _classBuilder.Append(_options.HtmlVersion == HtmlVersion.XHtml ?
-                    " />"
-                    : ">");
+            if (nodeTag.IsSelfClosing || Options.IsAutoClosingTag(nodeTag.TagName))
+                ClassBuilder.AppendSelfClosingTagSuffix();
             else
             {
-                _classBuilder.Append(">");
+                ClassBuilder.Append(">");
                 base.Walk(nodeTag);
-                if (nodeTag.IsMultiLine)
+                if (IsPreCloseTagWhitespaceTrimmed(nodeTag))
                 {
-                    _classBuilder.AppendNewLine();
-                    _classBuilder.AppendFormat(nodeTag.Indent + "</{0}>", nodeTag.NamespaceQualifiedTagName);
+                    ClassBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
                 }
                 else
                 {
-                    _classBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
+                    ClassBuilder.AppendNewLine();
+                    ClassBuilder.AppendFormat(nodeTag.Indent + "</{0}>", nodeTag.NamespaceQualifiedTagName);
                 }
             }
         }
 
-        private void RenderStandardTag(HamlNodeTag nodeTag, string attributesMarkup)
+        private bool IsPreCloseTagWhitespaceTrimmed(HamlNodeTag nodeTag)
         {
-            _classBuilder.AppendFormat("<{0}{1}>", nodeTag.NamespaceQualifiedTagName, attributesMarkup);
-            base.Walk(nodeTag);
+            if (nodeTag.IsMultiLine == false || nodeTag.WhitespaceRemoval == WhitespaceRemoval.Internal)
+                return true;
 
-            if (nodeTag.IsMultiLine)
-            {
-                _classBuilder.AppendNewLine();
-                _classBuilder.AppendFormat(nodeTag.Indent + "</{0}>", nodeTag.NamespaceQualifiedTagName);
-            }
-            else
-            {
-                _classBuilder.AppendFormat("</{0}>", nodeTag.NamespaceQualifiedTagName);
-            }
+            var lastNonWhitespaceChild = GetLastNonWhitespaceChild(nodeTag) as HamlNodeTag;
+            if (lastNonWhitespaceChild == null)
+                return false;
+            
+            return (lastNonWhitespaceChild).WhitespaceRemoval == WhitespaceRemoval.Surrounding;
         }
 
-        private string GetAttributes(IEnumerable<KeyValuePair<string, string>> attributes)
+        private HamlNode GetLastNonWhitespaceChild(HamlNodeTag nodeTag)
         {
-            if (attributes.Count() == 0) return "";
-
-            return " " + string.Join(" ", 
-                attributes.Select(x => string.Format("{0}='{1}'", x.Key, x.Value)).ToArray());
+            return nodeTag.Children.LastOrDefault(x => x.IsWhitespaceNode() == false);
         }
     }
 }

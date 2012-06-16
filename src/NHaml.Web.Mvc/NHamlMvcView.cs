@@ -8,14 +8,14 @@ using NHaml4.TemplateBase;
 
 namespace NHaml.Web.Mvc
 {
-    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public abstract class NHamlMvcView : NHamlMvcView<object>
     {
     };
 
-    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal )]
+    //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public abstract class NHamlMvcView<TModel> : Template, IView, IViewDataContainer
       where TModel : class
     {
@@ -55,7 +55,7 @@ namespace NHaml.Web.Mvc
 
         public ViewContext ViewContext { get; private set; }
 
-        public ViewDataDictionary<TModel> ViewData { get; private set; }
+        public new ViewDataDictionary<TModel> ViewData { get; private set; }
 
         public TempDataDictionary TempData
         {

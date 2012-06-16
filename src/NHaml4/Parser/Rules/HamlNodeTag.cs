@@ -1,8 +1,4 @@
-﻿using System;
-using System.Linq;
-using System.Collections.Generic;
-using NHaml4.Crosscutting;
-using NHaml4.IO;
+﻿using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
@@ -16,12 +12,12 @@ namespace NHaml4.Parser.Rules
     {
         private string _tagName = string.Empty;
         private string _namespace = string.Empty;
-        private bool _isSelfClosing = false;
         private WhitespaceRemoval _whitespaceRemoval = WhitespaceRemoval.None;
 
         public HamlNodeTag(IO.HamlLine nodeLine)
             : base(nodeLine)
         {
+            IsSelfClosing = false;
             int pos = 0;
 
             SetNamespaceAndTagName(nodeLine.Content, ref pos);
@@ -31,13 +27,18 @@ namespace NHaml4.Parser.Rules
             HandleInlineContent(nodeLine.Content, ref pos);
         }
 
+        protected override bool IsContentGeneratingTag
+        {
+            get { return true; }
+        }
+
         private void SetNamespaceAndTagName(string content, ref int pos)
         {
             _tagName = GetTagName(content, ref pos);
             
             if (pos < content.Length
                 && content[pos] == ':'
-                && _isSelfClosing == false)
+                && IsSelfClosing == false)
             {
                 pos++;
                 _namespace = _tagName;
@@ -60,74 +61,71 @@ namespace NHaml4.Parser.Rules
 
         private void ParseAttributes(string content, ref int pos)
         {
-            if (pos < content.Length)
+            if (pos >= content.Length) return;
+
+            char attributeEndChar = HtmlStringHelper.GetAttributeTerminatingChar(content[pos]);
+            if (attributeEndChar != '\0')
             {
-                if (content[pos] == '(')
-                {
-                    string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos, new[] { ')' });
-                    if (attributes[attributes.Length - 1] != ')')
-                        throw new HamlMalformedTagException("Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNo);
-                    pos++;
-                    var attributesNode = new HamlNodeHtmlAttributeCollection(SourceFileLineNo, attributes);
-                    AddChild(attributesNode);
-                }
+                string attributes = HtmlStringHelper.ExtractTokenFromTagString(content, ref pos,
+                                                                               new[] {attributeEndChar});
+                if (attributes[attributes.Length - 1] != attributeEndChar)
+                    throw new HamlMalformedTagException(
+                        "Malformed HTML Attributes collection \"" + attributes + "\".", SourceFileLineNum);
+                AddChild(new HamlNodeHtmlAttributeCollection(SourceFileLineNum, attributes));
+
+                pos++;
             }
         }
 
-        private void ParseSpecialCharacters(string p, ref int pos)
+        private void ParseSpecialCharacters(string content, ref int pos)
         {
             _whitespaceRemoval = WhitespaceRemoval.None;
-            _isSelfClosing = false;
+            IsSelfClosing = false;
 
-            while (pos < p.Length)
+            while (pos < content.Length)
             {
-                if (ParseWhitespaceRemoval(p, ref pos) == false
-                    && ParseSelfClosing(p, pos) == false)
-                    break;
+                if (ParseWhitespaceRemoval(content, ref pos)) continue;
+                if (ParseSelfClosing(content, ref pos)) continue;
+                
+                break;
             }
         }
 
-        private bool ParseSelfClosing(string p, int pos)
+        private bool ParseWhitespaceRemoval(string content, ref int pos)
         {
-            if (_isSelfClosing == false)
-            {
-                if (p[pos] == '/')
-                {
-                    _isSelfClosing = true;
-                    pos++;
-                    return true;
-                }
-            }
-            return false;
-        }
+            if (_whitespaceRemoval != WhitespaceRemoval.None)
+                return false;
 
-        private bool ParseWhitespaceRemoval(string p, ref int pos)
-        {
-            if (_whitespaceRemoval == WhitespaceRemoval.None)
+            switch (content[pos])
             {
-                if (p[pos] == '>')
-                {
+                case '>':
                     _whitespaceRemoval = WhitespaceRemoval.Surrounding;
                     pos++;
                     return true;
-                }
-                else if (p[pos] == '<')
-                {
+                case '<':
                     _whitespaceRemoval = WhitespaceRemoval.Internal;
                     pos++;
                     return true;
-                }
             }
             return false;
+        }
+
+        private bool ParseSelfClosing(string content, ref int pos)
+        {
+            if (IsSelfClosing || content[pos] != '/')
+                return false;
+
+            IsSelfClosing = true;
+            pos++;
+            return true;
         }
 
         private void HandleInlineContent(string content, ref int pos)
         {
-            if (pos < content.Length)
-            {
-                var contentLine = new HamlLine(content.Substring(pos).TrimStart(), SourceFileLineNo);
-                AddChild(new HamlNodeText(contentLine));
-            }
+            if (pos >= content.Length) return;
+
+            string contentLine = content.Substring(pos).TrimStart();
+            AddChild(new HamlNodeTextContainer(SourceFileLineNum, contentLine));
         }
 
         public string TagName
@@ -135,10 +133,7 @@ namespace NHaml4.Parser.Rules
             get { return _tagName; }
         }
 
-        public bool IsSelfClosing
-        {
-            get { return _isSelfClosing; }
-        }
+        public bool IsSelfClosing { get; private set; }
 
         public WhitespaceRemoval WhitespaceRemoval
         {
@@ -161,7 +156,7 @@ namespace NHaml4.Parser.Rules
         {
             pos++;
             string tagId = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagId(SourceFileLineNo, tagId);
+            var newTag = new HamlNodeTagId(SourceFileLineNum, tagId);
             AddChild(newTag);
         }
 
@@ -169,7 +164,7 @@ namespace NHaml4.Parser.Rules
         {
             pos++;
             string className = GetHtmlToken(content, ref pos);
-            var newTag = new HamlNodeTagClass(SourceFileLineNo, className);
+            var newTag = new HamlNodeTagClass(SourceFileLineNum, className);
             AddChild(newTag);
         }
 
@@ -179,13 +174,9 @@ namespace NHaml4.Parser.Rules
             while (pos < content.Length)
             {
                 if (HtmlStringHelper.IsHtmlIdentifierChar(content[pos]))
-                {
                     pos++;
-                }
                 else
-                {
                     break;
-                }
             }
             return content.Substring(startIndex, pos - startIndex);
         }
