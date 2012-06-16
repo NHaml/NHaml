@@ -1,30 +1,19 @@
 using System.Configuration;
 
-namespace NHaml.Configuration
+namespace NHaml4.Configuration
 {
     public  class AssemblyConfigurationElement : KeyedConfigurationElement
     {
-        private const string AssemblyElement = "assembly";
-
-        public AssemblyConfigurationElement()
-        {
-        }
-
-        public AssemblyConfigurationElement( string name )
-        {
-            Name = name;
-        }
-
         public override string Key
         {
             get { return Name; }
         }
 
-        [ConfigurationProperty( AssemblyElement, IsRequired = true, IsKey = true )]
+        private const string AssemblyElement = "assembly";
+        [ConfigurationProperty(AssemblyElement, IsRequired = true, IsKey = true)]
         public string Name
         {
             get { return (string)this[AssemblyElement]; }
-            set { this[AssemblyElement] = value; }
         }
     }
 }

@@ -4,58 +4,69 @@ using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.IO;
 using NHaml4.Compilers;
-using NHaml4.Compilers.CSharp2;
 using NHaml4.TemplateResolution;
 using NHaml4.Walkers.CodeDom;
 
 namespace NHaml4
 {
-    public class TemplateEngine
+    public class TemplateEngine : ITemplateEngine
     {
         private readonly IHamlTemplateCache _compiledTemplateCache;
         private readonly ITemplateFactoryFactory _templateFactoryFactory;
 
-        public TemplateEngine(HamlOptions hamlOptions)
-            : this(
-            new SimpleTemplateCache(),
-            new TemplateFactoryFactory(
-                    new HamlTreeParser(new HamlFileLexer()),
-                    new HamlDocumentWalker(new CSharp2TemplateClassBuilder(), hamlOptions),
-                    new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder())))
-        { }
-
         public TemplateEngine(IHamlTemplateCache templateCache, ITemplateFactoryFactory templateFactoryFactory)
         {
-            _templateFactoryFactory = templateFactoryFactory;
             _compiledTemplateCache = templateCache;
+            _templateFactoryFactory = templateFactoryFactory;
         }
 
-        public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type baseType)
-        {
-            Invariant.ArgumentNotNull(contentProvider, "contentProvider");
+        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type templateBaseType)
+        //{
+        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
 
-            var viewSource = contentProvider.GetViewSource(templatePath);
-            return GetCompiledTemplate(viewSource, baseType);
+        //    var viewSourceCollection = new ViewSourceCollection { contentProvider.GetViewSource(templatePath) };
+        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
+        //}
+
+        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, string masterPath, Type templateBaseType)
+        //{
+        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
+
+        //    var viewSourceCollection = GetViewSourceCollection(contentProvider, templatePath, masterPath);
+        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
+        //}
+
+        private static ViewSourceCollection GetViewSourceCollection(ITemplateContentProvider contentProvider, string templatePath, string masterPath)
+        {
+            return new ViewSourceCollection {
+                contentProvider.GetViewSource(masterPath),
+                contentProvider.GetViewSource(templatePath)
+            };
         }
 
-        public TemplateFactory GetCompiledTemplate(IViewSource viewSource)
+        public TemplateFactory GetCompiledTemplate(ViewSource viewSource, Type templateBaseType)
         {
-            return GetCompiledTemplate(viewSource, typeof(TemplateBase.Template));
+            return GetCompiledTemplate(new ViewSourceCollection { viewSource }, templateBaseType);
         }
 
-        public TemplateFactory GetCompiledTemplate(IViewSource viewSource, Type templateBaseType)
+        public TemplateFactory GetCompiledTemplate(ViewSourceCollection viewSourceCollection, Type templateBaseType)
         {
-            Invariant.ArgumentNotNull(viewSource, "viewSource");
+            Invariant.ArgumentNotNull(viewSourceCollection, "viewSourceCollection");
             Invariant.ArgumentNotNull(templateBaseType, "templateBaseType");
 
             templateBaseType = ProxyExtracter.GetNonProxiedType(templateBaseType);
-            var className = viewSource.GetClassName();
+            var className = viewSourceCollection.GetClassName();
 
             lock( _compiledTemplateCache )
             {
-                return _compiledTemplateCache.GetOrAdd(className, viewSource.TimeStamp,
-                    () => _templateFactoryFactory.CompileTemplateFactory(className, viewSource));
+                return _compiledTemplateCache.GetOrAdd(className, viewSourceCollection[0].TimeStamp,
+                    () => _templateFactoryFactory.CompileTemplateFactory(className, viewSourceCollection, templateBaseType));
             }
+        }
+
+        public ITemplateContentProvider TemplateContentProvider
+        {
+            set { _templateFactoryFactory.TemplateContentProvider = value; }
         }
     }
 }

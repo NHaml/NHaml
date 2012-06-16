@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace NHaml4.Walkers.CodeDom
 {
-    public enum HtmlVersion
+    public class HamlHtmlOptions
     {
-        Html4, Html5, XHtml
-    }
+        private readonly IList<string> _autoClosingTags;
 
-    public class HamlOptions
-    {
-        public HamlOptions()
+        public HamlHtmlOptions()
         {
-            AutoClosingTags = new List<string> {
+            _autoClosingTags = new List<string> {
                                     "area",
                                     "base",
                                     "br",
@@ -26,15 +20,11 @@ namespace NHaml4.Walkers.CodeDom
                                     "meta",
                                     "param"
                                 };
-            HtmlVersion = CodeDom.HtmlVersion.XHtml;
         }
 
         internal bool IsAutoClosingTag(string tagName)
         {
-            return AutoClosingTags.Contains(tagName);
+            return _autoClosingTags.Contains(tagName);
         }
-
-        public IList<string> AutoClosingTags;
-        public HtmlVersion HtmlVersion;
     }
 }

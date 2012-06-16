@@ -19,17 +19,22 @@ namespace NHaml4.Tests.Walkers.CodeDom
         private class BogusHamlNode : HamlNode
         {
             public BogusHamlNode() : base(0, "") { }
+
+            protected override bool IsContentGeneratingTag
+            {
+                get { return true; }
+            }
         }
 
         ClassBuilderMock _classBuilderMock;
         private HamlNodeHtmlCommentWalker _walker;
-        private HamlOptions _hamlOptions;
+        private HamlHtmlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
             _classBuilderMock = new ClassBuilderMock();
-            _hamlOptions = new HamlOptions();
+            _hamlOptions = new HamlHtmlOptions();
             _walker = new HamlNodeHtmlCommentWalker(_classBuilderMock, _hamlOptions);
         }
 
@@ -60,7 +65,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             // Arrange
             HamlLine nestedText = new HamlLine("  Hello world", 0);
             var tagNode = new HamlNodeHtmlComment(new HamlLine("", 0));
-            tagNode.AddChild(new HamlNodeText(nestedText));
+            tagNode.AddChild(new HamlNodeTextContainer(nestedText));
 
             // Act
             _walker.Walk(tagNode);

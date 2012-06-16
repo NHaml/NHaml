@@ -12,29 +12,29 @@ using System.Web.UI;
 using System.IO;
 using NHaml4;
 using NHaml4.Walkers.CodeDom;
+using NHaml4.Configuration;
+using NHaml4.TemplateResolution;
 
 namespace NHaml.Web.Mvc
 {
-    [AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-    [AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
+    //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     public class NHamlMvcViewEngine : VirtualPathProviderViewEngine
     {
         private readonly TemplateEngine _templateEngine;
-        private readonly IList<string> _usings;
-        private readonly IList<string> _references;
         private readonly MapPathTemplateContentProvider _contentProvider;
         private readonly Type _baseType = typeof(NHamlMvcView<>);
         private bool _isMasterConfigured;
-        public string DefaultMaster { get; set; }
-
+        private string DefaultMaster { get; set; }
 
         public NHamlMvcViewEngine()
         {
-            _contentProvider = new MapPathTemplateContentProvider();
-            _usings = GetDefaultUsings();
-            _references = GetDefaultReferences();
-            _templateEngine = new TemplateEngine(new HamlOptions());
             InitializeBaseViewLocations();
+            _contentProvider = new MapPathTemplateContentProvider();
+            _templateEngine = XmlConfigurator.GetTemplateEngine(
+                _contentProvider,
+                GetDefaultUsings(),
+                GetDefaultReferences());
             DefaultMaster = "Application";
         }
 
@@ -55,7 +55,9 @@ namespace NHaml.Web.Mvc
                 typeof(RouteValueDictionary).Assembly.Location,
                 typeof(DataContext).Assembly.Location,
                 typeof(LinkExtensions).Assembly.Location,
-                typeof(IView).Assembly.Location };
+                typeof(IView).Assembly.Location,
+                typeof(NHamlMvcView).Assembly.Location
+            };
 
             var referencedAssemblies = typeof(MvcHandler).Assembly.GetReferencedAssemblies();
             result.AddRange(referencedAssemblies.Select(x => Assembly.Load(x).Location));
@@ -129,7 +131,8 @@ namespace NHaml.Web.Mvc
         {
             _contentProvider.SetRequestContext(controllerContext.RequestContext);
             string templatePath = VirtualPathToPhysicalPath(controllerContext.RequestContext, partialPath);
-            var templateFactory = _templateEngine.GetCompiledTemplate(_contentProvider, templatePath, GetViewBaseType(controllerContext));
+            var viewSource = _contentProvider.GetViewSource(templatePath);
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource, GetViewBaseType(controllerContext));
             return (IView)templateFactory.CreateTemplate();
 
             //return (IView)_templateEngine.Compile(
@@ -154,7 +157,10 @@ namespace NHaml.Web.Mvc
             //{
             //    if (string.IsNullOrEmpty(masterPath))
             //    {
-            return (IView)_templateEngine.GetCompiledTemplate(_contentProvider, viewPath, GetViewBaseType(controllerContext)).
+            var viewSource = _contentProvider.GetViewSource(viewPath);
+            var masterSource = _contentProvider.GetViewSource(masterPath);
+            var viewSourceCollection = new ViewSourceCollection { viewSource, masterSource };
+            return (IView)_templateEngine.GetCompiledTemplate(viewSourceCollection, GetViewBaseType(controllerContext)).
                     CreateTemplate();
             //    }
             //    else

@@ -5,6 +5,8 @@ using System.Text;
 using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml4.IO;
+using NHaml4.Parser.Rules;
+using NHaml4.Tests.Builders;
 
 namespace NHaml4.Tests.Parser
 {
@@ -13,6 +15,11 @@ namespace NHaml4.Tests.Parser
     {
         private class HamlNodeDummy : HamlNode {
             public HamlNodeDummy() : base(0, "") { }
+
+            protected override bool IsContentGeneratingTag
+            {
+                get { return true; }
+            }
         }
 
         [Test]
@@ -21,7 +28,7 @@ namespace NHaml4.Tests.Parser
             var node = new HamlNodeDummy();
             var childNode = new HamlNodeDummy();
             node.AddChild(childNode);
-            Assert.AreSame(childNode, node.Children[0]);
+            Assert.AreSame(childNode, node.Children.First());
         }
 
         [Test]
@@ -31,8 +38,8 @@ namespace NHaml4.Tests.Parser
             document.AddChild(new HamlNodeDummy());
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[1].Previous;
-            Assert.That(result, Is.SameAs(document.Children[0]));
+            var result = new List<HamlNode>(document.Children)[1].Previous;
+            Assert.That(result, Is.SameAs(document.Children.First()));
         }
 
         [Test]
@@ -41,7 +48,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Previous;
+            var result = document.Children.First().Previous;
             Assert.That(result, Is.Null);
         }
 
@@ -52,8 +59,8 @@ namespace NHaml4.Tests.Parser
             document.AddChild(new HamlNodeDummy());
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Next;
-            Assert.That(result, Is.SameAs(document.Children[1]));
+            var result = document.Children.First().Next;
+            Assert.That(result, Is.SameAs(document.Children.ToList()[1]));
         }
 
         [Test]
@@ -62,7 +69,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Parent;
+            var result = document.Children.First().Parent;
             Assert.That(result, Is.SameAs(document));
         }
 
@@ -81,7 +88,7 @@ namespace NHaml4.Tests.Parser
             var document = new HamlNodeDummy();
             document.AddChild(new HamlNodeDummy());
 
-            var result = document.Children[0].Next;
+            var result = document.Children.First().Next;
             Assert.That(result, Is.Null);
         }
 
@@ -95,5 +102,56 @@ namespace NHaml4.Tests.Parser
             var result = document.Next;
             Assert.That(result, Is.Null);
         }
+
+        [Test]
+        public void GetNextUnresolvedPartial_NoPartials_ReturnsNull()
+        {
+            var rootNode = new HamlNodeDummy();
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.Null);
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_Partials_ReturnsPartial()
+        {
+            var partial = new HamlNodePartial(new HamlLine("", -1));
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(partial);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(partial));
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_OneResolvedAndOneUnresolvedPartial_ReturnsCorrectPartial()
+        {
+            var resolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+            resolvedPartial.SetDocument(HamlDocumentBuilder.Create());
+
+            var unresolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(resolvedPartial);
+            rootNode.AddChild(unresolvedPartial);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(unresolvedPartial));
+        }
+
+        [Test]
+        public void GetNextUnresolvedPartial_PartialIsAGrandchildNode_ReturnsPartial()
+        {
+            var textContainerNode = new HamlNodeTextContainer(0, "Test content");
+            var partial = new HamlNodePartial(new HamlLine("", -1));
+            textContainerNode.AddChild(partial);
+
+            var rootNode = new HamlNodeDummy();
+            rootNode.AddChild(textContainerNode);
+
+            var result = rootNode.GetNextUnresolvedPartial();
+            Assert.That(result, Is.EqualTo(partial));
+        }
+
     }
 }

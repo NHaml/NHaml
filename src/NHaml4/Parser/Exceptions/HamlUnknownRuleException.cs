@@ -9,8 +9,8 @@ namespace NHaml4.Parser.Exceptions
             : this(ruleValue, lineNo, null)
         { }
 
-        public HamlUnknownRuleException(string ruleValue, int lineNo, Exception ex)
-            : base(string.Format("Unable to create node for unknown rule '{0}' on line {1}", ruleValue, lineNo), ex)
+        private HamlUnknownRuleException(string ruleValue, int lineNo, Exception ex)
+            : base(string.Format("Unknown rule '{0}' on line {1}", ruleValue, lineNo), ex)
         { }
     }
 }

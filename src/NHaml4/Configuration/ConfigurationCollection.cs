@@ -2,9 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace NHaml.Configuration
+namespace NHaml4.Configuration
 {
-    public abstract class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
+    // ReSharper disable UnusedMember.Global
+    // ReSharper disable ClassNeverInstantiated.Global
+    public class ConfigurationCollection<T> : ConfigurationElementCollection, IEnumerable<T>
       where T : KeyedConfigurationElement, new()
     {
         public override ConfigurationElementCollectionType CollectionType
@@ -28,9 +30,7 @@ namespace NHaml.Configuration
             set
             {
                 if( BaseGet( index ) != null )
-                {
                     BaseRemoveAt( index );
-                }
 
                 BaseAdd( index, value );
             }
@@ -46,9 +46,7 @@ namespace NHaml.Configuration
             var enumerator = base.GetEnumerator();
 
             while( enumerator.MoveNext() )
-            {
                 yield return (T)enumerator.Current;
-            }
         }
 
         public int IndexOf( T element )
@@ -69,9 +67,7 @@ namespace NHaml.Configuration
         public void Remove( T element )
         {
             if( BaseIndexOf( element ) >= 0 )
-            {
                 BaseRemove( element.Key );
-            }
         }
 
         public void RemoveAt( int index )
@@ -89,4 +85,6 @@ namespace NHaml.Configuration
             BaseClear();
         }
     }
+    // ReSharper restore ClassNeverInstantiated.Global
+    // ReSharper restore UnusedMember.Global
 }

@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Crosscutting;
+﻿using NHaml4.Crosscutting;
 using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Parser.Rules
@@ -10,50 +6,65 @@ namespace NHaml4.Parser.Rules
     public class HamlNodeHtmlAttribute : HamlNode
     {
         private string _name = string.Empty;
-        private string _value = string.Empty;
+        private char _quoteChar = '\'';
 
         public HamlNodeHtmlAttribute(int sourceFileLineNo, string nameValuePair)
             : base(sourceFileLineNo, nameValuePair)
         {
             int index = 0;
-            _name = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
-            if (_name.EndsWith("=")) _name = _name.Substring(0, _name.Length - 1);
+            ParseName(ref index);
+            ParseValue(index);
+        }
 
-            if (!string.IsNullOrEmpty(_name))
-            {
-                if (index < Content.Length)
-                    _value = Content.Substring(index + 1);
-            }
-            else
-            {
-                throw new HamlMalformedTagException("Malformed HTML attribute \"" + nameValuePair + "\"", SourceFileLineNo);
-            }
+        private void ParseValue(int index)
+        {
+            if (index >= Content.Length) return;
+
+            string value = Content.Substring(index + 1);
+            value = IsQuoted(value)
+                ? RemoveQuotes(value)
+                : "#{" + value + "}";
+
+            AddChild(new HamlNodeTextContainer(SourceFileLineNum, value));
+        }
+
+        private void ParseName(ref int index)
+        {
+            string result = HtmlStringHelper.ExtractTokenFromTagString(Content, ref index, new[] { '=', '\0' });
+            if (string.IsNullOrEmpty(result))
+                throw new HamlMalformedTagException("Malformed HTML attribute \"" + Content + "\"", SourceFileLineNum);
+
+            _name = result.TrimEnd('=');
+        }
+
+        protected override bool IsContentGeneratingTag
+        {
+            get { return true; }
         }
 
         public string Name
         {
             get { return _name; }
-            set { _name = value; }
         }
 
-        public string Value
+        public char QuoteChar
         {
-            get { return _value; }
-            set { _value = value; }
+            get { return _quoteChar; }
         }
 
-        public string ValueWithoutQuotes
+        private bool IsQuoted(string input)
         {
-            get
-            {
-                if (_value.Length < 2) return _value;
+          return ((input[0] == '\'' && input[input.Length - 1] == '\'')
+                || (input[0] == '"' && input[input.Length - 1] == '"'));
+        }
 
-                if ((_value[0] == '\'' && _value[_value.Length - 1] == '\'')
-                    || (_value[0] == '"' && _value[_value.Length - 1] == '"'))
-                    return _value.Substring(1, _value.Length - 2);
-                
-                return _value;
-            }
+        private string RemoveQuotes(string input)
+        {
+            if (input.Length < 2 || IsQuoted(input) == false)
+                return input;
+
+            _quoteChar = input[0];
+            return input.Substring(1, input.Length - 2);
         }
     }
 }

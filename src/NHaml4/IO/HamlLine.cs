@@ -1,33 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.Parser;
+﻿using NHaml4.Parser;
 
 namespace NHaml4.IO
 {
     public class HamlLine
     {
-        private int _indentCount;
         private HamlRuleEnum _hamlRule;
         private string _content;
-        private string _indent;
-        private int _sourceFileLineNo;
+        private readonly int _sourceFileLineNum;
 
-        public HamlLine(string currentLine, int sourceFileLineNo)
+        public HamlLine(string currentLine, int sourceFileLineNum)
         {
             ParseHamlLine(currentLine);
-            _sourceFileLineNo = sourceFileLineNo;
+            _sourceFileLineNum = sourceFileLineNum;
+            _hamlRule = HamlRuleFactory.ParseHamlRule(ref _content);
+            AddImplicitDivTag();
+
+            if (string.IsNullOrEmpty(currentLine.Trim())) IndentCount = 0;
         }
 
-        public int IndentCount
-        {
-            get { return _indentCount; }
-        }
+        public int IndentCount { get; private set; }
 
         public int SourceFileLineNo
         {
-            get { return _sourceFileLineNo; }
+            get { return _sourceFileLineNum; }
         }
 
         public HamlRuleEnum HamlRule
@@ -41,84 +36,31 @@ namespace NHaml4.IO
             get { return _content; }
         }
 
-        public string Indent
-        {
-            get { return _indent; }
-        }
+        public string Indent { get; private set; }
 
         private void ParseHamlLine(string currentLine)
         {
-            _indentCount = 0;
+            IndentCount = 0;
             int whiteSpaceIndex = 0;
-
             while (whiteSpaceIndex < currentLine.Length)
             {
                 if (currentLine[whiteSpaceIndex] == ' ')
-                    _indentCount++;
+                    IndentCount++;
                 else if (currentLine[whiteSpaceIndex] == '\t')
-                    _indentCount += 2;
+                    IndentCount += 2;
                 else
                     break;
                 whiteSpaceIndex++;
             }
 
-            _indent = currentLine.Substring(0, whiteSpaceIndex);
+            Indent = currentLine.Substring(0, whiteSpaceIndex);
             _content = (whiteSpaceIndex == currentLine.Length) ? "" : currentLine.Substring(whiteSpaceIndex);
-
-            if (string.IsNullOrEmpty(_content)) _indentCount = 0;
-
-            AddImplicitDivTag();
-
-            _hamlRule = ParseHamlRule();
         }
 
         private void AddImplicitDivTag()
         {
-            if (_content.Length == 0) return;
-            if (_content[0] == '.' || _content[0] == '#')
-                _content = "%" + _content;
-        }
-
-        private HamlRuleEnum ParseHamlRule()
-        {
-            if (_content == "") return HamlRuleEnum.PlainText;
-
-            if (_content.StartsWith("!!!"))
-            {
-                _content = (_content.Length > 3 ? _content.Substring(3) : "");
-                return HamlRuleEnum.DocType;
-            }
-            else if (_content.StartsWith("-#"))
-            {
-                _content = (_content.Length > 2 ? _content.Substring(2) : "");
-                return HamlRuleEnum.HamlComment;
-            }
-            else if (_content.StartsWith("%"))
-            {
-                _content = (_content.Length > 1 ? _content.Substring(1) : "");
-                return HamlRuleEnum.Tag;
-            }
-            //if (_content.StartsWith("#"))
-            //{
-            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
-            //    return HamlRuleEnum.DivId;
-            //}
-            //if (_content.StartsWith("."))
-            //{
-            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
-            //    return HamlRuleEnum.DivClass;
-            //}
-            else if (_content.StartsWith("/"))
-            {
-                _content = (_content.Length > 1 ? _content.Substring(1) : "");
-                return HamlRuleEnum.HtmlComment;
-            }
-            //if (_content.StartsWith("="))
-            //{
-            //    _content = (_content.Length > 1 ? _content.Substring(1) : "");
-            //    return HamlRuleEnum.Evaluation;
-            //}
-            return HamlRuleEnum.PlainText;
+            if (_hamlRule == HamlRuleEnum.DivClass || _hamlRule == HamlRuleEnum.DivId)
+                _hamlRule = HamlRuleEnum.Tag;
         }
     }
 }

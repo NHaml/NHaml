@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 
 namespace NHaml4
 {
@@ -13,12 +11,12 @@ namespace NHaml4
             public TemplateFactory TemplateFactory;
         }
 
-        private static IDictionary<string, TemplateFactoryCacheEntry> _templateCache = new Dictionary<string, TemplateFactoryCacheEntry>();
+        private static readonly IDictionary<string, TemplateFactoryCacheEntry> TemplateCache = new Dictionary<string, TemplateFactoryCacheEntry>();
 
         public TemplateFactory GetOrAdd(string templateKey, DateTime timeStamp, Func<TemplateFactory> templateGet)
         {
             TemplateFactoryCacheEntry result;
-            bool templateInCache = _templateCache.TryGetValue(templateKey, out result);
+            bool templateInCache = TemplateCache.TryGetValue(templateKey, out result);
             if (templateInCache == false || result.TimeStamp < timeStamp)
             {
                 result = new TemplateFactoryCacheEntry
@@ -26,7 +24,7 @@ namespace NHaml4
                     TimeStamp = timeStamp,
                     TemplateFactory = templateGet()
                 };
-                _templateCache[templateKey] = result;
+                TemplateCache[templateKey] = result;
             }
 
             return result.TemplateFactory;
@@ -34,12 +32,12 @@ namespace NHaml4
 
         public bool ContainsTemplate(string fileName)
         {
-            return _templateCache.ContainsKey(fileName);
+            return TemplateCache.ContainsKey(fileName);
         }
 
         public void Clear()
         {
-            _templateCache.Clear();
+            TemplateCache.Clear();
         }
     }
 }

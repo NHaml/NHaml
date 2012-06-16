@@ -1,18 +1,18 @@
 ﻿using NHaml4.Compilers;
 using NHaml4.Parser.Rules;
-using NHaml4.Crosscutting;
 using NHaml4.Parser;
 using NHaml4.Parser.Exceptions;
+using System.Linq;
 
 namespace NHaml4.Walkers.CodeDom
 {
     public class HamlNodeHtmlAttributeCollectionWalker : HamlNodeWalker
     {
-        public HamlNodeHtmlAttributeCollectionWalker(ITemplateClassBuilder classBuilder, HamlOptions options)
+        public HamlNodeHtmlAttributeCollectionWalker(ITemplateClassBuilder classBuilder, HamlHtmlOptions options)
             : base(classBuilder, options)
         { }
 
-        public override void Walk(Parser.HamlNode node)
+        public override void Walk(HamlNode node)
         {
             var attributeCollectionNode = node as HamlNodeHtmlAttributeCollection;
             if (attributeCollectionNode == null)
@@ -22,27 +22,18 @@ namespace NHaml4.Walkers.CodeDom
             {
                 if (childNode.Content.StartsWith("class=")
                     || childNode.Content.StartsWith("id=")) continue;
-                _classBuilder.Append(MakeAttribute(childNode));
+                MakeAttribute(childNode);
             }
         }
 
-        private string MakeAttribute(HamlNode childNode)
+        private void MakeAttribute(HamlNode childNode)
         {
             var attributeNode = childNode as HamlNodeHtmlAttribute;
             if (attributeNode == null)
                 throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node",
-                    childNode.SourceFileLineNo);
+                    childNode.SourceFileLineNum);
 
-            if ((string.IsNullOrEmpty(attributeNode.Name)) || (attributeNode.Value == "false"))
-                return "";
-            if ((attributeNode.Value == "true") || (attributeNode.Value == ""))
-            {
-                if (_options.HtmlVersion == HtmlVersion.XHtml)
-                    return " " + attributeNode.Name + "='" + attributeNode.Name + "'";
-                else
-                    return " " + attributeNode.Name;
-            }
-            return " " + attributeNode.Name + "=" + attributeNode.Value;
+            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, attributeNode.Children.Select(x => x.Content), attributeNode.QuoteChar);
         }
     }
 }

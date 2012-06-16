@@ -10,6 +10,7 @@ using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
 using NHaml4.Tests.Mocks;
+using NHaml4.TemplateBase;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -18,13 +19,13 @@ namespace NHaml4.Tests.Walkers.CodeDom
     {
         private ClassBuilderMock _classBuilderMock;
         private HamlNodeTagWalker _tagWalker;
-        private HamlOptions _hamlOptions;
+        private HamlHtmlOptions _hamlOptions;
 
         [SetUp]
         public void SetUp()
         {
             _classBuilderMock = new ClassBuilderMock();
-            _hamlOptions = new HamlOptions();
+            _hamlOptions = new HamlHtmlOptions();
             _tagWalker = new HamlNodeTagWalker(_classBuilderMock, _hamlOptions);
         }
 
@@ -61,23 +62,6 @@ namespace NHaml4.Tests.Walkers.CodeDom
         }
 
         [Test]
-        [TestCase(HtmlVersion.Html4, ">")]
-        [TestCase(HtmlVersion.Html5, ">")]
-        [TestCase(HtmlVersion.XHtml, " />")]
-        public void Walk_AutoSelfClosingTag_AppendsCorrectTag(HtmlVersion htmlVersion, string expectedFormat)
-        {
-            // Arrange
-            var tagNode = new HamlNodeTag(new HamlLine("br", 0));
-
-            // Act
-            _hamlOptions.HtmlVersion = htmlVersion;
-            _tagWalker.Walk(tagNode);
-
-            // Assert
-            Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedFormat));
-        }
-
-        [Test]
         public void Walk_IndentedTag_AppendsIndent()
         {
             // Arrange
@@ -98,7 +82,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             const string tagName = "p";
             const string nestedText = "Hello world";
             var tagNode = new HamlNodeTag(new HamlLine(tagName, 0));
-            tagNode.AddChild(new HamlNodeText(new HamlLine(nestedText, 0)));
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine(nestedText, 0)));
             // Act
             _tagWalker.Walk(tagNode);
 
@@ -218,7 +202,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
             _tagWalker.Walk(tagNode);
 
             // Assert
-            const string expectedIdAttr = "id='id1_id2'";
+            const string expectedIdAttr = @"id='id1_id2'";
             Assert.That(_classBuilderMock.Build(""), Is.StringContaining(expectedIdAttr));
         }
 
@@ -241,7 +225,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         [TestCase("p", "()", "<p></p>")]
         [TestCase("p/", "()", "<p />")]
-        [TestCase("p", "(a='b')", "<p a='b'></p>")]
+        [TestCase("p", "(a='b')", "<p a=\'b\'></p>")]
         public void Walk_EmptyAttributeCollectionNode_WritesCorrectAttributes(string tag, string attributes, string expectedOutput)
         {
             var tagNode = new HamlNodeTag(new HamlLine(tag, 0));
@@ -253,15 +237,30 @@ namespace NHaml4.Tests.Walkers.CodeDom
         }
 
         [Test]
-        [TestCase("%p", "   %p>", "<p><p></p></p>")]
-        [TestCase("%p<", "   %p", "<p><p></p></p>")]
-        public void Walk_WhitespaceRemoval_GeneratesCorrectOutput(string line1, string line2, string expectedOutput)
+        [TestCase("%p", "   %p>", "", "<p><p></p></p>")]
+        [TestCase("%p<", "   %p", "", "<p><p></p></p>")]
+        public void Walk_WhitespaceRemoval_GeneratesCorrectOutput(string line1, string line2, string line3, string expectedOutput)
         {
             var tagNode = new HamlNodeTag(new HamlLine(line1, 0));
             tagNode.AddChild(new HamlNodeTag(new HamlLine(line2, 0)));
 
             _tagWalker.Walk(tagNode);
 
+            Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
+        }
+
+        [Test]
+        public void Walk_InternalWhitespaceRemoval_GeneratesCorrectOutput()
+        {
+            var tagNode = new HamlNodeTag(new HamlLine("%p<", 0));
+            tagNode.IsMultiLine = true;
+
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine("\n", 0)));
+            tagNode.AddChild(new HamlNodeTextContainer(new HamlLine("  Hello", 0)));
+  
+            _tagWalker.Walk(tagNode);
+
+            const string expectedOutput = "<p>Hello</p>";
             Assert.That(_classBuilderMock.Build(""), Is.EqualTo(expectedOutput));
         }
     }

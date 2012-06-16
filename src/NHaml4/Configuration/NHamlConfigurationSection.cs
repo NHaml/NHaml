@@ -1,218 +1,103 @@
 using System;
 using System.Configuration;
-using System.Diagnostics.CodeAnalysis;
-using System.Globalization;
 using System.Reflection;
-using System.Security.Permissions;
-using System.Web;
-using NHaml4.Compilers;
-using NHaml4.Compilers.CSharp2;
-using NHaml4.Compilers.CSharp3;
-using NHaml4.Compilers.CSharp4;
-using NHaml.Utils;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
 
-namespace NHaml.Configuration
+namespace NHaml4.Configuration
 {
-	[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
-	[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
 	public class NHamlConfigurationSection : ConfigurationSection
 	{
-		[SuppressMessage("Microsoft.Design", "CA1024:UsePropertiesWhereAppropriate")]
-		public static NHamlConfigurationSection GetSection()
+		public static NHamlConfigurationSection GetConfiguration(string configFile)
 		{
-			return (NHamlConfigurationSection)ConfigurationManager.GetSection("nhaml");
-		}
+            if (!File.Exists(configFile))
+                throw new FileNotFoundException("Unable to find configuration file " + configFile, configFile);
 
-		public static void UpdateTemplateOptions()
-		{
-			if (options == null)
-				throw new ArgumentNullException("options");
+            var map = new ConfigurationFileMap(configFile);
+            var config = ConfigurationManager.OpenMappedMachineConfiguration(map);
+            var result = (NHamlConfigurationSection)config.GetSection("NHaml");
 
-			var section = GetSection();
+            return result ?? new NHamlConfigurationSection();
+        }
 
-			if (section == null)
-			{
-				return;
-			}
+        internal static NHamlConfigurationSection GetConfiguration()
+        {
+            var result = ConfigurationManager.GetSection("system.serviceModel/client") as NHamlConfigurationSection;
+            return result ?? new NHamlConfigurationSection();
+        }
 
-			if (section.IndentSize.HasValue)
-			{
-				options.IndentSize = section.IndentSize.Value;
-			}
+        const string ReferencedAssembliesElement = "ReferencedAssemblies";
+        [ConfigurationProperty(ReferencedAssembliesElement)]
+        public ConfigurationCollection<AssemblyConfigurationElement> ReferencedAssemblies
+        {
+            get
+            {
+                return (ConfigurationCollection<AssemblyConfigurationElement>)base[ReferencedAssembliesElement];
+            }
+        }
 
-			if (section.AutoRecompile.HasValue)
-			{
-				options.AutoRecompile = section.AutoRecompile.Value;
-			}
-			else
-			{
-				options.AutoRecompile = true;
-			}
+        public IEnumerable<string> ReferencedAssembliesList
+        {
+            get
+            {
+                return (ReferencedAssemblies != null)
+                    ? ReferencedAssemblies.Select(x => GetAssemblyLocation(x.Name))
+                    : new List<string>();
+            }
+        }
 
-			if (section.UseTabs.HasValue)
-			{
-				options.UseTabs = section.UseTabs.Value;
-			}
+        private string GetAssemblyLocation(string assemblyName)
+        {
+            try
+            {
+                return Assembly.Load(assemblyName).Location;
+            }
+            catch (Exception exception)
+            {
+                var message = string.Format("Could not load Assembly '{0}'.Did you forget to fully qualify it? For example 'System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'", assemblyName);
+                throw new Exception(message, exception);
+            }
+        }
 
-			if (!string.IsNullOrEmpty(section.TemplateBaseType))
-			{
-				options.TemplateBaseType = Type.GetType(section.TemplateBaseType, true, false);
-			}
+        const string ImportsElement = "Imports";
+        [ConfigurationProperty(ImportsElement)]
+        private ConfigurationCollection<ImportConfigurationElement> Imports
+        {
+            get {
+                return (ConfigurationCollection<ImportConfigurationElement>)base[ImportsElement];
+            }
+        }
 
-			if (section.EncodeHtml.HasValue)
-			{
-				options.EncodeHtml = section.EncodeHtml.Value;
-			}
+        public IEnumerable<string> ImportsList
+        {
+            get
+            {
+                return (Imports != null)
+                    ? Imports.Select(x => x.Name)
+                    : new List<string>();
+            }
+        }
 
-			if (section.OutputDebugFiles.HasValue)
-			{
-				options.OutputDebugFiles = section.OutputDebugFiles.Value;
-			}
+        //const string AutoRecompileAttribute = "AutoRecompile";
+        //[ConfigurationProperty(AutoRecompileAttribute)]
+        //public virtual bool? AutoRecompile
+        //{
+        //    get { return this[AutoRecompileAttribute] as bool?; }
+        //}
 
+        //const string OutputDebugFilesAttribute = "OutputDebugFiles";
+        //[ConfigurationProperty(OutputDebugFilesAttribute)]
+        //public virtual bool? OutputDebugFiles
+        //{
+        //    get { return this[OutputDebugFilesAttribute] as bool?; }
+        //}
 
-
-			if (!string.IsNullOrEmpty(section.TemplateCompiler))
-			{
-				options.TemplateCompiler = section.CreateTemplateCompiler();
-			}
-
-			foreach (var assemblyConfigurationElement in section.Assemblies)
-			{
-				Assembly assembly;
-				var assemblyName = assemblyConfigurationElement.Name;
-				try
-				{
-					assembly = Assembly.Load(assemblyName);
-				}
-				catch (Exception exception)
-				{
-					var message = string.Format("Coule not load Assembly '{0}'.Did you forget to fully qualify it? For example 'System.Xml, Version=2.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089'", assemblyName);
-					throw new Exception(message, exception);
-				}
-				options.AddReference(assembly.Location);
-			}
-
-			foreach (var namespaceConfigurationElement in section.Namespaces)
-			{
-				options.AddUsing(namespaceConfigurationElement.Name);
-			}
-		}
-
-		private const string AssembliesElement = "assemblies";
-		private const string NamespacesElement = "namespaces";
-		private const string AutoRecompileAttribute = "autoRecompile";
-		private const string EncodeHtmlAttribute = "encodeHtml";
-		private const string OutputDebugFilesAttribute = "outputDebugFiles";
-		private const string TemplateCompilerAttribute = "templateCompiler";
-		private const string TemplateBaseTypeAttribute = "templateBaseType";
-
-		private const string UseTabsAttribute = "useTabs";
-		private const string IndentSizeAttribute = "indentSize";
-
-		[ConfigurationProperty(AutoRecompileAttribute)]
-		public virtual bool? AutoRecompile
-		{
-			get { return this[AutoRecompileAttribute] as bool?; }
-		}
-
-		[ConfigurationProperty(EncodeHtmlAttribute)]
-		public virtual bool? EncodeHtml
-		{
-			get { return this[EncodeHtmlAttribute] as bool?; }
-		}
-		[ConfigurationProperty(OutputDebugFilesAttribute)]
-		public virtual bool? OutputDebugFiles
-		{
-			get { return this[OutputDebugFilesAttribute] as bool?; }
-		}
-
-		[ConfigurationProperty(UseTabsAttribute)]
-		public virtual bool? UseTabs
-		{
-			get { return this[UseTabsAttribute] as bool?; }
-		}
-
-		[ConfigurationProperty(IndentSizeAttribute)]
-		public virtual int? IndentSize
-		{
-			get { return this[IndentSizeAttribute] as int?; }
-		}
-
-		[ConfigurationProperty(TemplateCompilerAttribute)]
-		public virtual string TemplateCompiler
-		{
-			get { return Convert.ToString(this[TemplateCompilerAttribute], CultureInfo.CurrentCulture); }
-		}
-		[ConfigurationProperty(TemplateBaseTypeAttribute)]
-		public virtual string TemplateBaseType
-		{
-			get { return Convert.ToString(this[TemplateBaseTypeAttribute], CultureInfo.CurrentCulture); }
-		}
-
-		[ConfigurationProperty(AssembliesElement)]
-		public virtual AssembliesConfigurationCollection Assemblies
-		{
-			get { return (AssembliesConfigurationCollection)base[AssembliesElement]; }
-		}
-
-		[ConfigurationProperty(NamespacesElement)]
-		public virtual NamespacesConfigurationCollection Namespaces
-		{
-			get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
-		}
-
-		public ITemplateFactoryCompiler CreateTemplateCompiler()
-		{
-			var templateCompiler = TemplateCompiler;
-
-			var csharp2Type = typeof(CSharp2TemplateCompiler);
-			var csharp3Type = typeof(CSharp3TemplateCompiler);
-			var csharp4Type = typeof(CSharp4TemplateCompiler);
-
-			Type type;
-
-			if (templateCompiler.IndexOf(Type.Delimiter) == -1)
-			{
-				if (!templateCompiler.EndsWith("TemplateCompiler", StringComparison.OrdinalIgnoreCase))
-				{
-					templateCompiler += "TemplateCompiler";
-				}
-
-				if (templateCompiler.Equals(csharp2Type.Name, StringComparison.OrdinalIgnoreCase))
-				{
-					type = csharp2Type;
-				}
-				else if (templateCompiler.Equals(csharp3Type.Name, StringComparison.OrdinalIgnoreCase))
-				{
-					type = csharp3Type;
-				}
-				else if (templateCompiler.Equals(csharp4Type.Name, StringComparison.OrdinalIgnoreCase))
-				{
-					type = csharp4Type;
-				}
-				else
-				{
-					type = Type.GetType(templateCompiler, false);
-				}
-			}
-			else
-			{
-				type = Type.GetType(templateCompiler, false);
-			}
-
-			if (type == null)
-			{
-				var message = Utility.FormatCurrentCulture("TemplateCompiler type '{0}' not found", templateCompiler);
-				throw new ConfigurationErrorsException(message);
-			}
-
-			if (!typeof(ITemplateFactoryCompiler).IsAssignableFrom(type))
-			{
-				var message = Utility.FormatCurrentCulture("Type '{0}' is not assignable to ITemplateCompiler", templateCompiler);
-				throw new ConfigurationErrorsException(message);
-			}
-
-			return (ITemplateFactoryCompiler)Activator.CreateInstance(type);
-		}
-	}
+        //const string NamespacesElement = "Namespaces";
+        //[ConfigurationProperty(NamespacesElement)]
+        //public virtual NamespacesConfigurationCollection Namespaces
+        //{
+        //    get { return (NamespacesConfigurationCollection)base[NamespacesElement]; }
+        //}
+    }
 }

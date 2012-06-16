@@ -1,44 +1,37 @@
 using System;
-using System.Collections.Generic;
+using System.Linq;
 
 namespace NHaml4
 {
     public static class ProxyExtracter
     {
-        /// <summary>
-        /// Do a best guess on getting a non dynamic <see cref="Type"/>.
-        /// </summary>
-        /// <remarks>
-        /// This is necessary for libraries like nhibernate that use proxied types.
-        /// </remarks>
         public static Type GetNonProxiedType(Type type)
         {
             if (type.IsGenericType && !type.IsGenericTypeDefinition)
-            {
-                var genericArguments = new List<Type>();
-                foreach (var genericArgument in type.GetGenericArguments())
-                {
-                    genericArguments.Add(GetNonProxiedType(genericArgument));
-                }
-                type = GetNonProxiedType(type.GetGenericTypeDefinition());
-                return type.MakeGenericType(genericArguments.ToArray());
-            }
+                return GetGenericType(ref type);
+            return IsDynamic(type)
+                ? GetNonDynamicType(type)
+                : type;
+        }
 
-            if (IsDynamic(type))
+        private static Type GetNonDynamicType(Type type)
+        {
+            var baseType = type.BaseType;
+            if (baseType == typeof(object))
             {
-                var baseType = type.BaseType;
-                if (baseType == typeof(object))
-                {
-                    var interfaces = type.GetInterfaces();
-                    if (interfaces.Length > 1)
-                    {
-                        return GetNonProxiedType(interfaces[0]);
-                    }
+                var interfaces = type.GetInterfaces();
+                if (interfaces.Length <= 1)
                     throw new Exception(string.Format("Could not create non dynamic type for '{0}'.", type.FullName));
-                }
-                return GetNonProxiedType(baseType);
+                return GetNonProxiedType(interfaces[0]);
             }
-            return type;
+            return GetNonProxiedType(baseType);
+        }
+
+        private static Type GetGenericType(ref Type type)
+        {
+            var genericArguments = type.GetGenericArguments().Select(x => GetNonProxiedType(x));
+            type = GetNonProxiedType(type.GetGenericTypeDefinition());
+            return type.MakeGenericType(genericArguments.ToArray());
         }
 
         //HACK: must be a better way of working this out
@@ -46,7 +39,9 @@ namespace NHaml4
         {
             try
             {
+#pragma warning disable 168
                 var location = type.Assembly.Location;
+#pragma warning restore 168
                 return false;
             }
             catch (NotSupportedException)

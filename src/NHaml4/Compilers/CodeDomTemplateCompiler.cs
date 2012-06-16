@@ -1,71 +1,52 @@
-using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-using NHaml4.Parser;
 using System;
-using NHaml4.Compilers.Abstract;
+using System.Reflection.Emit;
 
 namespace NHaml4.Compilers
 {
     public class CodeDomTemplateCompiler : ITemplateFactoryCompiler
     {
-        //private readonly Regex lambdaRegex;
-        private readonly CodeDomTemplateTypeBuilder _typeBuilder;
+        private readonly ITemplateTypeBuilder _typeBuilder;
 
-        public CodeDomTemplateCompiler(CodeDomTemplateTypeBuilder typeBuilder)
+        public CodeDomTemplateCompiler(ITemplateTypeBuilder typeBuilder)
         {
-            //this.lambdaRegex = new Regex(lambdaRegex,
-            //    RegexOptions.Compiled | RegexOptions.Singleline);
             _typeBuilder = typeBuilder;
         }
 
-        public TemplateFactory Compile(string templateSource, string className, IList<Type> references)
+        public TemplateFactory Compile(string templateSource, string className, IEnumerable<string> referencedAssemblyLocations)
         {
-            var templateType = _typeBuilder.Build( templateSource, className, references);
-
-            //if( templateType == null )
-            //{
-            //    var viewSources = viewSourceReader.ViewSources;
-            //    TemplateCompilationException.Throw(typeBuilder.CompilerResults, typeBuilder.Source, ListExtensions.Last(viewSources).Path);
-            //}
-
+            var fullAssemblyList = MergeInDefaultCompileTypes(referencedAssemblyLocations);
+            var templateType = _typeBuilder.Build(templateSource, className, fullAssemblyList);
             return new TemplateFactory( templateType );
         }
 
-        //public BlockClosingAction RenderSilentEval(HamlNode node, TemplateClassBuilder builder)
-        //{
-        //    var code = viewSourceReader.CurrentInputLine.NormalizedText;
+        private IEnumerable<string> MergeInDefaultCompileTypes(IEnumerable<string> referencedAssemblyLocations)
+        {
+            var result = new List<string>(referencedAssemblyLocations);
+            foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (assembly is AssemblyBuilder)
+                    continue;
 
-        //    var lambdaMatch = lambdaRegex.Match(code);
+                string location;
+                try
+                {
+                    location = assembly.Location;
+                }
+                catch (NotSupportedException)
+                {
+                    continue;
+                }
+                if (result.Contains(location) == false)
+                    result.Add(location);
+            }
+            if (result.Contains(typeof(TemplateBase.Template).Assembly.Location) == false)
+                result.Add(typeof(TemplateBase.Template).Assembly.Location);
 
-        //    if (!lambdaMatch.Success)
-        //    {
-        //        builder.AppendSilentCode(code, !viewSourceReader.IsBlock);
+            if (result.Contains(typeof(System.Web.HttpUtility).Assembly.Location) == false)
+                result.Add(typeof(System.Web.HttpUtility).Assembly.Location);
 
-        //        if (viewSourceReader.IsBlock)
-        //        {
-        //            builder.BeginCodeBlock();
-
-        //            return builder.EndCodeBlock;
-        //        }
-
-        //        return MarkupRule.EmptyClosingAction;
-        //    }
-
-        //    var depth = viewSourceReader.CurrentInputLine.IndentCount;
-        //    code = TranslateLambda(code, lambdaMatch);
-
-        //    builder.AppendChangeOutputDepth(depth);
-        //    builder.AppendSilentCode(code, true);
-
-        //    return () =>
-        //               {
-        //                   builder.AppendChangeOutputDepth(depth);
-        //                   builder.AppendSilentCode("})", true);
-        //               };
-        //    return null;
-        //}
-
-        //public abstract string TranslateLambda(string codeLine, Match lambdaMatch);
+            return result;
+        }
     }
 }
