@@ -29,7 +29,7 @@ namespace NHaml4
 
         private static Type GetGenericType(ref Type type)
         {
-            var genericArguments = type.GetGenericArguments().Select(x => GetNonProxiedType(x));
+            var genericArguments = type.GetGenericArguments().Select(GetNonProxiedType);
             type = GetNonProxiedType(type.GetGenericTypeDefinition());
             return type.MakeGenericType(genericArguments.ToArray());
         }

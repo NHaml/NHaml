@@ -5,6 +5,7 @@ using NHaml4.Walkers.CodeDom;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
 using NHaml4.Walkers.Exceptions;
+using NHaml4.Parser;
 
 namespace NHaml4.Tests.Walkers.CodeDom
 {
@@ -25,8 +26,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_ValidNode_CallsAppendCodeToStringMethod()
         {
             string codeSnippet = "1+1";
-            var node = new HamlNodeEval(new HamlLine(codeSnippet, -1));
-
+            var node = new HamlNodeEval(new HamlLine(-1, codeSnippet, "", HamlRuleEnum.PlainText));
+            
             _walker.Walk(node);
 
             _classBuilderMock.Verify(x => x.AppendCodeToString(codeSnippet));
@@ -35,7 +36,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         [Test]
         public void Walk_ChildNode_ThrowsInvalidChildNodeException()
         {
-            var node = new HamlNodeEval(new HamlLine("1+1", -1));
+            string codeSnippet = "1+1";
+            var node = new HamlNodeEval(new HamlLine(-1, codeSnippet, "", HamlRuleEnum.PlainText));
             node.AddChild(new HamlNodeTextContainer(0, ""));
 
             Assert.Throws<HamlInvalidChildNodeException>(() => _walker.Walk(node));

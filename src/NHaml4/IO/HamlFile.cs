@@ -4,7 +4,7 @@ namespace NHaml4.IO
 {
     public class HamlFile
     {
-        private readonly IList<HamlLine> _hamlLines = new List<HamlLine>();
+        private readonly List<HamlLine> _hamlLines = new List<HamlLine>();
         private readonly string _fileName;
         private int _currentLineIndex;
 
@@ -35,6 +35,11 @@ namespace NHaml4.IO
         public void AddLine(HamlLine line)
         {
             _hamlLines.Add(line);
+        }
+
+        public void AddRange(IEnumerable<HamlLine> lines)
+        {
+            _hamlLines.AddRange(lines);
         }
         
         public void MoveNext()

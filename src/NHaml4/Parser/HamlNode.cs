@@ -143,13 +143,13 @@ namespace NHaml4.Parser
         public void AppendInnerTagNewLine()
         {
             if (IsContentGeneratingTag)
-                AddChild(new HamlNodeTextContainer(new HamlLine("\n", SourceFileLineNum)));
+                AddChild(new HamlNodeTextContainer(new HamlLine(SourceFileLineNum, "\n", "", HamlRuleEnum.PlainText)));
         }
 
         public void AppendPostTagNewLine(HamlNode childNode, int lineNo)
         {
             if (childNode.IsContentGeneratingTag)
-                AddChild(new HamlNodeTextContainer(new HamlLine("\n", lineNo)));
+                AddChild(new HamlNodeTextContainer(new HamlLine(lineNo, "\n", "", HamlRuleEnum.PlainText)));
         }
 
         public HamlNodePartial GetNextUnresolvedPartial()

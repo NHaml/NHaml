@@ -48,7 +48,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IndentedNode_WritesIndent()
         {
             const string indent = "  ";
-            var node = new HamlNodeTextContainer(new HamlLine(indent + "Content", 0));
+            var node = new HamlNodeTextContainer(new HamlLine(0, "Content", indent, HamlRuleEnum.PlainText));
 
             _walker.Walk(node);
 
@@ -61,8 +61,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_PreviousTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTag(new HamlLine("p>", -1)),
-                new HamlNodeTextContainer(new HamlLine(whiteSpace, -1)));
+                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", whiteSpace, HamlRuleEnum.PlainText)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -73,10 +73,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleWhitespaceWithPreviousTagSurroundingWhitespaceRemoved_RendersTag()
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTag(new HamlLine("p>", -1)),
-                new HamlNodeTextContainer(new HamlLine("   ", -1)),
-                new HamlNodeTextContainer(new HamlLine("   ", -1)),
-                new HamlNodeTextContainer(new HamlLine("   ", -1)));
+                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -89,8 +89,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NextTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTextContainer(new HamlLine(whiteSpace, -1)),
-                new HamlNodeTag(new HamlLine("p>", -1)));
+                new HamlNodeTextContainer(new HamlLine(-1, "", whiteSpace, HamlRuleEnum.PlainText)),
+                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -101,10 +101,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleWhitespaceWithNextTagSurroundingWhitespaceRemoved_RendersTag()
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTextContainer(new HamlLine("   ", -1)),
-                new HamlNodeTextContainer(new HamlLine("   ", -1)),
-                new HamlNodeTextContainer(new HamlLine("   ", -1)),
-                new HamlNodeTag(new HamlLine("p>", -1)));
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
+                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
+                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 

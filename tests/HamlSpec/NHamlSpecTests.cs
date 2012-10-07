@@ -28,8 +28,8 @@ namespace HamlSpec
 #endif
         }
 
-        //[TestCase("Eval")]
-        //[TestCase("Inline code")]
+        [TestCase("Eval")]
+        [TestCase("Inline code")]
         [TestCase("Code flow")]
         //[TestCase("Line Escaping")]
         //[TestCase("Legacy mangled Ruby-Style Tag Support")]

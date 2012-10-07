@@ -3,6 +3,7 @@ using System;
 using NHaml4.IO;
 using NHaml4.Parser;
 using NHaml4.Parser.Rules;
+using NHaml4.Parser.Exceptions;
 
 namespace NHaml4.Tests.Parser
 {
@@ -10,21 +11,25 @@ namespace NHaml4.Tests.Parser
     public class HamlNodeFactory_Tests
     {
         [Test]
-        [TestCase("Test", typeof(HamlNodeTextContainer))]
-        [TestCase("%Test", typeof(HamlNodeTag))]
-        [TestCase(".Test", typeof(HamlNodeTag))]
-        [TestCase("#Test", typeof(HamlNodeTag))]
-        [TestCase("-#Test", typeof(HamlNodeHamlComment))]
-        [TestCase("/Test", typeof(HamlNodeHtmlComment))]
-        [TestCase("=Test", typeof(HamlNodeEval))]
-        [TestCase("-Test", typeof(HamlNodeCode))]
-        [TestCase("!!!Test", typeof(HamlNodeDocType))]
-        [TestCase("_Test", typeof(HamlNodePartial))]
-        public void GetHamlNode_DifferentHamlLineTypes_ReturnsCorrectHamlNode(string hamlLine, Type nodeType)
+        [TestCase(HamlRuleEnum.PlainText, typeof(HamlNodeTextContainer))]
+        [TestCase(HamlRuleEnum.Tag, typeof(HamlNodeTag))]
+        [TestCase(HamlRuleEnum.HamlComment, typeof(HamlNodeHamlComment))]
+        [TestCase(HamlRuleEnum.HtmlComment, typeof(HamlNodeHtmlComment))]
+        [TestCase(HamlRuleEnum.Evaluation, typeof(HamlNodeEval))]
+        public void GetHamlNode_DifferentHamlLineTypes_ReturnsCorrectHamlNode(HamlRuleEnum rule, Type nodeType)
         {
-            var line = new HamlLine(hamlLine, 0);
+            var line = new HamlLine(0, "Blah", "", rule);
             var result = HamlNodeFactory.GetHamlNode(line);
             Assert.That(result, Is.InstanceOf(nodeType));
+        }
+
+        [Test]
+        [TestCase(HamlRuleEnum.DivClass, typeof(HamlNodeTag))]
+        [TestCase(HamlRuleEnum.DivId, typeof(HamlNodeTag))]
+        public void GetHamlNode_TagSubTypes_ThrowsHamlUnknownRuleException(HamlRuleEnum rule, Type nodeType)
+        {
+            var line = new HamlLine(0, "Blah", "", rule);
+            Assert.Throws<HamlUnknownRuleException>(() => HamlNodeFactory.GetHamlNode(line));
         }
     }
 }

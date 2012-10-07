@@ -6,7 +6,7 @@ namespace NHaml4.Compilers.Exceptions
     [Serializable]
     class CompilerException : Exception
     {
-        private string _sourceCode;
+        private readonly string _sourceCode;
 
         public CompilerException(CompilerResults compilerResults, string source)
             : base(GenerateExceptionMessage(compilerResults))

@@ -115,7 +115,7 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void GetNextUnresolvedPartial_Partials_ReturnsPartial()
         {
-            var partial = new HamlNodePartial(new HamlLine("", -1));
+            var partial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
             var rootNode = new HamlNodeDummy();
             rootNode.AddChild(partial);
 
@@ -126,10 +126,10 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void GetNextUnresolvedPartial_OneResolvedAndOneUnresolvedPartial_ReturnsCorrectPartial()
         {
-            var resolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+            var resolvedPartial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
             resolvedPartial.SetDocument(HamlDocumentBuilder.Create());
 
-            var unresolvedPartial = new HamlNodePartial(new HamlLine("", -1));
+            var unresolvedPartial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
 
             var rootNode = new HamlNodeDummy();
             rootNode.AddChild(resolvedPartial);
@@ -143,7 +143,7 @@ namespace NHaml4.Tests.Parser
         public void GetNextUnresolvedPartial_PartialIsAGrandchildNode_ReturnsPartial()
         {
             var textContainerNode = new HamlNodeTextContainer(0, "Test content");
-            var partial = new HamlNodePartial(new HamlLine("", -1));
+            var partial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
             textContainerNode.AddChild(partial);
 
             var rootNode = new HamlNodeDummy();

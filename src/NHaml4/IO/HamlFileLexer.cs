@@ -9,6 +9,12 @@ namespace NHaml4.IO
     {
         bool _eof;
         int _sourceFileLineIndex;
+        private readonly HamlLineLexer _lineLexer;
+
+        public HamlFileLexer()
+        {
+            _lineLexer = new HamlLineLexer();
+        }
 
         public HamlFile Read(TextReader reader, string fileName)
         {
@@ -29,53 +35,14 @@ namespace NHaml4.IO
         private void ReadHamlLine(TextReader reader, HamlFile result)
         {
             string currentLine = ReadLine(reader);
-            while (IsPartialTag(currentLine))
+            while (_lineLexer.IsPartialTag(currentLine))
             {
                 if (_eof)
                     throw new HamlMalformedTagException("Multi-line tag found with no end token.", _sourceFileLineIndex);
                 currentLine += " " + ReadLine(reader);
             }
 
-            result.AddLine(new HamlLine(currentLine, _sourceFileLineIndex - 1));
-        }
-
-        private bool IsPartialTag(string currentLine)
-        {
-            bool inAttributes = false;
-            bool inSingleQuote = false;
-            bool inDoubleQuote = false;
-
-            foreach (char curChar in currentLine)
-            {
-                if (inSingleQuote)
-                {
-                    if (curChar == '\'') inSingleQuote = false;
-                }
-                else if (inDoubleQuote)
-                {
-                    if (curChar == '\"') inDoubleQuote = false;
-                }
-                else if (inAttributes)
-                {
-                    if (curChar == '\'')
-                        inSingleQuote = true;
-                    else if (curChar == '\"')
-                        inDoubleQuote = true;
-                    else if (curChar == ')' || curChar == '}')
-                    {
-                        inAttributes = false;
-                        break;
-                    }
-                }
-                else
-                {
-                    if (curChar == '(' || curChar == '{')
-                        inAttributes = true;
-                    else if (Char.IsWhiteSpace(curChar))
-                        break;
-                }
-            }
-            return inAttributes;
+            result.AddRange(new HamlLineLexer().ParseHamlLine(currentLine, _sourceFileLineIndex - 1));
         }
 
         private string ReadLine(TextReader reader)

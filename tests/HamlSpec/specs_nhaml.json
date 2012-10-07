@@ -10,6 +10,11 @@
       "html" : "1"
     },
 
+    "an integer constant inline within a tag" : {
+      "haml" : "%tr = 1",
+      "html" : "<tr>1</tr>"
+    },
+
 	"a viewbag variable" : {
 	  "haml" : "=ViewData[\"var\"]",
 	  "html" : "hello world",

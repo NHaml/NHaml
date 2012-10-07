@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using NHaml4.TemplateBase;
+using NHaml4.TemplateResolution;
 using NUnit.Framework;
 using NHaml.Tests.Builders;
 using NHaml4.Walkers.CodeDom;
@@ -87,7 +88,7 @@ namespace HamlSpec
             var viewSource = ViewSourceBuilder.Create(hamlTemplate);
 
             var hamlOptions = new HamlHtmlOptions();
-            var templateEngine = XmlConfigurator.GetTemplateEngine();
+            var templateEngine = XmlConfigurator.GetTemplateEngine(new FileTemplateContentProvider(), new List<string>(), new List<string>());
             var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             return compiledTemplate.CreateTemplate();
         }

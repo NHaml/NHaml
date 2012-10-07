@@ -1,66 +1,30 @@
 ﻿using NHaml4.Parser;
+using System.Linq;
 
 namespace NHaml4.IO
 {
     public class HamlLine
     {
-        private HamlRuleEnum _hamlRule;
-        private string _content;
-        private readonly int _sourceFileLineNum;
-
-        public HamlLine(string currentLine, int sourceFileLineNum)
+        public HamlLine(int sourceFileLineNum, string content, string indent, HamlRuleEnum hamlRule)
         {
-            ParseHamlLine(currentLine);
-            _sourceFileLineNum = sourceFileLineNum;
-            _hamlRule = HamlRuleFactory.ParseHamlRule(ref _content);
-            AddImplicitDivTag();
+            SourceFileLineNo = sourceFileLineNum;
+            Content = content;
+            Indent = indent;
+            IndentCount = GetIndentCount(Indent);
+            HamlRule = hamlRule;
+        }
 
-            if (string.IsNullOrEmpty(currentLine.Trim())) IndentCount = 0;
+        private int GetIndentCount(string indent)
+        {
+            if (string.IsNullOrEmpty(Content)) return 0;
+            var chars = indent.ToArray();
+            return chars.Sum(curChar => curChar == '\t' ? 2 : 1);
         }
 
         public int IndentCount { get; private set; }
-
-        public int SourceFileLineNo
-        {
-            get { return _sourceFileLineNum; }
-        }
-
-        public HamlRuleEnum HamlRule
-        {
-            get { return _hamlRule; }
-            protected set { _hamlRule = value; }
-        }
-
-        public string Content
-        {
-            get { return _content; }
-        }
-
+        public int SourceFileLineNo { get; private set; }
+        public HamlRuleEnum HamlRule { get; private set; }
+        public string Content { get; private set; }
         public string Indent { get; private set; }
-
-        private void ParseHamlLine(string currentLine)
-        {
-            IndentCount = 0;
-            int whiteSpaceIndex = 0;
-            while (whiteSpaceIndex < currentLine.Length)
-            {
-                if (currentLine[whiteSpaceIndex] == ' ')
-                    IndentCount++;
-                else if (currentLine[whiteSpaceIndex] == '\t')
-                    IndentCount += 2;
-                else
-                    break;
-                whiteSpaceIndex++;
-            }
-
-            Indent = currentLine.Substring(0, whiteSpaceIndex);
-            _content = (whiteSpaceIndex == currentLine.Length) ? "" : currentLine.Substring(whiteSpaceIndex);
-        }
-
-        private void AddImplicitDivTag()
-        {
-            if (_hamlRule == HamlRuleEnum.DivClass || _hamlRule == HamlRuleEnum.DivId)
-                _hamlRule = HamlRuleEnum.Tag;
-        }
     }
 }

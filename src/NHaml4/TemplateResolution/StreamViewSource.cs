@@ -1,17 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.TemplateResolution;
 using System.IO;
 
 namespace NHaml4.TemplateResolution
 {
     public class StreamViewSource : ViewSource
     {
-        private System.IO.TextReader _textReader;
-        private string _path;
-        private DateTime _timeStamp = DateTime.Now;
+        private readonly TextReader _textReader;
+        private readonly string _path;
+        private readonly DateTime _timeStamp = DateTime.Now;
 
         public StreamViewSource(string content, string filePath)
             : this(new MemoryStream(new System.Text.UTF8Encoding().GetBytes(content)), filePath)

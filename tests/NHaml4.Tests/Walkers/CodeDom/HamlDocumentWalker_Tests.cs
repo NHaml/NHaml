@@ -21,7 +21,7 @@ namespace NHaml4.Tests.Walkers
         public void Walk_TextNode_AppendsCorrectTag()
         {
             // Arrange
-            var content = new HamlLine("Simple content", 0);
+            var content = new HamlLine(0, "Simple content", "", HamlRuleEnum.PlainText);
             var document = HamlDocumentBuilder.Create("",
                 new HamlNodeTextContainer(content));
             Type baseType = typeof(Template);

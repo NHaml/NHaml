@@ -54,7 +54,7 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void ParseDocumentSource_MultiLineTemplates_AddsLineBreakNode()
         {
-            string template = "Line1\nLine2";
+            const string template = "Line1\nLine2";
             var result = _parser.ParseDocumentSource(template, "");
             Assert.That(result.Children.ToList()[1].Content, Is.EqualTo("\n"));
         }
@@ -94,22 +94,11 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void ParseHamlFile_UnknownRuleType_ThrowsUnknownRuleException()
         {
-            var fakeLine = new HamlLineFake("") {HamlRule = HamlRuleEnum.Unknown};
+            var line = new HamlLine(0, "", "", HamlRuleEnum.Unknown);
 
             var file = new HamlFile("");
-            file.AddLine(fakeLine);
+            file.AddLine(line);
             Assert.Throws<HamlUnknownRuleException>(() => _parser.ParseHamlFile(file));           
         }
-
-        class HamlLineFake : HamlLine
-        {
-            public HamlLineFake(string line) : base(line, 0) { }
-
-            public new HamlRuleEnum HamlRule
-            {
-                set { base.HamlRule = value;  }
-            }
-        }
-
     }
 }

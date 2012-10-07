@@ -50,7 +50,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             string comment = "Comment";
-            var node = new HamlNodeHtmlComment(new HamlLine(comment, 0));
+            var node = new HamlNodeHtmlComment(new HamlLine(0, comment, "", HamlRuleEnum.HtmlComment));
 
             // Act
             _walker.Walk(node);
@@ -63,8 +63,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NestedTags_AppendsCorrectTags()
         {
             // Arrange
-            HamlLine nestedText = new HamlLine("  Hello world", 0);
-            var tagNode = new HamlNodeHtmlComment(new HamlLine("", 0));
+            HamlLine nestedText = new HamlLine(0, "Hello world", "  ", HamlRuleEnum.PlainText);
+            var tagNode = new HamlNodeHtmlComment(new HamlLine(0, "", "", HamlRuleEnum.HtmlComment));
             tagNode.AddChild(new HamlNodeTextContainer(nestedText));
 
             // Act

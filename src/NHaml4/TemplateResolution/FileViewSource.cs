@@ -1,6 +1,5 @@
 using System.IO;
 using System;
-using System.Text;
 
 namespace NHaml4.TemplateResolution
 {

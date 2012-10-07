@@ -1,11 +1,6 @@
 using System;
-using System.Collections.Generic;
 using NHaml4.Crosscutting;
-using NHaml4.Parser;
-using NHaml4.IO;
-using NHaml4.Compilers;
 using NHaml4.TemplateResolution;
-using NHaml4.Walkers.CodeDom;
 
 namespace NHaml4
 {
