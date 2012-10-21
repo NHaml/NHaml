@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
 using NHaml4.Parser;
-using NHaml4.Compilers;
-using Moq;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
 using NHaml4.Tests.Mocks;
@@ -48,7 +43,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_IndentedNode_WritesIndent()
         {
             const string indent = "  ";
-            var node = new HamlNodeTextContainer(new HamlLine(0, "Content", indent, HamlRuleEnum.PlainText));
+            var node = new HamlNodeTextContainer(new HamlLine("Content", HamlRuleEnum.PlainText, indent, 0));
 
             _walker.Walk(node);
 
@@ -61,8 +56,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_PreviousTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", whiteSpace, HamlRuleEnum.PlainText)));
+                new HamlNodeTag(new HamlLine("p>", HamlRuleEnum.Tag, "", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, whiteSpace, -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -73,10 +68,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleWhitespaceWithPreviousTagSurroundingWhitespaceRemoved_RendersTag()
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)));
+                new HamlNodeTag(new HamlLine("p>", HamlRuleEnum.Tag, "", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -89,8 +84,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NextTagHasSurroundingWhitespaceRemoved_RendersTag(string whiteSpace)
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTextContainer(new HamlLine(-1, "", whiteSpace, HamlRuleEnum.PlainText)),
-                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)));
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, whiteSpace, -1)),
+                new HamlNodeTag(new HamlLine("p>", HamlRuleEnum.Tag, "", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 
@@ -101,10 +96,10 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_MultipleWhitespaceWithNextTagSurroundingWhitespaceRemoved_RendersTag()
         {
             var node = HamlDocumentBuilder.Create("",
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
-                new HamlNodeTextContainer(new HamlLine(-1, "", "   ", HamlRuleEnum.PlainText)),
-                new HamlNodeTag(new HamlLine(-1, "p>", "", HamlRuleEnum.Tag)));
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)),
+                new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "   ", -1)),
+                new HamlNodeTag(new HamlLine("p>", HamlRuleEnum.Tag, "", -1)));
 
             new HamlDocumentWalker(_mockClassBuilder).Walk(node);
 

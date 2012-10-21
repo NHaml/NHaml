@@ -48,7 +48,7 @@ namespace NHaml4.Parser
 
         private void ParseNode(HamlNode node, HamlFile hamlFile)
         {
-            node.IsMultiLine = true;
+            //node.IsMultiLine = true;
             while ((!hamlFile.EndOfFile) && (hamlFile.CurrentLine.IndentCount > node.IndentCount))
             {
                 var nodeLine = hamlFile.CurrentLine;
@@ -59,9 +59,10 @@ namespace NHaml4.Parser
                 if (hamlFile.EndOfFile == false
                     && hamlFile.CurrentLine.IndentCount > nodeLine.IndentCount)
                 {
-                    childNode.AppendInnerTagNewLine();
+                    if (hamlFile.CurrentLine.IsInline == false) childNode.AppendInnerTagNewLine();
                     ParseNode(childNode, hamlFile);
                 }
+
                 if (hamlFile.EndOfFile == false
                     && hamlFile.CurrentLine.IndentCount >= nodeLine.IndentCount)
                 {

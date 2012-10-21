@@ -21,10 +21,34 @@ namespace NHaml4.IO
             content = AddImplicitDivTag(content);
             var hamlRule = HamlRuleFactory.ParseHamlRule(ref content);
 
-            return new List<HamlLine>
-                       {
-                           new HamlLine(currentLineIndex, content, indent, hamlRule)
-                       };
+            var result = new List<HamlLine>();
+            var line = new HamlLine(content, hamlRule, indent, currentLineIndex, false);
+
+            ProcessInlineTags(line, result);
+            return result;
+        }
+
+        private void ProcessInlineTags(HamlLine line, List<HamlLine> result)
+        {
+            if (IsRuleThatAllowsInlineContent(line.HamlRule))
+            {
+                int contentIndex = GetEndOfTagIndex('%' + line.Content)-1;
+                if (contentIndex < line.Content.Length-1)
+                {
+                    string subTag = line.Content.Substring(contentIndex).TrimStart();
+                    line.Content = line.Content.Substring(0, contentIndex).Trim();
+                    subTag = AddImplicitDivTag(subTag);
+                    var subTagRule = HamlRuleFactory.ParseHamlRule(ref subTag);
+                    var subLine = new HamlLine(subTag, subTagRule, line.Indent + "\t", line.SourceFileLineNo, true);
+                    ProcessInlineTags(subLine, result);
+                }
+            }
+            result.Insert(0, line);
+        }
+
+        private static bool IsRuleThatAllowsInlineContent(HamlRuleEnum hamlRule)
+        {
+            return hamlRule == HamlRuleEnum.Tag || hamlRule == HamlRuleEnum.DivId || hamlRule == HamlRuleEnum.DivClass;
         }
 
         private string AddImplicitDivTag(string content)
@@ -35,14 +59,21 @@ namespace NHaml4.IO
             return content;
         }
 
-        public bool IsPartialTag(string currentLine)
+        internal int GetEndOfTagIndex(string currentLine)
         {
+            if (currentLine.Length < 1 ||
+                "%.#".Contains(currentLine[0].ToString()) == false)
+                return currentLine.Length;
+
             bool inAttributes = false;
             bool inSingleQuote = false;
             bool inDoubleQuote = false;
+            bool acceptAlphas = true;
 
-            foreach (char curChar in currentLine)
+            int index;
+            for (index = 1; index < currentLine.Length; index++)
             {
+                char curChar = currentLine[index];
                 if (inSingleQuote)
                 {
                     if (curChar == '\'') inSingleQuote = false;
@@ -60,18 +91,22 @@ namespace NHaml4.IO
                     else if (curChar == ')' || curChar == '}')
                     {
                         inAttributes = false;
-                        break;
+                        acceptAlphas = false;
                     }
                 }
                 else
                 {
                     if (curChar == '(' || curChar == '{')
                         inAttributes = true;
-                    else if (Char.IsWhiteSpace(curChar))
-                        break;
+                    else if ("\\.#".Contains(curChar.ToString()))
+                        continue;
+                    else if (Char.IsLetterOrDigit(curChar) && acceptAlphas)
+                        continue;
+                    else
+                        return index;
                 }
             }
-            return inAttributes;
+            return inAttributes ? -1 : index;
         }
     }
 }

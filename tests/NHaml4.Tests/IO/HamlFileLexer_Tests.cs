@@ -105,17 +105,19 @@ namespace NHaml4.Tests.IO
         }
 
         [Test]
-        [TestCase("%p(a='b'\nc='d')content", "p(a='b' c='d')content")]
-        [TestCase("%p(a=')b'\nc='d')content", "p(a=')b' c='d')content")]
-        [TestCase("%p(a=\")b\"\nc='d')content", "p(a=\")b\" c='d')content")]
-        [TestCase("%p{a='b'\nc='d'}content", "p{a='b' c='d'}content")]
-        [TestCase("%p{a='}b'\nc='d'}content", "p{a='}b' c='d'}content")]
-        [TestCase("%p{a=\"}b\"\nc='d'}content", "p{a=\"}b\" c='d'}content")]
-        public void Read_SplitLineTag_ReturnsSingleLine(string template, string expectedLine)
+        [TestCase("%p(a='b'\nc='d')content", "p(a='b' c='d')", "content")]
+        [TestCase("%p(a=')b'\nc='d')content", "p(a=')b' c='d')", "content")]
+        [TestCase("%p(a=\")b\"\nc='d')content", "p(a=\")b\" c='d')", "content")]
+        [TestCase("%p{a='b'\nc='d'}content", "p{a='b' c='d'}", "content")]
+        [TestCase("%p{a='}b'\nc='d'}content", "p{a='}b' c='d'}", "content")]
+        [TestCase("%p{a=\"}b\"\nc='d'}content", "p{a=\"}b\" c='d'}", "content")]
+        public void Read_SplitLineTag_ReturnsSingleLine(string template, string expectedTag, string expectedContent)
         {
             var textReader = new StringReader(template);
             var result = new HamlFileLexer().Read(textReader, "");
-            Assert.That(result.CurrentLine.Content, Is.EqualTo(expectedLine));
+            Assert.That(result.CurrentLine.Content, Is.EqualTo(expectedTag));
+            result.MoveNext();
+            Assert.That(result.CurrentLine.Content, Is.EqualTo(expectedContent));
         }
 
         public void Read_FileName_ResultContainsFileName()

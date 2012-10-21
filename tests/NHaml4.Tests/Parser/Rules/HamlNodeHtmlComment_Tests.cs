@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NHaml4.IO;
+﻿using NHaml4.IO;
 using NHaml4.Parser;
 using NUnit.Framework;
 using NHaml4.Parser.Rules;
@@ -17,7 +13,7 @@ namespace NHaml4.Tests.Parser.Rules
         {
             string comment = "Test comment";
 
-            var node = new HamlNodeHtmlComment(new HamlLine(0, comment, "", HamlRuleEnum.HtmlComment));
+            var node = new HamlNodeHtmlComment(new HamlLine(comment, HamlRuleEnum.HtmlComment, "", 0));
             Assert.That(node.Content, Is.EqualTo(comment));
         }    
     }

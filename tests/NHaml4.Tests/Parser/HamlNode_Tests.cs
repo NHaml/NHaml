@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using NUnit.Framework;
 using NHaml4.Parser;
 using NHaml4.IO;
@@ -115,7 +113,7 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void GetNextUnresolvedPartial_Partials_ReturnsPartial()
         {
-            var partial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
+            var partial = new HamlNodePartial(new HamlLine("", HamlRuleEnum.Partial, "", -1));
             var rootNode = new HamlNodeDummy();
             rootNode.AddChild(partial);
 
@@ -126,10 +124,10 @@ namespace NHaml4.Tests.Parser
         [Test]
         public void GetNextUnresolvedPartial_OneResolvedAndOneUnresolvedPartial_ReturnsCorrectPartial()
         {
-            var resolvedPartial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
+            var resolvedPartial = new HamlNodePartial(new HamlLine("", HamlRuleEnum.Partial, "", -1));
             resolvedPartial.SetDocument(HamlDocumentBuilder.Create());
 
-            var unresolvedPartial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
+            var unresolvedPartial = new HamlNodePartial(new HamlLine("", HamlRuleEnum.Partial, "", -1));
 
             var rootNode = new HamlNodeDummy();
             rootNode.AddChild(resolvedPartial);
@@ -143,7 +141,7 @@ namespace NHaml4.Tests.Parser
         public void GetNextUnresolvedPartial_PartialIsAGrandchildNode_ReturnsPartial()
         {
             var textContainerNode = new HamlNodeTextContainer(0, "Test content");
-            var partial = new HamlNodePartial(new HamlLine(-1, "", "", HamlRuleEnum.Partial));
+            var partial = new HamlNodePartial(new HamlLine("", HamlRuleEnum.Partial, "", -1));
             textContainerNode.AddChild(partial);
 
             var rootNode = new HamlNodeDummy();

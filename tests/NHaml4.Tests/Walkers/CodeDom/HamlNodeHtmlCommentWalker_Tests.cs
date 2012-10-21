@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using NHaml4.Walkers.CodeDom;
 using NUnit.Framework;
 using NHaml4.Parser;
-using NHaml4.Compilers;
-using Moq;
 using NHaml4.IO;
 using NHaml4.Parser.Rules;
 using NHaml4.Tests.Mocks;
@@ -50,7 +45,7 @@ namespace NHaml4.Tests.Walkers.CodeDom
         {
             // Arrange
             string comment = "Comment";
-            var node = new HamlNodeHtmlComment(new HamlLine(0, comment, "", HamlRuleEnum.HtmlComment));
+            var node = new HamlNodeHtmlComment(new HamlLine(comment, HamlRuleEnum.HtmlComment, "", 0));
 
             // Act
             _walker.Walk(node);
@@ -63,8 +58,8 @@ namespace NHaml4.Tests.Walkers.CodeDom
         public void Walk_NestedTags_AppendsCorrectTags()
         {
             // Arrange
-            HamlLine nestedText = new HamlLine(0, "Hello world", "  ", HamlRuleEnum.PlainText);
-            var tagNode = new HamlNodeHtmlComment(new HamlLine(0, "", "", HamlRuleEnum.HtmlComment));
+            HamlLine nestedText = new HamlLine("Hello world", HamlRuleEnum.PlainText, "  ", 0, true);
+            var tagNode = new HamlNodeHtmlComment(new HamlLine("", HamlRuleEnum.HtmlComment, "", 0));
             tagNode.AddChild(new HamlNodeTextContainer(nestedText));
 
             // Act

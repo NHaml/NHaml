@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using NUnit.Framework;
+﻿using NUnit.Framework;
 using NHaml4.IO;
 using NHaml4.Parser;
 
@@ -21,7 +17,7 @@ namespace NHaml4.Tests.IO
         [TestCase("\t ", "Test", 3, Description = "Tab + Space followed by plain text")]
         public void Constructor_CalculatesIndentCountCorrectly(string indent, string content, int expectedIndent)
         {
-            var line = new HamlLine(0, content, indent, HamlRuleEnum.PlainText);
+            var line = new HamlLine(content, HamlRuleEnum.PlainText, indent, 0);
             Assert.AreEqual(expectedIndent, line.IndentCount);
         }
     }

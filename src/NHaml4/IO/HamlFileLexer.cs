@@ -35,7 +35,7 @@ namespace NHaml4.IO
         private void ReadHamlLine(TextReader reader, HamlFile result)
         {
             string currentLine = ReadLine(reader);
-            while (_lineLexer.IsPartialTag(currentLine))
+            while (_lineLexer.GetEndOfTagIndex(currentLine) < 0)
             {
                 if (_eof)
                     throw new HamlMalformedTagException("Multi-line tag found with no end token.", _sourceFileLineIndex);

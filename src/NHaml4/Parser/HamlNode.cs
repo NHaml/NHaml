@@ -18,10 +18,8 @@ namespace NHaml4.Parser
         }
 
         protected HamlNode(int sourceFileLineNum, string content)
-        {
-            SourceFileLineNum = sourceFileLineNum;
-            Content = content;
-        }
+            : this(new HamlLine(content, HamlRuleEnum.Unknown, "", sourceFileLineNum, true))
+        { }
 
         protected abstract bool IsContentGeneratingTag { get; }
 
@@ -32,7 +30,15 @@ namespace NHaml4.Parser
             get { return (_line == null) ? "" : _line.Indent; }
         }
 
-        public bool IsMultiLine { get; set; }
+        public bool IsMultiLine
+        {
+            get { return Children.Any(x => x.IsInline == false); }
+        }
+
+        protected bool IsInline
+        {
+            get { return _line.IsInline; }
+        }
 
         public int IndentCount
         {
@@ -143,13 +149,13 @@ namespace NHaml4.Parser
         public void AppendInnerTagNewLine()
         {
             if (IsContentGeneratingTag)
-                AddChild(new HamlNodeTextContainer(new HamlLine(SourceFileLineNum, "\n", "", HamlRuleEnum.PlainText)));
+                AddChild(new HamlNodeTextContainer(new HamlLine("\n", HamlRuleEnum.PlainText, "", SourceFileLineNum, false)));
         }
 
         public void AppendPostTagNewLine(HamlNode childNode, int lineNo)
         {
             if (childNode.IsContentGeneratingTag)
-                AddChild(new HamlNodeTextContainer(new HamlLine(lineNo, "\n", "", HamlRuleEnum.PlainText)));
+                AddChild(new HamlNodeTextContainer(new HamlLine("\n", HamlRuleEnum.PlainText, "", lineNo, false)));
         }
 
         public HamlNodePartial GetNextUnresolvedPartial()

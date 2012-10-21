@@ -5,13 +5,15 @@ namespace NHaml4.IO
 {
     public class HamlLine
     {
-        public HamlLine(int sourceFileLineNum, string content, string indent, HamlRuleEnum hamlRule)
+        public HamlLine(string content, HamlRuleEnum hamlRule,
+            string indent = "", int sourceFileLineNum = -1, bool isInline = false)
         {
             SourceFileLineNo = sourceFileLineNum;
             Content = content;
-            Indent = indent;
-            IndentCount = GetIndentCount(Indent);
+            Indent = isInline ? "" : indent;
+            IndentCount = GetIndentCount(indent);
             HamlRule = hamlRule;
+            IsInline = isInline;
         }
 
         private int GetIndentCount(string indent)
@@ -24,7 +26,8 @@ namespace NHaml4.IO
         public int IndentCount { get; private set; }
         public int SourceFileLineNo { get; private set; }
         public HamlRuleEnum HamlRule { get; private set; }
-        public string Content { get; private set; }
         public string Indent { get; private set; }
+        public string Content { get; set; }
+        public bool IsInline { get; private set; }
     }
 }

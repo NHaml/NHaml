@@ -3,7 +3,6 @@ using Moq;
 using NHaml4.Compilers;
 using NHaml4.Parser;
 using NHaml4.Walkers.CodeDom;
-using NHaml4.Tests.Walkers.CodeDom;
 using NHaml4.Parser.Rules;
 using NHaml4.IO;
 using NHaml4.Tests.Mocks;
@@ -21,7 +20,7 @@ namespace NHaml4.Tests.Walkers
         public void Walk_TextNode_AppendsCorrectTag()
         {
             // Arrange
-            var content = new HamlLine(0, "Simple content", "", HamlRuleEnum.PlainText);
+            var content = new HamlLine("Simple content", HamlRuleEnum.PlainText, "", 0);
             var document = HamlDocumentBuilder.Create("",
                 new HamlNodeTextContainer(content));
             Type baseType = typeof(Template);

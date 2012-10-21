@@ -60,7 +60,7 @@ namespace NHaml4.Tests
             var rootViewSource = ViewSourceBuilder.Create("MainFile");
             var rootDocument = HamlDocumentBuilder.Create("MainFile",
                 new HamlNodeTextContainer(0, "Test"),
-                new HamlNodePartial(new HamlLine(0, "SubDocument", "", HamlRuleEnum.Partial)));
+                new HamlNodePartial(new HamlLine("SubDocument", HamlRuleEnum.Partial, "", 0)));
             _treeParserMock.Setup(x => x.ParseViewSource(rootViewSource))
                 .Returns(rootDocument);
 
@@ -84,7 +84,7 @@ namespace NHaml4.Tests
         {
             var rootViewSource = ViewSourceBuilder.Create("MainFile");
             var rootDocument = HamlDocumentBuilder.Create("MainFile",
-                new HamlNodePartial(new HamlLine(0, "", "", HamlRuleEnum.Partial)));
+                new HamlNodePartial(new HamlLine("", HamlRuleEnum.Partial, "", 0)));
             _treeParserMock.Setup(x => x.ParseViewSource(rootViewSource))
                 .Returns(rootDocument);
 
@@ -108,7 +108,7 @@ namespace NHaml4.Tests
             const string partialName = "SubDocument";
             var rootViewSource = ViewSourceBuilder.Create("MainFile");
             var rootDocument = HamlDocumentBuilder.Create("MainFile",
-                new HamlNodePartial(new HamlLine(0, partialName, "", HamlRuleEnum.Partial)));
+                new HamlNodePartial(new HamlLine(partialName, HamlRuleEnum.Partial, "", 0)));
             _treeParserMock.Setup(x => x.ParseViewSource(rootViewSource))
                 .Returns(rootDocument);
             var viewSourceList = new ViewSourceCollection { rootViewSource };

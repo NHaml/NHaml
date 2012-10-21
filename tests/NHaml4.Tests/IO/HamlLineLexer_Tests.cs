@@ -6,6 +6,7 @@ using NUnit.Framework;
 
 namespace NHaml4.Tests.IO
 {
+    [TestFixture]
     public class HamlLineLexer_Tests
     {
         [Test]
@@ -23,15 +24,22 @@ namespace NHaml4.Tests.IO
         }
 
         [Test]
+        [TestCase("%p", "p", null)]
+        [TestCase("%meta", "meta", null)]
         [TestCase("%p Content", "p", "Content")]
         [TestCase("%p(a='b')Content", "p(a='b')", "Content")]
+        [TestCase("%p.className Content", "p.className", "Content")]
         public void Constructor_InlineContent_GeneratesCorrectLines(
             string templateLine, string expectedLine1, string expectedLine2)
         {
             var lines = new HamlLineLexer().ParseHamlLine(templateLine, 0).ToList();
 
+            int expectedLineCount = expectedLine2 == null ? 1 : 2;
+
+            Assert.That(lines.Count, Is.EqualTo(expectedLineCount));
             Assert.That(lines[0].Content, Is.EqualTo(expectedLine1));
-            Assert.That(lines[1].Content, Is.EqualTo(expectedLine2));
+            if (expectedLineCount > 1)
+                Assert.That(lines[1].Content, Is.EqualTo(expectedLine2));
         }
     }
 }

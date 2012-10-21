@@ -19,7 +19,7 @@ namespace NHaml4.Tests.Parser.Rules
         [TestCase("\t", true)]
         public void IsWhitespace_ReturnsCorrectResult(string whiteSpace, bool expectedResult)
         {
-            var node = new HamlNodeTextContainer(new HamlLine(0, whiteSpace, "", HamlRuleEnum.PlainText));
+            var node = new HamlNodeTextContainer(new HamlLine(whiteSpace, HamlRuleEnum.PlainText, "", 0));
             Assert.That(node.IsWhitespace(), Is.EqualTo(expectedResult));
         }
 
@@ -39,7 +39,7 @@ namespace NHaml4.Tests.Parser.Rules
 
         public void Children_EmptyString_NoChildren()
         {
-            var node = new HamlNodeTextContainer(new HamlLine(0, "", "", HamlRuleEnum.PlainText));
+            var node = new HamlNodeTextContainer(new HamlLine("", HamlRuleEnum.PlainText, "", 0));
             Assert.That(node.Children.Count(), Is.EqualTo(0));
         }
 
@@ -58,14 +58,14 @@ namespace NHaml4.Tests.Parser.Rules
         [Test]
         public void Children_EscapedContent_RemovesEscapeCharacter()
         {
-            var node = new HamlNodeTextContainer(new HamlLine(0, "\\#{variable}", "", HamlRuleEnum.PlainText));
+            var node = new HamlNodeTextContainer(new HamlLine("\\#{variable}", HamlRuleEnum.PlainText, "", 0));
             Assert.That(node.Children.First().Content, Is.EqualTo("#{variable}"));
         }
 
         [Test]
         public void Children_IncompleteVariableReference_ThrowsException()
         {
-            var line = new HamlLine(0, "#{variable", "", HamlRuleEnum.PlainText);
+            var line = new HamlLine("#{variable", HamlRuleEnum.PlainText, "", 0);
             Assert.Throws<HamlMalformedVariableException>(() => new HamlNodeTextContainer(line));
         }
     }

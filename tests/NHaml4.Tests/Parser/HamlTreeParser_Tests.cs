@@ -92,9 +92,20 @@ namespace NHaml4.Tests.Parser
         }
 
         [Test]
+        public void ParseDocumentSource_InlineContent_PlacesLineBreaksCorrectly()
+        {
+            string template = "%p =DateTime.Now()";
+            var result = _parser.ParseDocumentSource(template, "");
+
+            var children = result.Children.ToList();
+            Assert.That(children[0].Children.Count(), Is.EqualTo(1));
+            Assert.That(children[0].Children.First().Content, Is.EqualTo("DateTime.Now()"));
+        }
+
+        [Test]
         public void ParseHamlFile_UnknownRuleType_ThrowsUnknownRuleException()
         {
-            var line = new HamlLine(0, "", "", HamlRuleEnum.Unknown);
+            var line = new HamlLine("", HamlRuleEnum.Unknown, "", 0);
 
             var file = new HamlFile("");
             file.AddLine(line);
