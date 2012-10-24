@@ -29,20 +29,20 @@ namespace HamlSpec
         }
 
         // WORKING
-        //[TestCase("plain text templates")]
-        //[TestCase("tags with unusual HTML characters")]
-        //[TestCase("tags with unusual CSS identifiers")]
-        //[TestCase("basic Haml tags and CSS")]
-        //[TestCase("silent comments")]
-        //[TestCase("tags with inline content")]
-        //[TestCase("markup comments")]
-        //[TestCase("tags with nested content")]
-        //[TestCase("tags with HTML-style attributes")]
-        //[TestCase("boolean attributes")]
+        [TestCase("plain text templates")]
+        [TestCase("tags with unusual HTML characters")]
+        [TestCase("tags with unusual CSS identifiers")]
+        [TestCase("basic Haml tags and CSS")]
+        [TestCase("silent comments")]
+        [TestCase("tags with inline content")]
+        [TestCase("markup comments")]
+        [TestCase("tags with nested content")]
+        [TestCase("tags with HTML-style attributes")]
+        [TestCase("boolean attributes")]
         [TestCase("whitespace removal")]
         [TestCase("Ruby-style interpolation")]
-        //[TestCase("tags with HTML-style attributes and variables")]
-        //[TestCase("headers")]
+        [TestCase("tags with HTML-style attributes and variables")]
+        [TestCase("headers")]
 
         // IN PROGRESS
 

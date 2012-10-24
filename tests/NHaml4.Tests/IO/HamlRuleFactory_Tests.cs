@@ -25,6 +25,7 @@ namespace NHaml4.Tests.IO
         [TestCase("-Statement", HamlRuleEnum.Code, Description = "Haml Comment")]
         [TestCase("\\%EscapedTag", HamlRuleEnum.PlainText, Description = "Escaped Tag")]
         [TestCase("_Partial", HamlRuleEnum.Partial, Description = "Partial Reference")]
+        [TestCase("#{Var}", HamlRuleEnum.PlainText, Description = "Line starting with ruby-style variable")]
         public void Constructor_CalculatesRuleTypeCorrectly(string testString, HamlRuleEnum expectedRule)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);
@@ -40,8 +41,9 @@ namespace NHaml4.Tests.IO
         [TestCase("/Tag", "Tag", Description = "HTML Comment")]
         [TestCase("-#Tag", "Tag", Description = "Haml Comment")]
         [TestCase("!!!Tag", "Tag", Description = "DocType")]
-        [TestCase("\\%EscapedTag", "%EscapedTag", Description = "Escaped Tag")]
+        [TestCase("\\%EscapedTag", "\\%EscapedTag", Description = "Escaped Tag")]
         [TestCase("_ PartialName", "PartialName", Description = "Partial with space")]
+        [TestCase("#{var}", "#{var}", Description = "Line starting with ruby-style variable")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
         {
             var rule = HamlRuleFactory.ParseHamlRule(ref testString);

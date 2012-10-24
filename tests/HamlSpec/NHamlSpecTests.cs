@@ -29,10 +29,10 @@ namespace HamlSpec
         }
 
         [TestCase("Eval")]
-        //[TestCase("Inline code")]
-        //[TestCase("Code flow")]
-        //[TestCase("Line Escaping")]
-        //[TestCase("Legacy mangled Ruby-Style Tag Support")]
+        [TestCase("Inline code")]
+        [TestCase("Code flow")]
+        [TestCase("Line Escaping")]
+        [TestCase("Legacy mangled Ruby-Style Tag Support")]
         public void ExecuteHamlsTestSuite(string groupName)
         {
             _specTestRunner.ExecuteSpecs(groupName);

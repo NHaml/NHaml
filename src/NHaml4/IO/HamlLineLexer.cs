@@ -53,10 +53,10 @@ namespace NHaml4.IO
 
         private string AddImplicitDivTag(string content)
         {
-            if (content.Length == 0) return "";
-            if (content[0] == '.' || content[0] == '#')
-                content = "%" + content;
-            return content;
+            if (content.Length > 1 && content.StartsWith("#{")) return content;
+            if (content.Length > 0)
+                return (content[0] == '.' || content[0] == '#') ? "%" + content : content;
+            return string.Empty;
         }
 
         internal int GetEndOfTagIndex(string currentLine)
@@ -98,7 +98,7 @@ namespace NHaml4.IO
                 {
                     if (curChar == '(' || curChar == '{')
                         inAttributes = true;
-                    else if ("\\.#_-:".Contains(curChar.ToString()))
+                    else if ("\\.#_-:>".Contains(curChar.ToString()))
                         continue;
                     else if (Char.IsLetterOrDigit(curChar) && acceptAlphas)
                         continue;
