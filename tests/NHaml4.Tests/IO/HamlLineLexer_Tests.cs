@@ -29,6 +29,9 @@ namespace NHaml4.Tests.IO
         [TestCase("%p Content", "p", "Content")]
         [TestCase("%p(a='b')Content", "p(a='b')", "Content")]
         [TestCase("%p.className Content", "p.className", "Content")]
+        [TestCase("%a:b Content", "a:b", "Content")]
+        [TestCase("%a_b Content", "a_b", "Content")]
+        [TestCase("%a-b Content", "a-b", "Content")]
         public void Constructor_InlineContent_GeneratesCorrectLines(
             string templateLine, string expectedLine1, string expectedLine2)
         {

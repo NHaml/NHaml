@@ -27,7 +27,7 @@ namespace NHaml4.Parser
 
         public string Indent
         {
-            get { return (_line == null) ? "" : _line.Indent; }
+            get { return _line.HamlRule == HamlRuleEnum.Document ? "" : _line.Indent; }
         }
 
         public bool IsMultiLine
@@ -42,7 +42,7 @@ namespace NHaml4.Parser
 
         public int IndentCount
         {
-            get { return (_line == null) ? -1 : _line.IndentCount; }
+            get { return _line.HamlRule == HamlRuleEnum.Document ? -1 : _line.IndentCount; }
         }
 
         public int SourceFileLineNum { get; private set; }

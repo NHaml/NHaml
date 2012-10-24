@@ -98,7 +98,7 @@ namespace NHaml4.IO
                 {
                     if (curChar == '(' || curChar == '{')
                         inAttributes = true;
-                    else if ("\\.#".Contains(curChar.ToString()))
+                    else if ("\\.#_-:".Contains(curChar.ToString()))
                         continue;
                     else if (Char.IsLetterOrDigit(curChar) && acceptAlphas)
                         continue;

@@ -12,6 +12,7 @@
         HamlComment,
         Evaluation,
         Code,
-        Partial
+        Partial,
+        Document
     }
 }
