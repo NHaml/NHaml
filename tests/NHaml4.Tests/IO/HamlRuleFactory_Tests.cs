@@ -41,7 +41,7 @@ namespace NHaml4.Tests.IO
         [TestCase("/Tag", "Tag", Description = "HTML Comment")]
         [TestCase("-#Tag", "Tag", Description = "Haml Comment")]
         [TestCase("!!!Tag", "Tag", Description = "DocType")]
-        [TestCase("\\%EscapedTag", "\\%EscapedTag", Description = "Escaped Tag")]
+        [TestCase("\\%EscapedTag", "%EscapedTag", Description = "Escaped Tag")]
         [TestCase("_ PartialName", "PartialName", Description = "Partial with space")]
         [TestCase("#{var}", "#{var}", Description = "Line starting with ruby-style variable")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)

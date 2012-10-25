@@ -34,6 +34,7 @@ namespace NHaml4.Tests.IO
         [TestCase("%a-b Content", "a-b", "Content")]
         [TestCase("%a-b> Content", "a-b>", "Content")]
         [TestCase("%p #{one}", "p", "#{one}")]
+        [TestCase("%p \\#{one}", "p", "\\#{one}")]
         public void Constructor_InlineContent_GeneratesCorrectLines(
             string templateLine, string expectedLine1, string expectedLine2)
         {

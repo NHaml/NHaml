@@ -23,6 +23,16 @@ namespace NHaml4.IO
                 content = content.Substring(0);
                 return HamlRuleEnum.PlainText;
             }
+            if (content.StartsWith("\\\\"))
+            {
+                content = content.Substring(0);
+                return HamlRuleEnum.PlainText;
+            }
+            if (content.StartsWith("\\#"))
+            {
+                content = content.Substring(0);
+                return HamlRuleEnum.PlainText;
+            }
             if (content.StartsWith("%"))
             {
                 content = content.Substring(1);
@@ -53,7 +63,7 @@ namespace NHaml4.IO
             }
             if (content.StartsWith(@"\"))
             {
-                content = content.Substring(0);
+                content = content.Substring(1);
                 return HamlRuleEnum.PlainText;
             }
             if (content.StartsWith("_"))
