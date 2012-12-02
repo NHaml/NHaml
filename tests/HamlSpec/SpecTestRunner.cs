@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml4.TemplateBase;
-using NHaml4.TemplateResolution;
+using NHaml.TemplateBase;
+using NHaml.TemplateResolution;
 using NUnit.Framework;
 using NHaml.Tests.Builders;
-using NHaml4.Walkers.CodeDom;
-using NHaml4;
+using NHaml.Walkers.CodeDom;
+using NHaml;
 using System.IO;
-using NHaml4.Configuration;
+using NHaml.Configuration;
 
 namespace HamlSpec
 {

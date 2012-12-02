@@ -3,19 +3,14 @@ using System.Collections.Generic;
 using System.Data.Linq;
 using System.Linq;
 using System.Reflection;
-using System.Security.Permissions;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.Routing;
 using System.Web.UI;
-using System.IO;
-using NHaml4;
-using NHaml4.Walkers.CodeDom;
-using NHaml4.Configuration;
-using NHaml4.TemplateResolution;
+using NHaml.Configuration;
+using NHaml.TemplateResolution;
 
-namespace NHaml.Web.Mvc
+namespace NHaml.Web.Mvc3
 {
     //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]
@@ -38,7 +33,7 @@ namespace NHaml.Web.Mvc
             DefaultMaster = "Application";
         }
 
-        private IList<string> GetDefaultUsings()
+        private IEnumerable<string> GetDefaultUsings()
         {
             return new List<string> {
                 "System.Web",
@@ -48,7 +43,7 @@ namespace NHaml.Web.Mvc
                 "NHaml.Web.Mvc" };
         }
 
-        private IList<string> GetDefaultReferences()
+        private IEnumerable<string> GetDefaultReferences()
         {
             var result = new List<string> {
                 typeof(UserControl).Assembly.Location,

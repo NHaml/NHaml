@@ -2,7 +2,7 @@ using System;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
-using NHaml.Web.Mvc;
+using NHaml.Web.Mvc3;
 
 namespace NHaml.Samples.Mvc.CSharp4
 {

@@ -89,9 +89,9 @@
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\NHaml4\NHaml4.csproj">
+    <ProjectReference Include="..\NHaml\NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml4</Name>
+      <Name>NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

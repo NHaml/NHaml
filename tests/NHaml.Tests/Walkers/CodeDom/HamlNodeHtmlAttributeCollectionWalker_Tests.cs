@@ -1,0 +1,35 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using NUnit.Framework;
+using NHaml.Parser.Rules;
+using NHaml.Walkers.CodeDom;
+using NHaml.Tests.Mocks;
+using Moq;
+using NHaml.Compilers;
+
+namespace NHaml.Tests.Walkers.CodeDom
+{
+    [TestFixture]
+    public class HamlNodeHtmlAttributeCollectionWalker_Tests
+    {
+        [Test]
+        [TestCase("()", "")]
+        [TestCase("(a='b')", " a=\'b\'")]
+        [TestCase("(a='b' c='d')", " a=\'b\' c=\'d\'")]
+        [TestCase("(class='class1')", "")]
+        [TestCase("(id='id1')", "")]
+        public void Walk_EmptyAttributeCollection_WritesCorrectAttributes(string hamlLine, string expectedTag)
+        {
+            var node = new HamlNodeHtmlAttributeCollection(0, hamlLine);
+
+            var builder = new ClassBuilderMock();
+            new HamlNodeHtmlAttributeCollectionWalker(builder, new HamlHtmlOptions())
+                .Walk(node);
+
+            Assert.That(builder.Build(""), Is.EqualTo(expectedTag));
+        }
+
+    }
+}

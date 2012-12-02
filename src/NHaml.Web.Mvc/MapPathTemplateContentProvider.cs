@@ -1,8 +1,8 @@
 ﻿using System.Web.Routing;
-using NHaml4.TemplateResolution;
+using NHaml.TemplateResolution;
 using System.IO;
 
-namespace NHaml.Web.Mvc
+namespace NHaml.Web.Mvc3
 {
     public class MapPathTemplateContentProvider : FileTemplateContentProvider
     {

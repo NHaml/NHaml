@@ -1,12 +1,10 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
-using System.Security.Permissions;
-using System.Web;
 using System.Web.Mvc;
-using NHaml4.Crosscutting;
-using NHaml4.TemplateBase;
+using NHaml.Crosscutting;
+using NHaml.TemplateBase;
 
-namespace NHaml.Web.Mvc
+namespace NHaml.Web.Mvc3
 {
     //[AspNetHostingPermission(SecurityAction.InheritanceDemand, Level = AspNetHostingPermissionLevel.Minimal)]
     //[AspNetHostingPermission(SecurityAction.LinkDemand, Level = AspNetHostingPermissionLevel.Minimal)]

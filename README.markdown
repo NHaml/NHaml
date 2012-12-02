@@ -18,6 +18,7 @@ partials and ships with an ASP.NET MVC view engine.
 License
 ================
 Copyright (c) 2010 Andrew Peters, Steve Wagner, Simon Cropp, Zsolt Sz. Sztupák
+Copyright (c) 2012 Andrew Peters, Steve Wagner, Simon Cropp, Zsolt Sz. Sztupák, Russell Allen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -39,7 +40,7 @@ THE SOFTWARE.
 
 Issues
 ================
-Ouer IssueTracker is located here: [http://code.google.com/p/nhaml/issues/list]
+Our IssueTracker is located here: [http://code.google.com/p/nhaml/issues/list]
 
 Getting Help
 ===========
@@ -52,5 +53,4 @@ Contributors
 - Steve Wagner (lanwin) [http://www.lanwin.de]
 - Simon Cropp
 - Zsolt Sz. Sztupák (sztupy) [http://www.sztupy.hu]
-
-
+- Russell Allen (russpall) [http://www.russellallen.info]

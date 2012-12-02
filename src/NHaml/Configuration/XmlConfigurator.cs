@@ -1,0 +1,46 @@
+﻿using System.Collections.Generic;
+using System.Linq;
+using NHaml.Parser;
+using NHaml.Walkers.CodeDom;
+using NHaml.IO;
+using NHaml.Compilers;
+using System.Configuration;
+using NHaml.TemplateResolution;
+
+namespace NHaml.Configuration
+{
+    public static class XmlConfigurator
+    {
+        public static TemplateEngine GetTemplateEngine()
+        {
+            return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath);
+        }
+
+        public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)
+        {
+            var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration();
+            return GetTemplateEngine(templateContentProvider, nhamlConfiguration, imports, referencedAssemblies);
+        }
+        
+        public static TemplateEngine GetTemplateEngine(string configFile)
+        {
+            var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration(configFile);
+            return GetTemplateEngine(new FileTemplateContentProvider(), nhamlConfiguration, new List<string>(), new List<string>());
+        }
+
+        private static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, NHamlConfigurationSection nhamlConfiguration, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)
+        {
+            var templateCache = new SimpleTemplateCache();
+
+            var templateFactoryFactory = new TemplateFactoryFactory(
+                templateContentProvider,
+                new HamlTreeParser(new HamlFileLexer()),
+                new HamlDocumentWalker(new CodeDomClassBuilder()),
+                new CodeDomTemplateCompiler(new CSharp2TemplateTypeBuilder()),
+                nhamlConfiguration.ImportsList.Concat(imports),
+                nhamlConfiguration.ReferencedAssembliesList.Concat(referencedAssemblies));
+
+            return new TemplateEngine(templateCache, templateFactoryFactory);
+        }
+    }
+}
