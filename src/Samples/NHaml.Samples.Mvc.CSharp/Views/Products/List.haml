@@ -1,5 +1,5 @@
 %h2= ViewData.Model.CategoryName
 %ul
   - foreach (var product in ViewData.Model.Products)
-    @partialcontent=Product( model="product" )
+    _ Product
 = Html.ActionLink("Add New Product", "New")

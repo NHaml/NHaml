@@ -1,6 +1,6 @@
-﻿using NHaml.Compilers;
+﻿using System.Web.NHaml.Compilers;
 
-namespace NHaml.Walkers.CodeDom
+namespace System.Web.NHaml.Walkers.CodeDom
 {
     public class HamlPartialWalker : HamlNodeWalker
     {

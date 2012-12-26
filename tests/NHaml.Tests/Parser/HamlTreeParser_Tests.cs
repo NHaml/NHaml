@@ -1,10 +1,10 @@
 ﻿using System;
-using NHaml.IO;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Exceptions;
+using System.Web.NHaml.Parser.Rules;
 using NUnit.Framework;
-using NHaml.Parser;
 using NHaml.Tests.Builders;
-using NHaml.Parser.Rules;
-using NHaml.Parser.Exceptions;
 using System.Linq;
 
 namespace NHaml.Tests.Parser

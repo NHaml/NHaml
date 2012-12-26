@@ -1,13 +1,13 @@
-﻿using NUnit.Framework;
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.TemplateBase;
+using System.Web.NHaml.Walkers.CodeDom;
+using NUnit.Framework;
 using Moq;
-using NHaml.Compilers;
-using NHaml.Parser;
-using NHaml.Walkers.CodeDom;
-using NHaml.Parser.Rules;
-using NHaml.IO;
 using NHaml.Tests.Mocks;
 using System;
-using NHaml.TemplateBase;
 using System.Collections.Generic;
 using NHaml.Tests.Builders;
 
@@ -39,7 +39,7 @@ namespace NHaml.Tests.Walkers
             // Arrange
             const string className = "ClassName";
             Type baseType = typeof(Template);
-            var parser = new HamlTreeParser(new NHaml.IO.HamlFileLexer());
+            var parser = new HamlTreeParser(new HamlFileLexer());
             var document = parser.ParseDocumentSource("Simple content", "");
             var imports = new List<string>();
 

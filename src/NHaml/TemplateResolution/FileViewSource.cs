@@ -1,7 +1,6 @@
 using System.IO;
-using System;
 
-namespace NHaml.TemplateResolution
+namespace System.Web.NHaml.TemplateResolution
 {
     public class FileViewSource : ViewSource
     {

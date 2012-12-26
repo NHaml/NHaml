@@ -1,10 +1,10 @@
-﻿using NHaml.Compilers;
-using NHaml.Parser.Rules;
-using NHaml.Parser;
-using NHaml.Parser.Exceptions;
-using System.Linq;
+﻿using System.Linq;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Exceptions;
+using System.Web.NHaml.Parser.Rules;
 
-namespace NHaml.Walkers.CodeDom
+namespace System.Web.NHaml.Walkers.CodeDom
 {
     public class HamlNodeHtmlAttributeCollectionWalker : HamlNodeWalker
     {

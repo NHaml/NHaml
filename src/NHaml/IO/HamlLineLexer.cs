@@ -1,8 +1,7 @@
 ﻿using System.Collections.Generic;
-using NHaml.Parser;
-using System;
+using System.Web.NHaml.Parser;
 
-namespace NHaml.IO
+namespace System.Web.NHaml.IO
 {
     public class HamlLineLexer
     {

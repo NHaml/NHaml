@@ -2,8 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.Compilers;
-using NHaml.TemplateBase;
+using System.Web.NHaml.Compilers;
 
 namespace NHaml.Tests.Mocks
 {

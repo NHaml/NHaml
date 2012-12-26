@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NHaml.IO
+namespace System.Web.NHaml.IO
 {
     public class HamlFile
     {

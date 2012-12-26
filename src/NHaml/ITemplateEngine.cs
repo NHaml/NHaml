@@ -1,7 +1,6 @@
-﻿using System;
-using NHaml.TemplateResolution;
+﻿using System.Web.NHaml.TemplateResolution;
 
-namespace NHaml
+namespace System.Web.NHaml
 {
     public interface ITemplateEngine
     {

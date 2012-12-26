@@ -1,7 +1,7 @@
-﻿using NHaml.Parser;
-using System.Linq;
+﻿using System.Linq;
+using System.Web.NHaml.Parser;
 
-namespace NHaml.IO
+namespace System.Web.NHaml.IO
 {
     public class HamlLine
     {
@@ -11,14 +11,20 @@ namespace NHaml.IO
             SourceFileLineNo = sourceFileLineNum;
             Content = content;
             Indent = isInline ? "" : indent;
-            IndentCount = GetIndentCount(indent);
+            IndentCount = IsBlankLine(content, hamlRule)
+                ? 0
+                : GetIndentCount(indent);
             HamlRule = hamlRule;
             IsInline = isInline;
         }
 
+        private static bool IsBlankLine(string content, HamlRuleEnum hamlRule)
+        {
+            return (hamlRule == HamlRuleEnum.PlainText && string.IsNullOrEmpty(content));
+        }
+
         private int GetIndentCount(string indent)
         {
-            if (string.IsNullOrEmpty(Content)) return 0;
             var chars = indent.ToArray();
             return chars.Sum(curChar => curChar == '\t' ? 2 : 1);
         }

@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
 using NUnit.Framework;
-using NHaml.Parser;
-using NHaml.IO;
-using NHaml.Parser.Rules;
 using NHaml.Tests.Builders;
 
 namespace NHaml.Tests.Parser

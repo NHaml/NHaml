@@ -1,15 +1,15 @@
-﻿using NUnit.Framework;
-using NHaml.Parser;
-using NHaml.Parser.Rules;
-using NHaml.Walkers;
-using NHaml.Compilers;
+﻿using System.Web.NHaml;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.TemplateResolution;
+using System.Web.NHaml.Walkers;
+using NUnit.Framework;
 using Moq;
 using System.Collections.Generic;
-using NHaml.TemplateResolution;
 using NHaml.Tests.Builders;
 using System.Linq;
-using NHaml.IO;
-using NHaml.Tests.Builders;
 
 namespace NHaml.Tests
 {

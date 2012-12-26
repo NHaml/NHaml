@@ -1,7 +1,8 @@
-﻿using NHaml.Parser;
-using NHaml.Compilers;
-using NHaml.Parser.Rules;
-namespace NHaml.Walkers.CodeDom
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+
+namespace System.Web.NHaml.Walkers.CodeDom
 {
     public sealed class HamlNodeHtmlCommentWalker : HamlNodeWalker
     {

@@ -1,8 +1,7 @@
-﻿using NHaml.Parser;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using System.Web.NHaml.Parser;
 
-namespace NHaml.Walkers
+namespace System.Web.NHaml.Walkers
 {
     public interface IDocumentWalker
     {

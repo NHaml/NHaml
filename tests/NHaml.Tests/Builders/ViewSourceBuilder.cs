@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.TemplateResolution;
 using System.IO;
+using System.Web.NHaml.TemplateResolution;
 using Moq;
 using NHaml.Tests.Mocks;
 

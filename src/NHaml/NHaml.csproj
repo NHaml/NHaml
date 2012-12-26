@@ -8,7 +8,7 @@
     <ProjectGuid>{9B885FC4-45C0-4526-9253-A799238EDD66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>NHaml</RootNamespace>
+    <RootNamespace>System.Web.NHaml</RootNamespace>
     <AssemblyName>NHaml</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

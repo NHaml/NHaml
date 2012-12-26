@@ -1,9 +1,8 @@
-using System;
 using System.IO;
-using NHaml.Crosscutting;
 using System.Collections.Generic;
+using System.Web.NHaml.Crosscutting;
 
-namespace NHaml.TemplateBase
+namespace System.Web.NHaml.TemplateBase
 {
     public abstract class Template
     {

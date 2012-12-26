@@ -1,8 +1,8 @@
 ﻿using System.Linq;
-using NHaml.Crosscutting;
-using NHaml.Parser.Exceptions;
+using System.Web.NHaml.Crosscutting;
+using System.Web.NHaml.Parser.Exceptions;
 
-namespace NHaml.Parser.Rules
+namespace System.Web.NHaml.Parser.Rules
 {
     public class HamlNodeHtmlAttributeCollection : HamlNode
     {

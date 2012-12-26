@@ -1,11 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using NHaml.Compilers;
-using NHaml.Parser;
-using NHaml.Parser.Rules;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
 
-namespace NHaml.Walkers.CodeDom
+namespace System.Web.NHaml.Walkers.CodeDom
 {
     public class HamlNodeTagWalker : HamlNodeWalker
     {

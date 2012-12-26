@@ -1,10 +1,10 @@
-﻿using NUnit.Framework;
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
+using NUnit.Framework;
 using Moq;
-using NHaml.Compilers;
-using NHaml.Walkers.CodeDom;
-using NHaml.Parser.Rules;
-using NHaml.IO;
-using NHaml.Walkers.Exceptions;
 using System;
 using NHaml.Tests.Mocks;
 using System.Linq;
@@ -36,7 +36,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         public void Walk_ValidNodeWithNoChildren_CallsAppendCodeSnippetMethodWithFalse()
         {
             string codeSnippet = "int c = 1";
-            var node = new HamlNodeCode(new HamlLine(codeSnippet, NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine(codeSnippet, HamlRuleEnum.Code, "", -1));
 
             _walker.Walk(node);
 
@@ -47,7 +47,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         public void Walk_ValidNodeWithChildren_CallsAppendCodeSnippetMethodWithTrue()
         {
             string codeSnippet = "int c = 1";
-            var node = new HamlNodeCode(new HamlLine(codeSnippet, NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine(codeSnippet, HamlRuleEnum.Code, "", -1));
             node.AddChild(new HamlNodeTextContainer(-1, ""));
 
             _walker.Walk(node);
@@ -59,7 +59,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         public void Walk_ValidNodeWithChildren_CallsRenderEndBlock()
         {
             string codeSnippet = "int c = 1";
-            var node = new HamlNodeCode(new HamlLine(codeSnippet, NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine(codeSnippet, HamlRuleEnum.Code, "", -1));
             node.AddChild(new HamlNodeTextContainer(-1, ""));
 
             _walker.Walk(node);
@@ -70,7 +70,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void Walk_ChildNode_DoesNotThrowInvalidChildNodeException()
         {
-            var node = new HamlNodeCode(new HamlLine("1+1", NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine("1+1", HamlRuleEnum.Code, "", -1));
             node.AddChild(new HamlNodeTextContainer(0, ""));
 
             Assert.DoesNotThrow(() => _walker.Walk(node));
@@ -80,7 +80,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         public void Walk_ConditionalWithChildNode_RendersChildNode()
         {
             const string dummyText = "Hello";
-            var node = new HamlNodeCode(new HamlLine("if (true)", NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine("if (true)", HamlRuleEnum.Code, "", -1));
             node.AddChild(new HamlNodeTextContainer(0, dummyText));
             var classBuilder = new ClassBuilderMock();
 
@@ -93,7 +93,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void Walk_ValidNode_DoesNotGenerateContent()
         {
-            var node = new HamlNodeCode(new HamlLine("1+1", NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine("1+1", HamlRuleEnum.Code, "", -1));
             var classBuilder = new ClassBuilderMock();
             var walker = new HamlNodeCodeWalker(classBuilder, new HamlHtmlOptions());
             walker.Walk(node);
@@ -104,7 +104,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void AppendInnerTagNewLine_ValidNode_DoesNotAppendNewLine()
         {
-            var node = new HamlNodeCode(new HamlLine("1+1", NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine("1+1", HamlRuleEnum.Code, "", -1));
 
             node.AppendInnerTagNewLine();
 
@@ -114,8 +114,8 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void AppendPostTagNewLine_ValidNode_DoesNotAppendNewLine()
         {
-            var node = new HamlNodeCode(new HamlLine("1+1", NHaml.Parser.HamlRuleEnum.Code, "", -1));
-            var childNode = new HamlNodeCode(new HamlLine("1+1", NHaml.Parser.HamlRuleEnum.Code, "", -1));
+            var node = new HamlNodeCode(new HamlLine("1+1", HamlRuleEnum.Code, "", -1));
+            var childNode = new HamlNodeCode(new HamlLine("1+1", HamlRuleEnum.Code, "", -1));
 
             node.AppendPostTagNewLine(childNode, -1);
 

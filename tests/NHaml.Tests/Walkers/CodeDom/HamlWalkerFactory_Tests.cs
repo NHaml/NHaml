@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
 using NUnit.Framework;
-using NHaml.Walkers.CodeDom;
-using NHaml.Parser.Rules;
 
 namespace NHaml.Tests.Walkers.CodeDom
 {

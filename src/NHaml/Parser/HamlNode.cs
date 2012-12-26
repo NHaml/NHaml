@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NHaml.IO;
-using NHaml.Parser.Rules;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser.Rules;
 
-namespace NHaml.Parser
+namespace System.Web.NHaml.Parser
 {
     public abstract class HamlNode
     {

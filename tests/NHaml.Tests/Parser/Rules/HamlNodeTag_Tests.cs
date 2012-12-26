@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using NHaml.Parser;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Exceptions;
+using System.Web.NHaml.Parser.Rules;
 using NUnit.Framework;
-using NHaml.IO;
-using NHaml.Parser.Rules;
-using NHaml.Parser.Exceptions;
 
 namespace NHaml.Tests.Parser.Rules
 {

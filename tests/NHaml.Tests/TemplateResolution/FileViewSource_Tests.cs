@@ -1,6 +1,6 @@
-﻿using Moq;
+﻿using System.Web.NHaml.TemplateResolution;
+using Moq;
 using NUnit.Framework;
-using NHaml.TemplateResolution;
 using System;
 using System.IO;
 

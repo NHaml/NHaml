@@ -1,7 +1,8 @@
 ﻿using System;
+using System.Web.NHaml;
+using System.Web.NHaml.TemplateBase;
+using System.Web.NHaml.TemplateResolution;
 using NHaml.Tests.Builders;
-using NHaml.TemplateBase;
-using NHaml.TemplateResolution;
 using NUnit.Framework;
 using Moq;
 

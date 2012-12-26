@@ -1,6 +1,6 @@
-﻿using NHaml.Parser;
+﻿using System.Web.NHaml.Parser;
 
-namespace NHaml.IO
+namespace System.Web.NHaml.IO
 {
     public static class HamlRuleFactory
     {

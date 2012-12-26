@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NHaml.Parser.Exceptions
+﻿namespace System.Web.NHaml.Parser.Exceptions
 {
     [Serializable]
     public class HamlMalformedTagException : Exception

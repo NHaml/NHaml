@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.Compilers;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.TemplateBase;
 using NUnit.Framework;
-using NHaml.TemplateBase;
 
 namespace NHaml.Tests.Compilers
 {
@@ -32,7 +32,7 @@ namespace NHaml.Tests.Compilers
         public void Build_EmptyClassBuilder_InheritsFromCorrectClass()
         {
             var code = BuildEmptyClass();
-            string expectedCode = ": " + typeof(NHaml.TemplateBase.Template).FullName;
+            string expectedCode = ": " + typeof(Template).FullName;
             Assert.That(code, Is.StringContaining(expectedCode));
         }
 

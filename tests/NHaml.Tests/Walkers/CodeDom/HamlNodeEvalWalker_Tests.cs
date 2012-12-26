@@ -1,11 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
+using System.Web.NHaml.Walkers.Exceptions;
+using NUnit.Framework;
 using Moq;
-using NHaml.Compilers;
-using NHaml.Walkers.CodeDom;
-using NHaml.Parser.Rules;
-using NHaml.IO;
-using NHaml.Walkers.Exceptions;
-using NHaml.Parser;
 
 namespace NHaml.Tests.Walkers.CodeDom
 {

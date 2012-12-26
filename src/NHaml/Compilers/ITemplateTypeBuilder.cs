@@ -1,7 +1,6 @@
-using System;
 using System.Collections.Generic;
 
-namespace NHaml.Compilers
+namespace System.Web.NHaml.Compilers
 {
     public interface ITemplateTypeBuilder
     {

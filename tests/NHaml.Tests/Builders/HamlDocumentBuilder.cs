@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.Parser;
+using System.Web.NHaml.Parser;
 
 namespace NHaml.Tests.Builders
 {

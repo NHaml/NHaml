@@ -1,7 +1,6 @@
-using System;
 using System.Linq;
 
-namespace NHaml
+namespace System.Web.NHaml
 {
     public static class ProxyExtracter
     {

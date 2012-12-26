@@ -1,9 +1,9 @@
 ﻿using System.Text;
-using NHaml.IO;
 using System.IO;
-using NHaml.TemplateResolution;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.TemplateResolution;
 
-namespace NHaml.Parser
+namespace System.Web.NHaml.Parser
 {
     public class HamlTreeParser : ITreeParser
     {

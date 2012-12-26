@@ -1,7 +1,6 @@
-﻿using NHaml.TemplateResolution;
-using System;
+﻿using System.Web.NHaml.TemplateResolution;
 
-namespace NHaml
+namespace System.Web.NHaml
 {
     public interface ITemplateFactoryFactory
     {

@@ -1,8 +1,8 @@
-﻿using NHaml.Parser;
-using NHaml.Walkers.CodeDom;
+﻿using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
 using NUnit.Framework;
-using NHaml.IO;
-using NHaml.Parser.Rules;
 using NHaml.Tests.Mocks;
 
 namespace NHaml.Tests.Walkers.CodeDom

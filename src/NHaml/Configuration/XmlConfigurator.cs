@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using NHaml.Parser;
-using NHaml.Walkers.CodeDom;
-using NHaml.IO;
-using NHaml.Compilers;
 using System.Configuration;
-using NHaml.TemplateResolution;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.TemplateResolution;
+using System.Web.NHaml.Walkers.CodeDom;
 
-namespace NHaml.Configuration
+namespace System.Web.NHaml.Configuration
 {
     public static class XmlConfigurator
     {

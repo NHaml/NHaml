@@ -1,10 +1,11 @@
-﻿using NUnit.Framework;
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
+using System.Web.NHaml.Walkers.Exceptions;
+using NUnit.Framework;
 using Moq;
-using NHaml.Compilers;
-using NHaml.Walkers.CodeDom;
-using NHaml.Parser.Rules;
-using NHaml.IO;
-using NHaml.Walkers.Exceptions;
 using System;
 
 namespace NHaml.Tests.Walkers.CodeDom
@@ -33,7 +34,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void Walk_ValidNodeWithNoChildren_AppendsDocType()
         {
-            var node = new HamlNodeDocType(new HamlLine("", NHaml.Parser.HamlRuleEnum.DocType, "", -1));
+            var node = new HamlNodeDocType(new HamlLine("", HamlRuleEnum.DocType, "", -1));
 
             _walker.Walk(node);
 
@@ -43,7 +44,7 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         public void Walk_ValidNodeWithChildren_Throws()
         {
-            var node = new HamlNodeDocType(new HamlLine("", NHaml.Parser.HamlRuleEnum.DocType, "", -1));
+            var node = new HamlNodeDocType(new HamlLine("", HamlRuleEnum.DocType, "", -1));
             node.AddChild(new HamlNodeTextContainer(-1, ""));
 
             Assert.Throws<HamlInvalidChildNodeException>(() => _walker.Walk(node));

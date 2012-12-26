@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace NHaml.Walkers.CodeDom
+﻿namespace System.Web.NHaml.Walkers.CodeDom
 {
     class HamlNodeWalkerException : Exception
     {

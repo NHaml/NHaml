@@ -1,4 +1,4 @@
-﻿namespace NHaml.TemplateBase
+﻿namespace System.Web.NHaml.TemplateBase
 {
     public enum HtmlVersion
     {

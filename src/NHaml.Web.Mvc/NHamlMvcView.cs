@@ -1,8 +1,8 @@
 using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Web.Mvc;
-using NHaml.Crosscutting;
-using NHaml.TemplateBase;
+using System.Web.NHaml.Crosscutting;
+using System.Web.NHaml.TemplateBase;
 
 namespace NHaml.Web.Mvc3
 {

@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
-using NHaml.TemplateBase;
+using System.Web.NHaml.TemplateBase;
 using NUnit.Framework;
 
 namespace NHaml.Tests.TemplateBase

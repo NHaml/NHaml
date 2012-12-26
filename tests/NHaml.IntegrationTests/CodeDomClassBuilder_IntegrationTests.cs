@@ -1,6 +1,7 @@
-﻿using NUnit.Framework;
+﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.TemplateBase;
+using NUnit.Framework;
 using System.Collections.Generic;
-using NHaml.Compilers;
 using System;
 using System.IO;
 
@@ -37,7 +38,7 @@ namespace NHaml.IntegrationTests
             dictionary.Add("Variable", "Result");
 
             var writer = new StringWriter();
-            result.Render(writer, TemplateBase.HtmlVersion.XHtml, dictionary);
+            result.Render(writer, HtmlVersion.XHtml, dictionary);
             Assert.That(writer.ToString(), Is.EqualTo(" name=\"valueResultvalue\""));
         }
 
@@ -51,7 +52,7 @@ namespace NHaml.IntegrationTests
             var result = GenerateTemplateFromSource(templateSource);
 
             var writer = new StringWriter();
-            result.Render(writer, TemplateBase.HtmlVersion.XHtml);
+            result.Render(writer, HtmlVersion.XHtml);
             Assert.That(writer.ToString(), Is.EqualTo(" name=\"value\" name=\"value\""));
         }
 
@@ -66,11 +67,11 @@ namespace NHaml.IntegrationTests
             var result = GenerateTemplateFromSource(templateSource);
 
             var writer = new StringWriter();
-            result.Render(writer, TemplateBase.HtmlVersion.XHtml);
+            result.Render(writer, HtmlVersion.XHtml);
             Assert.That(writer.ToString(), Is.EqualTo("Test\r\nTest\r\nTest"));
         }
 
-        private TemplateBase.Template GenerateTemplateFromSource(string templateSource)
+        private Template GenerateTemplateFromSource(string templateSource)
         {
             var typeBuilder = new CSharp2TemplateTypeBuilder();
             var templateCompiler = new CodeDomTemplateCompiler(typeBuilder);
@@ -82,7 +83,7 @@ namespace NHaml.IntegrationTests
         private IList<Type> GetCompileTypes()
         {
             return new List<Type> {
-                typeof(TemplateBase.Template),
+                typeof(Template),
                 typeof(System.Web.HttpUtility)
             };
         }

@@ -5,10 +5,11 @@ using System.Linq;
 using System.Reflection;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
+using System.Web.NHaml;
+using System.Web.NHaml.Configuration;
+using System.Web.NHaml.TemplateResolution;
 using System.Web.Routing;
 using System.Web.UI;
-using NHaml.Configuration;
-using NHaml.TemplateResolution;
 
 namespace NHaml.Web.Mvc3
 {
@@ -40,7 +41,7 @@ namespace NHaml.Web.Mvc3
                 "System.Web.Mvc",
                 "System.Web.Mvc.Html",
                 "System.Web.Routing",
-                "NHaml.Web.Mvc" };
+                "NHaml.Web.Mvc3" };
         }
 
         private IEnumerable<string> GetDefaultReferences()

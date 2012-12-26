@@ -1,6 +1,6 @@
-﻿using NUnit.Framework;
-using NHaml.IO;
-using NHaml.Parser;
+﻿using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
+using NUnit.Framework;
 
 namespace NHaml.Tests.IO
 {
@@ -18,6 +18,16 @@ namespace NHaml.Tests.IO
         public void Constructor_CalculatesIndentCountCorrectly(string indent, string content, int expectedIndent)
         {
             var line = new HamlLine(content, HamlRuleEnum.PlainText, indent, 0);
+            Assert.AreEqual(expectedIndent, line.IndentCount);
+        }
+
+        [Test]
+        [TestCase(" ", "", HamlRuleEnum.PlainText, 0)]
+        [TestCase(" ", "Test", HamlRuleEnum.PlainText, 1)]
+        [TestCase(" ", "", HamlRuleEnum.Partial, 1)]
+        public void Constructor_MaintainsIndentForNonTextNodes(string indent, string content, HamlRuleEnum rule, int expectedIndent)
+        {
+            var line = new HamlLine(content, rule, indent, 0);
             Assert.AreEqual(expectedIndent, line.IndentCount);
         }
     }

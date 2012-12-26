@@ -1,5 +1,5 @@
-﻿using System.Web.Routing;
-using NHaml.TemplateResolution;
+﻿using System.Web.NHaml.TemplateResolution;
+using System.Web.Routing;
 using System.IO;
 
 namespace NHaml.Web.Mvc3

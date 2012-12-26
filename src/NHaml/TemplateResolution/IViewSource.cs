@@ -1,8 +1,7 @@
 using System.IO;
-using System;
 using System.Text;
 
-namespace NHaml.TemplateResolution
+namespace System.Web.NHaml.TemplateResolution
 {
     /// <summary>
     /// Represents a view template source

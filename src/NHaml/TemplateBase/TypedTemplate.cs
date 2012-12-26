@@ -1,9 +1,6 @@
-using System;
 using System.IO;
-using NHaml.Crosscutting;
-using System.Collections.Generic;
 
-namespace NHaml.TemplateBase
+namespace System.Web.NHaml.TemplateBase
 {
     public class TypedTemplate<T> : Template
     {

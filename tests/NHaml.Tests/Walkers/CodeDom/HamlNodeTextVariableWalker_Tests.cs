@@ -2,13 +2,11 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using NHaml.Walkers.CodeDom;
+using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser.Rules;
+using System.Web.NHaml.Walkers.CodeDom;
 using NUnit.Framework;
-using NHaml.Parser;
-using NHaml.Compilers;
 using Moq;
-using NHaml.Parser.Rules;
-using NHaml.IO;
 using NHaml.Tests.Mocks;
 
 namespace NHaml.Tests.Walkers.CodeDom

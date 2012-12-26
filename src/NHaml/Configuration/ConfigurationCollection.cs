@@ -1,8 +1,7 @@
-using System;
 using System.Collections.Generic;
 using System.Configuration;
 
-namespace NHaml.Configuration
+namespace System.Web.NHaml.Configuration
 {
     // ReSharper disable UnusedMember.Global
     // ReSharper disable ClassNeverInstantiated.Global

@@ -1,8 +1,7 @@
-using System;
-using NHaml.Crosscutting;
-using NHaml.TemplateResolution;
+using System.Web.NHaml.Crosscutting;
+using System.Web.NHaml.TemplateResolution;
 
-namespace NHaml
+namespace System.Web.NHaml
 {
     public class TemplateEngine : ITemplateEngine
     {

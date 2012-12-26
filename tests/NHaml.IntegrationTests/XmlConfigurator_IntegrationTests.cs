@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Web.NHaml.Configuration;
+using System.Web.NHaml.TemplateBase;
+using System.Web.NHaml.TemplateResolution;
 using NHaml.Tests.Builders;
 using NUnit.Framework;
-using NHaml.TemplateBase;
 using System.IO;
-using NHaml.Configuration;
-using NHaml.TemplateResolution;
 
 namespace NHaml.IntegrationTests
 {

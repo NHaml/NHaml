@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Web.NHaml.IO;
+using System.Web.NHaml.Parser;
 using NUnit.Framework;
-using NHaml.IO;
-using NHaml.Parser;
 
 namespace NHaml.Tests.IO
 {
@@ -46,7 +42,7 @@ namespace NHaml.Tests.IO
         [TestCase("#{var}", "#{var}", Description = "Line starting with ruby-style variable")]
         public void Constructor_ExtractsContentCorrectly(string testString, string expectedContent)
         {
-            var rule = HamlRuleFactory.ParseHamlRule(ref testString);
+            HamlRuleFactory.ParseHamlRule(ref testString);
             Assert.AreEqual(expectedContent, testString);
         }
     }

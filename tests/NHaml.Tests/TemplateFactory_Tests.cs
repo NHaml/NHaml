@@ -1,5 +1,6 @@
 ﻿using System;
-using NHaml.TemplateBase;
+using System.Web.NHaml;
+using System.Web.NHaml.TemplateBase;
 using NUnit.Framework;
 
 namespace NHaml.Tests

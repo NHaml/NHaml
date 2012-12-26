@@ -1,7 +1,5 @@
 ﻿using System.Linq;
-using NHaml.IO;
-using NHaml.Parser;
-using NHaml.Parser.Rules;
+using System.Web.NHaml.IO;
 using NUnit.Framework;
 
 namespace NHaml.Tests.IO
