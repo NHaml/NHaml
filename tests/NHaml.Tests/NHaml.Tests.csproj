@@ -116,9 +116,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NHaml\NHaml.csproj">
+    <ProjectReference Include="..\..\src\NHaml\System.Web.NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
+      <Name>System.Web.NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

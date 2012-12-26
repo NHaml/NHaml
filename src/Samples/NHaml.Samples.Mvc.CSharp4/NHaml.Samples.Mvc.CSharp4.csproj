@@ -94,9 +94,9 @@
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
       <Name>NHaml.Web.Mvc3</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\NHaml\NHaml.csproj">
+    <ProjectReference Include="..\..\NHaml\System.Web.NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
-      <Name>NHaml</Name>
+      <Name>System.Web.NHaml</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />

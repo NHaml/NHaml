@@ -15,7 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Samples.Mvc.CSharp4",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.Tests", "tests\NHaml.Tests\NHaml.Tests.csproj", "{92236FD2-3C06-4487-A6ED-E3E89511665B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml", "src\NHaml\NHaml.csproj", "{9B885FC4-45C0-4526-9253-A799238EDD66}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.NHaml", "src\NHaml\System.Web.NHaml.csproj", "{9B885FC4-45C0-4526-9253-A799238EDD66}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.IntegrationTests", "tests\NHaml.IntegrationTests\NHaml.IntegrationTests.csproj", "{67DD89E7-D115-4714-A4F0-27A837D92A56}"
 EndProject
