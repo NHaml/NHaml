@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Configuration;
+using System.Web.Configuration;
 using System.Web.NHaml.Compilers;
 using System.Web.NHaml.IO;
 using System.Web.NHaml.Parser;
@@ -13,7 +14,11 @@ namespace System.Web.NHaml.Configuration
     {
         public static TemplateEngine GetTemplateEngine()
         {
-            return GetTemplateEngine(ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath);
+            string configFile = HttpContext.Current == null
+                                    ? ConfigurationManager.OpenExeConfiguration(ConfigurationUserLevel.None).FilePath
+                                    : WebConfigurationManager.OpenWebConfiguration("~").FilePath;
+
+            return GetTemplateEngine(configFile);
         }
 
         public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)

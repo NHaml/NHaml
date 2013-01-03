@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.IO;
 using System.Linq;
-using System.Text;
 using System.Web.NHaml.Configuration;
 using NUnit.Framework;
-using System.IO;
 
 namespace NHaml.Tests.Configuration
 {

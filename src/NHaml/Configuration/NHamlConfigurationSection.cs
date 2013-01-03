@@ -8,21 +8,20 @@ namespace System.Web.NHaml.Configuration
 {
 	public class NHamlConfigurationSection : ConfigurationSection
 	{
-		public static NHamlConfigurationSection GetConfiguration(string configFile)
+		public static NHamlConfigurationSection GetConfiguration()
 		{
+            return ConfigurationManager.GetSection("NHaml") as NHamlConfigurationSection
+                ?? new NHamlConfigurationSection();
+        }
+
+        public static NHamlConfigurationSection GetConfiguration(string configFile)
+        {
             if (!File.Exists(configFile))
                 throw new FileNotFoundException("Unable to find configuration file " + configFile, configFile);
 
             var map = new ConfigurationFileMap(configFile);
             var config = ConfigurationManager.OpenMappedMachineConfiguration(map);
             var result = (NHamlConfigurationSection)config.GetSection("NHaml");
-
-            return result ?? new NHamlConfigurationSection();
-        }
-
-        internal static NHamlConfigurationSection GetConfiguration()
-        {
-            var result = ConfigurationManager.GetSection("system.serviceModel/client") as NHamlConfigurationSection;
             return result ?? new NHamlConfigurationSection();
         }
 

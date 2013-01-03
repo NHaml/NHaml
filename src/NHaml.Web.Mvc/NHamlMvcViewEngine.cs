@@ -27,10 +27,8 @@ namespace NHaml.Web.Mvc3
         {
             InitializeBaseViewLocations();
             _contentProvider = new MapPathTemplateContentProvider();
-            _templateEngine = XmlConfigurator.GetTemplateEngine(
-                _contentProvider,
-                GetDefaultUsings(),
-                GetDefaultReferences());
+            _templateEngine = XmlConfigurator.GetTemplateEngine();
+            _templateEngine.TemplateContentProvider = _contentProvider;
             DefaultMaster = "Application";
         }
 

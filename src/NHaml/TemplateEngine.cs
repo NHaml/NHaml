@@ -14,30 +14,6 @@ namespace System.Web.NHaml
             _templateFactoryFactory = templateFactoryFactory;
         }
 
-        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, Type templateBaseType)
-        //{
-        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
-
-        //    var viewSourceCollection = new ViewSourceCollection { contentProvider.GetViewSource(templatePath) };
-        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
-        //}
-
-        //public TemplateFactory GetCompiledTemplate(ITemplateContentProvider contentProvider, string templatePath, string masterPath, Type templateBaseType)
-        //{
-        //    Invariant.ArgumentNotNull(contentProvider, "contentProvider");
-
-        //    var viewSourceCollection = GetViewSourceCollection(contentProvider, templatePath, masterPath);
-        //    return GetCompiledTemplate(viewSourceCollection, templateBaseType);
-        //}
-
-        private static ViewSourceCollection GetViewSourceCollection(ITemplateContentProvider contentProvider, string templatePath, string masterPath)
-        {
-            return new ViewSourceCollection {
-                contentProvider.GetViewSource(masterPath),
-                contentProvider.GetViewSource(templatePath)
-            };
-        }
-
         public TemplateFactory GetCompiledTemplate(ViewSource viewSource, Type templateBaseType)
         {
             return GetCompiledTemplate(new ViewSourceCollection { viewSource }, templateBaseType);

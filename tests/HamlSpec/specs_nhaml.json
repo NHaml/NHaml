@@ -10,6 +10,14 @@
       "html" : "1"
     },
 
+    "a null constant" : {
+      "haml" : "=ViewData[\"nullVar\"]",
+      "html" : "",
+	  "locals" : {
+        "nullVar" : null
+      }
+    },
+
     "an integer constant inline within a tag" : {
       "haml" : "%tr = 1",
       "html" : "<tr>1</tr>"
