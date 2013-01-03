@@ -57,6 +57,7 @@
   <ItemGroup>
     <Compile Include="CodeDomClassBuilder_IntegrationTests.cs" />
     <Compile Include="CompiledTemplate_IntegrationTests.cs" />
+    <Compile Include="CustomBaseClass_IntegrationTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="XmlConfigurator_IntegrationTests.cs" />
   </ItemGroup>
