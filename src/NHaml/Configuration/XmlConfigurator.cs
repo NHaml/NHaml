@@ -21,10 +21,11 @@ namespace System.Web.NHaml.Configuration
             return GetTemplateEngine(configFile);
         }
 
-        public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider, IEnumerable<string> imports, IEnumerable<string> referencedAssemblies)
+        public static TemplateEngine GetTemplateEngine(ITemplateContentProvider templateContentProvider,
+            IEnumerable<string> defaultImports, IEnumerable<string> defaultReferences)
         {
             var nhamlConfiguration = NHamlConfigurationSection.GetConfiguration();
-            return GetTemplateEngine(templateContentProvider, nhamlConfiguration, imports, referencedAssemblies);
+            return GetTemplateEngine(templateContentProvider, nhamlConfiguration, defaultImports, defaultReferences);
         }
         
         public static TemplateEngine GetTemplateEngine(string configFile)

@@ -25,7 +25,7 @@ namespace System.Web.NHaml.Configuration
             return result ?? new NHamlConfigurationSection();
         }
 
-        const string ReferencedAssembliesElement = "ReferencedAssemblies";
+        const string ReferencedAssembliesElement = "assemblies";
         [ConfigurationProperty(ReferencedAssembliesElement)]
         public ConfigurationCollection<AssemblyConfigurationElement> ReferencedAssemblies
         {
@@ -58,7 +58,7 @@ namespace System.Web.NHaml.Configuration
             }
         }
 
-        const string ImportsElement = "Imports";
+        const string ImportsElement = "imports";
         [ConfigurationProperty(ImportsElement)]
         private ConfigurationCollection<ImportConfigurationElement> Imports
         {

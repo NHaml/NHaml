@@ -9,7 +9,7 @@ namespace System.Web.NHaml.Configuration
             get { return Name; }
         }
 
-        private const string NamespaceElement = "namespace";
+        private const string NamespaceElement = "import";
         [ConfigurationProperty(NamespaceElement, IsRequired = true, IsKey = true)]
         public string Name
         {
