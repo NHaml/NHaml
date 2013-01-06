@@ -17,7 +17,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.NHaml", "src\NHa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NHaml.IntegrationTests", "tests\NHaml.IntegrationTests\NHaml.IntegrationTests.csproj", "{67DD89E7-D115-4714-A4F0-27A837D92A56}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.NHaml.Mvc3.Tests", "System.Web.NHaml.Mvc3.Tests\System.Web.NHaml.Mvc3.Tests.csproj", "{477CC932-ACC5-4F6A-93D1-F44BE2A11D2C}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "System.Web.NHaml.Mvc3.Tests", "tests\System.Web.NHaml.Mvc3.Tests\System.Web.NHaml.Mvc3.Tests.csproj", "{477CC932-ACC5-4F6A-93D1-F44BE2A11D2C}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
