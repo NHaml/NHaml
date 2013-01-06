@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using System.Web.NHaml;
 using System.Web.NHaml.Configuration;
+using System.Web.NHaml.Mvc3;
 using System.Web.NHaml.TemplateResolution;
 using System.Web.Routing;
 using System.Web.UI;
@@ -111,7 +112,7 @@ namespace NHaml.Web.Mvc3
             _isMasterConfigured = false;
             _contentProvider.SetRequestContext(controllerContext.RequestContext);
             var controllerName = controllerContext.RouteData.GetRequiredString("controller");
-            var result = base.FindView(controllerContext, viewName, controllerName, useCache);
+            var result = BaseFindView(controllerContext, viewName, useCache, controllerName);
 
             if (result.View == null)
             {
@@ -119,6 +120,12 @@ namespace NHaml.Web.Mvc3
             }
 
             return result.View == null ? base.FindView(controllerContext, viewName, null, useCache) : result;
+        }
+
+        protected ViewEngineResult BaseFindView(ControllerContext controllerContext, string viewName, bool useCache,
+                                                     string controllerName)
+        {
+            return base.FindView(controllerContext, viewName, controllerName, useCache);
         }
 
         protected override IView CreatePartialView(ControllerContext controllerContext, string partialPath)
@@ -152,7 +159,9 @@ namespace NHaml.Web.Mvc3
             //    if (string.IsNullOrEmpty(masterPath))
             //    {
             var viewSource = _contentProvider.GetViewSource(viewPath);
-            var masterSource = _contentProvider.GetViewSource(masterPath);
+            var masterSource = _isMasterConfigured
+                ? _contentProvider.GetViewSource(masterPath)
+                : null;
             var viewSourceCollection = new ViewSourceCollection { viewSource, masterSource };
             return (IView)_templateEngine.GetCompiledTemplate(viewSourceCollection, GetViewBaseType(controllerContext)).
                     CreateTemplate();

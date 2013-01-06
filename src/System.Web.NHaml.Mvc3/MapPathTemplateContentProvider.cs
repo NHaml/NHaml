@@ -2,7 +2,7 @@
 using System.Web.Routing;
 using System.IO;
 
-namespace NHaml.Web.Mvc3
+namespace System.Web.NHaml.Mvc3
 {
     public class MapPathTemplateContentProvider : FileTemplateContentProvider
     {

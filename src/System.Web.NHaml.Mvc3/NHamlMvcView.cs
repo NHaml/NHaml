@@ -75,7 +75,7 @@ namespace NHaml.Web.Mvc3
 
         private void SetViewData( ViewDataDictionary viewData )
         {
-            if( typeof( ViewDataDictionary<TModel> ).IsAssignableFrom( viewData.GetType() ) )
+            if (typeof(ViewDataDictionary<TModel>).IsAssignableFrom(viewData.GetType()))
             {
                 ViewData = (ViewDataDictionary<TModel>)viewData;
             }

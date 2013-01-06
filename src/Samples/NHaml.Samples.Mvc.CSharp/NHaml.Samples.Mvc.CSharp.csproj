@@ -107,15 +107,14 @@
     <None Include="Views\Products\List.haml" />
     <None Include="Views\Products\New.haml" />
     <None Include="Views\Products\Edit.haml" />
-    <None Include="Views\Products\_Product.haml" />
     <None Include="Views\Shared\Application.haml" />
     <None Include="Views\Shared\Products.haml" />
     <None Include="Views\Shared\_Button.haml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\NHaml.Web.Mvc\NHaml.Web.Mvc3.csproj">
+    <ProjectReference Include="..\..\System.Web.NHaml.Mvc3\System.Web.NHaml.Mvc3.csproj">
       <Project>{78CA518B-F6A6-4E12-A3E5-6CBBB1A7096D}</Project>
-      <Name>NHaml.Web.Mvc3</Name>
+      <Name>System.Web.NHaml.Mvc3</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
