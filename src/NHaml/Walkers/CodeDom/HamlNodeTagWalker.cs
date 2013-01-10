@@ -44,25 +44,30 @@ namespace System.Web.NHaml.Walkers.CodeDom
             AppendClassAttribute(classValues);
         }
 
-        private static IList<string> GetClassValues(HamlNodeTag nodeTag)
+        private static IList<HamlNodeTextContainer> GetClassValues(HamlNodeTag nodeTag)
         {
             var classValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
                                from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
                                where attr.Name == "class"
                                from attrFragment in attr.Children
-                               select attrFragment.Content).ToList();
+                               select (HamlNodeTextContainer)attrFragment).ToList();
 
-            classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>()
-                                     .Select(x => " " + x.Content));
+            classValues.AddRange(nodeTag.Children.OfType<HamlNodeTagClass>().Select(x => new HamlNodeTextContainer(x.SourceFileLineNum, x.Content)));
             return classValues;
         }
 
-        private void AppendClassAttribute(IList<string> classValues)
+        private void AppendClassAttribute(IList<HamlNodeTextContainer> classTextContainers)
         {
-            if (!classValues.Any()) return;
+            if (!classTextContainers.Any()) return;
 
-            classValues[0] = classValues[0].Trim();
-            ClassBuilder.AppendAttributeNameValuePair("class", classValues, '\'');
+            var classFragments = new List<HamlNode>();
+            for (int index = 0; index < classTextContainers.Count; index++)
+            {
+                if (index > 0) classFragments.Add(new HamlNodeTextLiteral(-1, " "));
+                classFragments.AddRange(classTextContainers[index].Children);
+            }
+
+            ClassBuilder.AppendAttributeNameValuePair("class", classFragments, '\'');
         }
 
         private void MakeIdAttribute(HamlNodeTag nodeTag)
@@ -71,26 +76,31 @@ namespace System.Web.NHaml.Walkers.CodeDom
             AppendIdAttribute(idValues);
         }
 
-        private static IList<string> GetIdValues(HamlNodeTag nodeTag)
+        private static IList<HamlNodeTextContainer> GetIdValues(HamlNodeTag nodeTag)
         {
             var idValues = (from collection in nodeTag.Children.OfType<HamlNodeHtmlAttributeCollection>()
                             from attr in collection.Children.OfType<HamlNodeHtmlAttribute>()
                             where attr.Name == "id"
                             from attrFragment in attr.Children
-                            select attrFragment.Content).ToList();
+                            select (HamlNodeTextContainer)attrFragment).ToList();
 
-            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof (HamlNodeTagId));
-            if (idTag != null) idValues.Insert(0, idTag.Content);
+            var idTag = nodeTag.Children.LastOrDefault(x => x.GetType() == typeof(HamlNodeTagId));
+            if (idTag != null) idValues.Insert(0, new HamlNodeTextContainer(idTag.SourceFileLineNum, idTag.Content));
             return idValues;
         }
 
-        private void AppendIdAttribute(IList<string> idValues)
+        private void AppendIdAttribute(IList<HamlNodeTextContainer> idValues)
         {
             if (!idValues.Any()) return;
 
-            for (int c = idValues.Count - 1; c > 0; c--)
-                idValues.Insert(c, "_");
-            ClassBuilder.AppendAttributeNameValuePair("id", idValues, '\'');
+            var idFragments = new List<HamlNode>();
+            for (int index = 0; index < idValues.Count; index++)
+            {
+                if (index > 0) idFragments.Add(new HamlNodeTextLiteral(-1, "_"));
+                idFragments.AddRange(idValues[index].Children);
+            }
+
+            ClassBuilder.AppendAttributeNameValuePair("id", idFragments, '\'');
         }
 
         private void WalkHtmlStyleAttributes(HamlNodeTag nodeTag)

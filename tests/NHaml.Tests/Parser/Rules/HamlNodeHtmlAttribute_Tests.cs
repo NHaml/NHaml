@@ -33,17 +33,20 @@ namespace NHaml.Tests.Parser.Rules
         }
 
         [Test]
-        public void Constructor_NormalUse_RemovesQuoteMarks()
+        [TestCase("a='b'", "b", typeof(HamlNodeTextLiteral))]
+        [TestCase("a=b", "#{b}", typeof(HamlNodeTextVariable))]
+        public void Constructor_ValueWithAndWithoutQuotes_GeneratesCorrectContent(
+            string nodeText, string expectedContent, Type expectedType)
         {
-            var node = new HamlNodeHtmlAttribute(0, "a='b'");
-            Assert.That(node.Children.First().Children.First(), Is.InstanceOf<HamlNodeTextLiteral>());
-            Assert.That(node.Children.First().Children.First().Content, Is.EqualTo("b"));
+            var node = new HamlNodeHtmlAttribute(0, nodeText);
+            Assert.That(node.Children.First().Children.First(), Is.InstanceOf(expectedType));
+            Assert.That(node.Children.First().Children.First().Content, Is.EqualTo(expectedContent));
         }
 
         [Test]
         public void Constructor_ValueWithoutQuotes_ConvertsValueToVariable()
         {
-            var node = new HamlNodeHtmlAttribute(0, "a=b");
+            var node = new HamlNodeHtmlAttribute(0, "a=#{b}");
             Assert.That(node.Children.First().Children.First(), Is.InstanceOf<HamlNodeTextVariable>());
             Assert.That(node.Children.First().Children.First().Content, Is.EqualTo("#{b}"));
         }

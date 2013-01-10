@@ -16,10 +16,11 @@ namespace NHaml.Tests.Walkers.CodeDom
         [Test]
         [TestCase("()", "")]
         [TestCase("(a='b')", " a=\'b\'")]
+        [TestCase("(a=#{test})", " a=\'test\'")]
         [TestCase("(a='b' c='d')", " a=\'b\' c=\'d\'")]
         [TestCase("(class='class1')", "")]
         [TestCase("(id='id1')", "")]
-        public void Walk_EmptyAttributeCollection_WritesCorrectAttributes(string hamlLine, string expectedTag)
+        public void Walk_VaryingAttributeCollections_WritesCorrectAttributes(string hamlLine, string expectedTag)
         {
             var node = new HamlNodeHtmlAttributeCollection(0, hamlLine);
 

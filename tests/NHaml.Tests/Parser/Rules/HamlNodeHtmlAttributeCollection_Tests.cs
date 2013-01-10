@@ -31,5 +31,16 @@ namespace NHaml.Tests.Parser.Rules
 
             Assert.That(tag.Children.First().Content, Is.EqualTo(expectedFirstAttribute));
         }
+
+        [TestCase("(attrName=#{attrValue})", "attrName", "#{attrValue}")]
+        public void Constructor_MixedBrackets_ParsesCorrectly(
+            string attributeString, string expectedName, string expectedValue)
+        {
+            var tag = new HamlNodeHtmlAttributeCollection(0, attributeString);
+
+            var firstChild = (HamlNodeHtmlAttribute)tag.Children.First();
+            Assert.That(firstChild.Name, Is.EqualTo(expectedName));
+            Assert.That(firstChild.Children.First().Content, Is.EqualTo(expectedValue));
+        }
     }
 }

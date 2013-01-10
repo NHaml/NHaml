@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Web.NHaml.Compilers;
+﻿using System.Web.NHaml.Compilers;
 using System.Web.NHaml.Parser.Rules;
 using System.Web.NHaml.Walkers.CodeDom;
 using NUnit.Framework;
 using Moq;
-using NHaml.Tests.Mocks;
 
 namespace NHaml.Tests.Walkers.CodeDom
 {
@@ -23,13 +18,26 @@ namespace NHaml.Tests.Walkers.CodeDom
         }
 
         [Test]
-        [TestCase("{#Test}", "Test")]
-        public void Walk_ValidVariableName_CallsAppendVariableCorrectly(string variableName, string expectedCall)
+        [TestCase("#{Test}", "Test")]
+        public void Walk_SimpleVariableName_CallsAppendVariableCorrectly(string variableName, string expectedCall)
         {
-            var node = new HamlNodeTextVariable(variableName, 0);
+            var node = new HamlNodeTextVariable(0, variableName);
             var walker = new HamlNodeTextVariableWalker(_mockClassBuilder.Object, new HamlHtmlOptions());
             walker.Walk(node);
             _mockClassBuilder.Verify(x => x.AppendVariable(expectedCall));
+        }
+
+        [Test]
+        [TestCase("#{Model.Blah}", "Model.Blah")]
+        [TestCase("#{Model[0]}", "Model[0]")]
+        [TestCase("#{Model[0].Blah}", "Model[0].Blah")]
+        [TestCase("#{new Object()}", "new Object()")]
+        public void Walk_ComplexPropertyName_CallsCodeSnippetToStringCorrectly(string variableName, string expectedCodeSnippet)
+        {
+            var node = new HamlNodeTextVariable(0, variableName);
+            var walker = new HamlNodeTextVariableWalker(_mockClassBuilder.Object, new HamlHtmlOptions());
+            walker.Walk(node);
+            _mockClassBuilder.Verify(x => x.AppendCodeToString(expectedCodeSnippet));
         }
     }
 }

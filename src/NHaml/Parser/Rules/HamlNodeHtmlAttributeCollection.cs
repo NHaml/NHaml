@@ -24,18 +24,19 @@ namespace System.Web.NHaml.Parser.Rules
         private void ParseChildren(string attributeCollection)
         {
             int index = 1;
+            char closingBracketChar = attributeCollection[0] == '{' ? '}' : ')';
             while (index < attributeCollection.Length)
             {
-                string nameValuePair = GetNextAttributeToken(attributeCollection, ref index);
+                string nameValuePair = GetNextAttributeToken(attributeCollection, closingBracketChar, ref index);
                 if (!string.IsNullOrEmpty(nameValuePair))
                     AddChild(new HamlNodeHtmlAttribute(SourceFileLineNum, nameValuePair));
                 index++;
             }
         }
 
-        private static string GetNextAttributeToken(string attributeCollection, ref int index)
+        private static string GetNextAttributeToken(string attributeCollection, char closingBracketChar, ref int index)
         {
-            var terminatingChars = new[] { ' ', '\t', ')', '}' };
+            var terminatingChars = new[] { ' ', '\t', closingBracketChar };
             string nameValuePair = HtmlStringHelper.ExtractTokenFromTagString(attributeCollection, ref index,
                 terminatingChars);
             if (terminatingChars.Contains(nameValuePair[nameValuePair.Length - 1]))

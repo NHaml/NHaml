@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
 using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Linq;
+using System.Web.NHaml.Parser.Rules;
 
 namespace NHaml.Tests.Mocks
 {
     public class ClassBuilderMock : ITemplateClassBuilder
     {
-        private StringBuilder _output = new StringBuilder();
+        private readonly StringBuilder _output = new StringBuilder();
 
         public void Append(string content)
         {
@@ -62,9 +64,9 @@ namespace NHaml.Tests.Mocks
         }
 
 
-        public void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteChar)
+        public void AppendAttributeNameValuePair(string name, IEnumerable<HamlNode> valueFragments, char quoteChar)
         {
-            string value = string.Join("", valueFragments);
+            string value = string.Join("", valueFragments.Select(x => x is HamlNodeTextVariable ? ((HamlNodeTextVariable)x).VariableName : x.Content));
             if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value) || value.ToLower() == "false")
                 return;
             else if (value.ToLower() == "true" || string.IsNullOrEmpty(value))

@@ -48,14 +48,14 @@ namespace System.Web.NHaml.Parser.Rules
                     {
                         index++;
                         return (result.Length > 3)
-                            ? new HamlNodeTextVariable(result, SourceFileLineNum)
-                            : (HamlNode)new HamlNodeTextLiteral(result, SourceFileLineNum);
+                            ? new HamlNodeTextVariable(SourceFileLineNum, result)
+                            : (HamlNode)new HamlNodeTextLiteral(SourceFileLineNum, result);
                     }
                 }
                 else if (IsTagToken(content, index))
                 {
                     if (isEscaped == false)
-                        return new HamlNodeTextLiteral(result, SourceFileLineNum);
+                        return new HamlNodeTextLiteral(SourceFileLineNum, result);
                     result = RemoveEscapeCharacter(result) + content[index];
                 }
                 else
@@ -72,7 +72,7 @@ namespace System.Web.NHaml.Parser.Rules
             if (isInTag)
                 throw new HamlMalformedVariableException(result, SourceFileLineNum);
 
-            return new HamlNodeTextLiteral(result, SourceFileLineNum);
+            return new HamlNodeTextLiteral(SourceFileLineNum, result);
         }
 
         private static string RemoveEscapeCharacter(string result)

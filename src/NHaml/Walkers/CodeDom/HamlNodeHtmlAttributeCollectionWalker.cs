@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System.Collections.Generic;
+using System.Linq;
 using System.Web.NHaml.Compilers;
 using System.Web.NHaml.Parser;
 using System.Web.NHaml.Parser.Exceptions;
@@ -33,7 +34,10 @@ namespace System.Web.NHaml.Walkers.CodeDom
                 throw new HamlMalformedTagException("Unexpected " + childNode.GetType().FullName + " tag in AttributeCollection node",
                     childNode.SourceFileLineNum);
 
-            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, attributeNode.Children.Select(x => x.Content), attributeNode.QuoteChar);
+            var valueFragments = attributeNode.Children.Any(ch => ch is HamlNodeTextContainer)
+                                     ? attributeNode.Children.First().Children
+                                     : attributeNode.Children;
+            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, valueFragments, attributeNode.QuoteChar);
         }
     }
 }

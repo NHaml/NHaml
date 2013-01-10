@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
 using System.Web.NHaml.TemplateBase;
 using NUnit.Framework;
 
@@ -104,23 +103,42 @@ namespace NHaml.Tests.Compilers
         }
 
         [Test]
-        public void AppendAttributeNameValuePair_AppendsOutputCallingTemplateAppendAttributeNameValuePair()
+        public void AppendAttributeNameValuePair_TextLiteralHamlNode_AppendsRenderAttributeNameValuePair()
         {
             var classBuilder = new CodeDomClassBuilder();
-            classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value" }, '\"');
+            var valueNodes = new List<HamlNode> {new HamlNodeTextLiteral(-1, "value")};
+            classBuilder.AppendAttributeNameValuePair("Name", valueNodes, '\"');
             string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));
             Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value_0.ToString(), '\\\"')"));
         }
 
         [Test]
-        public void AppendAttributeNameValuePair_BuildsValueCorrectly()
+        public void AppendAttributeNameValuePair_LiteralAndVariableHamlNode_BuildsValueCorrectly()
         {
             var classBuilder = new CodeDomClassBuilder();
-            classBuilder.AppendAttributeNameValuePair("Name", new List<string> { "value1", "#{variable}" }, '\"');
+            var valueFragments = new List<HamlNode>
+                                     {
+                                         new HamlNodeTextLiteral(-1, "value1"),
+                                         new HamlNodeTextVariable(-1, "#{variable}")
+                                     };
+            classBuilder.AppendAttributeNameValuePair("Name", valueFragments, '\"');
             string result = classBuilder.Build(ClassName);
-            Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));
             Assert.That(result, Is.StringContaining(".Append(\"value1\");"));
             Assert.That(result, Is.StringContaining(".Append(base.RenderValueOrKeyAsString(\"variable\"));"));
+        }
+
+        [Test]
+        public void AppendAttributeNameValuePair_ObjectReferenceHamlNode_BuildsValueCorrectly()
+        {
+            var classBuilder = new CodeDomClassBuilder();
+            var valueFragments = new List<HamlNode>
+                                     {
+                                         new HamlNodeTextVariable(-1, "#{Model.Property}")
+                                     };
+            classBuilder.AppendAttributeNameValuePair("Name", valueFragments, '\"');
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining(".Append(Convert.ToString(Model.Property));"));
         }
 
         [Test]

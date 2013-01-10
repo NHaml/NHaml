@@ -2,7 +2,7 @@
 {
     public class HamlNodeTextLiteral : HamlNode
     {
-        public HamlNodeTextLiteral(string content, int sourceLineNum)
+        public HamlNodeTextLiteral(int sourceLineNum, string content)
             : base(sourceLineNum, content)
         { }
 

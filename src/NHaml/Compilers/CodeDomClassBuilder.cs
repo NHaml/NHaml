@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
 using Microsoft.CSharp;
 
 namespace System.Web.NHaml.Compilers
@@ -152,7 +154,7 @@ namespace System.Web.NHaml.Compilers
         //    Depth--;
         //}
 
-        public void AppendAttributeNameValuePair(string name, IEnumerable<string> valueFragments, char quoteToUse)
+        public void AppendAttributeNameValuePair(string name, IEnumerable<HamlNode> valueFragments, char quoteToUse)
         {
             string variableName = "value_" + RenderMethod.Statements.Count;
             RenderMethod.AddStatement(
@@ -162,15 +164,30 @@ namespace System.Web.NHaml.Compilers
             foreach (var fragment in valueFragments)
             {
                 CodeExpression parameter;
-                if (fragment.StartsWith("#{") && fragment.EndsWith("}"))
+                if (fragment is HamlNodeTextVariable)
                 {
+                    string nodeVariableName = ((HamlNodeTextVariable) fragment).VariableName;
+                    if (nodeVariableName.All(ch => Char.IsLetterOrDigit(ch)))
                     parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("base.RenderValueOrKeyAsString")
-                        .WithInvokePrimitiveParameter(fragment.Substring(2, fragment.Length-3));
+                        .WithInvokePrimitiveParameter(nodeVariableName);
+                    else
+                    {
+                        parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "Convert")
+                            .WithCodeSnippetParameter(nodeVariableName);
+                    }
                 }
                 else
                 {
-                    parameter = new CodePrimitiveExpression { Value = fragment };
+                    parameter = new CodePrimitiveExpression { Value = fragment.Content };
                 }
+
+            //var writeInvoke = CodeDomFluentBuilder
+            //    .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+            //    .WithInvokeCodeSnippetToStringParameter(code);
+
+            //RenderMethod.AddExpressionStatement(writeInvoke);
+        
+
 
                 RenderMethod.AddExpressionStatement(
                     CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Append", variableName)

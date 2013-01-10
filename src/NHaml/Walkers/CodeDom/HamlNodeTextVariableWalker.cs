@@ -14,11 +14,14 @@ namespace System.Web.NHaml.Walkers.CodeDom
         {
             var nodeText = node as HamlNodeTextVariable;
             if (nodeText == null)
-                throw new System.InvalidCastException("HamlNodeTextVariableWalker requires that HamlNode object be of type HamlNodeTextVariable.");
+                throw new InvalidCastException("HamlNodeTextVariableWalker requires that HamlNode object be of type HamlNodeTextVariable.");
 
-            string variableName = node.Content.Substring(2, node.Content.Length-3);
+            string variableName = nodeText.VariableName;
 
-            ClassBuilder.AppendVariable(variableName);
+            if (nodeText.IsVariableViewDataKey())
+                ClassBuilder.AppendVariable(variableName);
+            else
+                ClassBuilder.AppendCodeToString(variableName);
         }
     }
 }

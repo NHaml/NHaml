@@ -1,4 +1,6 @@
 ﻿using System.Web.NHaml.Compilers;
+using System.Web.NHaml.Parser;
+using System.Web.NHaml.Parser.Rules;
 using System.Web.NHaml.TemplateBase;
 using NUnit.Framework;
 using System.Collections.Generic;
@@ -29,13 +31,21 @@ namespace NHaml.IntegrationTests
         public void AppendAttributeNameValuePair_XHtml4_CompilesValidTemplate()
         {
             var classBuilder = new CodeDomClassBuilder();
+            var valueFragments = new List<HamlNode>
+                                     {
+                                         new HamlNodeTextLiteral(-1, "value"),
+                                         new HamlNodeTextVariable(-1, "#{Variable}"),
+                                         new HamlNodeTextLiteral(-1, "value")
+                                     };
             classBuilder.AppendAttributeNameValuePair("name",
-                new List<string> { "value", "#{Variable}", "value" }, '\"');
+                valueFragments, '\"');
             string templateSource = classBuilder.Build(ClassName);
             var result = GenerateTemplateFromSource(templateSource);
 
-            var dictionary = new Dictionary<string, object>();
-            dictionary.Add("Variable", "Result");
+            var dictionary = new Dictionary<string, object>
+                                 {
+                                     {"Variable", "Result"}
+                                 };
 
             var writer = new StringWriter();
             result.Render(writer, HtmlVersion.XHtml, dictionary);
@@ -46,8 +56,8 @@ namespace NHaml.IntegrationTests
         public void AppendMultipleAttributeNameValuePairs_XHtml4_CompilesValidTemplate()
         {
             var classBuilder = new CodeDomClassBuilder();
-            classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
-            classBuilder.AppendAttributeNameValuePair("name", new List<string> { "value" }, '\"');
+            classBuilder.AppendAttributeNameValuePair("name", new List<HamlNode> { new HamlNodeTextLiteral(-1, "value") }, '\"');
+            classBuilder.AppendAttributeNameValuePair("name", new List<HamlNode> { new HamlNodeTextLiteral(-1, "value") }, '\"');
             string templateSource = classBuilder.Build(ClassName);
             var result = GenerateTemplateFromSource(templateSource);
 

@@ -52,6 +52,26 @@ namespace NHaml.IntegrationTests
         }
 
         [Test]
+        public void TemplateWithStringModelProperty_ModelPropertyReferencedAsExpression_GeneratesCorrectOutput()
+        {
+            // Arrange
+            const string templateContent = "This is a test of a #{Model.StringValue}\n"
+                                           + "%a(href=#{Model.StringValue})";
+            var viewSource = ViewSourceBuilder.Create(templateContent);
+            var templateFactory = _templateEngine.GetCompiledTemplate(viewSource, typeof(CustomTemplateBase));
+
+            // Act
+            var template = (CustomTemplateBase)templateFactory.CreateTemplate();
+            template.Model.StringValue = "Model String Property";
+            var textWriter = new StringWriter();
+            template.Render(textWriter);
+
+            // Assert
+            string expected = string.Format("This is a test of a {0}\n<a href='{0}'></a>", template.Model.StringValue);
+            Assert.AreEqual(expected, textWriter.ToString());
+        }
+
+        [Test]
         public void TemplateWithDynamicModel_RenderNullString_ThrowsArgumentException()
         {
             // Arrange
