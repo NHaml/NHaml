@@ -4,26 +4,44 @@ NHAML C# CODING STANDARDS
 
 Indentation for files:
 
-Tab Size:      2 
-Indent Size:   2
+Tab Size:      4
+Indent Size:   4
 Insert Spaces: true 
  
 
 # BRACES
 
-All code blocks should be surrounded by braces. E.g:
+Conditionals should not require braces, as this implies an opportunity to extract a separate method. E.g:
 
-if (foo)
-{
-  DoOneThing();
-}
+	if (foo)
+	  SumItems();
+
+	private void SumItems()
+	{
+	  AddFirstItem();
+	  AddSecondItem();
+	}
 
 Not:
 
-if (foo) DoOneThing();
+	if (foo)
+	{
+	  AddFirstItem();
+	  AddSecondItem();
+	}
 
-This technique makes the code more readable and easier to maintain.
+This technique makes the code more readable, and reduces the chance of creating "God methods".
 
+
+# COMMENTS
+
+Code should not require comments to explain its function, if you are writing code that requires comments then it implies you are either:
+
+a) Putting too much functionality into one method - extract a well-named function to replace the comment
+b) Have inadequately descriptive variable names (e.g. "pointer" instead of "currentNodeIndex")
+c) Have no tests consuming the code that explains its functionality.
+
+The only exception where a comment is encouraged is in code that must be non-obvious for performance reasons where there is a proven need for this optimisation.
 
 # CONSTANTS
 

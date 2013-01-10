@@ -1,8 +1,8 @@
 !!!
-%html{xmlns="http://www.w3.org/1999/xhtml"}
+%html(xmlns="http://www.w3.org/1999/xhtml")
   %head
     %title NHaml C# Sample MVC Application
-    %link{href="../../Content/Site.css" rel="stylesheet" type="text/css"}
+    %link(href="../../Content/Site.css" rel="stylesheet" type="text/css")
   %body
     #inner
       #header
@@ -10,7 +10,7 @@
       #menu
         %ul
           %li
-            %a{href="/"} Home
+            %a(href="/") Home
           %li
             = Html.ActionLink("About Us", "About", "Home")
           %li
