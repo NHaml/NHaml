@@ -1,76 +1,81 @@
 ﻿using System.Configuration;
 using System.Web.Mvc;
 using NHaml.Samples.Mvc.CSharp.Models;
+using System.Collections.Generic;
 
 namespace NHaml.Samples.Mvc.CSharp.Controllers
 {
     public class ProductsController : Controller
     {
-        private readonly NorthwindDataContext northwind = new NorthwindDataContext(
-            ConfigurationManager.ConnectionStrings["NorthwindConnectionString"].ConnectionString );
-
-        //
-        // Products/Category/1
-
         public ActionResult Category( int id )
         {
-            var category = northwind.GetCategoryById( id );
+            var category = GetCategory();
 
             return View( "List", category );
         }
 
-        //
-        // Products/New
-
-        public ActionResult New()
+        private Category GetCategory()
         {
-            var viewData = new ProductsNewViewData
-                               {
-                                   Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName" ),
-                                   Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName" )
-                               };
-
-            return View( "New", viewData );
+            return new Category
+            {
+                CategoryName = "CategoryName",
+                Description = "Category description",
+                Products = new List<Product>()
+            };
         }
 
-        //
-        // Products/Create
+        ////
+        //// Products/New
 
-        public ActionResult Create()
-        {
-            var product = new Product();
-            UpdateModel( product, Request.Form.AllKeys );
+        //public ActionResult New()
+        //{
+        //    var viewData = new ProductsNewViewData
+        //                       {
+        //                           Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName" ),
+        //                           Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName" )
+        //                       };
 
-            northwind.AddProduct( product );
-            northwind.SubmitChanges();
+        //    return View( "New", viewData );
+        //}
 
-            return RedirectToAction( "Category", new { ID = product.CategoryID } );
-        }
+        ////
+        //// Products/Create
 
-        //
-        // Products/Edit/5
+        //public ActionResult Create()
+        //{
+        //    var product = new Product();
+        //    UpdateModel( product, Request.Form.AllKeys );
 
-        public ActionResult Edit( int id )
-        {
-            var viewData = new ProductsEditViewData { Product = northwind.GetProductById( id ) };
+        //    northwind.AddProduct( product );
+        //    northwind.SubmitChanges();
 
-            viewData.Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID );
-            viewData.Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID );
+        //    return RedirectToAction( "Category", new { ID = product.CategoryID } );
+        //}
 
-            return View( "Edit", viewData );
-        }
+        ////
+        //// Products/Edit/5
 
-        //
-        // Products/Update/5
+        //public ActionResult Edit( int id )
+        //{
+        //    var viewData = new ProductsEditViewData { Product = northwind.GetProductById( id ) };
 
-        public ActionResult Update( int id )
-        {
-            var product = northwind.GetProductById( id );
-            UpdateModel( product, Request.Form.AllKeys );
+        //    viewData.Categories = new SelectList( northwind.GetCategories(), "CategoryID", "CategoryName", viewData.Product.CategoryID );
+        //    viewData.Suppliers = new SelectList( northwind.GetSuppliers(), "SupplierID", "CompanyName", viewData.Product.SupplierID );
 
-            northwind.SubmitChanges();
+        //    return View( "Edit", viewData );
+        //}
 
-            return RedirectToAction( "Category", new { Action = "Category", ID = product.CategoryID } );
-        }
+        ////
+        //// Products/Update/5
+
+        //public ActionResult Update( int id )
+        //{
+        //    var product = northwind.GetProductById( id );
+        //    UpdateModel( product, Request.Form.AllKeys );
+
+        //    northwind.SubmitChanges();
+
+        //    return RedirectToAction( "Category", new { Action = "Category", ID = product.CategoryID } );
+        //}
     }
 }
