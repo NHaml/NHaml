@@ -6,7 +6,6 @@ using System.Resources;
 using System.Runtime.InteropServices;
 using System.Security;
 
-[assembly: AssemblyProduct("NHaml")]
 [assembly: AssemblyCopyright("MIT License")]
 [assembly: ComVisible(true)]
 [assembly: AssemblyVersion("4.0.0.0")]
