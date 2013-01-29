@@ -62,11 +62,11 @@
     <Compile Include="XmlConfigurator_IntegrationTests.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\NHaml\System.Web.NHaml.csproj">
+    <ProjectReference Include="..\..\src\System.Web.NHaml\System.Web.NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>System.Web.NHaml</Name>
     </ProjectReference>
-    <ProjectReference Include="..\NHaml.Tests\NHaml.Tests.csproj">
+    <ProjectReference Include="..\System.Web.NHaml.Tests\NHaml.Tests.csproj">
       <Project>{92236FD2-3C06-4487-A6ED-E3E89511665B}</Project>
       <Name>NHaml.Tests</Name>
     </ProjectReference>
