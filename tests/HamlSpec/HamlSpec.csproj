@@ -12,6 +12,8 @@
     <AssemblyName>HamlSpec</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
+    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\..\</SolutionDir>
+    <RestorePackages>true</RestorePackages>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -42,8 +44,9 @@
     <CodeAnalysisFailOnMissingRules>false</CodeAnalysisFailOnMissingRules>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -63,6 +66,7 @@
     <Compile Include="SpecTestRunner.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="packages.config" />
     <None Include="specs_nhaml.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
@@ -71,9 +75,9 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\System.Web.NHaml.Tests\NHaml.Tests.csproj">
+    <ProjectReference Include="..\System.Web.NHaml.Tests\System.Web.NHaml.Tests.csproj">
       <Project>{92236FD2-3C06-4487-A6ED-E3E89511665B}</Project>
-      <Name>NHaml.Tests</Name>
+      <Name>System.Web.NHaml.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\src\System.Web.NHaml\System.Web.NHaml.csproj">
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
@@ -90,6 +94,7 @@
   <PropertyGroup>
     <PostBuildEvent>if $(ConfigurationName) == Profiled "C:\Program Files\EQATEC\EQATECProfiler\EQATECProfilerCmd.exe" -build app.eqconfig</PostBuildEvent>
   </PropertyGroup>
+  <Import Project="$(SolutionDir)\.nuget\nuget.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
   <Target Name="BeforeBuild">

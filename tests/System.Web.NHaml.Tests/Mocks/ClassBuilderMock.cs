@@ -64,10 +64,12 @@ namespace NHaml.Tests.Mocks
         }
 
 
-        public void AppendAttributeNameValuePair(string name, IEnumerable<HamlNode> valueFragments, char quoteChar)
+        public void AppendAttributeNameValuePair(string name, IList<HamlNode> valueFragments, char quoteChar)
         {
             string value = string.Join("", valueFragments.Select(x => x is HamlNodeTextVariable ? ((HamlNodeTextVariable)x).VariableName : x.Content));
-            if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value) || value.ToLower() == "false")
+            if (valueFragments.Any() == false)
+                _output.Append(" " + name);
+            else if (string.IsNullOrEmpty(name) || string.IsNullOrEmpty(value) || value.ToLower() == "false")
                 return;
             else if (value.ToLower() == "true" || string.IsNullOrEmpty(value))
                 _output.Append(" " + name + "=" + quoteChar + name + quoteChar);

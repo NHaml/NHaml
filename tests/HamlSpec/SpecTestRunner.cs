@@ -87,7 +87,6 @@ namespace HamlSpec
         {
             var viewSource = ViewSourceBuilder.Create(hamlTemplate);
 
-            var hamlOptions = new HamlHtmlOptions();
             var templateEngine = XmlConfigurator.GetTemplateEngine(new FileTemplateContentProvider(), new List<string>(), new List<string>());
             var compiledTemplate = templateEngine.GetCompiledTemplate(viewSource, typeof(Template));
             return compiledTemplate.CreateTemplate();

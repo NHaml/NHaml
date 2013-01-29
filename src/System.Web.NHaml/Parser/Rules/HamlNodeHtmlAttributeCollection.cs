@@ -36,7 +36,7 @@ namespace System.Web.NHaml.Parser.Rules
 
         private static string GetNextAttributeToken(string attributeCollection, char closingBracketChar, ref int index)
         {
-            var terminatingChars = new[] { ' ', '\t', closingBracketChar };
+            var terminatingChars = new[] { ',', ' ', '\t', closingBracketChar };
             string nameValuePair = HtmlStringHelper.ExtractTokenFromTagString(attributeCollection, ref index,
                 terminatingChars);
             if (terminatingChars.Contains(nameValuePair[nameValuePair.Length - 1]))

@@ -37,7 +37,7 @@ namespace System.Web.NHaml.Walkers.CodeDom
             var valueFragments = attributeNode.Children.Any(ch => ch is HamlNodeTextContainer)
                                      ? attributeNode.Children.First().Children
                                      : attributeNode.Children;
-            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, valueFragments, attributeNode.QuoteChar);
+            ClassBuilder.AppendAttributeNameValuePair(attributeNode.Name, valueFragments.ToList(), attributeNode.QuoteChar);
         }
     }
 }
