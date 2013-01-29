@@ -84,6 +84,7 @@
     <Compile Include="NHamlMvcViewEngine.cs">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <CodeAnalysisDictionary Include="Properties\CodeAnalysisDictionary.xml" />
@@ -93,6 +94,9 @@
       <Project>{9B885FC4-45C0-4526-9253-A799238EDD66}</Project>
       <Name>System.Web.NHaml</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="System.Web.NHaml.Mvc3.nuspec" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

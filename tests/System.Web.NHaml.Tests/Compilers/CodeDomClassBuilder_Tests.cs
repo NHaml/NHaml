@@ -106,11 +106,21 @@ namespace NHaml.Tests.Compilers
         public void AppendAttributeNameValuePair_TextLiteralHamlNode_AppendsRenderAttributeNameValuePair()
         {
             var classBuilder = new CodeDomClassBuilder();
-            var valueNodes = new List<HamlNode> {new HamlNodeTextLiteral(-1, "value")};
+            var valueNodes = new List<HamlNode> { new HamlNodeTextLiteral(-1, "value") };
             classBuilder.AppendAttributeNameValuePair("Name", valueNodes, '\"');
             string result = classBuilder.Build(ClassName);
             Assert.That(result, Is.StringContaining("= new System.Text.StringBuilder();"));
             Assert.That(result, Is.StringContaining("base.RenderAttributeNameValuePair(\"Name\", value_0.ToString(), '\\\"')"));
+        }
+
+        [Test]
+        public void AppendAttributeNameValuePair_NoValueNode_AppendsRenderAttributeNameValuePair()
+        {
+            var classBuilder = new CodeDomClassBuilder();
+            var valueNodes = new List<HamlNode>();
+            classBuilder.AppendAttributeNameValuePair("Name", valueNodes, '\"');
+            string result = classBuilder.Build(ClassName);
+            Assert.That(result, Is.StringContaining("textWriter.Write(\" Name\");"));
         }
 
         [Test]

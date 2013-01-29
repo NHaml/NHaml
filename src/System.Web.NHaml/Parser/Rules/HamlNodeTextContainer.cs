@@ -19,7 +19,10 @@ namespace System.Web.NHaml.Parser.Rules
         public HamlNodeTextContainer(int sourceFileLineNo, string content)
             : base(sourceFileLineNo, content)
         {
-            ParseFragments(content);
+            if (string.IsNullOrEmpty(content))
+                AddChild(new HamlNodeTextLiteral(sourceFileLineNo, content));
+            else
+                ParseFragments(content);
         }
 
         private void ParseFragments(string content)

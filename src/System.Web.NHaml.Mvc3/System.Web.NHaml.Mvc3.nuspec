@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2011/08/nuspec.xsd">
+    <metadata>
+        <id>System.Web.NHaml.Mvc3</id>
+        <version>4.0.0-rc</version>
+        <title>System.Web.NHaml.Mvc3</title>
+        <authors>NA</authors>
+        <owners>NA</owners>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>NHaml view engine configured to work inside a Microsoft MVC3 project</description>
+        <copyright>MIT License</copyright>
+    </metadata>
+    <files>
+        <file src="bin\Debug\System.Web.NHaml.dll" target="lib\net40\System.Web.NHaml.dll" />
+        <file src="bin\Debug\System.Web.NHaml.Mvc3.dll" target="lib\net40\System.Web.NHaml.Mvc3.dll" />
+    </files>
+</package>
