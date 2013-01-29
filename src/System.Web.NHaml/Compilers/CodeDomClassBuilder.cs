@@ -154,12 +154,28 @@ namespace System.Web.NHaml.Compilers
         //    Depth--;
         //}
 
-        public void AppendAttributeNameValuePair(string name, IEnumerable<HamlNode> valueFragments, char quoteToUse)
+        public void AppendAttributeNameValuePair(string name, IList<HamlNode> valueFragments, char quoteToUse)
+        {
+            if (valueFragments.Any() == false)
+                AppendAttributeWithoutValue(name);
+            else
+                AppenAttributeWithValue(name, valueFragments, quoteToUse);
+        }
+
+        private void AppendAttributeWithoutValue(string name)
+        {
+            RenderMethod.AddExpressionStatement(
+                CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
+                    .WithInvokePrimitiveParameter(" " + name));
+        }
+
+        private void AppenAttributeWithValue(string name, IEnumerable<HamlNode> valueFragments, char quoteToUse)
         {
             string variableName = "value_" + RenderMethod.Statements.Count;
             RenderMethod.AddStatement(
-                CodeDomFluentBuilder.GetDeclaration(typeof(StringBuilder), variableName,
-                new CodeObjectCreateExpression("System.Text.StringBuilder", new CodeExpression[] { })));
+                CodeDomFluentBuilder.GetDeclaration(typeof (StringBuilder), variableName,
+                                                    new CodeObjectCreateExpression("System.Text.StringBuilder",
+                                                                                   new CodeExpression[] {})));
 
             foreach (var fragment in valueFragments)
             {
@@ -168,8 +184,9 @@ namespace System.Web.NHaml.Compilers
                 {
                     string nodeVariableName = ((HamlNodeTextVariable) fragment).VariableName;
                     if (nodeVariableName.All(ch => Char.IsLetterOrDigit(ch)))
-                    parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("base.RenderValueOrKeyAsString")
-                        .WithInvokePrimitiveParameter(nodeVariableName);
+                        parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression(
+                            "base.RenderValueOrKeyAsString")
+                            .WithInvokePrimitiveParameter(nodeVariableName);
                     else
                     {
                         parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "Convert")
@@ -178,20 +195,12 @@ namespace System.Web.NHaml.Compilers
                 }
                 else
                 {
-                    parameter = new CodePrimitiveExpression { Value = fragment.Content };
+                    parameter = new CodePrimitiveExpression {Value = fragment.Content};
                 }
-
-            //var writeInvoke = CodeDomFluentBuilder
-            //    .GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
-            //    .WithInvokeCodeSnippetToStringParameter(code);
-
-            //RenderMethod.AddExpressionStatement(writeInvoke);
-        
-
 
                 RenderMethod.AddExpressionStatement(
                     CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Append", variableName)
-                    .WithParameter(parameter));
+                        .WithParameter(parameter));
             }
 
             var outputExpression = CodeDomFluentBuilder
@@ -202,7 +211,7 @@ namespace System.Web.NHaml.Compilers
 
             RenderMethod.AddExpressionStatement(
                 CodeDomFluentBuilder.GetCodeMethodInvokeExpression("Write", TextWriterVariableName)
-                .WithParameter(outputExpression));
+                    .WithParameter(outputExpression));
         }
 
         public void AppendSelfClosingTagSuffix()

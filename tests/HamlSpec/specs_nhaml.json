@@ -31,6 +31,17 @@
       }
 	}
   },
+
+  "Attribute handling" : {
+    "Ambiquous variable or literal parameter value with non-ASCII characters" : {
+      "haml" : "%p(a='b.c', d=f)",
+	  "html" : "<p a='b.c' d='f'></p>"
+    },
+    "Empty attribute value" : {
+      "haml" : "%p(a)",
+	  "html" : "<p a></p>"
+    }
+  },
   
   "Inline code" : {
     "a string constant" : {

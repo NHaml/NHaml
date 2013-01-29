@@ -42,5 +42,19 @@ namespace NHaml.Tests.Parser.Rules
             Assert.That(firstChild.Name, Is.EqualTo(expectedName));
             Assert.That(firstChild.Children.First().Content, Is.EqualTo(expectedValue));
         }
+
+        [Test]
+        [TestCase("(a=b, c=d)", "a", "#{b}")]
+        [TestCase("(a='b',c=d)", "a", "b")]
+        [TestCase("(a=This.That, c=d)", "a", "#{This.That}")]
+        public void Constructor_CommaSeparatedAttributes_ParsesCorrectly(
+            string attributeString, string expectedName, string expectedValue)
+        {
+            var tag = new HamlNodeHtmlAttributeCollection(0, attributeString);
+
+            var firstChild = (HamlNodeHtmlAttribute)tag.Children.First();
+            Assert.That(firstChild.Name, Is.EqualTo(expectedName));
+            Assert.That(firstChild.Children.First().Content, Is.EqualTo(expectedValue));
+        }
     }
 }
