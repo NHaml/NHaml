@@ -60,6 +60,7 @@ namespace System.Web.NHaml.IO
 
         internal int GetEndOfTagIndex(string currentLine)
         {
+            currentLine = currentLine.Trim();
             if (currentLine.Length < 1 ||
                 "%.#".Contains(currentLine[0].ToString()) == false)
                 return currentLine.Length;

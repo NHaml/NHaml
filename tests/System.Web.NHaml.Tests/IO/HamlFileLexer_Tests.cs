@@ -106,6 +106,7 @@ namespace NHaml.Tests.IO
 
         [Test]
         [TestCase("%p(a='b'\nc='d')content", "p(a='b' c='d')", "content")]
+        [TestCase(" %p(a='b'\n  c='d')content", "p(a='b'   c='d')", "content")]
         [TestCase("%p(a=')b'\nc='d')content", "p(a=')b' c='d')", "content")]
         [TestCase("%p(a=\")b\"\nc='d')content", "p(a=\")b\" c='d')", "content")]
         [TestCase("%p{a='b'\nc='d'}content", "p{a='b' c='d'}", "content")]
