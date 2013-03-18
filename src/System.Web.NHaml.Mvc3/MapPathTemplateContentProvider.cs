@@ -22,9 +22,15 @@ namespace System.Web.NHaml.Mvc3
             }
             else
             {
-                string path = _context.HttpContext.Request.MapPath(templateName);
+                //string path = _context.HttpContext.Request.MapPath(templateName); //produces invalid path                
+                var path = _context.HttpContext.Request.MapPath(GetFullVirtualPath(templateName));                
                 return base.CreateFileInfo(path);
             }
+        }
+        
+        private string GetFullVirtualPath(string templateName)
+        {
+            return templateName.StartsWith("~/") ? templateName : VirtualPathUtility.ToAbsolute("~/" + templateName, _context.HttpContext.Request.ApplicationPath);
         }
     }
 }

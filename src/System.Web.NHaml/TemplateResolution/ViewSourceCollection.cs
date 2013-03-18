@@ -17,7 +17,7 @@ namespace System.Web.NHaml.TemplateResolution
 
         internal ViewSource GetByPartialName(string partialName)
         {
-            try
+            /*try
             {
                 return string.IsNullOrEmpty(partialName)
                     ? this[1]
@@ -26,7 +26,14 @@ namespace System.Web.NHaml.TemplateResolution
             catch (InvalidOperationException)
             {
                 return null;
+            }*/
+            
+            if (string.IsNullOrEmpty(partialName))
+            {
+                return this.Count > 1 ? this[1] : null;
             }
+            
+            return this.FirstOrDefault(x => x != null && x.FileName != null && x.FileName.ToLower() == partialName.ToLower());
         }
     }
 }
