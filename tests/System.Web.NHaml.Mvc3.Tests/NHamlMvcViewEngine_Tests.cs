@@ -28,7 +28,10 @@ namespace System.Web.NHaml.Mvc3.Tests
 
             _httpContext.Setup(ctx => ctx.Request).Returns(_httpRequest.Object);
             _httpRequest.Setup(req => req.MapPath(It.IsAny<string>()))
-                .Returns((String str) => str);
+             .Returns((String str) => str);
+
+            _httpRequest.Setup(req => req.ApplicationPath)
+                .Returns("/");
 
             _routeData = new RouteData();
             _controller = new FakeController();
