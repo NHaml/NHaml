@@ -49,8 +49,8 @@ namespace System.Web.NHaml.Compilers
         public static CodeMethodInvokeExpression WithInvokeCodeSnippetToStringParameter(this CodeMethodInvokeExpression expression,
             string codeSnippet)
         {
-            return WithParameter(expression, 
-                GetCodeMethodInvokeExpression("ToString", "Convert").WithCodeSnippetParameter(codeSnippet));
+            return WithParameter(expression,
+                GetCodeMethodInvokeExpression("ToString", "System.Convert").WithCodeSnippetParameter(codeSnippet));
         }
 
         public static CodeMethodInvokeExpression WithCodeSnippetParameter(this CodeMethodInvokeExpression expression,

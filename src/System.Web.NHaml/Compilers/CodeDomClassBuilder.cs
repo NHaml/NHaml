@@ -189,7 +189,7 @@ namespace System.Web.NHaml.Compilers
                             .WithInvokePrimitiveParameter(nodeVariableName);
                     else
                     {
-                        parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "Convert")
+                        parameter = CodeDomFluentBuilder.GetCodeMethodInvokeExpression("ToString", "System.Convert")
                             .WithCodeSnippetParameter(nodeVariableName);
                     }
                 }

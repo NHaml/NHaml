@@ -78,7 +78,7 @@ namespace NHaml.Tests.Compilers
             classBuilder.AppendCodeToString("1+1");
             string result = classBuilder.Build(ClassName);
 
-            Assert.That(result, Is.StringContaining("textWriter.Write(Convert.ToString(1+1));"));
+            Assert.That(result, Is.StringContaining("textWriter.Write(System.Convert.ToString(1+1));"));
         }
 
         [Test]
@@ -148,7 +148,7 @@ namespace NHaml.Tests.Compilers
                                      };
             classBuilder.AppendAttributeNameValuePair("Name", valueFragments, '\"');
             string result = classBuilder.Build(ClassName);
-            Assert.That(result, Is.StringContaining(".Append(Convert.ToString(Model.Property));"));
+            Assert.That(result, Is.StringContaining(".Append(System.Convert.ToString(Model.Property));"));
         }
 
         [Test]
